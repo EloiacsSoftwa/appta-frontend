@@ -1,10 +1,12 @@
-import logo from './logo.svg';
 import './App.css';
+import 'tailwindcss/tailwind.css';
+import First from './Components/First';
+
 
 function App() {
   return (
     <div className="App">
-        New Project
+    <First/>
     </div>
   );
 }
