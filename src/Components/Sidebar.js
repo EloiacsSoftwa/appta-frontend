@@ -109,7 +109,7 @@ console.log("selectedMenu",selectedMenu)
     <div className="flex h-screen">
       {/* Sidebar */}
       <div
-        className={`${isExpanded ? "w-64" : "w-20"} bg-black text-white flex flex-col transition-width duration-300 h-screen overflow-y-auto`}
+        className={`${isExpanded ? "w-64" : "w-20"} bg-black text-white flex flex-col transition-width duration-300 h-screen overflow-y-auto fixed `}
       >
         <div className={`${isExpanded ? "px-6 " : "px-2"} flex items-center justify-between py-4`}>
           <div className="flex items-center space-x-2">
@@ -137,14 +137,29 @@ console.log("selectedMenu",selectedMenu)
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 bg-zinc-300 h-14">
-        <div className="flex justify-end items-center mr-5 mt-2">
+      <div className={`flex-1 overflow-y-auto ${isExpanded ? "ml-64" : "ml-20"}`}>
+     
+      <div className="flex justify-end items-center bg-zinc-300 h-14 sticky">
+        <div className="flex items-center mr-5">
           <img src={Notifications} alt="Notification Icon" className="mr-2 md:mr-5" />
           <p className="mr-4 font-semibold text-sm font-manrope">Jony Larrence</p>
           <img src={Elipsepic} alt="Profile Picture" className="w-9 h-9 md:w-10 md:h-10" />
         </div>
-
+</div>
+        
+        
         {/* Title content when a sidebar item is clicked */}
+<div className="overflow-y-auto h-full ">
+
+
+        {selectedMenu === 'Dashboard' && (
+          <div className="bg-white  mt-2">
+           <h5>Dashboard Page</h5>
+          </div>
+        )}
+
+
+
         {selectedMenu === 'Product List' && (
           <div className="bg-white  mt-2">
             <ProductList />
@@ -165,9 +180,12 @@ console.log("selectedMenu",selectedMenu)
             <Expense_List/>
           </div>
         )}
+        </div>
       </div>
-    </div>
+      </div>
+    
   );
 }
 
 export default App;
+
