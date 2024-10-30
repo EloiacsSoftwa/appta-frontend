@@ -13,6 +13,10 @@ import RightArrow from "../Images/Icons/RightArrow.svg";
 import Elipse14 from "../Images/Icons/Ellipse 14.svg";
 import Elipsepic from "../Images/Icons/Ellipse pic.svg";
 import Notifications from "../Images/Icons/Notifications.svg";
+import ProductList from '../Sales/Product_List'
+import Sales_List from "../Sales/Sales_List";
+import Purchase_List from "../Sales/Purchase_List";
+import Expense_List from "../Sales/Expense_List";
 
 function App() {
   const [isExpanded, setIsExpanded] = useState(true);
@@ -54,7 +58,7 @@ function App() {
         )}
       </div>
       {isSubmenuOpen[title] && (
-        <ul className="pl-5 mt-2 space-y-1 text-gray-300">{renderSubmenuItems(submenuItems)}</ul>
+        <ul className="pl-5 mt-2 space-y-1 text-gray-300 cursor-pointer">{renderSubmenuItems(submenuItems)}</ul>
       )}
     </li>
   );
@@ -97,11 +101,15 @@ function App() {
     },
   ];
 
+
+console.log("selectedMenu",selectedMenu)
+
+
   return (
     <div className="flex h-screen">
       {/* Sidebar */}
       <div
-        className={`${isExpanded ? "w-64" : "w-20"} bg-black text-white flex flex-col transition-width duration-300 h-full overflow-y-auto`}
+        className={`${isExpanded ? "w-64" : "w-20"} bg-black text-white flex flex-col transition-width duration-300 h-screen overflow-y-auto`}
       >
         <div className={`${isExpanded ? "px-6 " : "px-2"} flex items-center justify-between py-4`}>
           <div className="flex items-center space-x-2">
@@ -120,8 +128,8 @@ function App() {
                 className="flex items-center pl-4 cursor-pointer"
                 onClick={() => setSelectedMenu(title)}
               >
-                <img src={icon} alt={`${title} Logo`} className="w-5 h-5" />
-                {isExpanded && <span className="ml-6 text-base font-normal font-manrope">{title}</span>}
+                <img src={icon} alt={`${title} Logo`} className="w-5 h-5 cursor-pointer" />
+                {isExpanded && <span className="ml-6 text-base font-normal font-manrope cursor-pointer">{title}</span>}
               </li>
             )
           )}
@@ -137,9 +145,24 @@ function App() {
         </div>
 
         {/* Title content when a sidebar item is clicked */}
-        {selectedMenu && (
-          <div className="bg-white p-4 mt-4">
-            <h3 className="text-xl font-bold">Title: {selectedMenu}</h3>
+        {selectedMenu === 'Product List' && (
+          <div className="bg-white  mt-2">
+            <ProductList />
+          </div>
+        )}
+        {selectedMenu === 'Sales List' && (
+          <div className="bg-white  mt-2">
+            <Sales_List />
+          </div>
+        )}
+         {selectedMenu === 'Purchase List' && (
+          <div className="bg-white mt-2">
+            <Purchase_List />
+          </div>
+        )}
+        {selectedMenu === 'Expense List' && (
+          <div className="bg-white  mt-2">
+            <Expense_List/>
           </div>
         )}
       </div>
