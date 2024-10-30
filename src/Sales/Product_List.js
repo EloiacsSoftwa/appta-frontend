@@ -171,7 +171,8 @@ function Product_List() {
                         </div>
                     </div>
                 </div>
-                <table className="w-full  text-left mb-5 table-auto">
+
+                <table className="w-full  text-left mb-5">
                     <thead>
                         
                         <tr className="bg-gray-200 border-0">
@@ -237,7 +238,7 @@ function Product_List() {
                                 </div>
                             </th>
                            
-                       <th className="p-1 font-semibold text-base text-neutral-900"></th>
+                       <th className="p-1 font-semibold text-base text-neutral-900  min-w-[40px]"></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -259,7 +260,7 @@ function Product_List() {
                                     {item.Price}
                                 </td>
                                 <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900">{item.Unit}</td>
-                                <td className="p-2 text-gray-500 cursor-pointer"><img src={Dot} /></td>
+                                <td className="p-2 text-gray-500 cursor-pointer w-8 "><img src={Dot} /></td>
                             </tr>
                         ))}
                     </tbody>

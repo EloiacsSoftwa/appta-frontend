@@ -316,7 +316,7 @@ function Expense_List() {
                                 </div>
                             </th>
 
-                            <th className="p-1 font-semibold text-base text-neutral-900"></th>
+                            <th className="p-1 font-semibold text-base text-neutral-900 min-w-[40px]"></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -343,8 +343,8 @@ function Expense_List() {
                                             item.Status === 'Partial' ? 'text-blue-600' : ''}`}>
                                     {item.Status}
                                 </td>                               
-                                
-                                 <td className="p-2 text-gray-500 cursor-pointer"><img src={Dot} /></td>
+                                 
+                                 <td className="p-2 text-gray-500 cursor-pointer w-8"><img src={Dot} /></td>
                             </tr>
                         ))}
                     </tbody>
