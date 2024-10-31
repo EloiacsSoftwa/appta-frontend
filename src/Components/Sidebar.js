@@ -17,6 +17,9 @@ import ProductList from '../Sales/Product_List'
 import Sales_List from "../Sales/Sales_List";
 import Purchase_List from "../Sales/Purchase_List";
 import Expense_List from "../Sales/Expense_List";
+import Invoice_List from '../Sales/Invoice';
+import Quotation from "../Sales/Quotation";
+
 
 function App() {
   const [isExpanded, setIsExpanded] = useState(true);
@@ -153,6 +156,16 @@ console.log("selectedMenu",selectedMenu)
         {selectedMenu === 'Sales List' && (
           <div className="bg-white  mt-2">
             <Sales_List />
+          </div>
+        )}
+          {selectedMenu === 'Invoice' && (
+          <div className="bg-white  mt-2">
+            <Invoice_List />
+          </div>
+        )}
+           {selectedMenu === 'Quotation' && (
+          <div className="bg-white  mt-2">
+            <Quotation />
           </div>
         )}
          {selectedMenu === 'Purchase List' && (
