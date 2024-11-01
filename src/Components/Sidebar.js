@@ -13,7 +13,7 @@ import RightArrow from "../Images/Icons/RightArrow.svg";
 import Elipse14 from "../Images/Icons/Ellipse 14.svg";
 import Elipsepic from "../Images/Icons/Ellipse pic.svg";
 import Notifications from "../Images/Icons/Notifications.svg";
-import ProductList from '../Sales/Product_List'
+import ProductList from '../Product Pages/Product_List_Table'
 import Sales_List from "../Sales/Sales_List";
 import Purchase_List from "../Sales/Purchase_List";
 import Expense_List from "../Sales/Expense_List";
