@@ -5,6 +5,7 @@ import config from './Config';
 
 
 
+
 const cookies = new Cookies();
 
 
@@ -15,6 +16,7 @@ headers: {
     'Access-Control-Allow-Origin' : '*'
 }
 })
+
 AxiosConfig.interceptors.request.use(
   (config) => {
       const token = cookies.get('token');
