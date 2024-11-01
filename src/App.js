@@ -1,14 +1,13 @@
 import './App.css';
 import 'tailwindcss/tailwind.css';
+import First from './Components/First';
 import Sidebar from './Components/Sidebar'
-
 
 function App() {
   return (
-    <div>
-<Sidebar />
-
-   
+    <div className="App">
+  
+    <Sidebar />
     </div>
   );
 }
