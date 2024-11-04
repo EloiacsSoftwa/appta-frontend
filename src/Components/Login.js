@@ -5,26 +5,35 @@ import { useDispatch, useSelector } from 'react-redux';
 import Cookies from 'universal-cookie';
 import CryptoJS from "crypto-js";
 
-const LoginPage = () => {
-  const dispatch = useDispatch();
-  const loginState = useSelector(state => state.LoginReducer);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [errors, setErrors] = useState({});
-  const [errorMessage, setErrorMessage] = useState('');
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const validationErrors = {};
+     const LoginPage = () => {
+
+      const dispatch = useDispatch();
+      const loginState = useSelector(state => state.LoginReducer);
+      const [email, setEmail] = useState('');
+      const [password, setPassword] = useState('');
+      const [errors, setErrors] = useState({});
+      const [errorMessage, setErrorMessage] = useState('');
+
+
+        const handleSubmit = (e) => {
+           e.preventDefault();
+          const validationErrors = {};
+
+          const hasUpperCase = /[A-Z]/.test(email);
 
     if (!email) {
-      validationErrors.email = "Email is required";
+      validationErrors.email = "Please Enter Email";
     } else if (!/\S+@\S+\.\S+/.test(email)) {
       validationErrors.email = "Email is invalid";
     }
+    else if (hasUpperCase) {
+      validationErrors.email = "Email address cannot contain uppercase letters";
+    }
+
 
     if (!password) {
-      validationErrors.password = "Password is required";
+      validationErrors.password = "Please Enter Password";
     } else if (password.length < 4) {
       validationErrors.password = "Password must be at least 6 characters";
     }
@@ -37,6 +46,7 @@ const LoginPage = () => {
   };
 
   useEffect(() => {
+    
     if (loginState.loginStatusCode == 200) {
 
       dispatch({ type: 'LOGIN-SUCCESS'})
@@ -60,6 +70,7 @@ setTimeout(()=>{
 },2000)
      
 
+
     }  
   }, [loginState.loginStatusCode]);
 
@@ -67,8 +78,7 @@ setTimeout(()=>{
 useEffect(()=>{
 if(loginState.loginFailedStatusCode == 403){
   setErrorMessage('Invalid email or password. Please try again.');
-  const cookies = new Cookies();
-  cookies.remove('token', { path: '/' });
+
   setTimeout(()=>{
     dispatch({ type: 'REMOVE_LOGIN_FAILED_STATUS_CODE' });
   },2000)
@@ -113,7 +123,7 @@ if(loginState.loginFailedStatusCode == 403){
                 placeholder="Enter your password"
                 className="w-full px-4 py-2 mt-1 border rounded-md bg-[#8ea992] placeholder-white focus:outline-none focus:ring-2 focus:ring-white"
               />
-              {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password}</p>}
+              {errors.password && <p className="text-red-500  text-sm mt-1">{errors.password}</p>}
             </div>
             {errorMessage && <p className="text-red-500 text-sm mt-2">{errorMessage}</p>}
             <button
