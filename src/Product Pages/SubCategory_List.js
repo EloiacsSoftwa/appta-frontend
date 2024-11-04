@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import Vector from '../Images/Sales/Vector.svg'
 import Frame1 from '../Images/Sales/Frame.svg'
 import Frame2 from '../Images/Sales/Frame2.svg'
@@ -8,15 +8,19 @@ import Search from '../Images/Sales/Search.svg'
 import Dot from '../Images/Sales/Dots.svg';
 import Add from '../Images/Sales/Add Green.svg';
 import SmallDot from '../Images/Sales/Smalldots.svg'
-import { ArrowRight2, ArrowLeft2 ,ArrowUp2, ArrowDown2} from 'iconsax-react';
+import { ArrowRight2, ArrowLeft2 ,ArrowUp2, ArrowDown2, Import} from 'iconsax-react';
 import AddSubCategory from './AddSubCategory';
-
+import { useDispatch, useSelector } from 'react-redux';
+import moment from 'moment';
 
 function SubCategory_List() {
 
-   
+    const dispatch = useDispatch();
+    const state = useSelector(state => state);
+
+    const [subCategoryList, setSubCategoryList] = useState([])
     const [currentPage, setCurrentPage] = useState(1);
-   const [showAddCategory, setShowAddCategory] = useState(false)
+    const [showAddCategory, setShowAddCategory] = useState(false)
 
 
 const handleAddCategory = () => {
@@ -26,6 +30,23 @@ const handleAddCategory = () => {
 const handleCloseAddCategory = () =>{
     setShowAddCategory(false)
 }
+
+
+useEffect(() => {
+    dispatch({ type: 'GETSUBCATEGORY' });
+     }, []);
+
+
+useEffect(()=>{
+    if(state.AddProduct.getSubCategoryStatusCode == 200){
+        setSubCategoryList(state.AddProduct.subcategory)
+    }
+
+},[state.AddProduct.getSubCategoryStatusCode])
+
+
+console.log("subCategoryList",subCategoryList)
+
 
     const reports = [
         {
@@ -88,10 +109,10 @@ const handleCloseAddCategory = () =>{
 
     //  pagination
     const itemsPerPage = 10;
-    const totalPages = Math.ceil(Category.length / itemsPerPage);
+    const totalPages = Math.ceil(subCategoryList.length / itemsPerPage);
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const currentItems = Category.slice(indexOfFirstItem, indexOfLastItem);
+    const currentItems = subCategoryList.slice(indexOfFirstItem, indexOfLastItem);
 
     const handlePrevClick = () => {
         if (currentPage > 1) {
@@ -259,14 +280,15 @@ const handleCloseAddCategory = () =>{
                                         type="checkbox"
                                         className="form-checkbox h-4 w-4 text-blue-600 border-neutral-500 cursor-pointer"
                                     /></td>
-                                <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{item.Category}</td>
-                                <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{item.CategoryCode}</td>
-                                <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{item.Description}</td>
+                                <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{item.subCategoryName}</td>
+                                <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start ml-5">{item.CategoryCode || '-'}</td>
+                                <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-center">{item.categoryName}</td>
                                 <td className='p-2 font-semibold text-sm font-Manrope text-start text-neutral-900 '>
-                                    {item.Createdby}
+                                    {item.createdBy}
                                 </td>
                                 <td className='p-2 font-semibold text-sm font-Manrope text-start text-neutral-900' >
-                                    {item.Date}
+                                {moment(item.createdAt, "DD-MM-YYYY HH:mm:ss").format("DD-MMM-YY")}
+
                                 </td>
                                 {/* <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900">{item.Unit}</td> */}
                                 <td className="p-2 text-gray-500 cursor-pointer w-8 "><img src={Dot} /></td>

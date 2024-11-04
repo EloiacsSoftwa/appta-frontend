@@ -3,9 +3,6 @@ import Cookies from 'universal-cookie';
 import config from './Config';
 
 
-
-
-
 const cookies = new Cookies();
 
 

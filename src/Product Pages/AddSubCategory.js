@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Minus from '../Images/Sales/Minus.svg';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -11,14 +11,23 @@ function AddSubCategory({ handleClose }) {
     const [description, setDescription] = useState('');
     const [selectedParentCategory, setSelectedParentCategory] = useState('');
     const [subCategoryNameError, setSubCategoryNameError] = useState('')
+    const [selectParentCategoryError, setSelectedParentCategoryError] = useState('')
+
+
 
     const dispatch = useDispatch();
     const state = useSelector(state => state);
 
+    console.log("Add Subcategory state", state)
 
+    
+    useEffect(() => {
+        dispatch({ type: 'GET_CATEGORY' })
+    }, [])
 
     const handleCategoryNameChange = (e) => {
         setSubCategoryName(e.target.value);
+        setSubCategoryNameError('')
     };
 
 
@@ -27,25 +36,31 @@ function AddSubCategory({ handleClose }) {
     };
     const handleParentCategoryChange = (e) => {
         setSelectedParentCategory(e.target.value);
+        setSelectedParentCategoryError('')
 
     }
 
 
     const handleAddSubCategory = () => {
-        console.log("SubCategoryName", SubCategoryName)
+        console.log("SubCategoryName", SubCategoryName,selectedParentCategory )
 
         const ImageUrl = 'sample'
         if (!SubCategoryName) {
             setSubCategoryNameError('Please enter subcategory')
-            return;
+
         }
-        if (SubCategoryName) {
+        if (!selectedParentCategory) {
+            setSelectedParentCategoryError('Please Select subcategory')
+        }
+
+
+        if (SubCategoryName && selectedParentCategory) {
             dispatch({
                 type: 'ADDSUBCATEGORY', payload:
                 {
                     id: 0,
                     subCategoryName: SubCategoryName,
-                    categoryId: 1,
+                    categoryId: selectedParentCategory,
                     imageUrl: ImageUrl,
                 }
             })
@@ -57,7 +72,7 @@ function AddSubCategory({ handleClose }) {
 
     return (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-            <div className="bg-zinc-300 rounded-lg w-full max-w-xl p-8 mx-4">
+            <div className="bg-zinc-300 rounded-lg w-full max-w-xl p-8 mx-4 border border-orange-600">
 
                 <div className="flex-1">
                     <div className="mb-4">
@@ -68,15 +83,13 @@ function AddSubCategory({ handleClose }) {
                             required
                             value={SubCategoryName}
                             onChange={handleCategoryNameChange}
-                            className="mt-1 block w-full border text-black font-Manrope rounded-md shadow-sm px-5 py-3 focus:outline-none focus:ring-2 focus:ring-orange-500"
+                            className=" placeholder-black font-normal text-base mt-1 block w-full border text-black font-Manrope rounded-md shadow-sm px-5 py-3 focus:outline-none focus:ring-2 focus:ring-orange-500"
                             placeholder="Enter category name"
                         />
                     </div>
 
-                    {subCategoryNameError && <div>
-
-                        <label className='text-red-600 text-sm font-Manrope font-bold'>{subCategoryNameError}</label>
-
+                    {subCategoryNameError && <div className='mb-4'>
+                        <label className='text-red-500 text-sm font-Manrope font-bold '>{subCategoryNameError}</label>
                     </div>}
 
                     <div className="mb-4 relative">
@@ -89,14 +102,14 @@ function AddSubCategory({ handleClose }) {
                                 required
                                 value={selectedParentCategory}
                                 onChange={handleParentCategoryChange}
-                                className="appearance-none mt-1 block w-full border text-black font-Manrope rounded-md shadow-sm p-3 focus:outline-none focus:ring-2 focus:ring-orange-500"
+                                className="appearance-none font-normal text-base  mt-1 block w-full border text-black font-Manrope rounded-md shadow-sm p-3 focus:outline-none focus:ring-2 focus:ring-orange-500"
                             >
                                 <option value="" disabled>Select a parent category</option>
-                                {/* {parentCategories.map((category) => (
-        <option key={category.id} value={category.id}>
-          {category.name}
-        </option>
-      ))} */}
+                                {state.categoryReducer?.Category?.map((category) => (
+                                    <option key={category.id} value={category.id}>
+                                        {category.categoryName}
+                                    </option>
+                                ))}
                             </select>
 
                             <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
@@ -117,7 +130,11 @@ function AddSubCategory({ handleClose }) {
 
 
 
+                    {selectParentCategoryError && <div>
 
+                        <label className='text-red-500 text-sm font-Manrope font-bold'>{selectParentCategoryError}</label>
+
+                    </div>}
 
 
                     {/* <div className="mb-4">
