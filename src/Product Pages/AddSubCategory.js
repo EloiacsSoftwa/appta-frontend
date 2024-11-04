@@ -10,7 +10,7 @@ function AddSubCategory({ handleClose }) {
     const [SubCategoryName, setSubCategoryName] = useState('');
     const [description, setDescription] = useState('');
     const [selectedParentCategory, setSelectedParentCategory] = useState('');
-const [subCategoryNameError, setSubCategoryNameError] = useState('')
+    const [subCategoryNameError, setSubCategoryNameError] = useState('')
 
     const dispatch = useDispatch();
     const state = useSelector(state => state);
@@ -25,17 +25,17 @@ const [subCategoryNameError, setSubCategoryNameError] = useState('')
     const handleDescriptionChange = (e) => {
         setDescription(e.target.value);
     };
-    const handleParentCategoryChange = (e) =>{
+    const handleParentCategoryChange = (e) => {
         setSelectedParentCategory(e.target.value);
 
     }
-         
+
 
     const handleAddSubCategory = () => {
-        console.log("SubCategoryName",SubCategoryName)
+        console.log("SubCategoryName", SubCategoryName)
 
         const ImageUrl = 'sample'
-        if(!SubCategoryName){
+        if (!SubCategoryName) {
             setSubCategoryNameError('Please enter subcategory')
             return;
         }
@@ -46,7 +46,7 @@ const [subCategoryNameError, setSubCategoryNameError] = useState('')
                     id: 0,
                     subCategoryName: SubCategoryName,
                     categoryId: 1,
-                    imageUrl: ImageUrl ,
+                    imageUrl: ImageUrl,
                 }
             })
         }
@@ -72,46 +72,46 @@ const [subCategoryNameError, setSubCategoryNameError] = useState('')
                             placeholder="Enter category name"
                         />
                     </div>
- 
+
                     {subCategoryNameError && <div>
 
-<label className='text-red-600 text-sm font-Manrope font-bold'>{subCategoryNameError}</label>
+                        <label className='text-red-600 text-sm font-Manrope font-bold'>{subCategoryNameError}</label>
 
-                        </div> }
+                    </div>}
 
-                        <div className="mb-4 relative">
-  <label htmlFor="parentCategory" className="block text-black font-semibold mb-1 font-Manrope">
-    Parent Category
-  </label>
-  <div className="relative">
-    <select
-      id="parentCategory"
-      required
-      value={selectedParentCategory}
-      onChange={handleParentCategoryChange}
-      className="appearance-none mt-1 block w-full border text-black font-Manrope rounded-md shadow-sm p-3 focus:outline-none focus:ring-2 focus:ring-orange-500"
-    >
-      <option value="" disabled>Select a parent category</option>
-      {/* {parentCategories.map((category) => (
+                    <div className="mb-4 relative">
+                        <label htmlFor="parentCategory" className="block text-black font-semibold mb-1 font-Manrope">
+                            Parent Category
+                        </label>
+                        <div className="relative">
+                            <select
+                                id="parentCategory"
+                                required
+                                value={selectedParentCategory}
+                                onChange={handleParentCategoryChange}
+                                className="appearance-none mt-1 block w-full border text-black font-Manrope rounded-md shadow-sm p-3 focus:outline-none focus:ring-2 focus:ring-orange-500"
+                            >
+                                <option value="" disabled>Select a parent category</option>
+                                {/* {parentCategories.map((category) => (
         <option key={category.id} value={category.id}>
           {category.name}
         </option>
       ))} */}
-    </select>
-   
-    <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-      <svg
-        className="w-4 h-4 text-gray-500"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
-      </svg>
-    </div>
-  </div>
-</div>     
+                            </select>
+
+                            <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                                <svg
+                                    className="w-4 h-4 text-gray-500"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                >
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
 
 
 
