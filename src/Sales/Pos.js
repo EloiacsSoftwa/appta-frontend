@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React,{ useState } from 'react';
 import Cup from '../Images/Icons/cup.svg'
 import Paylater from '../Images/Icons/paylater.svg'
 import Search from '../Images/Sales/Search.svg'
