@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Vector from '../Images/Sales/Vector.svg'
 import Frame1 from '../Images/Sales/Frame.svg'
 import Frame2 from '../Images/Sales/Frame2.svg'
@@ -10,11 +10,33 @@ import Add from '../Images/Sales/Add Green.svg';
 import SmallDot from '../Images/Sales/Smalldots.svg'
 import { ArrowRight2, ArrowLeft2 ,ArrowUp2, ArrowDown2} from 'iconsax-react';
 import AddCategory from './AddCategory';
+import { useDispatch, useSelector } from 'react-redux';
+import moment from 'moment';
 
 
 function Category_List() {
 
    
+    const dispatch = useDispatch();
+    const State = useSelector(state => state);
+
+    const [category ,setCatgory] = useState ([])
+
+    useEffect(() => {
+        dispatch({ type: 'GET_CATEGORY'})
+        setCatgory(State.categoryReducer.Category)
+     },[])
+
+
+     useEffect(() => {
+        if (State.categoryReducer.CategoryStatuscode ) {
+          dispatch({ type: 'GET_CATEGORY' })
+          setTimeout(() => {
+            dispatch({ type: 'REMOVE_ADD_CATEGORY_STATUS_CODE' })     
+          }, 100);
+        }
+      }, [State.categoryReducer.CategoryStatuscode])
+
     const [currentPage, setCurrentPage] = useState(1);
    const [showAddCategory, setShowAddCategory] = useState(false)
 
@@ -88,10 +110,10 @@ const handleCloseAddCategory = () =>{
 
     //  pagination
     const itemsPerPage = 10;
-    const totalPages = Math.ceil(Category.length / itemsPerPage);
+    const totalPages = Math.ceil(category && category.length / itemsPerPage);
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const currentItems = Category.slice(indexOfFirstItem, indexOfLastItem);
+    const currentItems = category &&category.slice(indexOfFirstItem, indexOfLastItem);
 
     const handlePrevClick = () => {
         if (currentPage > 1) {
@@ -251,7 +273,7 @@ const handleCloseAddCategory = () =>{
                         </tr>
                     </thead>
                     <tbody>
-                        {currentItems.map((item, index) => (
+                        {currentItems && currentItems.length > 0 && currentItems.map((item, index) => (
                             <tr key={index} className="hover:bg-gray-50 border-0">
                                <td className="p-2 mt-1 flex items-center justify-start">
                                     <img src={SmallDot} className="mr-1.5" />
@@ -259,14 +281,17 @@ const handleCloseAddCategory = () =>{
                                         type="checkbox"
                                         className="form-checkbox h-4 w-4 text-blue-600 border-neutral-500 cursor-pointer"
                                     /></td>
-                                <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{item.Category}</td>
+                                <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{item.categoryName}</td>
                                 <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{item.CategoryCode}</td>
-                                <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{item.Description}</td>
+                                <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">
+                                   -
+                                    {/* {item.Description} */}
+                                    </td>
                                 <td className='p-2 font-semibold text-sm font-Manrope text-start text-neutral-900 '>
-                                    {item.Createdby}
+                                    {item.createdBy}
                                 </td>
                                 <td className='p-2 font-semibold text-sm font-Manrope text-start text-neutral-900' >
-                                    {item.Date}
+                                    { moment(item.createdAt).format('DD-MM-YYYY')}
                                 </td>
                                 {/* <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900">{item.Unit}</td> */}
                                 <td className="p-2 text-gray-500 cursor-pointer w-8 "><img src={Dot} /></td>
