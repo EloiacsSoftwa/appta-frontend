@@ -9,13 +9,15 @@ import Dot from '../Images/Sales/Dots.svg';
 import Add from '../Images/Sales/Add Green.svg';
 import SmallDot from '../Images/Sales/Smalldots.svg'
 import { ArrowRight2, ArrowLeft2, ArrowUp2, ArrowDown2 } from 'iconsax-react';
+import AddPurchase from './AddPurchase';
+
 
 
 function Purchase_List() {
 
 
     const [currentPage, setCurrentPage] = useState(1);
-
+    const [showAddPurchase, setShowAddPurchase] = useState(false);
 
 
     const reports = [
@@ -97,11 +99,17 @@ function Purchase_List() {
         }
     };
 
-
+  const handleAdd = () => {
+    setShowAddPurchase(true);
+  }
 
 
 
     return (
+        <>
+        {showAddPurchase ? (
+             <AddPurchase /> 
+            ) : (
         <div className='h-screen bg-white p-4 w-full'>
 
             <div className='flex justify-between items-center gap-2 mb-2.5'>
@@ -109,7 +117,7 @@ function Purchase_List() {
                     <label className='font-semibold text-22 text-neutral-900 font-Manrope'>Purchase - </label> <label className='font-bold text-22 text-orange-600 font-Manrope'> Purchase List</label>
 
                 </div>
-                <div className='cursor-pointer flex items-center gap-2 w-auto h-auto text-orange-600 border border-orange-600 rounded px-2 py-1'>
+                <div onClick={handleAdd} className='cursor-pointer flex items-center gap-2 w-auto h-auto text-orange-600 border border-orange-600 rounded px-2 py-1'>
                     <div>
                         <img src={Add} className='w-4 h-4' />
                     </div>
@@ -299,6 +307,8 @@ function Purchase_List() {
                 </div>
             </div>
         </div>
+            )}
+        </>
     )
 }
 

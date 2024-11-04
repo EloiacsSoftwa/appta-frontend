@@ -15,7 +15,7 @@ import Elipsepic from "../Images/Icons/Ellipse pic.svg";
 import Notifications from "../Images/Icons/Notifications.svg";
 import ProductList from '../Product Pages/Product_List_Table'
 import Sales_List from "../Sales/Sales_List";
-import Purchase_List from "../Sales/Purchase_List";
+import Purchase_List from "../Purchase/Purchase_List";
 import Expense_List from "../Sales/Expense_List";
 import Invoice_List from '../Sales/Invoice';
 import Quotation from "../Sales/Quotation";
