@@ -19,7 +19,8 @@ import Purchase_List from "../Purchase/Purchase_List";
 import Expense_List from "../Sales/Expense_List";
 import Invoice_List from '../Sales/Invoice';
 import Quotation from "../Sales/Quotation";
-import CategoryList from '../Product Pages/Category_List'
+import CategoryList from '../Product Pages/Category_List';
+import BrandList from "../Brand Pages/BrandList";
 import Pos from "../Sales/Pos";
 import SubCategory_List from "../Product Pages/SubCategory_List";
 import { useDispatch, useSelector } from 'react-redux';
@@ -220,7 +221,7 @@ const handleLogout = () => {
         )}
 
 
-{selectedMenu === 'Category List' && (
+     {selectedMenu === 'Category List' && (
           <div className="bg-white  mt-2">
             <CategoryList />
           </div>
@@ -231,7 +232,18 @@ const handleLogout = () => {
             <SubCategory_List />
           </div>
         )}
+        {selectedMenu === 'Brand List' && (
+  <div className="bg-white mt-2">
+    <BrandList />
+  </div>
+)}
+
+
+
+
+
         </div>
+        
       </div>
       </div>
     
