@@ -45,17 +45,17 @@ function AddPurchase() {
       <div className="w-full rounded-xl shadow-custom mt-4 p-4 mb-4">
         <div className="grid gap-2">
           <div className="flex flex-col md:flex-row justify-start p-2">
-            <div className="relative mb-4 md:mb-0">
+            <div className={`relative mb-4 md:mb-0 ${dropdownOpen ? 'sm:mb-32 md:mb-32' : ''}`}>
               <p className="font-bold text-lg text-orange-600 mb-4">Supplier Details</p>
               <button
                 onClick={toggleDropdown}
-                className="flex items-center text-black bg-grey font-medium w-full md:w-56 px-5 py-2 text-sm rounded-t-xl"
+                className="flex items-center text-black bg-grey font-medium w-full md:w-56 sm:w-56 px-5 py-2 text-sm rounded-t-xl"
               >
                 Supplier
-                <img className="ml-28 md:ml-28" src={dropdown} />
+                <img className="ml-28 md:ml-28 sm:ml-10" src={dropdown} />
               </button>
               {dropdownOpen && (
-                <div className="absolute z-50 bg-light_gray divide-y divide-gray-100 shadow w-56 h-28">
+                <div className="absolute z-50 bg-light_gray divide-y divide-gray-100 shadow md:w-56 w-56 h-28 sm:w-56">
                   <ul className="py-2 text-sm text-black font-Manrope font-medium text-start">
                     <li>
                       <a href="#" className="block px-2 py-2">
@@ -116,8 +116,8 @@ function AddPurchase() {
                 <th className="px-2 py-2 border border-white font-Manrope font-semibold text-base">Taxable Amount</th>
                 <th className="px-2 py-2 border border-white font-Manrope font-semibold text-base">CGST</th>
                 <th className="px-2 py-2 border border-white font-Manrope font-semibold text-base">Tax Amount</th>
-                <th className="px-2 py-2 border border-white font-Manrope font-semibold text-base">Total</th>
-                <th className="px-2 py-2 border border-white font-Manrope font-semibold text-base"></th>
+                <th className="px-2 py-2 border-white  border border-r-0 font-Manrope font-semibold text-base">Total</th>
+                <th className="px-2 py-2 border-white  border border-l-0 border-white font-Manrope font-semibold text-base"></th>
               </tr>
             </thead>
             <tbody>
@@ -132,8 +132,8 @@ function AddPurchase() {
       <td className="px-2 py-2 border border-white font-Manrope font-semibold text-base">{data.TaxableAmount}</td>
       <td className="px-2 py-2 border border-white font-Manrope font-semibold text-base">{data.IGST}</td>
       <td className="px-2 py-2 border border-white font-Manrope font-semibold text-base">{data.Taxamount}</td>
-                  <td className="px-2 py-2 border border-white font-Manrope font-semibold text-base">{data.Total}</td>
-                  <td className="p-2 py-2 border border-white text-gray-500 cursor-pointer w-8"><img src={Dot} alt="Options" /></td>
+                  <td className="px-2 py-2 border-white  border border-r-0 font-Manrope font-semibold text-base">{data.Total}</td>
+                  <td className="p-2 py-2 border-white  border border-l-0 text-gray-500 cursor-pointer w-8"><img src={Dot} alt="Options" /></td>
                 </tr>
               ))}
             </tbody>
