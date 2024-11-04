@@ -22,7 +22,7 @@ function AddSubCategory({ handleClose }) {
 
     
     useEffect(() => {
-        dispatch({ type: 'GET_CATEGORY' })
+        dispatch({ type: 'GETCATEGORY' })
     }, [])
 
     const handleCategoryNameChange = (e) => {
@@ -105,7 +105,7 @@ function AddSubCategory({ handleClose }) {
                                 className="appearance-none font-normal text-base  mt-1 block w-full border text-black font-Manrope rounded-md shadow-sm p-3 focus:outline-none focus:ring-2 focus:ring-orange-500"
                             >
                                 <option value="" disabled>Select a parent category</option>
-                                {state.categoryReducer?.Category?.map((category) => (
+                                {state.AddProduct?.category?.map((category) => (
                                     <option key={category.id} value={category.id}>
                                         {category.categoryName}
                                     </option>
