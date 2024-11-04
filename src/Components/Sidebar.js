@@ -21,11 +21,12 @@ import Invoice_List from '../Sales/Invoice';
 import Quotation from "../Sales/Quotation";
 import CategoryList from '../Product Pages/Category_List'
 import Pos from "../Sales/Pos";
+import SubCategory_List from "../Product Pages/SubCategory_List";
 
 
 function App() {
   const [isExpanded, setIsExpanded] = useState(true);
-  const [selectedMenu, setSelectedMenu] = useState("");
+  const [selectedMenu, setSelectedMenu] = useState('Product List');
   const [isSubmenuOpen, setIsSubmenuOpen] = useState({});
 
   const toggleSidebar = () => {
@@ -205,6 +206,12 @@ console.log("selectedMenu",selectedMenu)
 {selectedMenu === 'Category List' && (
           <div className="bg-white  mt-2">
             <CategoryList />
+          </div>
+        )}
+        {selectedMenu === 'Sub Category' && (
+          <div className="bg-white  mt-2">
+       
+            <SubCategory_List />
           </div>
         )}
         </div>
