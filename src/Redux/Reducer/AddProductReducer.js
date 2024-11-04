@@ -6,6 +6,7 @@ const initialState = {
     statusCode:'',
     add_Product_status_code:'',
     getSubCategoryStatusCode:0,
+    getCategoryStatusCode:0,
     brands: []
   };
   

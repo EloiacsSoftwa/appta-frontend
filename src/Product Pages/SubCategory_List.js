@@ -44,6 +44,23 @@ useEffect(()=>{
 
 },[state.AddProduct.getSubCategoryStatusCode])
 
+useEffect(()=>{
+if(state.SubCategory.addSubCategoryStatusCode == 200){
+    dispatch({ type: 'GETSUBCATEGORY' });
+    setShowAddCategory(false)
+
+    setTimeout(()=>{
+        dispatch({ type: 'REMOVE_ADD_SUB_CATEGORY_STATUS_CODE'})
+    },4000)
+
+
+}
+
+},[state.SubCategory.addSubCategoryStatusCode])
+
+
+
+
 
 console.log("subCategoryList",subCategoryList)
 

@@ -9,7 +9,8 @@ export function Category(payload) {
     });
     
    }
-
+   
+// export  function SubCategory(payload) {
 
 
 export async function SubCategory(payload) {
@@ -22,15 +23,6 @@ export async function SubCategory(payload) {
  }
 
 
-// /products/addProduct
-export  function AddProductDetails(payload) {
-
-    return  AxiosConfig.post(`/products/addProduct`, payload).then(response=>response).catch(error=>{console.log(error,"catch")
-       return error
-    });
-    
-   }
-
 export function getAllBrands(payloads) {
    let params = {}
    if (payloads != undefined || payloads != null) {
@@ -42,3 +34,12 @@ export function getAllBrands(payloads) {
       return error
    });
 }
+//    }
+
+
+
+   export async function AddProductDetails(payload) {
+      return await AxiosConfig.post('/products/addProduct',payload ,{
+         data:payload
+      })
+    }

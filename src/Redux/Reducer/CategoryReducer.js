@@ -13,8 +13,8 @@ const initialState = {
       case 'REMOVE_ADD_CATEGORY_STATUS_CODE':
        return{...state, CategoryStatuscode:0 }
 
-       case 'GET-CATEGORY':
-        return {...state, Category :action.payload.response ,  GetCategoryStatusCode: action.payload.statusCode};
+      //  case 'GET-CATEGORY':
+      //   return {...state, Category :action.payload.response ,  GetCategoryStatusCode: action.payload.statusCode};
                      
       case 'REMOVE_GET_CATEGORY_STATUS_CODE':
        return{...state, GetCategoryStatusCode:0 }

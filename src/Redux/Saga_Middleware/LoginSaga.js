@@ -5,7 +5,7 @@ import Cookies from 'universal-cookie';
 function* Login(args) {
 
     const response = yield call(login, args.payload);
-console.log("Response For Login ",response)
+    console.log("Response For Login ",response)
     if (response.status === 200 || response.statusCode === 200) {
       const token = response.data;
       yield put({ type: 'LOGIN-INFO', payload: {response:response.data , statusCode: response.status  || response.statusCode}});
