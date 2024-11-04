@@ -1,4 +1,4 @@
-import React, { useEffect,useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './App.css';
 import 'tailwindcss/tailwind.css';
 import Sidebar from './Components/Sidebar';
@@ -19,51 +19,51 @@ function App() {
 
 
 
-  console.log("state",state)
+  console.log("state", state)
 
-const tokenAccessDenied = cookies.get('access-denied');
-const Appta_Login = localStorage.getItem("appTaLogin");
-
-
-useEffect(( )=>{
-if(tokenAccessDenied == 'Token expired'){
-dispatch({ type: 'LOG-OUT'})
-}
-},[tokenAccessDenied, Appta_Login])
+  const tokenAccessDenied = cookies.get('access-denied');
+  const Appta_Login = localStorage.getItem("appTaLogin");
 
 
-useEffect(()=>{
-if(Appta_Login){
-    const decryptedData = CryptoJS.AES.decrypt(Appta_Login, 'abcd');
-    const decryptedString = decryptedData.toString(CryptoJS.enc.Utf8);
-    const parseData = JSON.parse(decryptedString);
-    setSuccess(parseData)
-    
+  useEffect(() => {
+    if (tokenAccessDenied == 'Token expired') {
+      dispatch({ type: 'LOG-OUT' })
+    }
+  }, [tokenAccessDenied, Appta_Login])
+
+
+  useEffect(() => {
+    if (Appta_Login) {
+      const decryptedData = CryptoJS.AES.decrypt(Appta_Login, 'abcd');
+      const decryptedString = decryptedData.toString(CryptoJS.enc.Utf8);
+      const parseData = JSON.parse(decryptedString);
+      setSuccess(parseData)
+
+    }
+    setLoading(false);
+  }, [Appta_Login])
+
+  if (loading) {
+    return <div className="flex items-center justify-center h-screen">
+      <div className="animate-spin rounded-full border-t-4 border-orange-600 border-gray-300 w-16 h-16"></div>
+    </div>
   }
-  setLoading(false);
-},[Appta_Login])
-
-if (loading) {
-  return  <div className="flex items-center justify-center h-screen">
-  <div className="animate-spin rounded-full border-t-4 border-orange-600 border-gray-300 w-16 h-16"></div>
-</div> 
-}
 
   return (
-   
+
     <Router>
       <Routes>
         {success || state.LoginReducer?.isLoggedIn ? (
           <>
-            <Route path="/" element={<Sidebar/>} />
-             <Route path="*" element={<Navigate to="/" replace />} />
-           
+            <Route path="/" element={<Sidebar />} />
+            <Route path="*" element={<Navigate to="/" replace />} />
+
           </>
         ) : (
           <>
             <Route path="/" element={<Login />} />
             <Route path="*" element={<Navigate to="/" replace />} />
-            
+
           </>
         )}
       </Routes>
