@@ -9,15 +9,23 @@ import Dot from '../Images/Sales/Dots.svg';
 import Add from '../Images/Sales/Add Green.svg';
 import SmallDot from '../Images/Sales/Smalldots.svg'
 import { ArrowRight2, ArrowLeft2 ,ArrowUp2, ArrowDown2} from 'iconsax-react';
-import AddProductModal from './AddProduct';
+import AddCategory from './AddCategory';
 
 
-function Product_List() {
+function Category_List() {
 
-    // const [showModal, setShowModal] = useState(false);   
+   
     const [currentPage, setCurrentPage] = useState(1);
-    const [showModal, setShowModal] = useState(false);
+   const [showAddCategory, setShowAddCategory] = useState(false)
 
+
+const handleAddCategory = () => {
+    setShowAddCategory(true)
+}
+
+const handleCloseAddCategory = () =>{
+    setShowAddCategory(false)
+}
 
     const reports = [
         {
@@ -44,31 +52,31 @@ function Product_List() {
 
 
 
-    const products = [
+    const Category = [
         {
-          Product: "Butter",
-          ProductNumber: "DAE456YUT",
-          InventoryType: "Tracked",
-          Category: "Dairy",
-          Price: '₹89.00',
-          Unit: "Pieces"
+            Category: "Dairy",
+            CategoryCode: "DAE456YUT",
+            Description: "Milk Products",
+            Createdby: "Glada",
+            Date: '08-Sep-2024',
+         
         },
         {
-            Product: "Butter",
-            ProductNumber: "DAE456YUT",
-            InventoryType: "Tracked",
             Category: "Dairy",
-            Price: '₹89.00',
-            Unit: "Pieces"
-          },
-          {
-            Product: "Butter",
-            ProductNumber: "DAE456YUT",
-            InventoryType: "Tracked",
+            CategoryCode: "DAE456YUT",
+            Description: "Milk Products",
+            Createdby: "Glada",
+            Date: '08-Sep-2024',
+         
+        },
+        {
             Category: "Dairy",
-            Price: '₹89.00',
-            Unit: "Pieces"
-          },
+            CategoryCode: "DAE456YUT",
+            Description: "Milk Products",
+            Createdby: "Glada",
+            Date: '08-Sep-2024',
+         
+        },
       
       ];
       
@@ -80,10 +88,10 @@ function Product_List() {
 
     //  pagination
     const itemsPerPage = 10;
-    const totalPages = Math.ceil(products.length / itemsPerPage);
+    const totalPages = Math.ceil(Category.length / itemsPerPage);
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const currentItems = products.slice(indexOfFirstItem, indexOfLastItem);
+    const currentItems = Category.slice(indexOfFirstItem, indexOfLastItem);
 
     const handlePrevClick = () => {
         if (currentPage > 1) {
@@ -106,15 +114,15 @@ function Product_List() {
 
             <div className='flex justify-between items-center gap-2 mb-2.5'>
                 <div>
-                    <label className='font-semibold text-22 text-neutral-900 font-Manrope'>Product - </label> <label className='font-bold text-22 text-orange-600 font-Manrope'> Product List</label>
+                    <label className='font-semibold text-22 text-neutral-900 font-Manrope'>Product - </label> <label className='font-bold text-22 text-orange-600 font-Manrope'>Category List</label>
 
                 </div>
-                <div  onClick={() => setShowModal(true)} className='cursor-pointer flex items-center gap-2 w-auto h-auto text-orange-600 border border-orange-600 rounded px-2 py-1'>
+                <div onClick={handleAddCategory} className='cursor-pointer flex items-center gap-2 w-auto h-auto text-orange-600 border border-orange-600 rounded px-2 py-1'>
                     <div>
                         <img src={Add} className='w-4 h-4'/>
                     </div>
                     <div>
-                        <label  className="cursor-pointer text-sm text-orange-600 font-semibold  font-Manrope" onClick={() => setShowModal(true)}>Add Product</label>
+                        <label  className="cursor-pointer text-sm text-orange-600 font-semibold  font-Manrope">Add Category</label>
                     </div>
 
                 </div>
@@ -189,7 +197,7 @@ function Product_List() {
                                         <ArrowUp2 className="font-extrabold w-3 h-3 text-orange-600 cursor-pointer"  />
                                         <ArrowDown2 className="font-extrabold w-3 h-3 text-orange-600 cursor-pointer"  />
                                     </div>
-                                    <div className='font-semibold text-sm text-neutral-900 font-Manrope'>Product</div>
+                                    <div className='font-semibold text-sm text-neutral-900 font-Manrope'>Category</div>
                                 </div>
                             </th>
 
@@ -199,7 +207,7 @@ function Product_List() {
                                     <ArrowUp2 className="font-extrabold w-3 h-3 text-orange-600 cursor-pointer"  />
                                     <ArrowDown2 className="font-extrabold w-3 h-3 text-orange-600 cursor-pointer"  />
                                     </div>
-                                    <div className='font-semibold text-sm text-neutral-900 font-Manrope'>Product Number</div>
+                                    <div className='font-semibold text-sm text-neutral-900 font-Manrope'>Category Code</div>
                                 </div>
                             </th>
                             <th className="p-1 font-semibold text-base text-neutral-900">
@@ -208,7 +216,7 @@ function Product_List() {
                                     <ArrowUp2 className="font-extrabold w-3 h-3 text-orange-600 cursor-pointer"  />
                                     <ArrowDown2 className="font-extrabold w-3 h-3 text-orange-600 cursor-pointer"  />
                                     </div>
-                                    <div className='font-semibold text-sm  text-neutral-900 font-Manrope'>Inventory Type</div>
+                                    <div className='font-semibold text-sm  text-neutral-900 font-Manrope'>Description</div>
                                 </div>
                             </th>
                             <th className="p-1 font-semibold text-base text-neutral-900">
@@ -217,7 +225,7 @@ function Product_List() {
                                     <ArrowUp2 className="font-extrabold w-3 h-3 text-orange-600 cursor-pointer"  />
                                     <ArrowDown2 className="font-extrabold w-3 h-3 text-orange-600 cursor-pointer"  />
                                     </div>
-                                    <div className='font-semibold text-sm text-neutral-900 font-Manrope'>Category</div>
+                                    <div className='font-semibold text-sm text-neutral-900 font-Manrope'>Created by</div>
                                 </div>
                             </th>
                             <th className="p-1 font-semibold text-base text-neutral-900">
@@ -226,10 +234,10 @@ function Product_List() {
                                     <ArrowUp2 className="font-extrabold w-3 h-3 text-orange-600 cursor-pointer"  />
                                     <ArrowDown2 className="font-extrabold w-3 h-3 text-orange-600 cursor-pointer"  />
                                     </div>
-                                    <div className='font-semibold text-sm text-neutral-900 font-Manrope'>Price</div>
+                                    <div className='font-semibold text-sm text-neutral-900 font-Manrope'>Date</div>
                                 </div>
                             </th>
-                            <th className="p-1 font-semibold text-base text-neutral-900">
+                            {/* <th className="p-1 font-semibold text-base text-neutral-900">
                                 <div className="flex items-center justify-start gap-2">
                                     <div className="flex flex-col items-center">
                                     <ArrowUp2 className="font-extrabold w-3 h-3 text-orange-600 cursor-pointer"  />
@@ -237,7 +245,7 @@ function Product_List() {
                                     </div>
                                     <div className='font-semibold text-sm text-neutral-900 font-Manrope'>Unit</div>
                                 </div>
-                            </th>
+                            </th> */}
                            
                        <th className="p-1 font-semibold text-base text-neutral-900  min-w-[40px]"></th>
                         </tr>
@@ -251,16 +259,16 @@ function Product_List() {
                                         type="checkbox"
                                         className="form-checkbox h-4 w-4 text-blue-600 border-neutral-500 cursor-pointer"
                                     /></td>
-                                <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{item.Product}</td>
-                                <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{item.ProductNumber}</td>
-                                <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{item.InventoryType}</td>
+                                <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{item.Category}</td>
+                                <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{item.CategoryCode}</td>
+                                <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{item.Description}</td>
                                 <td className='p-2 font-semibold text-sm font-Manrope text-start text-neutral-900 '>
-                                    {item.Category}
+                                    {item.Createdby}
                                 </td>
                                 <td className='p-2 font-semibold text-sm font-Manrope text-start text-neutral-900' >
-                                    {item.Price}
+                                    {item.Date}
                                 </td>
-                                <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900">{item.Unit}</td>
+                                {/* <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900">{item.Unit}</td> */}
                                 <td className="p-2 text-gray-500 cursor-pointer w-8 "><img src={Dot} /></td>
                             </tr>
                         ))}
@@ -293,9 +301,12 @@ function Product_List() {
                     
                 </div>
             </div>
-            {showModal && <AddProductModal onClose={() => setShowModal(false)} />}
+
+
+            {showAddCategory && <AddCategory   handleClose={handleCloseAddCategory}   /> }
+
               </div>
     )
 }
 
-export default Product_List;
+export default Category_List;

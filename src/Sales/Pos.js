@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState ,useEffect} from 'react';
 import Cup from '../Images/Icons/cup.svg'
 import Paylater from '../Images/Icons/paylater.svg'
 import Search from '../Images/Sales/Search.svg'
@@ -12,10 +12,19 @@ import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Modal from '@mui/material/Modal';
 import {  FormControlLabel, Checkbox } from '@mui/material';
+import { useDispatch, useSelector } from 'react-redux';
+
 
 
 const  Pos = () => {
 
+    const dispatch = useDispatch();
+  const loginState = useSelector(state => state);
+
+
+  useEffect(()=> {
+    dispatch({ type: 'BARCODE_GET_PRODUCT', payload: { barcode:'rgtgerteyy' }})
+  },[])
 
     const [showModal, setShowModal] = useState(false);
 

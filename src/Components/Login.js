@@ -3,6 +3,7 @@ import ApptaLogo from '../Images/Icons/Appta Logo.svg';
 import './Login.css';
 import { useDispatch, useSelector } from 'react-redux';
 import Cookies from 'universal-cookie';
+import CryptoJS from "crypto-js";
 
 const LoginPage = () => {
   
@@ -43,6 +44,11 @@ const LoginPage = () => {
     if (loginState.loginStatusCode == 200) {
 
       dispatch({ type: 'LOGIN-SUCCESS'})
+
+      const encryptData = CryptoJS.AES.encrypt(JSON.stringify(true), 'abcd');
+      localStorage.setItem("appTaLogin", encryptData.toString());
+
+
 
       const token = loginState.JWTtoken;
       if (token) {
