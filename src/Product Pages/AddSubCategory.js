@@ -45,6 +45,7 @@ function AddSubCategory({ handleClose }) {
         console.log("SubCategoryName", SubCategoryName,selectedParentCategory )
 
         const ImageUrl = 'sample'
+        
         if (!SubCategoryName) {
             setSubCategoryNameError('Please enter subcategory')
 
@@ -83,8 +84,8 @@ function AddSubCategory({ handleClose }) {
                             required
                             value={SubCategoryName}
                             onChange={handleCategoryNameChange}
-                            className=" placeholder-black font-normal text-base mt-1 block w-full border text-black font-Manrope rounded-md shadow-sm px-5 py-3 focus:outline-none focus:ring-2 focus:ring-orange-500"
-                            placeholder="Enter category name"
+                            className=" placeholder-black font-normal text-sm mt-1 block w-full border text-black font-Manrope rounded-md shadow-sm px-5 py-3 focus:outline-none focus:ring-2 focus:ring-orange-500"
+                            placeholder="Enter sub category name"
                         />
                     </div>
 
@@ -102,7 +103,7 @@ function AddSubCategory({ handleClose }) {
                                 required
                                 value={selectedParentCategory}
                                 onChange={handleParentCategoryChange}
-                                className="appearance-none font-normal text-base  mt-1 block w-full border text-black font-Manrope rounded-md shadow-sm p-3 focus:outline-none focus:ring-2 focus:ring-orange-500"
+                                className="appearance-none font-normal text-sm  mt-1 block w-full border text-black font-Manrope rounded-md shadow-sm p-3 focus:outline-none focus:ring-2 focus:ring-orange-500"
                             >
                                 <option value="" disabled>Select a parent category</option>
                                 {state.AddProduct?.category?.map((category) => (

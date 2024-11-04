@@ -14,13 +14,13 @@ const AddProductReducer = (state = initialState, action) => {
   switch (action.type) {
     case 'GET_SUBCATEGORY':
       return { ...state, getSubCategoryStatusCode: action.payload.statusCode, subcategory: action.payload.response };
-    case 'ERROR':
-      return { ...state, statusCode: 0 }
+    case 'REMOVE_GET_SUBCATEGORY_STATUS_CODE':
+      return { ...state, getSubCategoryStatusCode: 0 }
 
     case 'GET_CATEGORY':
       return {
         ...state,
-        statusCode: action.payload ? action.payload.statusCode : null,
+        getCategoryStatusCode: action.payload ? action.payload.statusCode : null,
         category: action.payload ? action.payload.response : []
       };
     // ADD_PRODUCT_DETAILS
