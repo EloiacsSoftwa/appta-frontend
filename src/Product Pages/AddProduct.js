@@ -3,12 +3,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { GET_BRANDS_API_CALL } from "../utils/Constant";
 
 import Vector from '../Images/Icons/Vector.svg';
-import Delete from '../Images/Icons/Delete.jpeg';
+import Delete from '../Images/Icons/Delete.svg';
 
 const AddProductModal = ({ onClose }) => {
   const [activeTab, setActiveTab] = useState("Product Details");
 
   const [formData, setFormData] = useState({
+    
     image: null,
     Name: "",
     productId: '',
