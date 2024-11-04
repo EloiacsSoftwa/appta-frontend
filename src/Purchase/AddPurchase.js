@@ -30,13 +30,13 @@ function AddPurchase() {
     <div className="container mx-auto px-4">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mt-4">
         <p className="text-start font-semibold text-xl mb-2 md:mb-0">
-          Purchases - Purchase List - <span className="text-orange">Add Purchases</span>
+          Purchases - Purchase List - <span className="text-orange-600">Add Purchases</span>
         </p>
         <div className="flex gap-2">
-          <button className="flex items-center gap-2 w-16 h-7 px-2 rounded border border-orange text-orange font-semibold text-sm">
+          <button className="flex items-center gap-2 w-16 h-7 px-2 rounded border border-orange-600 text-orange-600 font-semibold text-sm">
             Cancel
           </button>
-          <button className="flex items-center gap-2 w-28 h-7 px-3 rounded border border-black bg-orange text-black font-semibold text-sm">
+          <button className="flex items-center gap-2 w-28 h-7 px-3 rounded border border-black bg-orange-600 text-black font-semibold text-sm">
             Save & Close
           </button>
         </div>
@@ -46,7 +46,7 @@ function AddPurchase() {
         <div className="grid gap-2">
           <div className="flex flex-col md:flex-row justify-start p-2">
             <div className="relative mb-4 md:mb-0">
-              <p className="font-bold text-lg text-orange mb-4">Supplier Details</p>
+              <p className="font-bold text-lg text-orange-600 mb-4">Supplier Details</p>
               <button
                 onClick={toggleDropdown}
                 className="flex items-center text-black bg-grey font-medium w-full md:w-56 px-5 py-2 text-sm rounded-t-xl"
@@ -89,7 +89,7 @@ function AddPurchase() {
 
         <div className="flex flex-col md:flex-row justify-between items-center">
           <div className="flex items-center mt-12 sm:mr-44">
-            <p className="font-bold text-lg text-orange mr-4">Products</p>
+            <p className="font-bold text-lg text-orange-600 mr-4">Products</p>
             <img src={Rectangle} alt="Product icon" />
             <p className="font-semibold text-base ml-4">On Credit</p>
           </div>
