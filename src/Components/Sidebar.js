@@ -19,6 +19,7 @@ import Purchase_List from "../Sales/Purchase_List";
 import Expense_List from "../Sales/Expense_List";
 import Invoice_List from '../Sales/Invoice';
 import Quotation from "../Sales/Quotation";
+import Pos from "../Sales/Pos";
 
 
 function App() {
@@ -166,6 +167,11 @@ console.log("selectedMenu",selectedMenu)
         {selectedMenu === 'Product List' && (
           <div className="bg-white  mt-2">
             <ProductList />
+          </div>
+        )}
+          {selectedMenu === 'POS' && (
+          <div className="bg-white  mt-2">
+            <Pos />
           </div>
         )}
         {selectedMenu === 'Sales List' && (
