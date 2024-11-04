@@ -77,6 +77,19 @@ function AddCategory({ handleClose }) {
             />
           </div>
 
+
+                     <div className="mb-4">
+             <label htmlFor="description" className="block text-sm font-medium text-gray-700">
+               Description
+             </label>
+            <textarea
+              id="description"
+              rows="4"
+              className="mt-1 lg:w-full sm:w-full xs:w-full block  border  rounded-md shadow-sm  p-2 focus:outline-none focus:ring-2 focus:ring-orange-500"
+              placeholder="Enter category description"
+            ></textarea>
+          </div>
+
           <div className="flex justify-end gap-3 mt-6">
             <button
               type="button"
