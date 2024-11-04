@@ -20,14 +20,13 @@ function* handleaddCategory (args) {
 
     
     if (response) {
-      refreshToken(response)
+      // refreshToken(response)
    }
 
   } 
 
   function* handleGetCategoryList (action){
     const response = yield call (GetCategory, action.payload);
-    console.log("response for compliance",response)
     
     if (response.status === 200 || response.statusCode === 200){
        yield put ({type : 'GET-CATEGORY' ,payload:{response: response.data.data, statusCode:response.status || response.statusCode}})
@@ -37,7 +36,7 @@ function* handleaddCategory (args) {
        yield put ({type:'ERROR', payload:response.data.message})
     }
     if(response){
-      refreshToken(response)
+      // refreshToken(response)
    }
 }
 
