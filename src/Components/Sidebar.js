@@ -21,11 +21,20 @@ import Invoice_List from '../Sales/Invoice';
 import Quotation from "../Sales/Quotation";
 import CategoryList from '../Product Pages/Category_List'
 import Pos from "../Sales/Pos";
+import SubCategory_List from "../Product Pages/SubCategory_List";
+import { useDispatch, useSelector } from 'react-redux';
+import CryptoJS from "crypto-js";
+
 
 
 function App() {
+
+ 
+  const dispatch = useDispatch();
+
+
   const [isExpanded, setIsExpanded] = useState(true);
-  const [selectedMenu, setSelectedMenu] = useState("");
+  const [selectedMenu, setSelectedMenu] = useState('Product List');
   const [isSubmenuOpen, setIsSubmenuOpen] = useState({});
 
   const toggleSidebar = () => {
@@ -110,6 +119,15 @@ function App() {
 console.log("selectedMenu",selectedMenu)
 
 
+const handleLogout = () => {
+  dispatch({type: 'LOG-OUT' })
+  const encryptData = CryptoJS.AES.encrypt(JSON.stringify(false), 'abcd');
+  localStorage.setItem("appTaLogin", encryptData.toString());
+}
+
+
+
+
   return (
     <div className="flex h-screen">
       {/* Sidebar */}
@@ -148,7 +166,7 @@ console.log("selectedMenu",selectedMenu)
         <div className="flex items-center mr-5">
           <img src={Notifications} alt="Notification Icon" className="mr-2 md:mr-5" />
           <p className="mr-4 font-semibold text-sm font-manrope">Jony Larrence</p>
-          <img src={Elipsepic} alt="Profile Picture" className="w-9 h-9 md:w-10 md:h-10" />
+          <img src={Elipsepic} alt="Profile Picture" className="w-9 h-9 md:w-10 md:h-10"  onClick={handleLogout}/>
         </div>
 </div>
         
@@ -205,6 +223,12 @@ console.log("selectedMenu",selectedMenu)
 {selectedMenu === 'Category List' && (
           <div className="bg-white  mt-2">
             <CategoryList />
+          </div>
+        )}
+        {selectedMenu === 'Sub Category' && (
+          <div className="bg-white  mt-2">
+       
+            <SubCategory_List />
           </div>
         )}
         </div>
