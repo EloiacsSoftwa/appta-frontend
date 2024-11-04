@@ -20,7 +20,7 @@ function* handleaddCategory (args) {
 
     
     if (response) {
-      refreshToken(response)
+      // refreshToken(response)
    }
 
   } 
@@ -46,6 +46,7 @@ function* handleaddCategory (args) {
 //       refreshToken(response)
 //    }
 // }
+  }
 
 
   function refreshToken(response) {

@@ -1,5 +1,7 @@
 import { call, takeEvery, put } from 'redux-saga/effects';
 import { Category,SubCategory,AddProductDetails } from '../Action/AddProductAction';
+import { GET_BRANDS_API_CALL, GET_BRANDS_API_RESPONSE } from '../../utils/Constant';
+import { getAllBrands } from '../Action/AddProductAction';
 // import Cookies from 'universal-cookie';
 
 function* Sub_Category(args) {
@@ -30,6 +32,18 @@ function* MainCategory(args) {
     }
   } 
 
+  function* getAllBrandsAPIRequest(args) {
+    const response = yield call(getAllBrands, args.payload);
+
+    if (response.status === 200 || response.statusCode === 200) {
+      yield put({ type: GET_BRANDS_API_RESPONSE, payload: {response:response.data.data , statusCode: response.status  || response.statusCode}});
+            
+    }
+       else {
+      yield put({ type: 'ERROR', payload: { statusCode:response.status  || response.statusCode  } });
+    }
+  }
+
   function* AddProduct_Details(args) {
 
     const response = yield call(AddProductDetails, args.payload);
@@ -41,10 +55,13 @@ function* MainCategory(args) {
       yield put({ type: 'ERROR', payload: { statusCode:response.status  || response.statusCode  } });
     }
   } 
+
+
   function* AddProductSaga() {
   yield takeEvery('GETSUBCATEGORY', Sub_Category);
   yield takeEvery('GETCATEGORY', MainCategory);
   yield takeEvery('ADDPRODUCTDETAILS', AddProduct_Details);
+  yield takeEvery(GET_BRANDS_API_CALL, getAllBrandsAPIRequest)
 //   ADD_PRODUCT_DETAILS
 }
 

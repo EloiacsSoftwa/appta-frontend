@@ -1,48 +1,39 @@
+import AxiosConfig from '../../WebService/AxiosConfig';
 import config from '../../WebService/Config';
 import axios from 'axios'
-import AxiosConfig from '../../WebService/AxiosConfig';
 
+export function Category(payload) {
 
-// export  function Category(payload) {
-
-//     return  axios.post(`${config.apiBaseUrl}/category/getCategory`, payload).then(response=>response).catch(error=>{console.log(error,"catch")
-//        return error
-//     });
+    return  AxiosConfig.post(`/category/getCategory`, payload).then(response=>response).catch(error=>{console.log(error,"catch")
+       return error
+    });
     
-//    }
+   }
    
-   export async function Category() {
-      return await AxiosConfig.post('/category/getCategory', {
-      })
-    }
-
-
-
-
-
 // export  function SubCategory(payload) {
 
-//  return  axios.post(`${config.apiBaseUrl}/subCategory/getSubCategory`, payload).then(response=>response).catch(error=>{console.log(error,"catch")
-//     return error
-//  });
- 
-// }
 
-
-export async function SubCategory() {
+export async function SubCategory(payload) {
    return await AxiosConfig.post('/subCategory/getSubCategory', {
+   }, {
+      params: {
+         subCategory: payload
+      }
    })
  }
 
 
-
-// /products/addProduct
-// export  function AddProductDetails (payload) {
-
-//     return  AxiosConfig.post(`${config.apiBaseUrl}/products/addProduct`, payload).then(response=>response).catch(error=>{console.log(error,"catch")
-//        return error
-//     });
-    
+export function getAllBrands(payloads) {
+   let params = {}
+   if (payloads != undefined || payloads != null) {
+      params['brand'] = payloads
+   }
+   return AxiosConfig.post(`/brand/getBrand`, {}, {
+      params: params
+   }).then(response=>response).catch(error=>{console.log(error,"catch")
+      return error
+   });
+}
 //    }
 
 
