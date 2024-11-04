@@ -30,7 +30,7 @@ function* handleaddCategory (args) {
     console.log("response for compliance",response)
     
     if (response.status === 200 || response.statusCode === 200){
-       yield put ({type : 'GET-CATEGORY' ,payload:{response: response.data, statusCode:response.status || response.statusCode}})
+       yield put ({type : 'GET-CATEGORY' ,payload:{response: response.data.data, statusCode:response.status || response.statusCode}})
     }
  
     else {

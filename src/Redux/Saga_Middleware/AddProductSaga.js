@@ -5,8 +5,9 @@ import { Category,SubCategory,AddProductDetails } from '../Action/AddProductActi
 function* Sub_Category(args) {
 
     const response = yield call(SubCategory, args.payload);
+    console.log("response for subCategory",response)
     if (response.status === 200 || response.statusCode === 200) {
-      yield put({ type: 'GET_SUBCATEGORY', payload: {response:response.data , statusCode: response.status  || response.statusCode}});
+      yield put({ type: 'GET_SUBCATEGORY', payload: {response:response.data.data , statusCode: response.status  || response.statusCode}});
             
     }
     // if (response.status === 403 || response.statusCode === 403)

@@ -64,7 +64,6 @@ setTimeout(()=>{
 },2000)
      
 
-
     }  
   }, [loginState.loginStatusCode]);
 
@@ -72,7 +71,8 @@ setTimeout(()=>{
 useEffect(()=>{
 if(loginState.loginFailedStatusCode == 403){
   setErrorMessage('Invalid email or password. Please try again.');
-
+  const cookies = new Cookies();
+  cookies.remove('token', { path: '/' });
   setTimeout(()=>{
     dispatch({ type: 'REMOVE_LOGIN_FAILED_STATUS_CODE' });
   },2000)

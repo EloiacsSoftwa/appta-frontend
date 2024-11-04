@@ -1,5 +1,6 @@
 import config from '../../WebService/Config';
 import axios from 'axios'
+import AxiosConfig from '../../WebService/AxiosConfig';
 
 
 export  function Category(payload) {
@@ -10,13 +11,20 @@ export  function Category(payload) {
     
    }
    
-export  function SubCategory(payload) {
+// export  function SubCategory(payload) {
 
- return  axios.post(`${config.apiBaseUrl}/subCategory/getSubCategory`, payload).then(response=>response).catch(error=>{console.log(error,"catch")
-    return error
- });
+//  return  axios.post(`${config.apiBaseUrl}/subCategory/getSubCategory`, payload).then(response=>response).catch(error=>{console.log(error,"catch")
+//     return error
+//  });
  
-}
+// }
+
+
+export async function SubCategory() {
+   return await AxiosConfig.post('/subCategory/getSubCategory', {
+   })
+ }
+
 
 // /products/addProduct
 export  function AddProductDetails (payload) {
