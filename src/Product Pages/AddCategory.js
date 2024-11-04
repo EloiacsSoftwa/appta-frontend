@@ -53,10 +53,36 @@
 // export default AddCategory;
 
 
-import React from 'react';
+import React,{useState,useEffect} from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import Minus from '../Images/Sales/Minus.svg';
 
 function AddCategory({ handleClose }) {
+  
+  const dispatch = useDispatch();
+  const State = useSelector(state => state);
+  console.log("State",State);
+  
+
+  const[categoryname, setCategoryName] = useState('');
+
+ 
+
+  const handleCategoryName = (e) => {
+    setCategoryName(e.target.value)
+  }
+
+  const handleSaveCategory = () => {
+     if(categoryname ){
+      dispatch({ type: 'ADD_CATEGORY', payload: { categoryName:categoryname, imageUrl :'', active :''}})
+      setCategoryName('')
+      handleClose()
+     }
+    
+  }
+
+ 
+
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
       <div className="bg-zinc-300 rounded-lg w-full max-w-xl p-8 mx-4">
@@ -71,6 +97,8 @@ function AddCategory({ handleClose }) {
             <input
               type="text"
               id="categoryName"
+              value = {categoryname}
+              onChange={(e)=> handleCategoryName(e)}
               required
               className="mt-1 block w-full border rounded-md shadow-sm p-2 focus:outline-none focus:ring-2 focus:ring-orange-500"
               placeholder="Enter category name"
@@ -99,11 +127,14 @@ function AddCategory({ handleClose }) {
               Discard
             </button>
             <button
-  type="button"
-  className="flex items-center justify-center px-4 py-2 bg-orange-600 text-black rounded-md hover:bg-orange-700 border border-black"
->
-  Save & Close
-</button>
+
+             onClick={handleSaveCategory}
+              type="button"
+              className="flex items-center justify-center px-4 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-700"
+            >
+              Save & Close
+            </button>
+
 
           </div>
         </div>

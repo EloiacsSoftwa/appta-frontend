@@ -19,7 +19,7 @@ import { useDispatch, useSelector } from 'react-redux';
 const  Pos = () => {
 
     const dispatch = useDispatch();
-  const loginState = useSelector(state => state);
+  const State = useSelector(state => state);
 
 
   useEffect(()=> {

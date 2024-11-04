@@ -2,6 +2,8 @@ import { call, takeEvery, put } from 'redux-saga/effects';
 import { PosGetbyBarcode } from '../Action/sales_pos_Action';
 import Cookies from 'universal-cookie';
 
+
+
 function* handleBarcodeGetProduct(args) {
 
     const response = yield call(PosGetbyBarcode, args.payload);
