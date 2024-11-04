@@ -515,6 +515,35 @@ import Delete from '../Images/Icons/Delete.jpeg';
 const AddProductModal = ({ onClose }) => {
   const [activeTab, setActiveTab] = useState("Product Details");
 
+  const [formData, setFormData] = useState({
+    image: null,
+    Name: "",
+    productId: '',
+    productName :'',
+    // productType: 'Tracked',
+    // productBrand: '',
+    categoryId: '',
+    subCategoryId: '',
+    brandId:0,
+    unitId: '',
+    quantity: '',
+    minPurchaseQuantity: '',
+    barcodeType:'',
+    barcodeNo:0,
+    description:'',
+    // quantity: 0,
+    isChecked: false,
+    purchasePrice: 0,
+    salesPricePercentage:0,
+    freebie:false,
+    purchasePercentage:0,
+    salesPrice:0,
+    mrp: 0,
+    // wholeSalePrice: 0,
+    wholesalePricePercentage: 0,
+    product_Threshold:0,
+    freebieProductId:0
+  });
   const dispatch = useDispatch();
   const state = useSelector(state => state);
 
@@ -563,29 +592,17 @@ const AddProductModal = ({ onClose }) => {
         </div>
 
         {/* Form */}
-        {activeTab === "Product Details" && <ProductDetailsForm handleNext={handleNext} />}
-        {activeTab === "Accounting" && <AccountingDetailsForm handleNext={handleNext} handleBack={handleBack} />}
-        {activeTab === "Bill Of Material" && <BillOfMaterials handleBack={handleBack} />}
+        {activeTab === "Product Details" && <ProductDetailsForm handleNext={handleNext} formData={formData} setFormData={setFormData}/>}
+        {activeTab === "Accounting" && <AccountingDetailsForm handleNext={handleNext} handleBack={handleBack} formData={formData} setFormData={setFormData}/>}
+        {activeTab === "Bill Of Material" && <BillOfMaterials handleBack={handleBack} formData={formData} setFormData={setFormData}/>}
       </div>
     </div>
   );
 };
 
-const ProductDetailsForm = ({ handleNext }) => {
+const ProductDetailsForm = ({ handleNext, formData, setFormData}) => {
   const state = useSelector(state => state);
-  const [formData, setFormData] = useState({
-    image: null,
-    productName: '',
-    productType: 'Tracked',
-    productBrand: '',
-    category: '',
-    subCategory: '',
-    unit: '',
-    qty: '',
-    minQty: '',
-    quantity: 0,
-    isChecked: false,
-  });
+ 
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -625,7 +642,7 @@ const ProductDetailsForm = ({ handleNext }) => {
           <input
             type="checkbox"
             name="isChecked"
-            checked={formData.isChecked}
+            checked={formData.freebie}
             onChange={handleInputChange}
             className="h-4 w-4 text-orange-600 border-gray-300 rounded focus:ring-orange-500"
           />
@@ -633,33 +650,33 @@ const ProductDetailsForm = ({ handleNext }) => {
         </div>
         <div>
           <label className="text-left text-sm font-medium text-gray-700">Name</label>
-          <input type="text" name="productName" value={formData.productName} onChange={handleInputChange} className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Freebie" />
+          <input type="text" name="productName" value={formData.Name} onChange={(e)=>{setFormData({...formData,Name:e.target.value})}} className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Freebie" />
         </div>
       </div>
 
       <div className="flex flex-col flex-1 gap-4">
         <div>
           <label className="text-left block text-sm font-medium text-gray-700">Product Type</label>
-          <select name="productType" value={formData.productType} onChange={handleInputChange} className="mt-1 block w-full border border-gray-300 rounded-md">
-            <option>Tracked</option>
+          <select name="productType" value={formData.productId} onChange={(e)=>{setFormData({...formData,productId:e.target.value})}} className="mt-1 block w-full border border-gray-300 rounded-md">
+            <option value={1}>Tracked</option>
           </select>
         </div>
 
         <div className="flex gap-4">
           <div className="flex-1">
             <label className="text-left block text-sm font-medium text-gray-700">Product Name</label>
-            <input type="text" name="productName" value={formData.productName} onChange={handleInputChange} className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Watch" />
+            <input type="text" name="productName" value={formData.productName} onChange={(e)=>{setFormData({...formData,productName:e.target.value})}} className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Watch" />
           </div>
           <div className="flex-1">
             <label className="text-left block text-sm font-medium text-gray-700">Product Brand</label>
-            <input type="text" name="productBrand" value={formData.productBrand} onChange={handleInputChange} className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Brand" />
+            <input type="text" name="productBrand" value={formData.brandId} onChange={handleInputChange} className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Brand" />
           </div>
         </div>
 
         <div className="flex gap-4">
           <div className="flex-1">
             <label className="text-left block text-sm font-medium text-gray-700">Category</label>
-            <select name="category" value={formData.category} onChange={handleInputChange} className="mt-1 block w-full border border-gray-300 rounded-md">
+            <select name="category" value={formData.categoryId} onChange={(e)=>{setFormData({...formData,categoryId:e.target.value})}} className="mt-1 block w-full border border-gray-300 rounded-md">
               <option>Tracked</option>
               {state.AddProduct?.category.length > 0 && state.AddProduct.category.map((v, i) => (
                 <option key={i} value={v}>{v}</option>
@@ -668,7 +685,7 @@ const ProductDetailsForm = ({ handleNext }) => {
           </div>
           <div className="flex-1">
             <label className="text-left block text-sm font-medium text-gray-700">Sub Category</label>
-            <select name="subCategory" value={formData.subCategory} onChange={handleInputChange} className="mt-1 block w-full border border-gray-300 rounded-md">
+            <select name="subCategory" value={formData.subCategoryId} onChange={(e)=>{setFormData({...formData,subCategoryId:e.target.value})}} className="mt-1 block w-full border border-gray-300 rounded-md">
               <option>Select</option>
               {state.AddProduct?.subcategory.length > 0 && state.AddProduct.subcategory.map((v, i) => (
                 <option key={i} value={v}>{v}</option>
@@ -707,22 +724,22 @@ const ProductDetailsForm = ({ handleNext }) => {
   );
 };
 
-const AccountingDetailsForm = ({handleNext, handleBack}) => {
+const AccountingDetailsForm = ({handleNext, handleBack, formData, setFormData}) => {
 
     return(
         <div className="flex flex-wrap gap-4">
 <div className="flex gap-4">
       <div className="flex-1">
         <label className="text-left block text-sm font-medium text-gray-700">Purchase Price</label>
-        <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Watch" />
+        <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Watch" value={formData.purchasePrice}/>
       </div>
       <div className="flex-1">
         <label className="text-left block text-sm font-medium text-gray-700">Purchase Percentage</label>
-        <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Brand" />
+        <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Brand" value={formData.purchasePercentage}/>
       </div>
       <div className="flex-1">
         <label className="text-left block text-sm font-medium text-gray-700">Sales Price</label>
-        <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Brand" />
+        <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Brand" value={formData.salesPrice}/>
       </div>
     </div>
     
@@ -730,25 +747,25 @@ const AccountingDetailsForm = ({handleNext, handleBack}) => {
     <div className="w-full">
     <div className="flex-1">
         <label className="text-left block text-sm font-medium text-gray-700">MRP</label>
-        <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Brand" />
+        <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Brand" value={formData.mrp}/>
       </div>
         </div>
 
         <div className="flex gap-4">
       <div className="flex-1">
         <label className="text-left block text-sm font-medium text-gray-700">Whole sale Price</label>
-        <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Watch" />
+        <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Watch" value={formData.wholeSalePrice}/>
       </div>
       <div className="flex-1">
         <label className="text-left block text-sm font-medium text-gray-700">Whole sale Percentage</label>
-        <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Brand" />
+        <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Brand" value={formData.wholeSalePercentage}/>
       </div>
     </div>
 
     <div className="w-full">
     <div className="flex-1">
         <label className="text-left block text-sm font-medium text-gray-700">Product Threshold</label>
-        <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Brand" />
+        <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Brand" value={formData.product_Threshold}/>
       </div>
         </div>
 
@@ -769,7 +786,7 @@ const AccountingDetailsForm = ({handleNext, handleBack}) => {
 }
 
 
-const BillOfMaterials = ({handleBack}) => {
+const BillOfMaterials = ({handleBack, formData, setFormData}) => {
     const dispatch = useDispatch();
     // var [peroductList, setProductList] = useState(
     //     {
@@ -806,7 +823,9 @@ const BillOfMaterials = ({handleBack}) => {
     //       }
     //   )
     var handleSubmit = () =>{
-        dispatch({type: "ADDPRODUCTDETAILS",payload : "peroductList"})
+        console.log("formData",formData);
+        
+        dispatch({type: "ADDPRODUCTDETAILS",payload : formData})
     }
 
     // min-h-screen 
