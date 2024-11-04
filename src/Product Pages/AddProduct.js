@@ -188,7 +188,7 @@ const ProductDetailsForm = ({ handleNext, formData, setFormData }) => {
               handleSelectCategory(e.target.value)
             }} className="mt-1 block w-full border border-gray-300 rounded-md">
               <option>Select One</option>
-              {state.categoryReducer?.Category && state.categoryReducer.Category?.map((v, i) => (
+              {state.AddProduct?.category && state.AddProduct.category?.map((v, i) => (
                 <option key={v.id} value={v.id}>{v.categoryName}</option>
               ))}
             </select>
@@ -208,7 +208,11 @@ const ProductDetailsForm = ({ handleNext, formData, setFormData }) => {
           <div className="flex-1">
             <label className="text-left block text-sm font-medium text-gray-700">Unit</label>
             <select name="unit" value={formData.unit} onChange={handleInputChange} className="mt-1 block w-full border border-gray-300 rounded-md">
-              <option>Tracked</option>
+              <option value={1} key={1}>Kg</option>
+              <option value={2} key={2}>g</option>
+              <option value={3} key={3}>Lt</option>
+              <option value={4} key={4}>ml</option>
+              <option value={5} key={5}>Box</option>
             </select>
           </div>
           <div className="flex gap-4">
