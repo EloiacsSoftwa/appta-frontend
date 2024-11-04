@@ -10,7 +10,7 @@ export async function AddCategory(payload) {
 }
 
 
-  export async function GetCategory(payload) {
-    return await AxiosConfig.post('/category/getCategory', payload, {
+  export async function GetCategory() {
+    return await AxiosConfig.post('/category/getCategory', {
     })
   }
