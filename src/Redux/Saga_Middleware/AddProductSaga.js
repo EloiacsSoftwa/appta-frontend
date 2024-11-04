@@ -22,7 +22,7 @@ function* MainCategory(args) {
 
     const response = yield call(Category, args.payload);
     if (response.status === 200 || response.statusCode === 200) {
-      yield put({ type: 'GET_CATEGORY', payload: {response:response.data , statusCode: response.status  || response.statusCode}});
+      yield put({ type: 'GET_CATEGORY', payload: {response:response.data.data, statusCode: response.status  || response.statusCode}});
             
     }
        else {

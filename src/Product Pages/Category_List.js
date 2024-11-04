@@ -23,14 +23,14 @@ function Category_List() {
     const [category ,setCatgory] = useState ([])
 
     useEffect(() => {
-        dispatch({ type: 'GET_CATEGORY'})
-        setCatgory(State.categoryReducer.Category)
+        dispatch({ type: 'GETCATEGORY'})
+        setCatgory(State.AddProduct?.category)
      },[])
 
 
      useEffect(() => {
         if (State.categoryReducer.CategoryStatuscode ) {
-          dispatch({ type: 'GET_CATEGORY' })
+          dispatch({ type: 'GETCATEGORY' })
           setTimeout(() => {
             dispatch({ type: 'REMOVE_ADD_CATEGORY_STATUS_CODE' })     
           }, 100);
@@ -113,7 +113,7 @@ const handleCloseAddCategory = () =>{
     const totalPages = Math.ceil(category && category.length / itemsPerPage);
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const currentItems = category &&category.slice(indexOfFirstItem, indexOfLastItem);
+    const currentItems = category && category.slice(indexOfFirstItem, indexOfLastItem);
 
     const handlePrevClick = () => {
         if (currentPage > 1) {
