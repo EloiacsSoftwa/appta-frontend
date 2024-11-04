@@ -41,7 +41,7 @@ if(Appta_Login){
     
   }
   setLoading(false);
-},[])
+},[Appta_Login])
 
 if (loading) {
   return  <div className="flex items-center justify-center h-screen">
