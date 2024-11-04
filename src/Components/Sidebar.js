@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { HiOutlineArrowLeft, HiOutlineArrowRight } from "react-icons/hi";
 import Eloiacs from "../Images/Icons/Eloiacs.svg";
 import Dashboard from "../Images/Icons/Dashboard.svg";

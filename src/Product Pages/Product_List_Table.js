@@ -22,6 +22,10 @@ function Product_List() {
     const dispatch = useDispatch();
     const state = useSelector(state => state);
 
+    useEffect(() => {
+        // dispatch({type: 'GET_CATEGORY'})
+    }, [])
+
 
 
     const reports = [
