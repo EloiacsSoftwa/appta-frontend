@@ -3,7 +3,6 @@ import './App.css';
 import 'tailwindcss/tailwind.css';
 import Sidebar from './Components/Sidebar';
 import Login from './Components/Login';
-import BrandList from './Brand Pages/BrandList';
 import { useDispatch, useSelector } from 'react-redux';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import Cookies from 'universal-cookie';
@@ -73,6 +72,7 @@ function App() {
         )}
       </Routes>
     </Router>
+  
     </>
   );
 }

@@ -14,6 +14,7 @@ import { ArrowRight2, ArrowLeft2, ArrowUp2, ArrowDown2 } from 'iconsax-react';
 import AddBrandList from './AddBrandList';
 
 function Brand_List() {
+    
     const [currentPage, setCurrentPage] = useState(1);
     const [showAddCategory, setShowAddCategory] = useState(false);
     const [isHovered, setIsHovered] = useState(false);
