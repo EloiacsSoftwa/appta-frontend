@@ -40,7 +40,10 @@ const LoginPage = () => {
   };
 
   useEffect(() => {
-    if (loginState.statusCode === 200) {
+    if (loginState.loginStatusCode == 200) {
+
+      dispatch({ type: 'LOGIN-SUCCESS'})
+
       const token = loginState.JWTtoken;
       if (token) {
         const cookies = new Cookies();
@@ -50,11 +53,33 @@ const LoginPage = () => {
       }
       setErrorMessage('');
       setErrors({});
-    } else if (loginState.statusCode === 403) {
-      setErrorMessage('Invalid email or password. Please try again.');
-      dispatch({ type: 'CLEAR_STATUSCODE' });
-    }
-  }, [loginState.statusCode, loginState.JWTtoken, dispatch]);
+setTimeout(()=>{
+  dispatch({ type: 'REMOVE_LOGIN_STATUS_CODE' });
+},2000)
+     
+
+
+    }  
+  }, [loginState.loginStatusCode]);
+
+
+useEffect(()=>{
+if(loginState.loginFailedStatusCode == 403){
+  setErrorMessage('Invalid email or password. Please try again.');
+
+  setTimeout(()=>{
+    dispatch({ type: 'REMOVE_LOGIN_FAILED_STATUS_CODE' });
+  },2000)
+       
+
+}
+},[loginState.loginFailedStatusCode])
+
+
+
+
+
+
 
   return (
     <div className="relative flex items-center justify-center min-h-screen bg-[#c1d3c5] p-4 overflow-hidden">
