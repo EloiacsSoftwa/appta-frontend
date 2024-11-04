@@ -3,14 +3,23 @@ import axios from 'axios'
 import AxiosConfig from '../../WebService/AxiosConfig';
 
 
-export  function Category(payload) {
+// export  function Category(payload) {
 
-    return  axios.post(`${config.apiBaseUrl}/category/getCategory`, payload).then(response=>response).catch(error=>{console.log(error,"catch")
-       return error
-    });
+//     return  axios.post(`${config.apiBaseUrl}/category/getCategory`, payload).then(response=>response).catch(error=>{console.log(error,"catch")
+//        return error
+//     });
     
-   }
+//    }
    
+   export async function Category() {
+      return await AxiosConfig.post('/category/getCategory', {
+      })
+    }
+
+
+
+
+
 // export  function SubCategory(payload) {
 
 //  return  axios.post(`${config.apiBaseUrl}/subCategory/getSubCategory`, payload).then(response=>response).catch(error=>{console.log(error,"catch")
@@ -26,11 +35,20 @@ export async function SubCategory() {
  }
 
 
-// /products/addProduct
-export  function AddProductDetails (payload) {
 
-    return  axios.post(`${config.apiBaseUrl}/products/addProduct`, payload).then(response=>response).catch(error=>{console.log(error,"catch")
-       return error
-    });
+// /products/addProduct
+// export  function AddProductDetails (payload) {
+
+//     return  AxiosConfig.post(`${config.apiBaseUrl}/products/addProduct`, payload).then(response=>response).catch(error=>{console.log(error,"catch")
+//        return error
+//     });
     
-   }
+//    }
+
+
+
+   export async function AddProductDetails(payload) {
+      return await AxiosConfig.post('/products/addProduct',payload ,{
+         data:payload
+      })
+    }

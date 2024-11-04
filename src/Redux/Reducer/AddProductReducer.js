@@ -5,6 +5,7 @@ const initialState = {
     statusCode:'',
     add_Product_status_code:'',
     getSubCategoryStatusCode:0,
+    getCategoryStatusCode:0
   };
   
   const AddProductReducer = (state = initialState, action) => {
@@ -17,7 +18,7 @@ const initialState = {
       case 'GET_CATEGORY':
     return {
         ...state,
-        statusCode: action.payload ? action.payload.statusCode : null,
+        getCategoryStatusCode: action.payload ? action.payload.statusCode : null,
         category: action.payload ? action.payload.response : []
     };
         // ADD_PRODUCT_DETAILS
