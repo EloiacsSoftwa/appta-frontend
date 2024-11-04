@@ -9,11 +9,12 @@ import Dot from '../Images/Sales/Dots.svg';
 import Add from '../Images/Sales/Add Green.svg';
 import SmallDot from '../Images/Sales/Smalldots.svg'
 import { ArrowRight2, ArrowLeft2 ,ArrowUp2, ArrowDown2} from 'iconsax-react';
+import AddProductModal from './AddProduct';
 
 
 function Product_List() {
 
-   
+    const [showModal, setShowModal] = useState(false);   
     const [currentPage, setCurrentPage] = useState(1);
    
 
@@ -113,7 +114,7 @@ function Product_List() {
                         <img src={Add} className='w-4 h-4'/>
                     </div>
                     <div>
-                        <label  className="cursor-pointer text-sm text-orange-600 font-semibold  font-Manrope">Add Product</label>
+                        <label  className="cursor-pointer text-sm text-orange-600 font-semibold  font-Manrope" onClick={() => setShowModal(true)}>Add Product</label>
                     </div>
 
                 </div>
@@ -292,6 +293,7 @@ function Product_List() {
                     
                 </div>
             </div>
+            {showModal && <AddProductModal onClose={() => setShowModal(false)} />}
               </div>
     )
 }

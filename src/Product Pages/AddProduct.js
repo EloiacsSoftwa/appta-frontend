@@ -1,9 +1,545 @@
-import React, { useState } from "react";
+// import React, { useEffect, useState } from "react";
+// import { useDispatch, useSelector } from 'react-redux';
+
+// import Vector from '../Images/Icons/Vector.svg';
+// import Delete from '../Images/Icons/Delete.jpeg';
+
+// const AddProductModal = ({ onClose }) => {
+//   const [activeTab, setActiveTab] = useState("Product Details");
+  
+
+//   const dispatch = useDispatch();
+//   const state = useSelector(state => state);
+
+//   useEffect(()=>{
+//     dispatch({type:'GETSUBCATEGORY'})
+//     dispatch({type:'GETCATEGORY'})
+//   },[])
+ 
+
+
+//   console.log("addProduct",state);
+  
+//   return (
+//     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+//       <div className="bg-white rounded-lg w-1/2 p-6">
+//         <div className="flex justify-between mb-4">
+//           <h2 className="text-xl font-semibold">Add Product</h2>
+//           <button onClick={onClose} className="text-gray-600 hover:text-gray-800">X</button>
+//         </div>
+        
+//         {/* Tabs */}
+//         <div className="flex border-b mb-4">
+//           {["Product Details", "Accounting", "Bill Of Material"].map((tab) => (
+//             <button
+//               key={tab}
+//               onClick={() => setActiveTab(tab)}
+//               className={`px-12 py-2 -mb-px border-b-2 ${
+//                 activeTab === tab ? "border-orange-500 text-orange-500" : "border-transparent text-gray-500"
+//               }`}
+//             >
+//               {tab}
+//             </button>
+//           ))}
+//         </div>
+
+//         {/* Form */}
+//         {activeTab === "Product Details" && (
+//           <ProductDetailsForm />
+//         )}
+//         {/* Add other tab content components if needed */}
+
+//         {activeTab === "Accounting" && (
+//           <AccountingDetailsForm />
+//         )}
+
+// {activeTab === "Bill Of Material" && (
+//           <BillOfMaterials />
+//         )}
+
+//       </div>
+//     </div>
+//   );
+// };
+
+// const ProductDetailsForm = () => {
+    
+//   const state = useSelector(state => state);
+//     const [image, setImage] = useState(null);
+//     const [fileName, setFileName] = useState('');
+//     const [isChecked, setIsChecked] = useState(false);
+// // const [nextButtonClicked, setnextButtonClicked] = useState(false)
+//   // Handle file input change
+//   const handleImageChange = (e) => {
+//     const file = e.target.files[0];
+//     if (file) {
+//       setFileName(file.name);
+//       setImage(URL.createObjectURL(file)); // Create a preview URL
+//     }
+//   };
+
+ 
+
+//   // Toggle the checkbox state
+//   const handleCheckboxChange = () => {
+//     setIsChecked(!isChecked);
+//   };
+    
+// return <form className="flex flex-wrap gap-4">
+//   {/* Image Upload Box */}
+//   <div className="relative w-40 h-40 flex-shrink-0">
+//     {/* Hidden file input */}
+//     <input
+//       type="file"
+//       accept="image/*"
+//       onChange={handleImageChange}
+//       className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+//     />
+
+//     {/* Square image box with preview */}
+//     <div className="w-full h-full border border-dashed border-gray-300 rounded-md bg-gray-100 flex items-center justify-center cursor-pointer overflow-hidden">
+//       {image ? (
+//         // Show uploaded image
+//         <img src={image} alt="Uploaded" className="object-cover w-full h-full" />
+//       ) : (
+//         // Placeholder text/icon when no image is uploaded
+//         <span className="text-gray-400 text-sm">+ Add image</span>
+//       )}
+//     </div>
+
+//     <div className="flex items-center mt-2">
+//       {/* Checkbox */}
+//       <input
+//         type="checkbox"
+//         checked={isChecked}
+//         onChange={handleCheckboxChange}
+//         className="h-4 w-4 text-orange-600 border-gray-300 rounded focus:ring-orange-500"
+//       />
+
+//       {/* Label */}
+//       <label
+//         className="ml-2 text-sm font-medium text-gray-700 cursor-pointer"
+//         onClick={handleCheckboxChange} // Toggle checkbox when label is clicked
+//       >
+//         Freebie
+//       </label>
+//     </div>
+//     <div>
+//         <label className="text-left text-sm font-medium text-gray-700">Name</label>
+//         <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Freebie" />
+//     </div>
+//   </div>
+
+//   {/* Form Fields */}
+//   <div className="flex flex-col flex-1 gap-4">
+//     <div>
+//       <label className="text-left block text-sm font-medium text-gray-700">Product Type</label>
+//       <select className="mt-1 block w-full border border-gray-300 rounded-md">
+//         <option>Tracked</option>
+//         {/* Other options */}
+//       </select>
+//     </div>
+
+//     <div className="flex gap-4">
+//       <div className="flex-1">
+//         <label className="text-left block text-sm font-medium text-gray-700">Product Name</label>
+//         <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Watch" />
+//       </div>
+//       <div className="flex-1">
+//         <label className="text-left block text-sm font-medium text-gray-700">Product Brand</label>
+//         <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Brand" />
+//       </div>
+//     </div>
+
+//     <div className="flex gap-4">
+//     <div className="flex-1">
+//       <label className="text-left block text-sm font-medium text-gray-700">Category</label>
+//       <select className="mt-1 block w-full border border-gray-300 rounded-md">
+//         <option>Tracked</option>
+//         {/* category */}
+//         {
+//             state.AddProduct?.category.length > 0 && state.AddProduct.category.map((v,i)=>{
+//                 return <option>{v}</option>
+//             })
+//         }
+//         {/* Other options */}
+//       </select>
+//       {/* <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Category" /> */}
+//     </div>
+//       <div className="flex-1">
+//         <label className="text-left block text-sm font-medium text-gray-700">Sub Category</label>
+//         {/* <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Brand" /> */}
+//         <select className="mt-1 block w-full border border-gray-300 rounded-md">
+//         <option>Select</option>
+//         {
+//             state.AddProduct.subcategory.length > 0 && state.AddProduct.subcategory.map((v,i)=>{
+//                 return <option>{v}</option>
+//             })
+//         }
+//         {/* Other options */}
+//       </select>
+//       </div>
+//     </div>
+
+   
+
+
+
+
+//     <div className="flex gap-4">
+//     <div className="flex-1">
+//       <label className="text-left block text-sm font-medium text-gray-700">Unit</label>
+//       <select className="mt-1 block w-full border border-gray-300 rounded-md">
+//         <option>Tracked</option>
+//         {/* Other options */}
+//       </select>
+//       {/* <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Category" /> */}
+//     </div>
+//     <div className="flex-1 flex gap-4">
+//     <div className="flex-1">
+//       <label className="text-left block text-sm font-medium text-gray-700">Qty</label>
+//       <select className="mt-1 block w-full border border-gray-300 rounded-md">
+//         <option>Tracked</option>
+//         {/* Other options */}
+//       </select>
+//       {/* <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Category" /> */}
+//     </div>
+//       <div className="flex-1">
+//         <label className="text-left block text-sm font-medium text-gray-700">Min Qty</label>
+//         {/* <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Brand" /> */}
+//         <select className="mt-1 block w-full border border-gray-300 rounded-md">
+//         <option>Tracked</option>
+//         {/* Other options */}
+//       </select>
+//       </div>
+//     </div>
+//     </div>
+
+
+
+//     <div>
+//       <label className="text-left block text-sm font-medium text-gray-700">Quantity</label>
+//       <input type="number" className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="15" />
+//     </div>
+
+//     <button type="submit" className="mt-4 bg-orange-500 text-white py-2 rounded-md w-full sm:w-auto">
+//       Next
+//     </button>
+//   </div>
+// </form>
+
+
+
+
+// //  return <form className="grid grid-cols-2">
+// //     {/* Form Fields */}
+// //     <div className="relative w-40 h-40">
+// //       {/* Hidden file input */}
+// //       <input
+// //         type="file"
+// //         accept="image/*"
+// //         onChange={handleImageChange}
+// //         className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+// //       />
+
+// //       {/* Square image box with preview */}
+// //       <div className="w-full h-full border border-dashed border-gray-300 rounded-md bg-gray-100 flex items-center justify-center cursor-pointer overflow-hidden">
+// //         {image ? (
+// //           // Show uploaded image
+// //           <img src={image} alt="Uploaded" className="object-cover w-full h-full" />
+// //         ) : (
+// //           // Placeholder text/icon when no image is uploaded
+// //           <span className="text-gray-400 text-sm">+ Add image</span>
+// //         )}
+// //       </div>
+// //     </div>
+
+
+// //     <div>
+// //     <div>
+// //       <label className="text-left block text-sm font-medium text-gray-700">Product Type</label>
+// //       <select className="mt-1 block w-full border border-gray-300 rounded-md">
+// //         <option>Tracked</option>
+// //         {/* Other options */}
+// //       </select>
+// //     </div>
+// //     <div className="flex-row">
+// //     <div className="flex-1">
+// //       <label className="text-left block text-sm font-medium text-gray-700">Product Name</label>
+// //       <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Watch" />
+// //     </div>
+// //     <div className="flex-1">
+// //       <label className="text-left block text-sm font-medium text-gray-700">Product Name</label>
+// //       <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Watch" />
+// //     </div>
+// //     </div>
+// //     </div>
+
+
+
+// //     {/* Add other form fields similarly */}
+
+// //     <div>
+// //       <label className="text-left block text-sm font-medium text-gray-700">Product Name</label>
+// //       <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Watch" />
+// //     </div>
+
+// //     <div>
+// //       <label className="text-left block text-sm font-medium text-gray-700">Product Name</label>
+// //       <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Watch" />
+// //     </div>
+    
+// //     <button type="submit" className="col-span-2 mt-4 bg-orange-500 text-white py-2 rounded-md">Next</button>
+// //   </form>
+// };
+
+
+
+// const AccountingDetailsForm = () => {
+
+//     return(
+//         <div className="flex flex-wrap gap-4">
+// <div className="flex gap-4">
+//       <div className="flex-1">
+//         <label className="text-left block text-sm font-medium text-gray-700">Product Name</label>
+//         <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Watch" />
+//       </div>
+//       <div className="flex-1">
+//         <label className="text-left block text-sm font-medium text-gray-700">Product Brand</label>
+//         <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Brand" />
+//       </div>
+//       <div className="flex-1">
+//         <label className="text-left block text-sm font-medium text-gray-700">Product Brand</label>
+//         <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Brand" />
+//       </div>
+//     </div>
+    
+
+//     <div className="w-full">
+//     <div className="flex-1">
+//         <label className="text-left block text-sm font-medium text-gray-700">Product Brand</label>
+//         <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Brand" />
+//       </div>
+//         </div>
+
+//         <div className="flex gap-4">
+//       <div className="flex-1">
+//         <label className="text-left block text-sm font-medium text-gray-700">Product Name</label>
+//         <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Watch" />
+//       </div>
+//       <div className="flex-1">
+//         <label className="text-left block text-sm font-medium text-gray-700">Product Brand</label>
+//         <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Brand" />
+//       </div>
+//     </div>
+
+//     <div className="w-full">
+//     <div className="flex-1">
+//         <label className="text-left block text-sm font-medium text-gray-700">Product Brand</label>
+//         <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Brand" />
+//       </div>
+//         </div>
+
+//         <div className="flex bg-gray">
+//     <div className="flex-1">
+//     <button type="submit" className="bg-orange-500 p-2 rounded-md w-full sm:w-auto">
+//       back
+//     </button>
+//       </div>
+//       <div className="flex-1">
+//       <button type="submit" className="bg-orange-500 p-2 rounded-md w-full sm:w-auto">
+//       Next
+//     </button>
+//       </div>
+//         </div>
+//             </div>
+//     )
+// }
+
+
+// const BillOfMaterials = () => {
+//     const dispatch = useDispatch();
+//     var [peroductList, setProductList] = useState(
+//         {
+//             productId: 0,
+//             productName: "string",
+//             statusTypeId: 0,
+//             categoryId: 0,
+//             subCategoryId: 0,
+//             brandId: 0,
+//             unitId: 0,
+//             quantity: 0,
+//             minPurchaseQuantity: 0,
+//             barcodeType: 0,
+//             barcodeNo: "string",
+//             description: "string",
+//             purchasePrice: 0,
+//             salesPricePercentage: 0,
+//             mrp: 0,
+//             wholesalePricePercentage: 0,
+//             threshold: 0,
+//             billOfMaterials: true,
+//             billOfMaterialsList: [
+//               {
+//                 billOfMaterialsProductId: 0,
+//                 billOfMaterialsProductQuantity: 0,
+//                 billOfMaterialsProductCost: 0
+//               }
+//             ],
+//             freebie: true,
+//             freebieProductId: 0,
+//             images: [
+//               "string"
+//             ]
+//           }
+//       )
+//     var handleSubmit = () =>{
+//         dispatch({type: "ADDPRODUCTDETAILS",payload : peroductList})
+//     }
+
+//     // min-h-screen 
+//     return (
+//       <div className="flex items-center justify-center bg-gray-100">
+//         <div className="bg-white rounded-lg shadow-lg w-full max-w-xl overflow-y-auto">
+      
+//          <div className="space-y-6 md:p-8">
+//             <div>
+//               <h3 className="font-semibold text-lg mb-2 text-orange-500">Component</h3>
+//               <div>
+//               <div className="flex items-center mb-px">
+//                 <input
+//                   type="text"
+//                   placeholder="Product Name"
+//                   className="w-52 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500 bg-zinc-300"
+//                 />
+//                 <input
+//                   type="text"
+//                   placeholder="Qty"
+//                   className="w-36 px-4 py-2 mx-0.5 focus:outline-none focus:ring-2 focus:ring-orange-500  bg-zinc-300"
+//                 />
+              
+//               </div>
+//               <div className="flex items-center space-x-0.5">
+//                 <input
+//                   type="text"
+//                   placeholder="Computer"
+//                   className="w-52 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500 text-neutral-900 bg-zinc-100"
+//                 />
+//                 <input
+//                   type="text"
+//                   placeholder="10 pcs"
+//                   className="w-36 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500  bg-zinc-100"
+//                 />
+//                 <button className="text-gray-500 hover:text-red-500 mt-2">
+//                 <img className="ml-2" src={Delete}></img>
+//                 </button>
+//               </div>
+           
+//               <button className="mt-4 text-neutral-900 text-sm font-manrope font-semibold text-left flex items-center space-x-2">
+//     <span className="flex items-center justify-center w-4 h-4 rounded-full border border-black text-black text-xs">
+//       <img src={Vector}></img>
+//     </span>
+//     <span>Add a component product</span>
+//   </button>
+  
+//             </div>
+//             </div>
+  
+//             <div>
+//               <h3 className="font-semibold text-lg mb-2 text-orange-500 mb-2 focus:outline-none focus:ring-2 focus:ring-orange-500">Additional Cost</h3>
+//               <div className="flex items-center mb-px">
+//                 <input
+//                   type="text"
+//                   placeholder="Cost Name"
+//                   className="w-52 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500 bg-zinc-300"
+//                 />
+//                 <input
+//                   type="text"
+//                   placeholder="Sub Total"
+//                   className="w-36 px-4 py-2 mx-0.5 focus:outline-none focus:ring-2 focus:ring-orange-500  bg-zinc-300"
+//                 />
+              
+//               </div>
+//               <div className="flex items-center space-x-0.5">
+//                 <input
+//                   type="text"
+//                   placeholder="Assemble"
+//                   className="w-52 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500 text-neutral-900 bg-zinc-100"
+//                 />
+//                 <input
+//                   type="text"
+//                   placeholder="₹ 11,000"
+//                   className="w-36 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500  bg-zinc-100"
+//                 />
+//                 <button className="text-gray-500 hover:text-red-500 mt-2">
+//                  <img className="ml-2" src={Delete}></img>
+//                 </button>
+//               </div>
+           
+//               <button className="mt-4 text-neutral-900 text-sm font-manrope font-semibold text-left flex items-center space-x-2">
+//     <span className="flex items-center justify-center w-4 h-4 rounded-full border border-black text-black text-xs">
+//       <img src={Vector}></img>
+//     </span>
+//     <span>Add an additional cost</span>
+//   </button>
+//             </div>
+//           </div>
+  
+//           <div className="w-full bg-zinc-300 mt-6 p-2">
+//     <div className="flex justify-end space-x-4">
+//       <button
+//         className="px-4 bg-orange-500 text-neutral-900 rounded-md hover:bg-gray-300"
+//       >
+//         Back
+//       </button>
+//       <button className="px-4 py-1 bg-orange-500 text-neutral-900 rounded-md hover:bg-orange-600" onClick={handleSubmit}>
+//         Submit
+//       </button>
+//     </div>
+//   </div>
+  
+//         </div>
+//       </div>
+//     );
+//   };
+
+// export default AddProductModal;
+
+
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from 'react-redux';
+
+import Vector from '../Images/Icons/Vector.svg';
+import Delete from '../Images/Icons/Delete.jpeg';
 
 const AddProductModal = ({ onClose }) => {
   const [activeTab, setActiveTab] = useState("Product Details");
 
- 
+  const dispatch = useDispatch();
+  const state = useSelector(state => state);
+
+  useEffect(() => {
+    dispatch({ type: 'GETSUBCATEGORY' });
+    dispatch({ type: 'GETCATEGORY' });
+  }, []);
+
+  const handleNext = () => {
+    if (activeTab === "Product Details") {
+      setActiveTab("Accounting");
+    } else if (activeTab === "Accounting") {
+      setActiveTab("Bill Of Material");
+    }
+  };
+
+  const handleBack = () => {
+    if (activeTab === "Accounting") {
+      setActiveTab("Product Details");
+    } else if (activeTab === "Bill Of Material") {
+      setActiveTab("Accounting");
+    }
+  };
+
+  console.log("addProduct", state);
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
@@ -12,16 +548,14 @@ const AddProductModal = ({ onClose }) => {
           <h2 className="text-xl font-semibold">Add Product</h2>
           <button onClick={onClose} className="text-gray-600 hover:text-gray-800">X</button>
         </div>
-        
+
         {/* Tabs */}
         <div className="flex border-b mb-4">
           {["Product Details", "Accounting", "Bill Of Material"].map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
-              className={`px-12 py-2 -mb-px border-b-2 ${
-                activeTab === tab ? "border-orange-500 text-orange-500" : "border-transparent text-gray-500"
-              }`}
+              className={`px-12 py-2 -mb-px border-b-2 ${activeTab === tab ? "border-orange-500 text-orange-500" : "border-transparent text-gray-500"}`}
             >
               {tab}
             </button>
@@ -29,257 +563,165 @@ const AddProductModal = ({ onClose }) => {
         </div>
 
         {/* Form */}
-        {activeTab === "Product Details" && (
-          <ProductDetailsForm />
-        )}
-        {/* Add other tab content components if needed */}
-
-        {activeTab === "Accounting" && (
-          <AccountingDetailsForm />
-        )}
-
-{activeTab === "Bill Of Material" && (
-          <ProductDetailsForm />
-        )}
-
+        {activeTab === "Product Details" && <ProductDetailsForm handleNext={handleNext} />}
+        {activeTab === "Accounting" && <AccountingDetailsForm handleNext={handleNext} handleBack={handleBack} />}
+        {activeTab === "Bill Of Material" && <BillOfMaterials handleBack={handleBack} />}
       </div>
     </div>
   );
 };
 
-const ProductDetailsForm = () => {
-    const [image, setImage] = useState(null);
-    const [fileName, setFileName] = useState('');
-    const [isChecked, setIsChecked] = useState(false);
+const ProductDetailsForm = ({ handleNext }) => {
+  const state = useSelector(state => state);
+  const [formData, setFormData] = useState({
+    image: null,
+    productName: '',
+    productType: 'Tracked',
+    productBrand: '',
+    category: '',
+    subCategory: '',
+    unit: '',
+    qty: '',
+    minQty: '',
+    quantity: 0,
+    isChecked: false,
+  });
 
-  // Handle file input change
+  const handleInputChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setFormData({
+      ...formData,
+      [name]: type === 'checkbox' ? checked : value,
+    });
+  };
+
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setFileName(file.name);
-      setImage(URL.createObjectURL(file)); // Create a preview URL
+      setFormData({
+        ...formData,
+        image: URL.createObjectURL(file),
+      });
     }
   };
 
- 
-
-  // Toggle the checkbox state
-  const handleCheckboxChange = () => {
-    setIsChecked(!isChecked);
-  };
-    
-return <form className="flex flex-wrap gap-4">
-  {/* Image Upload Box */}
-  <div className="relative w-40 h-40 flex-shrink-0">
-    {/* Hidden file input */}
-    <input
-      type="file"
-      accept="image/*"
-      onChange={handleImageChange}
-      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-    />
-
-    {/* Square image box with preview */}
-    <div className="w-full h-full border border-dashed border-gray-300 rounded-md bg-gray-100 flex items-center justify-center cursor-pointer overflow-hidden">
-      {image ? (
-        // Show uploaded image
-        <img src={image} alt="Uploaded" className="object-cover w-full h-full" />
-      ) : (
-        // Placeholder text/icon when no image is uploaded
-        <span className="text-gray-400 text-sm">+ Add image</span>
-      )}
-    </div>
-
-    <div className="flex items-center mt-2">
-      {/* Checkbox */}
-      <input
-        type="checkbox"
-        checked={isChecked}
-        onChange={handleCheckboxChange}
-        className="h-4 w-4 text-orange-600 border-gray-300 rounded focus:ring-orange-500"
-      />
-
-      {/* Label */}
-      <label
-        className="ml-2 text-sm font-medium text-gray-700 cursor-pointer"
-        onClick={handleCheckboxChange} // Toggle checkbox when label is clicked
-      >
-        Freebie
-      </label>
-    </div>
-    <div>
-        <label className="text-left text-sm font-medium text-gray-700">Name</label>
-        <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Freebie" />
-    </div>
-  </div>
-
-  {/* Form Fields */}
-  <div className="flex flex-col flex-1 gap-4">
-    <div>
-      <label className="text-left block text-sm font-medium text-gray-700">Product Type</label>
-      <select className="mt-1 block w-full border border-gray-300 rounded-md">
-        <option>Tracked</option>
-        {/* Other options */}
-      </select>
-    </div>
-
-    <div className="flex gap-4">
-      <div className="flex-1">
-        <label className="text-left block text-sm font-medium text-gray-700">Product Name</label>
-        <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Watch" />
+  return (
+    <form className="flex flex-wrap gap-4" onSubmit={(e) => { e.preventDefault(); handleNext(); }}>
+      <div className="relative w-40 h-40 flex-shrink-0">
+        <input
+          type="file"
+          accept="image/*"
+          onChange={handleImageChange}
+          className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+        />
+        <div className="w-full h-full border border-dashed border-gray-300 rounded-md bg-gray-100 flex items-center justify-center cursor-pointer overflow-hidden">
+          {formData.image ? (
+            <img src={formData.image} alt="Uploaded" className="object-cover w-full h-full" />
+          ) : (
+            <span className="text-gray-400 text-sm">+ Add image</span>
+          )}
+        </div>
+        <div className="flex items-center mt-2">
+          <input
+            type="checkbox"
+            name="isChecked"
+            checked={formData.isChecked}
+            onChange={handleInputChange}
+            className="h-4 w-4 text-orange-600 border-gray-300 rounded focus:ring-orange-500"
+          />
+          <label className="ml-2 text-sm font-medium text-gray-700 cursor-pointer" onClick={handleInputChange}>Freebie</label>
+        </div>
+        <div>
+          <label className="text-left text-sm font-medium text-gray-700">Name</label>
+          <input type="text" name="productName" value={formData.productName} onChange={handleInputChange} className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Freebie" />
+        </div>
       </div>
-      <div className="flex-1">
-        <label className="text-left block text-sm font-medium text-gray-700">Product Brand</label>
-        <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Brand" />
+
+      <div className="flex flex-col flex-1 gap-4">
+        <div>
+          <label className="text-left block text-sm font-medium text-gray-700">Product Type</label>
+          <select name="productType" value={formData.productType} onChange={handleInputChange} className="mt-1 block w-full border border-gray-300 rounded-md">
+            <option>Tracked</option>
+          </select>
+        </div>
+
+        <div className="flex gap-4">
+          <div className="flex-1">
+            <label className="text-left block text-sm font-medium text-gray-700">Product Name</label>
+            <input type="text" name="productName" value={formData.productName} onChange={handleInputChange} className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Watch" />
+          </div>
+          <div className="flex-1">
+            <label className="text-left block text-sm font-medium text-gray-700">Product Brand</label>
+            <input type="text" name="productBrand" value={formData.productBrand} onChange={handleInputChange} className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Brand" />
+          </div>
+        </div>
+
+        <div className="flex gap-4">
+          <div className="flex-1">
+            <label className="text-left block text-sm font-medium text-gray-700">Category</label>
+            <select name="category" value={formData.category} onChange={handleInputChange} className="mt-1 block w-full border border-gray-300 rounded-md">
+              <option>Tracked</option>
+              {state.AddProduct?.category.length > 0 && state.AddProduct.category.map((v, i) => (
+                <option key={i} value={v}>{v}</option>
+              ))}
+            </select>
+          </div>
+          <div className="flex-1">
+            <label className="text-left block text-sm font-medium text-gray-700">Sub Category</label>
+            <select name="subCategory" value={formData.subCategory} onChange={handleInputChange} className="mt-1 block w-full border border-gray-300 rounded-md">
+              <option>Select</option>
+              {state.AddProduct?.subcategory.length > 0 && state.AddProduct.subcategory.map((v, i) => (
+                <option key={i} value={v}>{v}</option>
+              ))}
+            </select>
+          </div>
+        </div>
+
+        <div className="flex gap-4">
+          <div className="flex-1">
+            <label className="text-left block text-sm font-medium text-gray-700">Unit</label>
+            <select name="unit" value={formData.unit} onChange={handleInputChange} className="mt-1 block w-full border border-gray-300 rounded-md">
+              <option>Tracked</option>
+            </select>
+          </div>
+          <div className="flex gap-4">
+            <div className="flex-1">
+              <label className="text-left block text-sm font-medium text-gray-700">Qty</label>
+              <input type="number" name="qty" value={formData.qty} onChange={handleInputChange} className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Qty" />
+            </div>
+            <div className="flex-1">
+              <label className="text-left block text-sm font-medium text-gray-700">Min Qty</label>
+              <input type="number" name="minQty" value={formData.minQty} onChange={handleInputChange} className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Min Qty" />
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <label className="text-left block text-sm font-medium text-gray-700">Quantity</label>
+          <input type="number" name="quantity" value={formData.quantity} onChange={handleInputChange} className="mt-1 block w-full border border-gray-300 rounded-md" />
+        </div>
+
+        <button type="submit" className="mt-4 bg-orange-500 text-white py-2 rounded-md w-full sm:w-auto">Next</button>
       </div>
-    </div>
-
-    <div className="flex gap-4">
-    <div className="flex-1">
-      <label className="text-left block text-sm font-medium text-gray-700">Category</label>
-      <select className="mt-1 block w-full border border-gray-300 rounded-md">
-        <option>Tracked</option>
-        {/* Other options */}
-      </select>
-      {/* <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Category" /> */}
-    </div>
-      <div className="flex-1">
-        <label className="text-left block text-sm font-medium text-gray-700">Sub Category</label>
-        {/* <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Brand" /> */}
-        <select className="mt-1 block w-full border border-gray-300 rounded-md">
-        <option>Tracked</option>
-        {/* Other options */}
-      </select>
-      </div>
-    </div>
-
-   
-
-
-
-
-    <div className="flex gap-4">
-    <div className="flex-1">
-      <label className="text-left block text-sm font-medium text-gray-700">Unit</label>
-      <select className="mt-1 block w-full border border-gray-300 rounded-md">
-        <option>Tracked</option>
-        {/* Other options */}
-      </select>
-      {/* <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Category" /> */}
-    </div>
-    <div className="flex-1 flex gap-4">
-    <div className="flex-1">
-      <label className="text-left block text-sm font-medium text-gray-700">Qty</label>
-      <select className="mt-1 block w-full border border-gray-300 rounded-md">
-        <option>Tracked</option>
-        {/* Other options */}
-      </select>
-      {/* <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Category" /> */}
-    </div>
-      <div className="flex-1">
-        <label className="text-left block text-sm font-medium text-gray-700">Min Qty</label>
-        {/* <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Brand" /> */}
-        <select className="mt-1 block w-full border border-gray-300 rounded-md">
-        <option>Tracked</option>
-        {/* Other options */}
-      </select>
-      </div>
-    </div>
-    </div>
-
-
-
-    <div>
-      <label className="text-left block text-sm font-medium text-gray-700">Quantity</label>
-      <input type="number" className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="15" />
-    </div>
-
-    <button type="submit" className="mt-4 bg-orange-500 text-white py-2 rounded-md w-full sm:w-auto">
-      Next
-    </button>
-  </div>
-</form>
-
-
-
-
-//  return <form className="grid grid-cols-2">
-//     {/* Form Fields */}
-//     <div className="relative w-40 h-40">
-//       {/* Hidden file input */}
-//       <input
-//         type="file"
-//         accept="image/*"
-//         onChange={handleImageChange}
-//         className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-//       />
-
-//       {/* Square image box with preview */}
-//       <div className="w-full h-full border border-dashed border-gray-300 rounded-md bg-gray-100 flex items-center justify-center cursor-pointer overflow-hidden">
-//         {image ? (
-//           // Show uploaded image
-//           <img src={image} alt="Uploaded" className="object-cover w-full h-full" />
-//         ) : (
-//           // Placeholder text/icon when no image is uploaded
-//           <span className="text-gray-400 text-sm">+ Add image</span>
-//         )}
-//       </div>
-//     </div>
-
-
-//     <div>
-//     <div>
-//       <label className="text-left block text-sm font-medium text-gray-700">Product Type</label>
-//       <select className="mt-1 block w-full border border-gray-300 rounded-md">
-//         <option>Tracked</option>
-//         {/* Other options */}
-//       </select>
-//     </div>
-//     <div className="flex-row">
-//     <div className="flex-1">
-//       <label className="text-left block text-sm font-medium text-gray-700">Product Name</label>
-//       <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Watch" />
-//     </div>
-//     <div className="flex-1">
-//       <label className="text-left block text-sm font-medium text-gray-700">Product Name</label>
-//       <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Watch" />
-//     </div>
-//     </div>
-//     </div>
-
-
-
-//     {/* Add other form fields similarly */}
-
-//     <div>
-//       <label className="text-left block text-sm font-medium text-gray-700">Product Name</label>
-//       <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Watch" />
-//     </div>
-
-//     <div>
-//       <label className="text-left block text-sm font-medium text-gray-700">Product Name</label>
-//       <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Watch" />
-//     </div>
-    
-//     <button type="submit" className="col-span-2 mt-4 bg-orange-500 text-white py-2 rounded-md">Next</button>
-//   </form>
+    </form>
+  );
 };
 
-const AccountingDetailsForm = () => {
+const AccountingDetailsForm = ({handleNext, handleBack}) => {
 
     return(
         <div className="flex flex-wrap gap-4">
 <div className="flex gap-4">
       <div className="flex-1">
-        <label className="text-left block text-sm font-medium text-gray-700">Product Name</label>
+        <label className="text-left block text-sm font-medium text-gray-700">Purchase Price</label>
         <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Watch" />
       </div>
       <div className="flex-1">
-        <label className="text-left block text-sm font-medium text-gray-700">Product Brand</label>
+        <label className="text-left block text-sm font-medium text-gray-700">Purchase Percentage</label>
         <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Brand" />
       </div>
       <div className="flex-1">
-        <label className="text-left block text-sm font-medium text-gray-700">Product Brand</label>
+        <label className="text-left block text-sm font-medium text-gray-700">Sales Price</label>
         <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Brand" />
       </div>
     </div>
@@ -287,37 +729,37 @@ const AccountingDetailsForm = () => {
 
     <div className="w-full">
     <div className="flex-1">
-        <label className="text-left block text-sm font-medium text-gray-700">Product Brand</label>
+        <label className="text-left block text-sm font-medium text-gray-700">MRP</label>
         <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Brand" />
       </div>
         </div>
 
         <div className="flex gap-4">
       <div className="flex-1">
-        <label className="text-left block text-sm font-medium text-gray-700">Product Name</label>
+        <label className="text-left block text-sm font-medium text-gray-700">Whole sale Price</label>
         <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Watch" />
       </div>
       <div className="flex-1">
-        <label className="text-left block text-sm font-medium text-gray-700">Product Brand</label>
+        <label className="text-left block text-sm font-medium text-gray-700">Whole sale Percentage</label>
         <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Brand" />
       </div>
     </div>
 
     <div className="w-full">
     <div className="flex-1">
-        <label className="text-left block text-sm font-medium text-gray-700">Product Brand</label>
+        <label className="text-left block text-sm font-medium text-gray-700">Product Threshold</label>
         <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Brand" />
       </div>
         </div>
 
         <div className="flex bg-gray">
     <div className="flex-1">
-    <button type="submit" className="bg-orange-500 p-2 rounded-md w-full sm:w-auto">
+    <button type="submit" className="bg-orange-500 p-2 rounded-md w-full sm:w-auto" onClick={handleBack}>
       back
     </button>
       </div>
       <div className="flex-1">
-      <button type="submit" className="bg-orange-500 p-2 rounded-md w-full sm:w-auto">
+      <button type="submit" className="bg-orange-500 p-2 rounded-md w-full sm:w-auto" onClick={handleNext}>
       Next
     </button>
       </div>
@@ -327,117 +769,149 @@ const AccountingDetailsForm = () => {
 }
 
 
+const BillOfMaterials = ({handleBack}) => {
+    const dispatch = useDispatch();
+    // var [peroductList, setProductList] = useState(
+    //     {
+    //         productId: 0,
+    //         productName: "string",
+    //         statusTypeId: 0,
+    //         categoryId: 0,
+    //         subCategoryId: 0,
+    //         brandId: 0,
+    //         unitId: 0,
+    //         quantity: 0,
+    //         minPurchaseQuantity: 0,
+    //         barcodeType: 0,
+    //         barcodeNo: "string",
+    //         description: "string",
+    //         purchasePrice: 0,
+    //         salesPricePercentage: 0,
+    //         mrp: 0,
+    //         wholesalePricePercentage: 0,
+    //         threshold: 0,
+    //         billOfMaterials: true,
+    //         billOfMaterialsList: [
+    //           {
+    //             billOfMaterialsProductId: 0,
+    //             billOfMaterialsProductQuantity: 0,
+    //             billOfMaterialsProductCost: 0
+    //           }
+    //         ],
+    //         freebie: true,
+    //         freebieProductId: 0,
+    //         images: [
+    //           "string"
+    //         ]
+    //       }
+    //   )
+    var handleSubmit = () =>{
+        dispatch({type: "ADDPRODUCTDETAILS",payload : "peroductList"})
+    }
+
+    // min-h-screen 
+    return (
+      <div className="flex items-center justify-center bg-gray-100">
+        <div className="bg-white rounded-lg shadow-lg w-full max-w-xl overflow-y-auto">
+      
+         <div className="space-y-6 md:p-8">
+            <div>
+              <h3 className="font-semibold text-lg mb-2 text-orange-500">Component</h3>
+              <div>
+              <div className="flex items-center mb-px">
+                <input
+                  type="text"
+                  placeholder="Product Name"
+                  className="w-52 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500 bg-zinc-300"
+                />
+                <input
+                  type="text"
+                  placeholder="Qty"
+                  className="w-36 px-4 py-2 mx-0.5 focus:outline-none focus:ring-2 focus:ring-orange-500  bg-zinc-300"
+                />
+              
+              </div>
+              <div className="flex items-center space-x-0.5">
+                <input
+                  type="text"
+                  placeholder="Computer"
+                  className="w-52 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500 text-neutral-900 bg-zinc-100"
+                />
+                <input
+                  type="text"
+                  placeholder="10 pcs"
+                  className="w-36 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500  bg-zinc-100"
+                />
+                <button className="text-gray-500 hover:text-red-500 mt-2">
+                <img className="ml-2" src={Delete}></img>
+                </button>
+              </div>
+           
+              <button className="mt-4 text-neutral-900 text-sm font-manrope font-semibold text-left flex items-center space-x-2">
+    <span className="flex items-center justify-center w-4 h-4 rounded-full border border-black text-black text-xs">
+      <img src={Vector}></img>
+    </span>
+    <span>Add a component product</span>
+  </button>
+  
+            </div>
+            </div>
+  
+            <div>
+              <h3 className="font-semibold text-lg mb-2 text-orange-500 mb-2 focus:outline-none focus:ring-2 focus:ring-orange-500">Additional Cost</h3>
+              <div className="flex items-center mb-px">
+                <input
+                  type="text"
+                  placeholder="Cost Name"
+                  className="w-52 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500 bg-zinc-300"
+                />
+                <input
+                  type="text"
+                  placeholder="Sub Total"
+                  className="w-36 px-4 py-2 mx-0.5 focus:outline-none focus:ring-2 focus:ring-orange-500  bg-zinc-300"
+                />
+              
+              </div>
+              <div className="flex items-center space-x-0.5">
+                <input
+                  type="text"
+                  placeholder="Assemble"
+                  className="w-52 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500 text-neutral-900 bg-zinc-100"
+                />
+                <input
+                  type="text"
+                  placeholder="₹ 11,000"
+                  className="w-36 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500  bg-zinc-100"
+                />
+                <button className="text-gray-500 hover:text-red-500 mt-2">
+                 <img className="ml-2" src={Delete}></img>
+                </button>
+              </div>
+           
+              <button className="mt-4 text-neutral-900 text-sm font-manrope font-semibold text-left flex items-center space-x-2">
+    <span className="flex items-center justify-center w-4 h-4 rounded-full border border-black text-black text-xs">
+      <img src={Vector}></img>
+    </span>
+    <span>Add an additional cost</span>
+  </button>
+            </div>
+          </div>
+  
+          <div className="w-full bg-zinc-300 mt-6 p-2">
+    <div className="flex justify-end space-x-4">
+      <button
+        className="px-4 bg-orange-500 text-neutral-900 rounded-md hover:bg-gray-300" onClick={handleBack}
+      >
+        Back
+      </button>
+      <button className="px-4 py-1 bg-orange-500 text-neutral-900 rounded-md hover:bg-orange-600" onClick={handleSubmit}>
+        Submit
+      </button>
+    </div>
+  </div>
+  
+        </div>
+      </div>
+    );
+  };
 export default AddProductModal;
-
-
-// import { useState } from 'react';
-
-// function AddProductModal() {
-//   const [activeTab, setActiveTab] = useState('Product Details');
-
-//   return (
-//     <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center">
-//       <div className="bg-white w-full max-w-2xl p-6 rounded-lg shadow-lg">
-//         <h2 className="text-lg font-semibold">Add Product</h2>
-//         <div className="flex border-b border-gray-200 mt-4">
-//           {['Product Details', 'Accounting', 'Bill Of Material'].map((tab) => (
-//             <button
-//               key={tab}
-//               className={`py-2 px-4 text-sm font-medium focus:outline-none ${
-//                 activeTab === tab ? 'border-orange-500 text-orange-500' : 'text-gray-500'
-//               }`}
-//               onClick={() => setActiveTab(tab)}
-//             >
-//               {tab}
-//             </button>
-//           ))}
-//         </div>
-
-//         {activeTab === 'Product Details' && (
-//           <div className="mt-4 space-y-4">
-//             {/* Product Type and Product Name */}
-//             <div className="grid grid-cols-2 gap-4">
-//               <div>
-//                 <label className="block text-sm font-medium text-gray-700">Product Type</label>
-//                 <select className="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
-//                   <option>Tracked</option>
-//                   <option>Untracked</option>
-//                 </select>
-//               </div>
-//               <div>
-//                 <label className="block text-sm font-medium text-gray-700">Product Name</label>
-//                 <input type="text" className="mt-1 block w-full border-gray-300 rounded-md shadow-sm" placeholder="Titan TMN" />
-//               </div>
-//             </div>
-
-//             {/* Brand and Category */}
-//             <div className="grid grid-cols-2 gap-4">
-//               <div>
-//                 <label className="block text-sm font-medium text-gray-700">Brand</label>
-//                 <select className="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
-//                   <option>Titan</option>
-//                   <option>Casio</option>
-//                   <option>Fossil</option>
-//                 </select>
-//               </div>
-//               <div>
-//                 <label className="block text-sm font-medium text-gray-700">Category</label>
-//                 <select className="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
-//                   <option>Fashion</option>
-//                   <option>Electronics</option>
-//                   <option>Accessories</option>
-//                 </select>
-//               </div>
-//             </div>
-
-//             {/* Sub Category and Unit */}
-//             <div className="grid grid-cols-2 gap-4">
-//               <div>
-//                 <label className="block text-sm font-medium text-gray-700">Sub Category</label>
-//                 <select className="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
-//                   <option>Watch</option>
-//                   <option>Jewelry</option>
-//                   <option>Apparel</option>
-//                 </select>
-//               </div>
-//               <div>
-//                 <label className="block text-sm font-medium text-gray-700">Unit</label>
-//                 <select className="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
-//                   <option>Kg</option>
-//                   <option>Pieces</option>
-//                   <option>Liters</option>
-//                 </select>
-//               </div>
-//             </div>
-
-//             {/* Qty and Min Qty */}
-//             <div className="grid grid-cols-2 gap-4">
-//               <div>
-//                 <label className="block text-sm font-medium text-gray-700">Qty</label>
-//                 <input type="number" className="mt-1 block w-full border-gray-300 rounded-md shadow-sm" placeholder="15" />
-//               </div>
-//               <div>
-//                 <label className="block text-sm font-medium text-gray-700">Min Qty</label>
-//                 <input type="number" className="mt-1 block w-full border-gray-300 rounded-md shadow-sm" placeholder="5" />
-//               </div>
-//             </div>
-
-//             {/* Barcode */}
-//             <div>
-//               <label className="block text-sm font-medium text-gray-700">Barcode</label>
-//               <input type="text" className="mt-1 block w-full border-gray-300 rounded-md shadow-sm" placeholder="Enter barcode" />
-//             </div>
-
-//             <button className="mt-4 w-full bg-orange-500 text-white py-2 rounded-lg">
-//               Next
-//             </button>
-//           </div>
-//         )}
-
-//         {/* You can implement similar layouts for Accounting and Bill Of Material tabs here */}
-//       </div>
-//     </div>
-//   );
-// }
-
-// export default AddProductModal;
