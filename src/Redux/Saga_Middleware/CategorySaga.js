@@ -7,7 +7,7 @@ import Cookies from 'universal-cookie';
 function* handleaddCategory (args) {
 
     const response = yield call(AddCategory, args.payload);
-   console.log("Response For pos ",response)
+   console.log("Response For Add category",response)
     if (response.status === 200 || response.statusCode === 200) {
       const token = response.data;
       yield put({ type: 'ADD-CATEGORY', payload: { statusCode: response.status  || response.statusCode}});
@@ -25,9 +25,15 @@ function* handleaddCategory (args) {
 
   } 
 
+
+  function* handleGetCategoryList (action){
+    const response = yield call (GetCategory, action.payload);
+    console.log("response for get category",response)
+
 //   function* handleGetCategoryList (action){
 //     const response = yield call (GetCategory, action.payload);
 //     console.log("response for compliance",response)
+
     
 //     if (response.status === 200 || response.statusCode === 200){
 //        yield put ({type : 'GET-CATEGORY' ,payload:{response: response.data.data, statusCode:response.status || response.statusCode}})
