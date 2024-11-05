@@ -2,10 +2,9 @@ import { call, takeEvery, put } from 'redux-saga/effects';
 import { Category,SubCategory,AddProductDetails,AddBrand } from '../Action/AddProductAction';
 import { GET_BRANDS_API_CALL, GET_BRANDS_API_RESPONSE } from '../../utils/Constant';
 import { getAllBrands } from '../Action/AddProductAction';
-// import Cookies from 'universal-cookie';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
+import Cookies from 'universal-cookie';
 
 
 function* Sub_Category(args) {
@@ -20,6 +19,9 @@ function* Sub_Category(args) {
     else {
       yield put({ type: 'ERROR', payload: { statusCode:response.status  || response.statusCode  } });
     }
+  if (response) {
+    ExpireToken(response)
+   }
   }  
 
 // Category
@@ -34,6 +36,9 @@ function* MainCategory(args) {
        else {
       yield put({ type: 'ERROR', payload: { statusCode:response.status  || response.statusCode  } });
     }
+    if (response) {
+      ExpireToken(response)
+   }
   } 
 
   function* getAllBrandsAPIRequest(args) {
@@ -46,6 +51,9 @@ function* MainCategory(args) {
        else {
       yield put({ type: 'ERROR', payload: { statusCode:response.status  || response.statusCode  } });
     }
+    if (response) {
+      ExpireToken(response)
+   }
   }
 
   function* AddProduct_Details(args) {
@@ -58,6 +66,9 @@ function* MainCategory(args) {
        else {
       yield put({ type: 'ERROR', payload: { statusCode:response.status  || response.statusCode  } });
     }
+    if (response) {
+      ExpireToken(response)
+   }
   } 
 
 
@@ -98,9 +109,20 @@ function* MainCategory(args) {
        else {
       yield put({ type: 'ERROR', payload: { statusCode:response.status  || response.statusCode  } });
     }
+    if (response) {
+      ExpireToken(response)
+   }
   } 
 
 
+  function ExpireToken(response) {
+    if (response.data.code === 204) {
+      const message = response.data.code
+      const cookies = new Cookies()
+      cookies.set('access-denied', message, { path: '/' });
+    }
+
+}
 
 
 
