@@ -51,3 +51,13 @@ export function getAllBrands(payloads) {
          data:payload
       })
     }
+
+
+
+    
+
+    export async function AddBrand(payload) {
+      return await AxiosConfig.post('/brand/insertBrand',payload ,{
+         data:payload
+      })
+    }

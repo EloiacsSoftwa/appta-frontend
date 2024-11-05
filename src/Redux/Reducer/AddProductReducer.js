@@ -7,7 +7,9 @@ const initialState = {
   add_Product_status_code: '',
   getSubCategoryStatusCode: 0,
   getCategoryStatusCode: 0,
-  brands: []
+  brands: [],
+  getBrandStatusCode: 0,
+  AddBrandSuccessStatusCode: 0
 };
 
 const AddProductReducer = (state = initialState, action) => {
@@ -23,12 +25,24 @@ const AddProductReducer = (state = initialState, action) => {
         getCategoryStatusCode: action.payload ? action.payload.statusCode : null,
         category: action.payload ? action.payload.response : []
       };
-    // ADD_PRODUCT_DETAILS
+
+    case 'REMOVE_GET_CATEGORY_STATUS_CODE':
+      return { ...state, getCategoryStatusCode: 0 }
+
     case 'ADD_PRODUCT_DETAILS':
       return { ...state, add_Product_status_code: action.payload.statusCode };
 
     case GET_BRANDS_API_RESPONSE:
-      return { ...state, brands: action.payload.response }
+      return { ...state, brands: action.payload.response, getBrandStatusCode: action.payload.statusCode }
+
+    case 'REMOVE_GET_BRAND_STATUSCODE':
+      return { ...state, getBrandStatusCode: 0 }
+
+    case 'ADD_BRAND':
+      return { ...state, AddBrandSuccessStatusCode: action.payload.statusCode }
+    case 'REMOVE_ADD_BRAND_STATUS_CODE':
+      return { ...state, AddBrandSuccessStatusCode: 0 }
+
 
     default:
       return state;

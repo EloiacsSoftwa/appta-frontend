@@ -19,9 +19,9 @@ function* handleBarcodeGetProduct(args) {
     }
 
     
-    if (response) {
-      refreshToken(response)
-   }
+   //  if (response) {
+   //    refreshToken(response)
+   // }
 
   } 
 

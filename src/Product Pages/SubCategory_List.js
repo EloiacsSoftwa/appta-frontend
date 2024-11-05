@@ -123,16 +123,20 @@ function SubCategory_List() {
 
 
 
-
-
+   
 
 
     //  pagination
     const itemsPerPage = 10;
-    const totalPages = Math.ceil(subCategoryList.length / itemsPerPage);
+    const totalPages = Math.ceil(subCategoryList && subCategoryList.length / itemsPerPage);
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const currentItems = subCategoryList.slice(indexOfFirstItem, indexOfLastItem);
+    const currentItems = subCategoryList && subCategoryList.slice(indexOfFirstItem, indexOfLastItem);
+    // const totalPages = subCategoryList ? Math.ceil(subCategoryList.length / itemsPerPage) : 0;
+    // const currentItems = (subCategoryList || []).slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+
+
+
 
     const handlePrevClick = () => {
         if (currentPage > 1) {
@@ -292,7 +296,7 @@ function SubCategory_List() {
                         </tr>
                     </thead>
                     <tbody>
-                        {currentItems.map((item, index) => (
+                        {currentItems && currentItems.length > 0 && currentItems.map((item, index) => (
                             <tr key={index} className="hover:bg-gray-50 border-0">
                                 <td className="p-2 mt-1 flex items-center justify-start">
                                     <img src={SmallDot} className="mr-1.5" />
