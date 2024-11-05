@@ -257,7 +257,7 @@ let fileInputRef = useRef()
 
         <div className="flex-1">
           <label className="text-left block text-sm font-medium text-gray-700">description</label>
-          <input type="number" name="quantity" value={formData.description} onChange={(e) => { setFormData({ ...formData, description: e.target.value }) }} className="mt-1 block w-full border border-gray-300 rounded-md" />
+          <input type="text" name="quantity" value={formData.description} onChange={(e) => { setFormData({ ...formData, description: e.target.value }) }} className="mt-1 block w-full border border-gray-300 rounded-md" />
         </div>
         </div>
 
