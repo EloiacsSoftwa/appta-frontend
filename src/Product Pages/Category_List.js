@@ -21,7 +21,8 @@ function Category_List() {
     const State = useSelector(state => state);
 
     const [category ,setCatgory] = useState ([])
-
+    const [loading, setLoading] = useState(true);
+    
     useEffect(() => {
         dispatch({ type: 'GETCATEGORY'})
         
@@ -30,6 +31,7 @@ function Category_List() {
 
 useEffect(()=>{
 if(State.AddProduct?.getCategoryStatusCode == 200){
+    setLoading(false)
     setCatgory(State.AddProduct?.category)
     setTimeout(()=>{
         dispatch({ type: 'REMOVE_GET_CATEGORY_STATUS_CODE'})
@@ -216,7 +218,13 @@ const handleCloseAddCategory = () =>{
                         </div>
                     </div>
                 </div>
+                <div className="relative w-full mb-5">
 
+{loading && (
+<div className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-75 z-10">
+<div className="loader border-t-4 border-orange-500 border-solid rounded-full w-10 h-10 animate-spin"></div>
+</div>
+)}
                 <table className="w-full  text-left mb-5">
                     <thead>
                         
@@ -315,11 +323,11 @@ const handleCloseAddCategory = () =>{
                 </table>
 
 
+</div>
 
 
 
-
-                <div className="flex items-center justify-center space-x-3 mt-40 mb-5">
+                <div className="flex items-center justify-center space-x-3 mt-10 mb-5">
                   
                         <ArrowLeft2 className='cursor-pointer'
                             size="16"

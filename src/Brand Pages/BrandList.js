@@ -26,6 +26,7 @@ function Brand_List() {
     const [brandList, setBrandList] = useState([])
     const dispatch = useDispatch();
     const state = useSelector(state => state);
+    const [loading, setLoading] = useState(true);
 
 
     console.log("state for Brand", state)
@@ -40,6 +41,7 @@ function Brand_List() {
 
     useEffect(() => {
         if (state.AddProduct.getBrandStatusCode == 200) {
+            setLoading(false)
             setBrandList(state.AddProduct?.brands)
 
             setTimeout(() => {
@@ -161,7 +163,13 @@ function Brand_List() {
                         <img src={Frame4} className='w-6 h-6 cursor-pointer' />
                     </div>
                 </div>
+                <div className="relative w-full mb-5">
 
+{loading && (
+<div className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-75 z-10">
+<div className="loader border-t-4 border-orange-500 border-solid rounded-full w-10 h-10 animate-spin"></div>
+</div>
+)}
                 <table className="w-full text-left mb-5">
                     <thead>
                         <tr className="bg-gray-200 border-0">
@@ -204,8 +212,8 @@ function Brand_List() {
                         ))}
                     </tbody>
                 </table>
-
-                <div className="flex items-center justify-center space-x-3 mt-40 mb-5">
+</div>
+                <div className="flex items-center justify-center space-x-3 mt-10 mb-5">
                     <ArrowLeft2 className='cursor-pointer' size="16" color="#797979" onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))} />
                     <span className="font-bold text-neutral-900 text-xs">
                         {String(currentPage).padStart(2, '0')} of {totalPages}
