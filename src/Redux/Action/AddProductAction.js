@@ -4,7 +4,15 @@ import axios from 'axios'
 
 export function Category(payload) {
 
-    return  AxiosConfig.post(`/category/getCategory`, payload).then(response=>response).catch(error=>{console.log(error,"catch")
+    return  AxiosConfig.post(`/category/getCategory`, 
+        {
+        }, {
+           params: {
+            categoryName: payload
+           }
+        }
+
+    ).then(response=>response).catch(error=>{console.log(error,"catch")
        return error
     });
     
@@ -40,6 +48,16 @@ export function getAllBrands(payloads) {
 
    export async function AddProductDetails(payload) {
       return await AxiosConfig.post('/products/addProduct',payload ,{
+         data:payload
+      })
+    }
+
+
+
+    
+
+    export async function AddBrand(payload) {
+      return await AxiosConfig.post('/brand/insertBrand',payload ,{
          data:payload
       })
     }

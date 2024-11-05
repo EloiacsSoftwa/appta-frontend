@@ -7,6 +7,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import Cookies from 'universal-cookie';
 import CryptoJS from "crypto-js";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
 
@@ -26,10 +28,12 @@ function App() {
 
 
   useEffect(() => {
-    if (tokenAccessDenied == 'Token expired') {
+    if (tokenAccessDenied == 204) {
       dispatch({ type: 'LOG-OUT' })
+      setSuccess(false)
+      cookies.set('access-denied', null, { path: '/', expires: new Date(0) });
     }
-  }, [tokenAccessDenied, Appta_Login])
+  }, [tokenAccessDenied])
 
 
   useEffect(() => {
@@ -50,7 +54,9 @@ function App() {
   }
 
   return (
+   <>
 
+<ToastContainer />
     <Router>
       <Routes>
         {success || state.LoginReducer?.isLoggedIn ? (
@@ -68,6 +74,8 @@ function App() {
         )}
       </Routes>
     </Router>
+  
+    </>
   );
 }
 

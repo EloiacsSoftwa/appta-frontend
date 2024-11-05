@@ -1,15 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import { GET_BRANDS_API_CALL } from "../utils/Constant";
 
 import Vector from '../Images/Icons/Vector.svg';
-import Delete from '../Images/Icons/Delete.jpeg';
+import Delete from '../Images/Icons/Delete.svg';
 
 const AddProductModal = ({ onClose }) => {
   const [activeTab, setActiveTab] = useState("Product Details");
 
   const [formData, setFormData] = useState({
-    image: null,
+    
+    images: [],
     Name: "",
     productId: '',
     productName: '',
@@ -17,32 +18,34 @@ const AddProductModal = ({ onClose }) => {
     // productBrand: '',
     categoryId: '',
     subCategoryId: '',
-    brandId: 0,
-    unitId: '',
+    brandId: 1,
+    unitId: 1,
     quantity: '',
     minPurchaseQuantity: '',
-    barcodeType: '',
-    barcodeNo: 0,
+    barcodeType: 1,
+    barcodeNo: 1,
     description: '',
     // quantity: 0,
-    isChecked: false,
+    billOfMaterials: false,
     purchasePrice: 0,
-    salesPricePercentage: 0,
+    salesPricePercentage: 1,
     freebie: false,
     purchasePercentage: 0,
     salesPrice: 0,
     mrp: 0,
     // wholeSalePrice: 0,
-    wholesalePricePercentage: 0,
-    product_Threshold: 0,
-    freebieProductId: 0
+    wholesalePricePercentage: 1,
+    threshold: 0,
+    freebieProductId: 0,
+    barcodeNo:0,
+    statusTypeId:1
   });
   const dispatch = useDispatch();
   const state = useSelector(state => state);
 
   useEffect(() => {
     // dispatch({ type: 'GETSUBCATEGORY' });
-    dispatch({ type: 'GETCATEGORY' });
+    dispatch({ type: 'GETCATEGORY'});
     dispatch({type: GET_BRANDS_API_CALL})
   }, []);
 
@@ -98,24 +101,44 @@ const ProductDetailsForm = ({ handleNext, formData, setFormData }) => {
   const state = useSelector(state => state);
   const dispatch = useDispatch();
   const [selectedCategory, setSelectedCategory] = useState()
-
+let fileInputRef = useRef()
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData({
       ...formData,
-      [name]: type === 'checkbox' ? checked : value,
+      freebie: true
     });
   };
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setFormData({
-        ...formData,
-        image: URL.createObjectURL(file),
-      });
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const base64String = e.target.result.split(',')[1];  
+        // setMainImg(base64String);
+        setFormData({
+                ...formData,
+                images: base64String,
+              });
+
+        fileInputRef.current.value = '';
+      };
+      reader.onerror = (error) => {
+        console.error(error);
+      };
+      reader.readAsDataURL(file);
     }
+
+
+    // const file = e.target.files[0];
+    // if (file) {
+    //   setFormData({
+    //     ...formData,
+    //     images: URL.createObjectURL(file),
+    //   });
+    // }
   };
 
   const handleSelectCategory = (id) => {
@@ -133,8 +156,8 @@ const ProductDetailsForm = ({ handleNext, formData, setFormData }) => {
           className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
         />
         <div className="w-full h-full border border-dashed border-gray-300 rounded-md bg-gray-100 flex items-center justify-center cursor-pointer overflow-hidden">
-          {formData.image ? (
-            <img src={formData.image} alt="Uploaded" className="object-cover w-full h-full" />
+          {formData.images ? (
+            <img src={formData.images} alt="Uploaded" className="object-cover w-full h-full" />
           ) : (
             <span className="text-gray-400 text-sm">+ Add image</span>
           )}
@@ -158,7 +181,7 @@ const ProductDetailsForm = ({ handleNext, formData, setFormData }) => {
       <div className="flex flex-col flex-1 gap-4">
         <div>
           <label className="text-left block text-sm font-medium text-gray-700">Product Type</label>
-          <select name="productType" value={formData.productId} onChange={(e) => { setFormData({ ...formData, productId: e.target.value }) }} className="mt-1 block w-full border border-gray-300 rounded-md">
+          <select name="productType" value={formData.productId} onChange={(e) => { setFormData({ ...formData, productId: e.target.value,statusTypeId : e.target.value }) }} className="mt-1 block w-full border border-gray-300 rounded-md">
             <option value={1}>Tracked</option>
             <option value={2}>Bill Of Materials</option>
           </select>
@@ -207,7 +230,7 @@ const ProductDetailsForm = ({ handleNext, formData, setFormData }) => {
         <div className="flex gap-4">
           <div className="flex-1">
             <label className="text-left block text-sm font-medium text-gray-700">Unit</label>
-            <select name="unit" value={formData.unit} onChange={handleInputChange} className="mt-1 block w-full border border-gray-300 rounded-md">
+            <select name="unit" value={formData.unitId} onChange={(e) => { setFormData({ ...formData, unitId: e.target.value }) }} className="mt-1 block w-full border border-gray-300 rounded-md">
               <option value={1} key={1}>Kg</option>
               <option value={2} key={2}>g</option>
               <option value={3} key={3}>Lt</option>
@@ -218,18 +241,24 @@ const ProductDetailsForm = ({ handleNext, formData, setFormData }) => {
           <div className="flex gap-4">
             <div className="flex-1">
               <label className="text-left block text-sm font-medium text-gray-700">Qty</label>
-              <input type="number" name="qty" value={formData.qty} onChange={handleInputChange} className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Qty" />
+              <input type="number" name="qty" value={formData.quantity} onChange={(e) => { setFormData({ ...formData, quantity: e.target.value }) }} className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Qty" />
             </div>
             <div className="flex-1">
               <label className="text-left block text-sm font-medium text-gray-700">Min Qty</label>
-              <input type="number" name="minQty" value={formData.minQty} onChange={handleInputChange} className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Min Qty" />
+              <input type="number" name="minQty" value={formData.minPurchaseQuantity} onChange={(e) => { setFormData({ ...formData, minPurchaseQuantity: e.target.value }) }} className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Min Qty" />
             </div>
           </div>
         </div>
+        <div className="flex gap-4">
+        <div className="flex-1">
+          <label className="text-left block text-sm font-medium text-gray-700">Barcode</label>
+          <input type="number" name="quantity" value={formData.barcodeNo} onChange={(e) => { setFormData({ ...formData, barcodeNo: e.target.value }) }} className="mt-1 block w-full border border-gray-300 rounded-md" />
+        </div>
 
-        <div>
-          <label className="text-left block text-sm font-medium text-gray-700">Quantity</label>
-          <input type="number" name="quantity" value={formData.quantity} onChange={handleInputChange} className="mt-1 block w-full border border-gray-300 rounded-md" />
+        <div className="flex-1">
+          <label className="text-left block text-sm font-medium text-gray-700">description</label>
+          <input type="text" name="quantity" value={formData.description} onChange={(e) => { setFormData({ ...formData, description: e.target.value }) }} className="mt-1 block w-full border border-gray-300 rounded-md" />
+        </div>
         </div>
 
         <button type="submit" className="mt-4 bg-orange-500 text-white py-2 rounded-md w-full sm:w-auto">Next</button>
@@ -245,15 +274,15 @@ const AccountingDetailsForm = ({ handleNext, handleBack, formData, setFormData }
       <div className="flex gap-4">
         <div className="flex-1">
           <label className="text-left block text-sm font-medium text-gray-700">Purchase Price</label>
-          <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Watch" value={formData.purchasePrice} />
+          <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Watch" value={formData.purchasePrice} onChange={(e) => { setFormData({ ...formData, purchasePrice: e.target.value }) }}/>
         </div>
         <div className="flex-1">
           <label className="text-left block text-sm font-medium text-gray-700">Purchase Percentage</label>
-          <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Brand" value={formData.purchasePercentage} />
+          <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Brand" value={formData.purchasePercentage} onChange={(e) => { setFormData({ ...formData, purchasePercentage: e.target.value }) }}/>
         </div>
         <div className="flex-1">
           <label className="text-left block text-sm font-medium text-gray-700">Sales Price</label>
-          <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Brand" value={formData.salesPrice} />
+          <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Brand" value={formData.salesPrice} onChange={(e) => { setFormData({ ...formData, salesPrice: e.target.value }) }}/>
         </div>
       </div>
 
@@ -261,25 +290,25 @@ const AccountingDetailsForm = ({ handleNext, handleBack, formData, setFormData }
       <div className="w-full">
         <div className="flex-1">
           <label className="text-left block text-sm font-medium text-gray-700">MRP</label>
-          <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Brand" value={formData.mrp} />
+          <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Brand" value={formData.mrp} onChange={(e) => { setFormData({ ...formData, mrp: e.target.value }) }}/>
         </div>
       </div>
 
       <div className="flex gap-4">
         <div className="flex-1">
           <label className="text-left block text-sm font-medium text-gray-700">Whole sale Price</label>
-          <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Watch" value={formData.wholeSalePrice} />
+          <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Watch" value={formData.wholeSalePrice} onChange={(e) => { setFormData({ ...formData, wholeSalePrice: e.target.value }) }}/>
         </div>
         <div className="flex-1">
           <label className="text-left block text-sm font-medium text-gray-700">Whole sale Percentage</label>
-          <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Brand" value={formData.wholeSalePercentage} />
+          <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Brand" value={formData.wholeSalePercentage} onChange={(e) => { setFormData({ ...formData, wholeSalePercentage: e.target.value }) }}/>
         </div>
       </div>
 
       <div className="w-full">
         <div className="flex-1">
           <label className="text-left block text-sm font-medium text-gray-700">Product Threshold</label>
-          <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Brand" value={formData.product_Threshold} />
+          <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Brand" value={formData.threshold} onChange={(e) => { setFormData({ ...formData, threshold: e.target.value }) }}/>
         </div>
       </div>
 
@@ -300,151 +329,339 @@ const AccountingDetailsForm = ({ handleNext, handleBack, formData, setFormData }
 }
 
 
-const BillOfMaterials = ({ handleBack, formData, setFormData }) => {
-  const dispatch = useDispatch();
-  // var [peroductList, setProductList] = useState(
-  //     {
-  //         productId: 0,
-  //         productName: "string",
-  //         statusTypeId: 0,
-  //         categoryId: 0,
-  //         subCategoryId: 0,
-  //         brandId: 0,
-  //         unitId: 0,
-  //         quantity: 0,
-  //         minPurchaseQuantity: 0,
-  //         barcodeType: 0,
-  //         barcodeNo: "string",
-  //         description: "string",
-  //         purchasePrice: 0,
-  //         salesPricePercentage: 0,
-  //         mrp: 0,
-  //         wholesalePricePercentage: 0,
-  //         threshold: 0,
-  //         billOfMaterials: true,
-  //         billOfMaterialsList: [
-  //           {
-  //             billOfMaterialsProductId: 0,
-  //             billOfMaterialsProductQuantity: 0,
-  //             billOfMaterialsProductCost: 0
-  //           }
-  //         ],
-  //         freebie: true,
-  //         freebieProductId: 0,
-  //         images: [
-  //           "string"
-  //         ]
-  //       }
-  //   )
-  var handleSubmit = () => {
-    console.log("formData", formData);
+// const BillOfMaterials = ({ handleBack, formData, setFormData }) => {
+//   const dispatch = useDispatch();
+//   // var [peroductList, setProductList] = useState(
+//   //     {
+//   //         productId: 0,
+//   //         productName: "string",
+//   //         statusTypeId: 0,
+//   //         categoryId: 0,
+//   //         subCategoryId: 0,
+//   //         brandId: 0,
+//   //         unitId: 0,
+//   //         quantity: 0,
+//   //         minPurchaseQuantity: 0,
+//   //         barcodeType: 0,
+//   //         barcodeNo: "string",
+//   //         description: "string",
+//   //         purchasePrice: 0,
+//   //         salesPricePercentage: 0,
+//   //         mrp: 0,
+//   //         wholesalePricePercentage: 0,
+//   //         threshold: 0,
+//   //         billOfMaterials: true,
+//   //         billOfMaterialsList: [
+//   //           {
+//   //             billOfMaterialsProductId: 0,
+//   //             billOfMaterialsProductQuantity: 0,
+//   //             billOfMaterialsProductCost: 0
+//   //           }
+//   //         ],
+//   //         freebie: true,
+//   //         freebieProductId: 0,
+//   //         images: [
+//   //           "string"
+//   //         ]
+//   //       }
+//   //   )
+//   var handleSubmit = () => {
+//     console.log("formData", formData);
 
-    dispatch({ type: "ADDPRODUCTDETAILS", payload: formData })
-  }
+//     dispatch({ type: "ADDPRODUCTDETAILS", payload: formData })
+//   }
 
-  // min-h-screen 
-  return (
-    <div className="flex items-center justify-center bg-gray-100">
-      <div className="bg-white rounded-lg shadow-lg w-full max-w-xl overflow-y-auto">
+//   // min-h-screen 
+//   return (
+//     <div className="flex items-center justify-center bg-gray-100">
+//       <div className="bg-white rounded-lg shadow-lg w-full max-w-xl overflow-y-auto">
 
-        <div className="space-y-6 md:p-8">
-          <div>
-            <h3 className="font-semibold text-lg mb-2 text-orange-500">Component</h3>
-            <div>
-              <div className="flex items-center mb-px">
-                <input
-                  type="text"
-                  placeholder="Product Name"
-                  className="w-52 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500 bg-zinc-300"
-                />
-                <input
-                  type="text"
-                  placeholder="Qty"
-                  className="w-36 px-4 py-2 mx-0.5 focus:outline-none focus:ring-2 focus:ring-orange-500  bg-zinc-300"
-                />
+//         <div className="space-y-6 md:p-8">
+//           <div>
+//             <h3 className="font-semibold text-lg mb-2 text-orange-500">Component</h3>
+//             <div>
+//               <div className="flex items-center mb-px">
+//                 <input
+//                   type="text"
+//                   placeholder="Product Name"
+//                   className="w-52 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500 bg-zinc-300"
 
-              </div>
-              <div className="flex items-center space-x-0.5">
-                <input
-                  type="text"
-                  placeholder="Computer"
-                  className="w-52 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500 text-neutral-900 bg-zinc-100"
-                />
-                <input
-                  type="text"
-                  placeholder="10 pcs"
-                  className="w-36 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500  bg-zinc-100"
-                />
-                <button className="text-gray-500 hover:text-red-500 mt-2">
-                  <img className="ml-2" src={Delete}></img>
-                </button>
-              </div>
+//                 />
+//                 <input
+//                   type="text"
+//                   placeholder="Qty"
+//                   className="w-36 px-4 py-2 mx-0.5 focus:outline-none focus:ring-2 focus:ring-orange-500  bg-zinc-300"
+//                 />
 
-              <button className="mt-4 text-neutral-900 text-sm font-manrope font-semibold text-left flex items-center space-x-2">
-                <span className="flex items-center justify-center w-4 h-4 rounded-full border border-black text-black text-xs">
-                  <img src={Vector}></img>
-                </span>
-                <span>Add a component product</span>
-              </button>
+//               </div>
+//               <div className="flex items-center space-x-0.5">
+//                 <input
+//                   type="text"
+//                   placeholder="Computer"
+//                   className="w-52 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500 text-neutral-900 bg-zinc-100"
+//                 />
+//                 <input
+//                   type="text"
+//                   placeholder="10 pcs"
+//                   className="w-36 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500  bg-zinc-100"
+//                 />
+//                 <button className="text-gray-500 hover:text-red-500 mt-2">
+//                   <img className="ml-2" src={Delete}></img>
+//                 </button>
+//               </div>
 
+//               <button className="mt-4 text-neutral-900 text-sm font-manrope font-semibold text-left flex items-center space-x-2">
+//                 <span className="flex items-center justify-center w-4 h-4 rounded-full border border-black text-black text-xs">
+//                   <img src={Vector}></img>
+//                 </span>
+//                 <span>Add a component product</span>
+//               </button>
+
+//             </div>
+//           </div>
+
+//           <div>
+//             <h3 className="font-semibold text-lg mb-2 text-orange-500 mb-2 focus:outline-none focus:ring-2 focus:ring-orange-500">Additional Cost</h3>
+//             <div className="flex items-center mb-px">
+//               <input
+//                 type="text"
+//                 placeholder="Cost Name"
+//                 className="w-52 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500 bg-zinc-300"
+//               />
+//               <input
+//                 type="text"
+//                 placeholder="Sub Total"
+//                 className="w-36 px-4 py-2 mx-0.5 focus:outline-none focus:ring-2 focus:ring-orange-500  bg-zinc-300"
+//               />
+
+//             </div>
+//             <div className="flex items-center space-x-0.5">
+//               <input
+//                 type="text"
+//                 placeholder="Assemble"
+//                 className="w-52 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500 text-neutral-900 bg-zinc-100"
+//               />
+//               <input
+//                 type="text"
+//                 placeholder="₹ 11,000"
+//                 className="w-36 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500  bg-zinc-100"
+//               />
+//               <button className="text-gray-500 hover:text-red-500 mt-2">
+//                 <img className="ml-2" src={Delete}></img>
+//               </button>
+//             </div>
+
+//             <button className="mt-4 text-neutral-900 text-sm font-manrope font-semibold text-left flex items-center space-x-2">
+//               <span className="flex items-center justify-center w-4 h-4 rounded-full border border-black text-black text-xs">
+//                 <img src={Vector}></img>
+//               </span>
+//               <span>Add an additional cost</span>
+//             </button>
+//           </div>
+//         </div>
+
+//         <div className="w-full bg-zinc-300 mt-6 p-2">
+//           <div className="flex justify-end space-x-4">
+//             <button
+//               className="px-4 bg-orange-500 text-neutral-900 rounded-md hover:bg-gray-300" onClick={handleBack}
+//             >
+//               Back
+//             </button>
+//             <button className="px-4 py-1 bg-orange-500 text-neutral-900 rounded-md hover:bg-orange-600" onClick={handleSubmit}>
+//               Submit
+//             </button>
+//           </div>
+//         </div>
+
+//       </div>
+//     </div>
+//   );
+// };
+
+function BillOfMaterials({handleBack, formData, setFormData}) {
+    const dispatch = useDispatch();
+    const [billOfMaterialsList, setbillOfMaterialsList] = useState([
+      { productName: 'Computer',billOfMaterialsProductId:1, billOfMaterialsProductQuantity: 0, costName: 'Assemble', billOfMaterialsProductCost: 0 }
+    
+    ]);
+  
+    // const [additionalCosts, setAdditionalCosts] = useState([
+    //   { costName: 'Assemble', billOfMaterialsProductCost: 0 },
+    // ]);
+  
+    
+    const addComponent = () => {
+        setbillOfMaterialsList([...billOfMaterialsList, { productName: '', billOfMaterialsProductQuantity: '' }]);
+    };
+  
+  
+    const deleteComponent = (index) => {
+        setbillOfMaterialsList(billOfMaterialsList.filter((_, i) => i !== index));
+    };
+  
+   
+    const addAdditionalCost = () => {
+      setbillOfMaterialsList([...billOfMaterialsList, { costName: '', subtotal: '' }]);
+    };
+  
+    const deleteAdditionalCost = (index) => {
+      setbillOfMaterialsList(billOfMaterialsList.filter((_, i) => i !== index));
+    };
+  
+    var handleSubmit = () => {
+        setFormData({...formData,billOfMaterialsList})
+        // const formattedBillOfMaterials = billOfMaterialsList.map(item => ({
+        //     billOfMaterialsProductId: item.billOfMaterialsProductId || 0,
+        //     billOfMaterialsProductQuantity: item.billOfMaterialsProductQuantity || 0,
+        //     billOfMaterialsProductCost: 0  // Set to 0 if not applicable
+        // }));
+        
+        // const formattedAdditionalCosts = additionalCosts.map(item => ({
+        //     billOfMaterialsProductId: 0, // Set to 0 if not applicable
+        //     billOfMaterialsProductQuantity: 0,
+        //     billOfMaterialsProductCost: item.billOfMaterialsProductCost || 0
+        // }));
+        
+        // Merge both formatted arrays into a single array
+        // const unifiedBillOfMaterialsList = [...formattedBillOfMaterials];
+        
+        // Wrap in the desired object structure
+        // const finalData = {
+        //     billOfMaterialsList: unifiedBillOfMaterialsList
+        // };
+        // let temp1 = [...finalData.billOfMaterialsList]
+        let temp = {...formData,billOfMaterialsList:[]}
+        console.log(temp);
+            dispatch({ type: "ADDPRODUCTDETAILS", payload: temp })
+          }
+
+    return (
+        // min-h-screen
+      <div className="flex justify-center items-center">
+        <div className="bg-white rounded-lg shadow-lg w-full max-w-xl overflow-y-auto border border-orange-500">
+        
+        <div className='p-6'>
+          <div className="my-4">
+            <h3 className="text-lg font-semibold font-Manrope text-orange-500">Component</h3>
+            <table className="w-full mt-3 border-none lg:w-96">
+              <thead>
+                <tr className="bg-zinc-300 font-Manrope text-base font-bold">
+                  <th className="text-left px-5 border-r-2 border-white ">Product Name</th>
+                  <th className="p-2 text-left px-5">Qty</th>
+                </tr>
+              </thead>
+              <tbody>
+                {billOfMaterialsList.map((component, index) => (
+                  <tr key={index} className="border-none">
+                    <td className="">
+                      <input
+                        type="text"
+                        value={component.productName}
+                        placeholder="Enter product name"
+                        className="border-none w-full bg-zinc-100 p-2 px-4 focus:outline-none focus:ring-2 focus:ring-orange-500"
+                        onChange={(e) => {
+                          const newComponents = [...billOfMaterialsList];
+                          newComponents[index].productName = e.target.value;
+                          setbillOfMaterialsList(newComponents);
+                        }}
+                      />
+                    </td>
+                    <td className="">
+                      <input
+                        type="text"
+                        value={component.billOfMaterialsProductQuantity}
+                        placeholder="Enter quantity"
+                        className="border w-full border-none w-full bg-zinc-100 p-2 px-4 focus:outline-none focus:ring-2 focus:ring-orange-500"
+                        onChange={(e) => {
+                          const newComponents = [...billOfMaterialsList];
+                          newComponents[index].billOfMaterialsProductQuantity = e.target.value;
+                          setbillOfMaterialsList(newComponents);
+                        }}
+                      />
+                    </td>
+                    <td className="text-center">
+                      <button onClick={() => deleteComponent(index)} className="text-red-500 hover:text-red-700">
+                       <img src={Delete} className="w-7 h-7 ml-1"></img>
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <div onClick={addComponent} className="text-blue-500 hover:text-blue-700 mt-4 flex items-center">
+              <span className=""><img src={Vector}className="w-4 h-4 ml-1"></img></span> 
+              <span className="ml-3 font-Manrope font-semibold text-sm text-neutral-900">Add a component product</span>
             </div>
           </div>
-
-          <div>
-            <h3 className="font-semibold text-lg mb-2 text-orange-500 mb-2 focus:outline-none focus:ring-2 focus:ring-orange-500">Additional Cost</h3>
-            <div className="flex items-center mb-px">
-              <input
-                type="text"
-                placeholder="Cost Name"
-                className="w-52 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500 bg-zinc-300"
-              />
-              <input
-                type="text"
-                placeholder="Sub Total"
-                className="w-36 px-4 py-2 mx-0.5 focus:outline-none focus:ring-2 focus:ring-orange-500  bg-zinc-300"
-              />
-
+  
+        
+          <div className="my-4">
+            <h3 className="text-lg font-semibold text-orange-500">Additional Cost</h3>
+            <table className="w-full mt-2 border-none lg:w-96">
+              <thead>
+                <tr className="bg-zinc-300 bg-zinc-300 font-Manrope text-base font-bold">
+                  <th className="text-left px-5 border-r-2 border-white">Cost Name</th>
+                  <th className="p-2 text-left px-5">Subtotal</th>
+                </tr>
+              </thead>
+              <tbody>
+                {billOfMaterialsList.map((cost, index) => (
+                  <tr key={index} className="border-none">
+                    <td className="">
+                      <input
+                        type="text"
+                        value={cost.costName}
+                        placeholder="Enter cost name"
+                        className=" border-none w-full bg-zinc-100 p-2 px-4 focus:outline-none focus:ring-2 focus:ring-orange-500"
+                        onChange={(e) => {
+                          const newCosts = [...billOfMaterialsList];
+                          newCosts[index].costName = e.target.value;
+                          setbillOfMaterialsList(newCosts);
+                        }}
+                      />
+                    </td>
+                    <td className="">
+                      <input
+                        type="text"
+                        value={cost.billOfMaterialsProductCost}
+                        placeholder="Enter subtotal"
+                        className="border-none w-full bg-zinc-100 p-2 px-4 focus:outline-none focus:ring-2 focus:ring-orange-500"
+                        onChange={(e) => {
+                          const newCosts = [...billOfMaterialsList];
+                          newCosts[index].billOfMaterialsProductCost = e.target.value;
+                          setbillOfMaterialsList(newCosts);
+                        }}
+                      />
+                    </td>
+                    <td className=" text-center">
+                      <button onClick={() => deleteAdditionalCost(index)} className="text-red-500 hover:text-red-700">
+                      <img src={Delete}className="w-7 h-7 ml-1"></img>
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <div onClick={addAdditionalCost} className="text-blue-500 hover:text-blue-700 mt-4 flex items-center">
+              <span className=""><img src={Vector}className="w-4 h-4 ml-1"></img></span> 
+              <span className="ml-1 font-Manrope font-semibold text-sm text-neutral-900 ">Add an additional cost</span>
             </div>
-            <div className="flex items-center space-x-0.5">
-              <input
-                type="text"
-                placeholder="Assemble"
-                className="w-52 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500 text-neutral-900 bg-zinc-100"
-              />
-              <input
-                type="text"
-                placeholder="₹ 11,000"
-                className="w-36 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500  bg-zinc-100"
-              />
-              <button className="text-gray-500 hover:text-red-500 mt-2">
-                <img className="ml-2" src={Delete}></img>
-              </button>
-            </div>
-
-            <button className="mt-4 text-neutral-900 text-sm font-manrope font-semibold text-left flex items-center space-x-2">
-              <span className="flex items-center justify-center w-4 h-4 rounded-full border border-black text-black text-xs">
-                <img src={Vector}></img>
-              </span>
-              <span>Add an additional cost</span>
-            </button>
+            
+          </div>
+  
+          </div>
+  
+        
+          <div className="flex justify-end mt-4 pr-4 space-x-4 bg-zinc-300 py-2">
+            <button className="bg-orange-500 hover:bg-gray-400 text-black font-semibold py-1 px-4 rounded" onClick={handleBack}>Back</button>
+            <button className="bg-orange-500 hover:bg-orange-600 text-black font-semibold py-1 px-4 rounded" onClick={handleSubmit}>Submit</button>
           </div>
         </div>
-
-        <div className="w-full bg-zinc-300 mt-6 p-2">
-          <div className="flex justify-end space-x-4">
-            <button
-              className="px-4 bg-orange-500 text-neutral-900 rounded-md hover:bg-gray-300" onClick={handleBack}
-            >
-              Back
-            </button>
-            <button className="px-4 py-1 bg-orange-500 text-neutral-900 rounded-md hover:bg-orange-600" onClick={handleSubmit}>
-              Submit
-            </button>
-          </div>
-        </div>
-
       </div>
-    </div>
-  );
-};
+    );
+  }
+  
+//   export default BillMaterial;
+
+
 export default AddProductModal;

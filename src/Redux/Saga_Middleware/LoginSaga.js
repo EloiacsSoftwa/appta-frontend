@@ -14,29 +14,12 @@ function* Login(args) {
     else if (response.status === 403 || response.statusCode === 403){
       yield put({ type: 'LOGIN_FAILURE', payload: { message: 'Login failed', statusCode:response.status  || response.statusCode  } });
     }
-    if (response) {
-      refreshToken(response)
-   }
 
+  
   } 
 
 
-  function refreshToken(response) {
-    if (response.data && response.data) {
-       const refreshTokenGet = response.data
-       console.log("refreshTokenGet", refreshTokenGet)
-       const cookies = new Cookies()
-       cookies.set('token', refreshTokenGet, { path: '/' });
-    } 
-    else if (response.data == 'Token expired') {
-       const message = response.data
-       const cookies = new Cookies()
-       cookies.set('access-denied', message, { path: '/' });
  
-    }
- 
- }
-
 
   function* LoginSaga() {
   yield takeEvery('LOGIN_REQUEST', Login);

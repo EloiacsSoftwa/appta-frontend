@@ -10,7 +10,7 @@ function* handleBarcodeGetProduct(args) {
    console.log("Response For pos ",response)
     if (response.status === 200 || response.statusCode === 200) {
       const token = response.data;
-      yield put({ type: 'BARCODE-GET-PRODUCT', payload: {response:response.data , statusCode: response.status  || response.statusCode}});
+      yield put({ type: 'BARCODE-GET-PRODUCT', payload: {response:response.data.data , statusCode: response.status  || response.statusCode}});
             
     }
     else{
@@ -20,27 +20,20 @@ function* handleBarcodeGetProduct(args) {
 
     
     if (response) {
-      refreshToken(response)
+      ExpireToken(response)
    }
 
   } 
 
 
-  function refreshToken(response) {
-    if (response.data && response.data) {
-       const refreshTokenGet = response.data
-       console.log("refreshTokenGet", refreshTokenGet)
-       const cookies = new Cookies()
-       cookies.set('token', refreshTokenGet, { path: '/' });
-    } 
-    else if (response.data == 'Token expired') {
-       const message = response.data
-       const cookies = new Cookies()
-       cookies.set('access-denied', message, { path: '/' });
- 
-    }
- 
- }
+  function ExpireToken(response) {
+   if (response.data.code === 204) {
+     const message = response.data.code
+     const cookies = new Cookies()
+     cookies.set('access-denied', message, { path: '/' });
+   }
+
+}
 
 
   function* PosSaga() {
