@@ -57,6 +57,8 @@ import CryptoJS from "crypto-js";
 
 
       const token = loginState.JWTtoken;
+       console.log("logintoken",token);
+       
       if (token) {
         const cookies = new Cookies();
         cookies.set('token', token, { path: '/' });
