@@ -31,7 +31,7 @@ function* handleSubCategory(args) {
   };
     if (response.status === 200 || response.statusCode === 200) {
            yield put({ type: 'ADD_SUB_CATEGORY', payload: {response:response.data , statusCode: response.status  || response.statusCode}});
-           toast.success('Category Successfully Created', {
+           toast.success('Subcategory Successfully Created', {
             position: "top-center",
             autoClose: 2000,
             hideProgressBar: true,
@@ -48,9 +48,9 @@ function* handleSubCategory(args) {
 
     }
     
-    if (response) {
-      refreshToken(response)
-   }
+//     if (response) {
+//     //   refreshToken(response)
+//    }
 
   } 
 

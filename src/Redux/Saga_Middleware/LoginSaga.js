@@ -15,7 +15,7 @@ function* Login(args) {
       yield put({ type: 'LOGIN_FAILURE', payload: { message: 'Login failed', statusCode:response.status  || response.statusCode  } });
     }
     if (response) {
-      refreshToken(response)
+      // refreshToken(response)
    }
 
   } 

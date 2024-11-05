@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Aashirvaad from '../Images/Icons/Aasirvaad.svg';
-import SakthiMasala from '../Images/Icons/SakthiMasala.svg'; 
+import SakthiMasala from '../Images/Icons/SakthiMasala.svg';
 import Frame1 from '../Images/Sales/Frame.svg';
 import Frame2 from '../Images/Sales/Frame2.svg';
 import Frame3 from '../Images/Sales/Frame 3.svg';
@@ -12,12 +12,60 @@ import Vector from '../Images/Icons/Vector.svg';
 import SmallDot from '../Images/Sales/Smalldots.svg';
 import { ArrowRight2, ArrowLeft2, ArrowUp2, ArrowDown2 } from 'iconsax-react';
 import AddBrandList from './AddBrandList';
+import { useDispatch, useSelector } from 'react-redux';
+import { GET_BRANDS_API_CALL } from "../utils/Constant";
+import moment from 'moment';
+
+
 
 function Brand_List() {
-    
+
     const [currentPage, setCurrentPage] = useState(1);
     const [showAddCategory, setShowAddCategory] = useState(false);
     const [isHovered, setIsHovered] = useState(false);
+    const [brandList, setBrandList] = useState([])
+    const dispatch = useDispatch();
+    const state = useSelector(state => state);
+
+
+    console.log("state for Brand", state)
+
+
+    useEffect(() => {
+        dispatch({ type: GET_BRANDS_API_CALL })
+    }, [])
+
+
+
+
+    useEffect(() => {
+        if (state.AddProduct.getBrandStatusCode == 200) {
+            setBrandList(state.AddProduct?.brands)
+
+            setTimeout(() => {
+                dispatch({ type: 'REMOVE_GET_BRAND_STATUSCODE' })
+            }, 3000)
+        }
+
+    }, [state.AddProduct.getBrandStatusCode])
+
+
+    useEffect(() => {
+        if (state.AddProduct.AddBrandSuccessStatusCode == 200) {
+            dispatch({ type: GET_BRANDS_API_CALL })
+            setShowAddCategory(false)
+            setTimeout(() => {
+                dispatch({ type: 'REMOVE_ADD_BRAND_STATUS_CODE' })
+            }, 2000)
+
+        }
+
+    }, [state.AddProduct.AddBrandSuccessStatusCode])
+
+
+
+
+
 
 
     const reports = [
@@ -45,32 +93,32 @@ function Brand_List() {
     ];
 
     const itemsPerPage = 10;
-    const totalPages = Math.ceil(Category.length / itemsPerPage);
-    const currentItems = Category.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+    const totalPages = Math.ceil(brandList.length / itemsPerPage);
+    const currentItems = brandList.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
     return (
         <div className='h-screen bg-white p-4 w-full'>
             <div className='flex justify-between items-center gap-2 mb-2.5'>
                 <div>
-                    <label className='font-semibold text-22 text-neutral-900 font-Manrope'>Product - </label> 
-                    <label className='font-bold text-22 text-orange-600 font-Manrope'>Sub Category List</label>
+                    <label className='font-semibold text-22 text-neutral-900 font-Manrope'>Product - </label>
+                    <label className='font-bold text-22 text-orange-600 font-Manrope'>Brand List</label>
                 </div>
-              
-                <div 
-  onClick={() => setShowAddCategory(true)} 
-  onMouseEnter={() => setIsHovered(true)}
-  onMouseLeave={() => setIsHovered(false)}
-  className='hover:bg-orange-500 cursor-pointer flex items-center gap-2 w-auto h-auto text-orange-600 border border-orange-600 rounded px-2 py-1'
->
-  {isHovered ? (
-    <img src={Vector} className='w-4 h-4 ml-1' />
-  ) : (
-    <img src={Add} className='w-4 h-4' />
-  )}
-  <label className="cursor-pointer text-sm hover:text-black text-orange-600 font-semibold font-Manrope">
-    Add Brand
-  </label>
-</div>
+
+                <div
+                    onClick={() => setShowAddCategory(true)}
+                    onMouseEnter={() => setIsHovered(true)}
+                    onMouseLeave={() => setIsHovered(false)}
+                    className='hover:bg-orange-500 cursor-pointer flex items-center gap-2 w-auto h-auto text-orange-600 border border-orange-600 rounded px-2 py-1'
+                >
+                    {isHovered ? (
+                        <img src={Vector} className='w-4 h-4 ml-1' />
+                    ) : (
+                        <img src={Add} className='w-4 h-4' />
+                    )}
+                    <label className="cursor-pointer text-sm hover:text-black text-orange-600 font-semibold font-Manrope">
+                        Add Brand
+                    </label>
+                </div>
 
             </div>
 
@@ -116,7 +164,7 @@ function Brand_List() {
                             <th className="p-1 flex items-center justify-start h-full">
                                 <input type="checkbox" className="ml-4 mt-1 form-checkbox h-4 w-4 text-blue-600 border-neutral-500 cursor-pointer" />
                             </th>
-                            {["Image", "Brand Name", "Brand Category", "Date"].map((header, i) => (
+                            {["Image", "Brand Name", "Brand Description", "Date"].map((header, i) => (
                                 <th key={i} className="p-1 font-semibold text-base text-neutral-900">
                                     <div className='flex gap-3'>
                                         <div className="flex flex-col items-center justify-start gap-1">
@@ -138,11 +186,13 @@ function Brand_List() {
                                     <input type="checkbox" className="form-checkbox h-4 w-4 text-blue-600 border-neutral-500 cursor-pointer" />
                                 </td>
                                 <td className="p-2 text-center">
-                                    <img src={item.image} alt={item.Category} className="w-10 h-10 mt-3 -mb-3" />
+                                    <img src={SakthiMasala} alt='brand' className="w-10 h-10 mt-3 -mb-3" />
                                 </td>
-                                <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{item.Category}</td>
-                                <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{item.Description}</td>
-                                <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{item.Date}</td>
+                                <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{item.brandName}</td>
+                                <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{item.Description || '-'}</td>
+                                <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">
+                                    {moment(item.createdAt, "DD-MM-YYYY HH:mm:ss").format("DD-MMM-YY")}
+                                </td>
                                 <td className="p-2 text-gray-500 cursor-pointer w-8">
                                     <img src={Dot} />
                                 </td>
