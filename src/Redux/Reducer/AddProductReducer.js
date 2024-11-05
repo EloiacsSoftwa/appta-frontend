@@ -25,7 +25,10 @@ const AddProductReducer = (state = initialState, action) => {
         getCategoryStatusCode: action.payload ? action.payload.statusCode : null,
         category: action.payload ? action.payload.response : []
       };
-    // ADD_PRODUCT_DETAILS
+
+    case 'REMOVE_GET_CATEGORY_STATUS_CODE':
+      return { ...state, getCategoryStatusCode: 0 }
+
     case 'ADD_PRODUCT_DETAILS':
       return { ...state, add_Product_status_code: action.payload.statusCode };
 

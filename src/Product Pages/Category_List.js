@@ -24,8 +24,22 @@ function Category_List() {
 
     useEffect(() => {
         dispatch({ type: 'GETCATEGORY'})
-        setCatgory(State.AddProduct?.category)
+        
      },[])
+
+
+useEffect(()=>{
+if(State.AddProduct?.getCategoryStatusCode == 200){
+    setCatgory(State.AddProduct?.category)
+    setTimeout(()=>{
+        dispatch({ type: 'REMOVE_GET_CATEGORY_STATUS_CODE'})
+    },2000)
+}
+
+
+},[State.AddProduct?.getCategoryStatusCode])
+
+
 
 
      useEffect(() => {
