@@ -2,23 +2,35 @@ import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 
 function AddBrandList({ handleClose }) {
-    const [subCategoryName, setSubCategoryName] = useState('');
+    const [brandName, setBrandName] = useState('');
     const [description, setDescription] = useState('');
-    const [subCategoryNameError, setSubCategoryNameError] = useState('');
+    const [brandNameError, setBrandNameError] = useState('');
 
     const dispatch = useDispatch();
 
-    const handleAddSubCategory = () => {
-        if (!subCategoryName) {
-            setSubCategoryNameError('Please enter Brand Name');
+
+
+const handleBrandName = (e) =>{
+
+    const value = e.target.value;
+setBrandName(value)
+setBrandNameError('')
+}
+
+
+
+
+
+    const handleAddBrand = () => {
+        if (!brandName) {
+            setBrandNameError('Please enter Brand Name');
             return;
         }
         dispatch({
-            type: 'ADDSUBCATEGORY',
+            type: 'ADDBRAND',
             payload: {
                 id: 0,
-                subCategoryName,
-                categoryId: 1,
+                brandName:brandName,
                 imageUrl: 'sample',
             },
         });
@@ -32,17 +44,17 @@ function AddBrandList({ handleClose }) {
                         <label className="block font-sans text-sm font-semibold mb-1">Brand Name</label>
                         <input
                             type="text"
-                            value={subCategoryName}
-                            onChange={(e) => setSubCategoryName(e.target.value)}
+                            value={brandName}
+                            onChange={(e) => handleBrandName(e)}
                             className="mt-1 block w-52 border text-black text-xs font-Manrope border-neutral-400 shadow-sm px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-orange-500"
                             placeholder="Aasirvaad"
                         />
-                        {subCategoryNameError && (
-                            <div className="text-red-600 text-sm font-Manrope font-bold">{subCategoryNameError}</div>
+                        {brandNameError && (
+                            <div className="text-red-600 text-sm font-Manrope font-bold">{brandNameError}</div>
                         )}
                     </div>
 
-                    <div className="mb-4">
+                    {/* <div className="mb-4">
                         <label className="block font-manrope text-xs font-semibold text-left">Description</label>
                         <textarea
                             rows="4"
@@ -51,7 +63,7 @@ function AddBrandList({ handleClose }) {
                             className="mt-1 block w-full border rounded-md shadow-sm border-neutral-400 p-2 focus:outline-none focus:ring-2 focus:ring-orange-500"
                             placeholder=""
                         ></textarea>
-                    </div>
+                    </div> */}
 
                     <div className="flex justify-center gap-3 mt-6">
                         <button
@@ -63,7 +75,7 @@ function AddBrandList({ handleClose }) {
                         </button>
                         <button
                             type="button"
-                            onClick={handleAddSubCategory}
+                            onClick={handleAddBrand}
                             className="flex items-center font-Manrope justify-center px-4 py-1 bg-orange-600 text-black hover:bg-orange-700 border border-black font-semibold text-sm"
                         >
                             Save & Close

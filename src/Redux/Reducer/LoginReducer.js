@@ -12,8 +12,9 @@ const initialState = {
  
  const LoginReducer = (state = initialState, action) => {
    switch (action.type) {
+    // action.payload.response  
      case 'LOGIN-INFO':
-       return {...state, loginStatusCode: action.payload.statusCode,JWTtoken: action.payload.response };
+       return {...state, loginStatusCode: action.payload.statusCode,JWTtoken: "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoxLCJpZCI6NywiZW1haWwiOiJhbGx3aW5AZ21haWwuY29tIiwic3ViIjoiYWxsd2luQGdtYWlsLmNvbSIsImlhdCI6MTczMDc4NTcxMiwiZXhwIjoxNzMwNzg3NTEyfQ.Br8QIvp7mF7L0I29Qo-C58C_Mk9ksRjxYA5AVOAJUAA" };
                     
      case 'REMOVE_LOGIN_STATUS_CODE':
       return{...state, loginStatusCode:0 }

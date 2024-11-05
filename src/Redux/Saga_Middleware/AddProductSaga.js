@@ -1,8 +1,12 @@
 import { call, takeEvery, put } from 'redux-saga/effects';
-import { Category,SubCategory,AddProductDetails } from '../Action/AddProductAction';
+import { Category,SubCategory,AddProductDetails,AddBrand } from '../Action/AddProductAction';
 import { GET_BRANDS_API_CALL, GET_BRANDS_API_RESPONSE } from '../../utils/Constant';
 import { getAllBrands } from '../Action/AddProductAction';
 // import Cookies from 'universal-cookie';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+
 
 function* Sub_Category(args) {
 
@@ -57,11 +61,56 @@ function* MainCategory(args) {
   } 
 
 
+  function* handleAddBrand(args) {
+    const response = yield call(AddBrand , args.payload);
+
+    const toastStyle = {
+      backgroundColor: "#fff",
+      color:'#38B000',
+      width: "100%",
+      borderRadius: "60px",
+      height: "20px",
+      fontFamily: "Manrope",
+      fontWeight: 700,
+      fontSize: 14,
+      textAlign: "start",
+      display: "flex",
+      alignItems: "center", 
+      padding: "10px",
+     
+    };
+
+
+    if (response.status === 200 || response.statusCode === 200) {
+      yield put({ type: 'ADD_BRAND', payload: {response:response.data , statusCode: response.status  || response.statusCode}});
+      toast.success('Brand Successfully Created', {
+        position: "top-center",
+        autoClose: 2000,
+        hideProgressBar: true,
+        closeButton: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        style: toastStyle,
+      });   
+    }
+       else {
+      yield put({ type: 'ERROR', payload: { statusCode:response.status  || response.statusCode  } });
+    }
+  } 
+
+
+
+
+
   function* AddProductSaga() {
   yield takeEvery('GETSUBCATEGORY', Sub_Category);
   yield takeEvery('GETCATEGORY', MainCategory);
   yield takeEvery('ADDPRODUCTDETAILS', AddProduct_Details);
   yield takeEvery(GET_BRANDS_API_CALL, getAllBrandsAPIRequest)
+  yield takeEvery('ADDBRAND', handleAddBrand);
+
 //   ADD_PRODUCT_DETAILS
 }
 

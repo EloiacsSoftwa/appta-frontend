@@ -36,14 +36,15 @@ const AddProductModal = ({ onClose }) => {
     // wholeSalePrice: 0,
     wholesalePricePercentage: 0,
     product_Threshold: 0,
-    freebieProductId: 0
+    freebieProductId: 0,
+    barcodeNo:0
   });
   const dispatch = useDispatch();
   const state = useSelector(state => state);
 
   useEffect(() => {
     // dispatch({ type: 'GETSUBCATEGORY' });
-    dispatch({ type: 'GETCATEGORY' });
+    dispatch({ type: 'GETCATEGORY' ,payload: "tea"});
     dispatch({type: GET_BRANDS_API_CALL})
   }, []);
 
@@ -105,7 +106,7 @@ const ProductDetailsForm = ({ handleNext, formData, setFormData }) => {
     const { name, value, type, checked } = e.target;
     setFormData({
       ...formData,
-      [name]: type === 'checkbox' ? checked : value,
+      freebie: true
     });
   };
 
@@ -219,18 +220,18 @@ const ProductDetailsForm = ({ handleNext, formData, setFormData }) => {
           <div className="flex gap-4">
             <div className="flex-1">
               <label className="text-left block text-sm font-medium text-gray-700">Qty</label>
-              <input type="number" name="qty" value={formData.qty} onChange={handleInputChange} className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Qty" />
+              <input type="number" name="qty" value={formData.quantity} onChange={(e) => { setFormData({ ...formData, quantity: e.target.value }) }} className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Qty" />
             </div>
             <div className="flex-1">
               <label className="text-left block text-sm font-medium text-gray-700">Min Qty</label>
-              <input type="number" name="minQty" value={formData.minQty} onChange={handleInputChange} className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Min Qty" />
+              <input type="number" name="minQty" value={formData.minPurchaseQuantity} onChange={(e) => { setFormData({ ...formData, minPurchaseQuantity: e.target.value }) }} className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Min Qty" />
             </div>
           </div>
         </div>
 
         <div>
-          <label className="text-left block text-sm font-medium text-gray-700">Quantity</label>
-          <input type="number" name="quantity" value={formData.quantity} onChange={handleInputChange} className="mt-1 block w-full border border-gray-300 rounded-md" />
+          <label className="text-left block text-sm font-medium text-gray-700">Barcode</label>
+          <input type="number" name="quantity" value={formData.barcodeNo} onChange={(e) => { setFormData({ ...formData, barcodeNo: e.target.value }) }} className="mt-1 block w-full border border-gray-300 rounded-md" />
         </div>
 
         <button type="submit" className="mt-4 bg-orange-500 text-white py-2 rounded-md w-full sm:w-auto">Next</button>
@@ -246,15 +247,15 @@ const AccountingDetailsForm = ({ handleNext, handleBack, formData, setFormData }
       <div className="flex gap-4">
         <div className="flex-1">
           <label className="text-left block text-sm font-medium text-gray-700">Purchase Price</label>
-          <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Watch" value={formData.purchasePrice} />
+          <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Watch" value={formData.purchasePrice} onChange={(e) => { setFormData({ ...formData, purchasePrice: e.target.value }) }}/>
         </div>
         <div className="flex-1">
           <label className="text-left block text-sm font-medium text-gray-700">Purchase Percentage</label>
-          <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Brand" value={formData.purchasePercentage} />
+          <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Brand" value={formData.purchasePercentage} onChange={(e) => { setFormData({ ...formData, purchasePercentage: e.target.value }) }}/>
         </div>
         <div className="flex-1">
           <label className="text-left block text-sm font-medium text-gray-700">Sales Price</label>
-          <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Brand" value={formData.salesPrice} />
+          <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Brand" value={formData.salesPrice} onChange={(e) => { setFormData({ ...formData, salesPrice: e.target.value }) }}/>
         </div>
       </div>
 
@@ -262,25 +263,25 @@ const AccountingDetailsForm = ({ handleNext, handleBack, formData, setFormData }
       <div className="w-full">
         <div className="flex-1">
           <label className="text-left block text-sm font-medium text-gray-700">MRP</label>
-          <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Brand" value={formData.mrp} />
+          <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Brand" value={formData.mrp} onChange={(e) => { setFormData({ ...formData, mrp: e.target.value }) }}/>
         </div>
       </div>
 
       <div className="flex gap-4">
         <div className="flex-1">
           <label className="text-left block text-sm font-medium text-gray-700">Whole sale Price</label>
-          <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Watch" value={formData.wholeSalePrice} />
+          <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Watch" value={formData.wholeSalePrice} onChange={(e) => { setFormData({ ...formData, wholeSalePrice: e.target.value }) }}/>
         </div>
         <div className="flex-1">
           <label className="text-left block text-sm font-medium text-gray-700">Whole sale Percentage</label>
-          <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Brand" value={formData.wholeSalePercentage} />
+          <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Brand" value={formData.wholeSalePercentage} onChange={(e) => { setFormData({ ...formData, wholeSalePercentage: e.target.value }) }}/>
         </div>
       </div>
 
       <div className="w-full">
         <div className="flex-1">
           <label className="text-left block text-sm font-medium text-gray-700">Product Threshold</label>
-          <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Brand" value={formData.product_Threshold} />
+          <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Brand" value={formData.product_Threshold} onChange={(e) => { setFormData({ ...formData, product_Threshold: e.target.value }) }}/>
         </div>
       </div>
 
@@ -301,151 +302,319 @@ const AccountingDetailsForm = ({ handleNext, handleBack, formData, setFormData }
 }
 
 
-const BillOfMaterials = ({ handleBack, formData, setFormData }) => {
-  const dispatch = useDispatch();
-  // var [peroductList, setProductList] = useState(
-  //     {
-  //         productId: 0,
-  //         productName: "string",
-  //         statusTypeId: 0,
-  //         categoryId: 0,
-  //         subCategoryId: 0,
-  //         brandId: 0,
-  //         unitId: 0,
-  //         quantity: 0,
-  //         minPurchaseQuantity: 0,
-  //         barcodeType: 0,
-  //         barcodeNo: "string",
-  //         description: "string",
-  //         purchasePrice: 0,
-  //         salesPricePercentage: 0,
-  //         mrp: 0,
-  //         wholesalePricePercentage: 0,
-  //         threshold: 0,
-  //         billOfMaterials: true,
-  //         billOfMaterialsList: [
-  //           {
-  //             billOfMaterialsProductId: 0,
-  //             billOfMaterialsProductQuantity: 0,
-  //             billOfMaterialsProductCost: 0
-  //           }
-  //         ],
-  //         freebie: true,
-  //         freebieProductId: 0,
-  //         images: [
-  //           "string"
-  //         ]
-  //       }
-  //   )
-  var handleSubmit = () => {
-    console.log("formData", formData);
+// const BillOfMaterials = ({ handleBack, formData, setFormData }) => {
+//   const dispatch = useDispatch();
+//   // var [peroductList, setProductList] = useState(
+//   //     {
+//   //         productId: 0,
+//   //         productName: "string",
+//   //         statusTypeId: 0,
+//   //         categoryId: 0,
+//   //         subCategoryId: 0,
+//   //         brandId: 0,
+//   //         unitId: 0,
+//   //         quantity: 0,
+//   //         minPurchaseQuantity: 0,
+//   //         barcodeType: 0,
+//   //         barcodeNo: "string",
+//   //         description: "string",
+//   //         purchasePrice: 0,
+//   //         salesPricePercentage: 0,
+//   //         mrp: 0,
+//   //         wholesalePricePercentage: 0,
+//   //         threshold: 0,
+//   //         billOfMaterials: true,
+//   //         billOfMaterialsList: [
+//   //           {
+//   //             billOfMaterialsProductId: 0,
+//   //             billOfMaterialsProductQuantity: 0,
+//   //             billOfMaterialsProductCost: 0
+//   //           }
+//   //         ],
+//   //         freebie: true,
+//   //         freebieProductId: 0,
+//   //         images: [
+//   //           "string"
+//   //         ]
+//   //       }
+//   //   )
+//   var handleSubmit = () => {
+//     console.log("formData", formData);
 
-    dispatch({ type: "ADDPRODUCTDETAILS", payload: formData })
-  }
+//     dispatch({ type: "ADDPRODUCTDETAILS", payload: formData })
+//   }
 
-  // min-h-screen 
-  return (
-    <div className="flex items-center justify-center bg-gray-100">
-      <div className="bg-white rounded-lg shadow-lg w-full max-w-xl overflow-y-auto">
+//   // min-h-screen 
+//   return (
+//     <div className="flex items-center justify-center bg-gray-100">
+//       <div className="bg-white rounded-lg shadow-lg w-full max-w-xl overflow-y-auto">
 
-        <div className="space-y-6 md:p-8">
-          <div>
-            <h3 className="font-semibold text-lg mb-2 text-orange-500">Component</h3>
-            <div>
-              <div className="flex items-center mb-px">
-                <input
-                  type="text"
-                  placeholder="Product Name"
-                  className="w-52 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500 bg-zinc-300"
-                />
-                <input
-                  type="text"
-                  placeholder="Qty"
-                  className="w-36 px-4 py-2 mx-0.5 focus:outline-none focus:ring-2 focus:ring-orange-500  bg-zinc-300"
-                />
+//         <div className="space-y-6 md:p-8">
+//           <div>
+//             <h3 className="font-semibold text-lg mb-2 text-orange-500">Component</h3>
+//             <div>
+//               <div className="flex items-center mb-px">
+//                 <input
+//                   type="text"
+//                   placeholder="Product Name"
+//                   className="w-52 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500 bg-zinc-300"
 
-              </div>
-              <div className="flex items-center space-x-0.5">
-                <input
-                  type="text"
-                  placeholder="Computer"
-                  className="w-52 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500 text-neutral-900 bg-zinc-100"
-                />
-                <input
-                  type="text"
-                  placeholder="10 pcs"
-                  className="w-36 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500  bg-zinc-100"
-                />
-                <button className="text-gray-500 hover:text-red-500 mt-2">
-                  <img className="ml-2" src={Delete}></img>
-                </button>
-              </div>
+//                 />
+//                 <input
+//                   type="text"
+//                   placeholder="Qty"
+//                   className="w-36 px-4 py-2 mx-0.5 focus:outline-none focus:ring-2 focus:ring-orange-500  bg-zinc-300"
+//                 />
 
-              <button className="mt-4 text-neutral-900 text-sm font-manrope font-semibold text-left flex items-center space-x-2">
-                <span className="flex items-center justify-center w-4 h-4 rounded-full border border-black text-black text-xs">
-                  <img src={Vector}></img>
-                </span>
-                <span>Add a component product</span>
-              </button>
+//               </div>
+//               <div className="flex items-center space-x-0.5">
+//                 <input
+//                   type="text"
+//                   placeholder="Computer"
+//                   className="w-52 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500 text-neutral-900 bg-zinc-100"
+//                 />
+//                 <input
+//                   type="text"
+//                   placeholder="10 pcs"
+//                   className="w-36 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500  bg-zinc-100"
+//                 />
+//                 <button className="text-gray-500 hover:text-red-500 mt-2">
+//                   <img className="ml-2" src={Delete}></img>
+//                 </button>
+//               </div>
 
+//               <button className="mt-4 text-neutral-900 text-sm font-manrope font-semibold text-left flex items-center space-x-2">
+//                 <span className="flex items-center justify-center w-4 h-4 rounded-full border border-black text-black text-xs">
+//                   <img src={Vector}></img>
+//                 </span>
+//                 <span>Add a component product</span>
+//               </button>
+
+//             </div>
+//           </div>
+
+//           <div>
+//             <h3 className="font-semibold text-lg mb-2 text-orange-500 mb-2 focus:outline-none focus:ring-2 focus:ring-orange-500">Additional Cost</h3>
+//             <div className="flex items-center mb-px">
+//               <input
+//                 type="text"
+//                 placeholder="Cost Name"
+//                 className="w-52 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500 bg-zinc-300"
+//               />
+//               <input
+//                 type="text"
+//                 placeholder="Sub Total"
+//                 className="w-36 px-4 py-2 mx-0.5 focus:outline-none focus:ring-2 focus:ring-orange-500  bg-zinc-300"
+//               />
+
+//             </div>
+//             <div className="flex items-center space-x-0.5">
+//               <input
+//                 type="text"
+//                 placeholder="Assemble"
+//                 className="w-52 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500 text-neutral-900 bg-zinc-100"
+//               />
+//               <input
+//                 type="text"
+//                 placeholder="₹ 11,000"
+//                 className="w-36 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500  bg-zinc-100"
+//               />
+//               <button className="text-gray-500 hover:text-red-500 mt-2">
+//                 <img className="ml-2" src={Delete}></img>
+//               </button>
+//             </div>
+
+//             <button className="mt-4 text-neutral-900 text-sm font-manrope font-semibold text-left flex items-center space-x-2">
+//               <span className="flex items-center justify-center w-4 h-4 rounded-full border border-black text-black text-xs">
+//                 <img src={Vector}></img>
+//               </span>
+//               <span>Add an additional cost</span>
+//             </button>
+//           </div>
+//         </div>
+
+//         <div className="w-full bg-zinc-300 mt-6 p-2">
+//           <div className="flex justify-end space-x-4">
+//             <button
+//               className="px-4 bg-orange-500 text-neutral-900 rounded-md hover:bg-gray-300" onClick={handleBack}
+//             >
+//               Back
+//             </button>
+//             <button className="px-4 py-1 bg-orange-500 text-neutral-900 rounded-md hover:bg-orange-600" onClick={handleSubmit}>
+//               Submit
+//             </button>
+//           </div>
+//         </div>
+
+//       </div>
+//     </div>
+//   );
+// };
+
+function BillOfMaterials({handleBack, formData, setFormData}) {
+    const dispatch = useDispatch();
+    const [components, setComponents] = useState([
+      { productName: 'Computer', quantity: '10pcs' }
+    
+    ]);
+  
+    const [additionalCosts, setAdditionalCosts] = useState([
+      { costName: 'Assemble', subtotal: '₹ 11,000' },
+    ]);
+  
+    
+    const addComponent = () => {
+      setComponents([...components, { productName: '', quantity: '' }]);
+    };
+  
+  
+    const deleteComponent = (index) => {
+      setComponents(components.filter((_, i) => i !== index));
+    };
+  
+   
+    const addAdditionalCost = () => {
+      setAdditionalCosts([...additionalCosts, { costName: '', subtotal: '' }]);
+    };
+  
+    const deleteAdditionalCost = (index) => {
+      setAdditionalCosts(additionalCosts.filter((_, i) => i !== index));
+    };
+  
+    var handleSubmit = () => {
+        setFormData({...formData,components})
+            console.log("formData", formData,components);
+        let temp = {...formData,components}
+            dispatch({ type: "ADDPRODUCTDETAILS", payload: temp })
+          }
+
+    return (
+        // min-h-screen
+      <div className="flex justify-center items-center">
+        <div className="bg-white rounded-lg shadow-lg w-full max-w-xl overflow-y-auto border border-orange-500">
+        
+        <div className='p-6'>
+          <div className="my-4">
+            <h3 className="text-lg font-semibold font-Manrope text-orange-500">Component</h3>
+            <table className="w-full mt-3 border-none lg:w-96">
+              <thead>
+                <tr className="bg-zinc-300 font-Manrope text-base font-bold">
+                  <th className="text-left px-5 border-r-2 border-white ">Product Name</th>
+                  <th className="p-2 text-left px-5">Qty</th>
+                </tr>
+              </thead>
+              <tbody>
+                {components.map((component, index) => (
+                  <tr key={index} className="border-none">
+                    <td className="">
+                      <input
+                        type="text"
+                        value={component.productName}
+                        placeholder="Enter product name"
+                        className="border-none w-full bg-zinc-100 p-2 px-4 focus:outline-none focus:ring-2 focus:ring-orange-500"
+                        onChange={(e) => {
+                          const newComponents = [...components];
+                          newComponents[index].productName = e.target.value;
+                          setComponents(newComponents);
+                        }}
+                      />
+                    </td>
+                    <td className="">
+                      <input
+                        type="text"
+                        value={component.quantity}
+                        placeholder="Enter quantity"
+                        className="border w-full border-none w-full bg-zinc-100 p-2 px-4 focus:outline-none focus:ring-2 focus:ring-orange-500"
+                        onChange={(e) => {
+                          const newComponents = [...components];
+                          newComponents[index].quantity = e.target.value;
+                          setComponents(newComponents);
+                        }}
+                      />
+                    </td>
+                    <td className="text-center">
+                      <button onClick={() => deleteComponent(index)} className="text-red-500 hover:text-red-700">
+                       <img src={Delete} className="w-7 h-7 ml-1"></img>
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <div onClick={addComponent} className="text-blue-500 hover:text-blue-700 mt-4 flex items-center">
+              <span className=""><img src={Vector}className="w-4 h-4 ml-1"></img></span> 
+              <span className="ml-3 font-Manrope font-semibold text-sm text-neutral-900">Add a component product</span>
             </div>
           </div>
-
-          <div>
-            <h3 className="font-semibold text-lg mb-2 text-orange-500 mb-2 focus:outline-none focus:ring-2 focus:ring-orange-500">Additional Cost</h3>
-            <div className="flex items-center mb-px">
-              <input
-                type="text"
-                placeholder="Cost Name"
-                className="w-52 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500 bg-zinc-300"
-              />
-              <input
-                type="text"
-                placeholder="Sub Total"
-                className="w-36 px-4 py-2 mx-0.5 focus:outline-none focus:ring-2 focus:ring-orange-500  bg-zinc-300"
-              />
-
+  
+        
+          <div className="my-4">
+            <h3 className="text-lg font-semibold text-orange-500">Additional Cost</h3>
+            <table className="w-full mt-2 border-none lg:w-96">
+              <thead>
+                <tr className="bg-zinc-300 bg-zinc-300 font-Manrope text-base font-bold">
+                  <th className="text-left px-5 border-r-2 border-white">Cost Name</th>
+                  <th className="p-2 text-left px-5">Subtotal</th>
+                </tr>
+              </thead>
+              <tbody>
+                {additionalCosts.map((cost, index) => (
+                  <tr key={index} className="border-none">
+                    <td className="">
+                      <input
+                        type="text"
+                        value={cost.costName}
+                        placeholder="Enter cost name"
+                        className=" border-none w-full bg-zinc-100 p-2 px-4 focus:outline-none focus:ring-2 focus:ring-orange-500"
+                        onChange={(e) => {
+                          const newCosts = [...additionalCosts];
+                          newCosts[index].costName = e.target.value;
+                          setAdditionalCosts(newCosts);
+                        }}
+                      />
+                    </td>
+                    <td className="">
+                      <input
+                        type="text"
+                        value={cost.subtotal}
+                        placeholder="Enter subtotal"
+                        className="border-none w-full bg-zinc-100 p-2 px-4 focus:outline-none focus:ring-2 focus:ring-orange-500"
+                        onChange={(e) => {
+                          const newCosts = [...additionalCosts];
+                          newCosts[index].subtotal = e.target.value;
+                          setAdditionalCosts(newCosts);
+                        }}
+                      />
+                    </td>
+                    <td className=" text-center">
+                      <button onClick={() => deleteAdditionalCost(index)} className="text-red-500 hover:text-red-700">
+                      <img src={Delete}className="w-7 h-7 ml-1"></img>
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <div onClick={addAdditionalCost} className="text-blue-500 hover:text-blue-700 mt-4 flex items-center">
+              <span className=""><img src={Vector}className="w-4 h-4 ml-1"></img></span> 
+              <span className="ml-1 font-Manrope font-semibold text-sm text-neutral-900 ">Add an additional cost</span>
             </div>
-            <div className="flex items-center space-x-0.5">
-              <input
-                type="text"
-                placeholder="Assemble"
-                className="w-52 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500 text-neutral-900 bg-zinc-100"
-              />
-              <input
-                type="text"
-                placeholder="₹ 11,000"
-                className="w-36 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500  bg-zinc-100"
-              />
-              <button className="text-gray-500 hover:text-red-500 mt-2">
-                <img className="ml-2" src={Delete}></img>
-              </button>
-            </div>
-
-            <button className="mt-4 text-neutral-900 text-sm font-manrope font-semibold text-left flex items-center space-x-2">
-              <span className="flex items-center justify-center w-4 h-4 rounded-full border border-black text-black text-xs">
-                <img src={Vector}></img>
-              </span>
-              <span>Add an additional cost</span>
-            </button>
+            
+          </div>
+  
+          </div>
+  
+        
+          <div className="flex justify-end mt-4 pr-4 space-x-4 bg-zinc-300 py-2">
+            <button className="bg-orange-500 hover:bg-gray-400 text-black font-semibold py-1 px-4 rounded" onClick={handleBack}>Back</button>
+            <button className="bg-orange-500 hover:bg-orange-600 text-black font-semibold py-1 px-4 rounded" onClick={handleSubmit}>Submit</button>
           </div>
         </div>
-
-        <div className="w-full bg-zinc-300 mt-6 p-2">
-          <div className="flex justify-end space-x-4">
-            <button
-              className="px-4 bg-orange-500 text-neutral-900 rounded-md hover:bg-gray-300" onClick={handleBack}
-            >
-              Back
-            </button>
-            <button className="px-4 py-1 bg-orange-500 text-neutral-900 rounded-md hover:bg-orange-600" onClick={handleSubmit}>
-              Submit
-            </button>
-          </div>
-        </div>
-
       </div>
-    </div>
-  );
-};
+    );
+  }
+  
+//   export default BillMaterial;
+
+
 export default AddProductModal;
