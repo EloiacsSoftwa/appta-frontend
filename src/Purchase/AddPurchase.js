@@ -45,7 +45,7 @@ function AddPurchase() {
       <div className="w-full rounded-xl shadow-custom mt-4 p-4 mb-4">
         <div className="grid gap-2">
           <div className="flex flex-col md:flex-row justify-start p-2">
-            <div className={`relative mb-4 md:mb-0 ${dropdownOpen ? 'sm:mb-32 md:mb-32' : ''}`}>
+            <div className={`relative mb-4 lg:mb-0 md:mb-0 ${dropdownOpen ? 'sm:mb-32' : ''}`}>
               <p className="font-bold text-lg text-orange-600 mb-4">Supplier Details</p>
               <button
                 onClick={toggleDropdown}
