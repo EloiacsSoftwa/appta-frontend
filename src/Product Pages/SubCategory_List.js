@@ -326,7 +326,7 @@ function SubCategory_List() {
 
 
 
-                <div className="flex items-center justify-center space-x-3 mt-40 mb-5">
+                <div className="flex items-center justify-center space-x-3 mt-10 mb-5">
 
                     <ArrowLeft2 className='cursor-pointer'
                         size="16"
