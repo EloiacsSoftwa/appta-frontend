@@ -49,27 +49,20 @@ function* handleSubCategory(args) {
     }
     
 
-//     if (response) {
-//     //   refreshToken(response)
-//    }
+    if (response) {
+        ExpireToken(response)
+   }
 
 
   } 
 
 
-  function refreshToken(response) {
-    if (response.data && response.data) {
-       const refreshTokenGet = response.data
-       console.log("refreshTokenGet", refreshTokenGet)
-       const cookies = new Cookies()
-       cookies.set('token', refreshTokenGet, { path: '/' });
-    } 
-    else if (response.data == 'Token expired') {
-       const message = response.data
+  function ExpireToken(response) {
+     if (response.data.code === 204) {
+       const message = response.data.code
        const cookies = new Cookies()
        cookies.set('access-denied', message, { path: '/' });
- 
-    }
+     }
  
  }
 

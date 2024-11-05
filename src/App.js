@@ -28,10 +28,12 @@ function App() {
 
 
   useEffect(() => {
-    if (tokenAccessDenied == 'Token expired') {
+    if (tokenAccessDenied == 204) {
       dispatch({ type: 'LOG-OUT' })
+      setSuccess(false)
+      cookies.set('access-denied', null, { path: '/', expires: new Date(0) });
     }
-  }, [tokenAccessDenied, Appta_Login])
+  }, [tokenAccessDenied])
 
 
   useEffect(() => {
