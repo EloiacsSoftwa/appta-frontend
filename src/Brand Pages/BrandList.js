@@ -93,8 +93,12 @@ function Brand_List() {
     ];
 
     const itemsPerPage = 10;
-    const totalPages = brandList ? Math.ceil(brandList.length / itemsPerPage) : 0;
-    const currentItems = (brandList || []).slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    const totalPages = Math.ceil(brandList && brandList.length / itemsPerPage);
+    const currentItems = brandList && brandList.slice(indexOfFirstItem, indexOfLastItem);
+    // const totalPages = brandList ? Math.ceil(brandList.length / itemsPerPage) : 0;
+    // const currentItems = (brandList || []).slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
     return (
         <div className='h-screen bg-white p-4 w-full'>

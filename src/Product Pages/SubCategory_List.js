@@ -128,12 +128,12 @@ function SubCategory_List() {
 
     //  pagination
     const itemsPerPage = 10;
-    // const totalPages = Math.ceil(subCategoryList.length / itemsPerPage);
+    const totalPages = Math.ceil(subCategoryList && subCategoryList.length / itemsPerPage);
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    // const currentItems = subCategoryList.slice(indexOfFirstItem, indexOfLastItem);
-    const totalPages = subCategoryList ? Math.ceil(subCategoryList.length / itemsPerPage) : 0;
-    const currentItems = (subCategoryList || []).slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+    const currentItems = subCategoryList && subCategoryList.slice(indexOfFirstItem, indexOfLastItem);
+    // const totalPages = subCategoryList ? Math.ceil(subCategoryList.length / itemsPerPage) : 0;
+    // const currentItems = (subCategoryList || []).slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
 
 
