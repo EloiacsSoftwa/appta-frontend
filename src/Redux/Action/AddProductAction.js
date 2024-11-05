@@ -4,7 +4,15 @@ import axios from 'axios'
 
 export function Category(payload) {
 
-    return  AxiosConfig.post(`/category/getCategory`, payload).then(response=>response).catch(error=>{console.log(error,"catch")
+    return  AxiosConfig.post(`/category/getCategory`, 
+        {
+        }, {
+           params: {
+            categoryName: payload
+           }
+        }
+
+    ).then(response=>response).catch(error=>{console.log(error,"catch")
        return error
     });
     
