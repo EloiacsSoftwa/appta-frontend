@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import { GET_BRANDS_API_CALL } from "../utils/Constant";
 
@@ -10,7 +10,7 @@ const AddProductModal = ({ onClose }) => {
 
   const [formData, setFormData] = useState({
     
-    image: null,
+    images: [],
     Name: "",
     productId: '',
     productName: '',
@@ -18,33 +18,34 @@ const AddProductModal = ({ onClose }) => {
     // productBrand: '',
     categoryId: '',
     subCategoryId: '',
-    brandId: 0,
-    unitId: '',
+    brandId: 1,
+    unitId: 1,
     quantity: '',
     minPurchaseQuantity: '',
-    barcodeType: '',
-    barcodeNo: 0,
+    barcodeType: 1,
+    barcodeNo: 1,
     description: '',
     // quantity: 0,
-    isChecked: false,
+    billOfMaterials: false,
     purchasePrice: 0,
-    salesPricePercentage: 0,
+    salesPricePercentage: 1,
     freebie: false,
     purchasePercentage: 0,
     salesPrice: 0,
     mrp: 0,
     // wholeSalePrice: 0,
-    wholesalePricePercentage: 0,
-    product_Threshold: 0,
+    wholesalePricePercentage: 1,
+    threshold: 0,
     freebieProductId: 0,
-    barcodeNo:0
+    barcodeNo:0,
+    statusTypeId:1
   });
   const dispatch = useDispatch();
   const state = useSelector(state => state);
 
   useEffect(() => {
     // dispatch({ type: 'GETSUBCATEGORY' });
-    dispatch({ type: 'GETCATEGORY' ,payload: "tea"});
+    dispatch({ type: 'GETCATEGORY'});
     dispatch({type: GET_BRANDS_API_CALL})
   }, []);
 
@@ -100,7 +101,7 @@ const ProductDetailsForm = ({ handleNext, formData, setFormData }) => {
   const state = useSelector(state => state);
   const dispatch = useDispatch();
   const [selectedCategory, setSelectedCategory] = useState()
-
+let fileInputRef = useRef()
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -113,11 +114,31 @@ const ProductDetailsForm = ({ handleNext, formData, setFormData }) => {
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setFormData({
-        ...formData,
-        image: URL.createObjectURL(file),
-      });
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const base64String = e.target.result.split(',')[1];  
+        // setMainImg(base64String);
+        setFormData({
+                ...formData,
+                images: base64String,
+              });
+
+        fileInputRef.current.value = '';
+      };
+      reader.onerror = (error) => {
+        console.error(error);
+      };
+      reader.readAsDataURL(file);
     }
+
+
+    // const file = e.target.files[0];
+    // if (file) {
+    //   setFormData({
+    //     ...formData,
+    //     images: URL.createObjectURL(file),
+    //   });
+    // }
   };
 
   const handleSelectCategory = (id) => {
@@ -135,8 +156,8 @@ const ProductDetailsForm = ({ handleNext, formData, setFormData }) => {
           className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
         />
         <div className="w-full h-full border border-dashed border-gray-300 rounded-md bg-gray-100 flex items-center justify-center cursor-pointer overflow-hidden">
-          {formData.image ? (
-            <img src={formData.image} alt="Uploaded" className="object-cover w-full h-full" />
+          {formData.images ? (
+            <img src={formData.images} alt="Uploaded" className="object-cover w-full h-full" />
           ) : (
             <span className="text-gray-400 text-sm">+ Add image</span>
           )}
@@ -160,7 +181,7 @@ const ProductDetailsForm = ({ handleNext, formData, setFormData }) => {
       <div className="flex flex-col flex-1 gap-4">
         <div>
           <label className="text-left block text-sm font-medium text-gray-700">Product Type</label>
-          <select name="productType" value={formData.productId} onChange={(e) => { setFormData({ ...formData, productId: e.target.value }) }} className="mt-1 block w-full border border-gray-300 rounded-md">
+          <select name="productType" value={formData.productId} onChange={(e) => { setFormData({ ...formData, productId: e.target.value,statusTypeId : e.target.value }) }} className="mt-1 block w-full border border-gray-300 rounded-md">
             <option value={1}>Tracked</option>
             <option value={2}>Bill Of Materials</option>
           </select>
@@ -209,7 +230,7 @@ const ProductDetailsForm = ({ handleNext, formData, setFormData }) => {
         <div className="flex gap-4">
           <div className="flex-1">
             <label className="text-left block text-sm font-medium text-gray-700">Unit</label>
-            <select name="unit" value={formData.unit} onChange={handleInputChange} className="mt-1 block w-full border border-gray-300 rounded-md">
+            <select name="unit" value={formData.unitId} onChange={(e) => { setFormData({ ...formData, unitId: e.target.value }) }} className="mt-1 block w-full border border-gray-300 rounded-md">
               <option value={1} key={1}>Kg</option>
               <option value={2} key={2}>g</option>
               <option value={3} key={3}>Lt</option>
@@ -228,10 +249,16 @@ const ProductDetailsForm = ({ handleNext, formData, setFormData }) => {
             </div>
           </div>
         </div>
-
-        <div>
+        <div className="flex gap-4">
+        <div className="flex-1">
           <label className="text-left block text-sm font-medium text-gray-700">Barcode</label>
           <input type="number" name="quantity" value={formData.barcodeNo} onChange={(e) => { setFormData({ ...formData, barcodeNo: e.target.value }) }} className="mt-1 block w-full border border-gray-300 rounded-md" />
+        </div>
+
+        <div className="flex-1">
+          <label className="text-left block text-sm font-medium text-gray-700">description</label>
+          <input type="number" name="quantity" value={formData.description} onChange={(e) => { setFormData({ ...formData, description: e.target.value }) }} className="mt-1 block w-full border border-gray-300 rounded-md" />
+        </div>
         </div>
 
         <button type="submit" className="mt-4 bg-orange-500 text-white py-2 rounded-md w-full sm:w-auto">Next</button>
@@ -281,7 +308,7 @@ const AccountingDetailsForm = ({ handleNext, handleBack, formData, setFormData }
       <div className="w-full">
         <div className="flex-1">
           <label className="text-left block text-sm font-medium text-gray-700">Product Threshold</label>
-          <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Brand" value={formData.product_Threshold} onChange={(e) => { setFormData({ ...formData, product_Threshold: e.target.value }) }}/>
+          <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Brand" value={formData.threshold} onChange={(e) => { setFormData({ ...formData, threshold: e.target.value }) }}/>
         </div>
       </div>
 
@@ -453,38 +480,58 @@ const AccountingDetailsForm = ({ handleNext, handleBack, formData, setFormData }
 
 function BillOfMaterials({handleBack, formData, setFormData}) {
     const dispatch = useDispatch();
-    const [components, setComponents] = useState([
-      { productName: 'Computer', quantity: '10pcs' }
+    const [billOfMaterialsList, setbillOfMaterialsList] = useState([
+      { productName: 'Computer',billOfMaterialsProductId:1, billOfMaterialsProductQuantity: 0, costName: 'Assemble', billOfMaterialsProductCost: 0 }
     
     ]);
   
-    const [additionalCosts, setAdditionalCosts] = useState([
-      { costName: 'Assemble', subtotal: '₹ 11,000' },
-    ]);
+    // const [additionalCosts, setAdditionalCosts] = useState([
+    //   { costName: 'Assemble', billOfMaterialsProductCost: 0 },
+    // ]);
   
     
     const addComponent = () => {
-      setComponents([...components, { productName: '', quantity: '' }]);
+        setbillOfMaterialsList([...billOfMaterialsList, { productName: '', billOfMaterialsProductQuantity: '' }]);
     };
   
   
     const deleteComponent = (index) => {
-      setComponents(components.filter((_, i) => i !== index));
+        setbillOfMaterialsList(billOfMaterialsList.filter((_, i) => i !== index));
     };
   
    
     const addAdditionalCost = () => {
-      setAdditionalCosts([...additionalCosts, { costName: '', subtotal: '' }]);
+      setbillOfMaterialsList([...billOfMaterialsList, { costName: '', subtotal: '' }]);
     };
   
     const deleteAdditionalCost = (index) => {
-      setAdditionalCosts(additionalCosts.filter((_, i) => i !== index));
+      setbillOfMaterialsList(billOfMaterialsList.filter((_, i) => i !== index));
     };
   
     var handleSubmit = () => {
-        setFormData({...formData,components})
-            console.log("formData", formData,components);
-        let temp = {...formData,components}
+        setFormData({...formData,billOfMaterialsList})
+        // const formattedBillOfMaterials = billOfMaterialsList.map(item => ({
+        //     billOfMaterialsProductId: item.billOfMaterialsProductId || 0,
+        //     billOfMaterialsProductQuantity: item.billOfMaterialsProductQuantity || 0,
+        //     billOfMaterialsProductCost: 0  // Set to 0 if not applicable
+        // }));
+        
+        // const formattedAdditionalCosts = additionalCosts.map(item => ({
+        //     billOfMaterialsProductId: 0, // Set to 0 if not applicable
+        //     billOfMaterialsProductQuantity: 0,
+        //     billOfMaterialsProductCost: item.billOfMaterialsProductCost || 0
+        // }));
+        
+        // Merge both formatted arrays into a single array
+        // const unifiedBillOfMaterialsList = [...formattedBillOfMaterials];
+        
+        // Wrap in the desired object structure
+        // const finalData = {
+        //     billOfMaterialsList: unifiedBillOfMaterialsList
+        // };
+        // let temp1 = [...finalData.billOfMaterialsList]
+        let temp = {...formData,billOfMaterialsList:[]}
+        console.log(temp);
             dispatch({ type: "ADDPRODUCTDETAILS", payload: temp })
           }
 
@@ -504,7 +551,7 @@ function BillOfMaterials({handleBack, formData, setFormData}) {
                 </tr>
               </thead>
               <tbody>
-                {components.map((component, index) => (
+                {billOfMaterialsList.map((component, index) => (
                   <tr key={index} className="border-none">
                     <td className="">
                       <input
@@ -513,22 +560,22 @@ function BillOfMaterials({handleBack, formData, setFormData}) {
                         placeholder="Enter product name"
                         className="border-none w-full bg-zinc-100 p-2 px-4 focus:outline-none focus:ring-2 focus:ring-orange-500"
                         onChange={(e) => {
-                          const newComponents = [...components];
+                          const newComponents = [...billOfMaterialsList];
                           newComponents[index].productName = e.target.value;
-                          setComponents(newComponents);
+                          setbillOfMaterialsList(newComponents);
                         }}
                       />
                     </td>
                     <td className="">
                       <input
                         type="text"
-                        value={component.quantity}
+                        value={component.billOfMaterialsProductQuantity}
                         placeholder="Enter quantity"
                         className="border w-full border-none w-full bg-zinc-100 p-2 px-4 focus:outline-none focus:ring-2 focus:ring-orange-500"
                         onChange={(e) => {
-                          const newComponents = [...components];
-                          newComponents[index].quantity = e.target.value;
-                          setComponents(newComponents);
+                          const newComponents = [...billOfMaterialsList];
+                          newComponents[index].billOfMaterialsProductQuantity = e.target.value;
+                          setbillOfMaterialsList(newComponents);
                         }}
                       />
                     </td>
@@ -558,7 +605,7 @@ function BillOfMaterials({handleBack, formData, setFormData}) {
                 </tr>
               </thead>
               <tbody>
-                {additionalCosts.map((cost, index) => (
+                {billOfMaterialsList.map((cost, index) => (
                   <tr key={index} className="border-none">
                     <td className="">
                       <input
@@ -567,22 +614,22 @@ function BillOfMaterials({handleBack, formData, setFormData}) {
                         placeholder="Enter cost name"
                         className=" border-none w-full bg-zinc-100 p-2 px-4 focus:outline-none focus:ring-2 focus:ring-orange-500"
                         onChange={(e) => {
-                          const newCosts = [...additionalCosts];
+                          const newCosts = [...billOfMaterialsList];
                           newCosts[index].costName = e.target.value;
-                          setAdditionalCosts(newCosts);
+                          setbillOfMaterialsList(newCosts);
                         }}
                       />
                     </td>
                     <td className="">
                       <input
                         type="text"
-                        value={cost.subtotal}
+                        value={cost.billOfMaterialsProductCost}
                         placeholder="Enter subtotal"
                         className="border-none w-full bg-zinc-100 p-2 px-4 focus:outline-none focus:ring-2 focus:ring-orange-500"
                         onChange={(e) => {
-                          const newCosts = [...additionalCosts];
-                          newCosts[index].subtotal = e.target.value;
-                          setAdditionalCosts(newCosts);
+                          const newCosts = [...billOfMaterialsList];
+                          newCosts[index].billOfMaterialsProductCost = e.target.value;
+                          setbillOfMaterialsList(newCosts);
                         }}
                       />
                     </td>
