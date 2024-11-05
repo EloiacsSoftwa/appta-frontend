@@ -205,7 +205,7 @@ function Brand_List() {
                     </tbody>
                 </table>
 
-                <div className="flex items-center justify-center space-x-3 mt-40 mb-5">
+                <div className="flex items-center justify-center space-x-3 mt-10 mb-5">
                     <ArrowLeft2 className='cursor-pointer' size="16" color="#797979" onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))} />
                     <span className="font-bold text-neutral-900 text-xs">
                         {String(currentPage).padStart(2, '0')} of {totalPages}
