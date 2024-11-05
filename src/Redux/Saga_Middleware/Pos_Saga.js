@@ -10,7 +10,7 @@ function* handleBarcodeGetProduct(args) {
    console.log("Response For pos ",response)
     if (response.status === 200 || response.statusCode === 200) {
       const token = response.data;
-      yield put({ type: 'BARCODE-GET-PRODUCT', payload: {response:response.data , statusCode: response.status  || response.statusCode}});
+      yield put({ type: 'BARCODE-GET-PRODUCT', payload: {response:response.data.data , statusCode: response.status  || response.statusCode}});
             
     }
     else{
@@ -19,9 +19,9 @@ function* handleBarcodeGetProduct(args) {
     }
 
     
-    if (response) {
-      refreshToken(response)
-   }
+   //  if (response) {
+   //    refreshToken(response)
+   // }
 
   } 
 

@@ -48,9 +48,9 @@ function* handleSubCategory(args) {
 
     }
     
-    if (response) {
-      refreshToken(response)
-   }
+   //  if (response) {
+   //    refreshToken(response)
+   // }
 
   } 
 
