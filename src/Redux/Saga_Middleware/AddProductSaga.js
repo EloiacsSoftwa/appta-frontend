@@ -74,7 +74,6 @@ function* MainCategory(args) {
 
   function* handleAddBrand(args) {
     const response = yield call(AddBrand , args.payload);
-
     const toastStyle = {
       backgroundColor: "#fff",
       color:'#38B000',

@@ -21,6 +21,7 @@ function SubCategory_List() {
     const [subCategoryList, setSubCategoryList] = useState([])
     const [currentPage, setCurrentPage] = useState(1);
     const [showAddCategory, setShowAddCategory] = useState(false)
+    const [loading, setLoading] = useState(true);
 
 
     const handleAddCategory = () => {
@@ -39,6 +40,7 @@ function SubCategory_List() {
 
     useEffect(() => {
         if (state.AddProduct.getSubCategoryStatusCode == 200) {
+            setLoading(false)
             setSubCategoryList(state.AddProduct.subcategory)
             setTimeout(() => {
                 dispatch({ type: 'REMOVE_GET_SUBCATEGORY_STATUS_CODE' })
@@ -226,6 +228,15 @@ function SubCategory_List() {
                     </div>
                 </div>
 
+
+                <div className="relative w-full mb-5">
+
+                {loading && (
+        <div className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-75 z-10">
+          <div className="loader border-t-4 border-orange-500 border-solid rounded-full w-10 h-10 animate-spin"></div>
+        </div>
+      )}
+
                 <table className="w-full  text-left mb-5">
                     <thead>
 
@@ -322,7 +333,7 @@ function SubCategory_List() {
                 </table>
 
 
-
+</div>
 
 
 
