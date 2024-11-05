@@ -93,20 +93,20 @@ function AddCategory({ handleClose }) {
 
         <div className="flex-1">
           <div className="mb-4">
-            <label htmlFor="categoryName" className="block text-gray-700 font-medium mb-1">Category Name</label>
+            <label htmlFor="categoryName" className="block text-black-700 font-semibold mb-1 font-Manrope mb-2 text-sm">Category Name</label>
             <input
               type="text"
               id="categoryName"
               value = {categoryname}
               onChange={(e)=> handleCategoryName(e)}
               required
-              className="mt-1 block w-full border rounded-md shadow-sm p-2 focus:outline-none focus:ring-2 focus:ring-orange-500"
+              className="mt-1 font-normal block  text-base  w-full border rounded-md shadow-sm p-2 focus:outline-none focus:ring-2 focus:ring-orange-500 font-Manrope text-black placeholder-black "
               placeholder="Enter category name"
             />
           </div>
 
 
-                     <div className="mb-4">
+                     {/* <div className="mb-4">
              <label htmlFor="description" className="block text-sm font-medium text-gray-700">
                Description
              </label>
@@ -116,7 +116,7 @@ function AddCategory({ handleClose }) {
               className="mt-1 lg:w-full sm:w-full xs:w-full block  border  rounded-md shadow-sm  p-2 focus:outline-none focus:ring-2 focus:ring-orange-500"
               placeholder="Enter category description"
             ></textarea>
-          </div>
+          </div> */}
 
           <div className="flex justify-end gap-3 mt-6">
             <button
@@ -129,8 +129,8 @@ function AddCategory({ handleClose }) {
             <button
 
              onClick={handleSaveCategory}
-              type="button"
-              className="flex items-center justify-center px-4 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-700"
+              type="button" 
+              className="flex items-center justify-center px-4 py-2 bg-orange-600 text-black rounded-md hover:bg-orange-700 border-black border"
             >
               Save & Close
             </button>

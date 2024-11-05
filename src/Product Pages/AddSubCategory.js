@@ -77,14 +77,14 @@ function AddSubCategory({ handleClose }) {
 
                 <div className="flex-1">
                     <div className="mb-4">
-                        <label htmlFor="categoryName" className="block text-black font-semibold mb-1 font-Manrope">Sub Category Name</label>
+                        <label htmlFor="categoryName" className="block text-black font-semibold mb-1 font-Manrope text-sm">Sub Category Name</label>
                         <input
                             type="text"
                             id="categoryName"
                             required
                             value={SubCategoryName}
                             onChange={handleCategoryNameChange}
-                            className=" placeholder-black font-normal text-sm mt-1 block w-full border text-black font-Manrope rounded-md shadow-sm px-5 py-3 focus:outline-none focus:ring-2 focus:ring-orange-500"
+                            className=" placeholder-black font-normal text-base mt-1 block w-full border text-black font-Manrope rounded-md shadow-sm px-5 py-3 focus:outline-none focus:ring-2 focus:ring-orange-500"
                             placeholder="Enter sub category name"
                         />
                     </div>
