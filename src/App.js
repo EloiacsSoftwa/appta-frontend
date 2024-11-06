@@ -28,7 +28,7 @@ function App() {
 
 
   useEffect(() => {
-    if (tokenAccessDenied == 204) {
+    if (tokenAccessDenied == 204 || tokenAccessDenied == 403) {
       dispatch({ type: 'LOG-OUT' })
       setSuccess(false)
       cookies.set('access-denied', null, { path: '/', expires: new Date(0) });
