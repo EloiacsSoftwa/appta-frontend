@@ -19,10 +19,10 @@ const AddProductModal = ({ onClose }) => {
     categoryId: '',
     subCategoryId: '',
     brandId: 1,
-    unitId: 1,
+    unitId: 0,
     quantity: '',
     minPurchaseQuantity: '',
-    barcodeType: 1,
+    barcodeType: 0,
     barcodeNo: 1,
     description: '',
     // quantity: 0,
@@ -89,7 +89,10 @@ const AddProductModal = ({ onClose }) => {
         {/* Form */}
         {activeTab === "Product Details" && <ProductDetailsForm handleNext={handleNext} formData={formData} setFormData={setFormData} />}
         {activeTab === "Accounting" && <AccountingDetailsForm handleNext={handleNext} handleBack={handleBack} formData={formData} setFormData={setFormData} />}
-        {activeTab === "Bill Of Material" && <BillOfMaterials handleBack={handleBack} formData={formData} setFormData={setFormData} />}
+        {
+        formData.billOfMaterials === true ?
+        activeTab === "Bill Of Material" && <BillOfMaterials handleBack={handleBack} formData={formData} setFormData={setFormData} />
+    :null}
       </div>
     </div>
   );
@@ -156,7 +159,7 @@ const ProductDetailsForm = ({ handleNext, formData, setFormData }) => {
           className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
         />
         <div className="w-full h-full border border-dashed border-gray-300 rounded-md bg-gray-100 flex items-center justify-center cursor-pointer overflow-hidden">
-          {formData.images ? (
+          {formData.images != "" ? (
             <img src={formData.images} alt="Uploaded" className="object-cover w-full h-full" />
           ) : (
             <span className="text-gray-400 text-sm">+ Add image</span>
@@ -226,14 +229,14 @@ const ProductDetailsForm = ({ handleNext, formData, setFormData }) => {
             <div className="flex-1 mr-4">
               <label className="text-left block text-sm font-medium text-gray-700">Size</label>
               <select name="productType" value={formData.productId} onChange={(e) => { setFormData({ ...formData, productId: e.target.value, statusTypeId: e.target.value }) }} className="mt-1 block w-full border border-gray-300 rounded-md">
-                <option value={1}>Tracked</option>
-                <option value={2}>Bill Of Materials</option>
+                <option value={1}>100</option>
+                <option value={2}>20</option>
               </select>
             </div>
 
             <div className="flex-1">
               <label className="text-left block text-sm font-medium text-gray-700">Product Type</label>
-              <select name="productType" value={formData.productId} onChange={(e) => { setFormData({ ...formData, productId: e.target.value, statusTypeId: e.target.value }) }} className="mt-1 block w-full border border-gray-300 rounded-md">
+              <select name="productType" value={formData.productId} onChange={(e) => { setFormData({ ...formData, productId: e.target.value, statusTypeId: e.target.value, billOfMaterials : e.target.value == 2 ? true : false}) }} className="mt-1 block w-full border border-gray-300 rounded-md">
                 <option value={1}>Tracked</option>
                 <option value={2}>Bill Of Materials</option>
               </select>
@@ -267,11 +270,23 @@ const ProductDetailsForm = ({ handleNext, formData, setFormData }) => {
         </div>
         <div className="flex gap-4">
           <div className="flex-1">
-            <label className="text-left block text-sm font-medium text-gray-700">Barcode</label>
-            <input type="number" name="quantity" value={formData.barcodeNo} onChange={(e) => { setFormData({ ...formData, barcodeNo: e.target.value }) }} className="mt-1 block w-full border border-gray-300 rounded-md" />
-          </div>
+          <label className="text-left block text-sm font-medium text-gray-700">Barcode</label>
+          <select name="barcode" value={formData.barcodeType} onChange={(e) => { setFormData({ ...formData, barcodeType: e.target.value }) }} className="mt-1 block w-full border border-gray-300 rounded-md">
+          <option value={0}>Selecte one</option>
+              <option value={1} key={1}>Auto GEnerate</option>
+              <option value={2} key={2}>Scan code</option>
+              <option value={3} key={3}>Manual</option>
+            </select>
+             </div>
 
-          <div className="flex-1"></div>
+          <div className="flex-1">
+          {/* <label className="text-left block text-sm font-medium text-gray-700">Barcode</label> */}
+            <input type="number" name="quantity" value={formData.barcodeNo} onChange={(e) => { setFormData({ ...formData, barcodeNo: e.target.value }) }} className="mt-6 block w-full border border-gray-300 rounded-md" />
+         
+          {/* <label className="text-left block text-sm font-medium text-gray-700">Barcode</label> */}
+            {/* <input type="number" name="quantity" value={formData.barcodeNo} onChange={(e) => { setFormData({ ...formData, barcodeNo: e.target.value }) }} className="mt-1 block w-full border border-gray-300 rounded-md" /> */}
+          
+          </div>
         </div>
 
         <div className="flex-1">
@@ -289,6 +304,15 @@ const ProductDetailsForm = ({ handleNext, formData, setFormData }) => {
 
 const AccountingDetailsForm = ({ handleNext, handleBack, formData, setFormData }) => {
 
+//   const state = useSelector(state => state);
+  const dispatch = useDispatch();
+
+    const handleSubmit = () => {
+        setFormData({ ...formData, billOfMaterialsList: [] })      
+        let temp = { ...formData, billOfMaterialsList: [] }
+        console.log(temp);
+        dispatch({ type: "ADDPRODUCTDETAILS", payload: temp })
+      }
   return (
     <div className="flex flex-wrap gap-4">
       <div className="flex gap-4">
@@ -332,17 +356,25 @@ const AccountingDetailsForm = ({ handleNext, handleBack, formData, setFormData }
         </div>
       </div>
 
-      <div className="flex bg-gray">
-        <div className="flex-1">
-          <button type="submit" className="bg-orange-500 p-2 rounded-md w-full sm:w-auto" onClick={handleBack}>
+      <div className="flex justify-end mt-4 pr-4 space-x-4 bg-zinc-300 py-2">
+        {/* <div className="flex-1"> */}
+          <button type="submit" className="bg-orange-500 hover:bg-gray-400 text-black font-semibold py-1 px-4 rounded" onClick={handleBack}>
             back
           </button>
-        </div>
-        <div className="flex-1">
-          <button type="submit" className="bg-orange-500 p-2 rounded-md w-full sm:w-auto" onClick={handleNext}>
+        {/* </div> */}
+        {/* <div className="flex-1"> */}
+            {
+                 formData.billOfMaterials == true ? 
+                 <button type="submit" className="bg-orange-500 hover:bg-orange-600 text-black font-semibold py-1 px-4 rounded" onClick={handleNext}>
             Next
           </button>
-        </div>
+          :
+                 <button type="submit" className="bg-orange-500 hover:bg-orange-600 text-black font-semibold py-1 px-4 rounded" onClick={handleSubmit}>
+            Submit
+          </button>
+            }
+          
+        {/* </div> */}
       </div>
     </div>
   )
