@@ -314,10 +314,11 @@ function Customer_List() {
                                             <td className='p-2 font-semibold text-sm font-Manrope text-start text-neutral-900 '>
                                                 ₹{item.loyaltyPoints}
                                             </td>
-                                            <td className={`p-2 font-semibold text-sm font-Manrope text-start  ${item.PayLater ? 'text-lime-600' : 'text-red-600'}`} >
+                                            <td className={`p-2 font-semibold text-sm font-Manrope text-start  ${item.paylater ? 'text-lime-600' : 'text-red-600'}`} >
                                                 {item.paylater ? <span>Enabled</span> : <span> Disabled</span>}
                                             </td>
                                             <td className={`p-2 font-semibold text-sm font-Manrope text-start  
+                                            
                                             ${item.Credits ? 'text-lime-600' : 'text-red-600'}`}>
 
                                                 {item.Credits}
