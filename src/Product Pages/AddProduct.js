@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from 'react-redux';
-import { GET_BRANDS_API_CALL } from "../utils/Constant";
+import { GET_BRANDS_API_CALL, GET_ALL_UNITS_API_CALL } from "../utils/Constant";
 
 import Vector from '../Images/Icons/Vector.svg';
 import Delete from '../Images/Icons/Delete.svg';
@@ -38,7 +38,8 @@ const AddProductModal = ({ onClose }) => {
     threshold: 0,
     freebieProductId: 0,
     barcodeNo: 0,
-    statusTypeId: 1
+    statusTypeId: 1,
+    sizeId: 0
   });
   const dispatch = useDispatch();
   const state = useSelector(state => state);
@@ -47,6 +48,7 @@ const AddProductModal = ({ onClose }) => {
     // dispatch({ type: 'GETSUBCATEGORY' });
     dispatch({ type: 'GETCATEGORY' });
     dispatch({ type: GET_BRANDS_API_CALL })
+    dispatch({type: GET_ALL_UNITS_API_CALL})
   }, []);
 
   const handleNext = () => {
@@ -67,7 +69,7 @@ const AddProductModal = ({ onClose }) => {
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="bg-white rounded-lg w-1/2 p-6">
+      <div className="bg-white rounded-lg w-1/2 p-6 overflow-y-scroll h-650px">
         <div className="flex justify-between mb-4">
           <h2 className="text-xl font-semibold">Add Product</h2>
           <button onClick={onClose} className="text-gray-600 hover:text-gray-800">X</button>
@@ -120,13 +122,13 @@ const ProductDetailsForm = ({ handleNext, formData, setFormData }) => {
       const reader = new FileReader();
       reader.onload = (e) => {
         const base64String = e.target.result.split(',')[1];
-        // setMainImg(base64String);
+
         setFormData({
           ...formData,
-          images: base64String,
+          images: [base64String],
         });
 
-        fileInputRef.current.value = '';
+        // fileInputRef.current.value = '';
       };
       reader.onerror = (error) => {
         console.error(error);
@@ -190,7 +192,7 @@ const ProductDetailsForm = ({ handleNext, formData, setFormData }) => {
           </div>
           <div className="flex-1">
             <label className="text-left block text-sm font-medium text-gray-700">Product Brand</label>
-            <select name="subCategory" value={formData.subCategoryId} onChange={(e) => { setFormData({ ...formData, subCategoryId: e.target.value }) }} className="mt-1 block w-full border border-gray-300 rounded-md">
+            <select name="subCategory" value={formData.brandId} onChange={(e) => { setFormData({ ...formData, brandId: e.target.value }) }} className="mt-1 block w-full border border-gray-300 rounded-md">
               <option>Select Brand</option>
               {state.AddProduct?.brands && state.AddProduct.brands.map((v, i) => (
                 <option key={v.id} value={v.id}>{v.brandName}</option>
@@ -228,7 +230,8 @@ const ProductDetailsForm = ({ handleNext, formData, setFormData }) => {
           <div className="flex flex-row flex-1">
             <div className="flex-1 mr-4">
               <label className="text-left block text-sm font-medium text-gray-700">Size</label>
-              <select name="productType" value={formData.productId} onChange={(e) => { setFormData({ ...formData, productId: e.target.value, statusTypeId: e.target.value }) }} className="mt-1 block w-full border border-gray-300 rounded-md">
+              <select name="productType" value={formData.sizeId} onChange={(e) => { setFormData({ ...formData, sizeId: e.target.value, statusTypeId: e.target.value }) }} className="mt-1 block w-full border border-gray-300 rounded-md">
+                <option value={0}>Please Select the size</option>
                 <option value={1}>100</option>
                 <option value={2}>20</option>
               </select>
@@ -250,11 +253,10 @@ const ProductDetailsForm = ({ handleNext, formData, setFormData }) => {
           <div className="flex-1">
             <label className="text-left block text-sm font-medium text-gray-700">Unit</label>
             <select name="unit" value={formData.unitId} onChange={(e) => { setFormData({ ...formData, unitId: e.target.value }) }} className="mt-1 block w-full border border-gray-300 rounded-md">
-              <option value={1} key={1}>Kg</option>
-              <option value={2} key={2}>g</option>
-              <option value={3} key={3}>Lt</option>
-              <option value={4} key={4}>ml</option>
-              <option value={5} key={5}>Box</option>
+              <option>Select Unit</option>
+              {state.AddProduct?.units && state.AddProduct.units.map((v, i) => (
+                <option key={v.id} value={v.id}>{v.unitSmall} - {v.unitName}</option>
+              ))}
             </select>
           </div>
           <div className="flex gap-4">

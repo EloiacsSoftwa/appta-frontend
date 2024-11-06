@@ -62,10 +62,11 @@ export function getAllBrands(payloads) {
       })
     }
 
-    
-
-
     export async function GetProduct() {
       return await AxiosConfig.post('/products/getProducts',{
               })
+    }
+
+    export async function getAllUnitsCall() {
+      return await AxiosConfig.post('/unit/getUnit')
     }

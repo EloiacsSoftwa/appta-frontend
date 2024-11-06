@@ -33,7 +33,8 @@ module.exports = {
     },
     height: {
       '100px': '100px',
-      '114px' :'114px'
+      '114px' :'114px',
+      '650px': '650px',
     },
     spacing: {
       22: '5.5rem', // Custom height of 88px
