@@ -23,10 +23,11 @@ import { useDispatch, useSelector } from 'react-redux';
 
     //  const [loading, setLoading] = useState(false);
 
-     const [posdata, setPosData] = useState([])
+      const [posdata, setPosData] = useState([])
 
        const[barcode, setBarcode] = useState('56676');
-
+   
+       const [productid , setProductId] = useState('')
 
 
        const BarcodeGetData = () => {
@@ -56,8 +57,41 @@ import { useDispatch, useSelector } from 'react-redux';
       }, [State.PosReducer.BarcodeproductData]);
       
       
+      useEffect(()=> {
+        dispatch({ type: 'GETPRODUCT'});
+
+        
+      },[])
+
+      const [searchQuery, setSearchQuery] = useState('');
+      const [selectedProductId, setSelectedProductId] = useState(null); // New state for productId
       
+      console.log("selectedProductId",selectedProductId);
+      
+      // Handle search input changes
+      const handleSearchChange = (e) => {
+        setSearchQuery(e.target.value.toLowerCase());
+        setSelectedProductId(null); // Reset productId on new search
+      };
+      
+      // Filter `ProductList` based on search query
+      const filteredData = State.AddProduct.ProductList.filter(item =>
+        item.productName.toLowerCase().includes(searchQuery) ||
+        item.barcodeNo.toLowerCase().includes(searchQuery)
+      );
     
+     const [searchfilterdata, setSearchFilterData] = useState('');
+     console.log("Productfilter",searchfilterdata);
+
+      useEffect(()=> {
+         const Productfilter = State.AddProduct.ProductList.filter((u)=> u.productId == selectedProductId)
+         
+         setSearchFilterData(Productfilter[0])
+      },[selectedProductId])
+
+      useEffect(()=> {
+       setPosData([...posdata,searchfilterdata])
+     },[searchfilterdata])
       
 
     const [showModal, setShowModal] = useState(false);
@@ -116,15 +150,42 @@ import { useDispatch, useSelector } from 'react-redux';
                     <div className="flex items-center ">
                         {/* <div><img src={Frame1} className='w-6 h-6 cursor-pointer' /></div> */}
                         <div className="relative">
-                            <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none">
-                                <img src={Search} />
-                            </span>
-                            <input
-                                type="text"
-                                placeholder="Search for products"
-                                className=" rounded pl-10 py-1  bg-zinc-300  "
-                            />
-                        </div>
+  <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none">
+    <img src={Search} alt="Search Icon" />
+  </span>
+  <input
+    type="text"
+    placeholder="Search for products"
+    className="rounded pl-10 py-1 bg-zinc-300"
+    value={searchQuery}
+    onChange={handleSearchChange}
+  />
+  
+  {/* Display filtered list below the search input */}
+  {searchQuery && filteredData.length > 0 && (
+    <div className="absolute w-full bg-white border border-gray-300 rounded mt-1 max-h-60 overflow-y-auto z-10">
+      {filteredData.map((item, index) => (
+        <div
+          key={index}
+          className="p-2 hover:bg-gray-100 cursor-pointer"
+          onClick={() => {
+            setSearchQuery(item.productName); // Display product name in search input
+            setSelectedProductId(item.productId); // Store productId
+          }}
+        >
+          <div className="text-sm font-medium text-gray-900">{item.productName}</div>
+        </div>
+      ))}
+    </div>
+  )}
+
+  {/* No results message */}
+  {searchQuery && filteredData.length === 0 && (
+    <div className="absolute w-full bg-white border border-gray-300 rounded mt-1 p-2 text-sm text-gray-500">
+      No products match your search
+    </div>
+  )}
+</div>
                         <div className='bg-zinc-300 ms-2 items-center rounded'>
                             <img  src={Barcode} className='p-1' alt='barcode' onClick={BarcodeGetData}/>
                         </div>
