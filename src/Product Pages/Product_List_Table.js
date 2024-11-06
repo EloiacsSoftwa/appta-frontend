@@ -18,14 +18,26 @@ function Product_List() {
     // const [showModal, setShowModal] = useState(false);   
     const [currentPage, setCurrentPage] = useState(1);
     const [showModal, setShowModal] = useState(false);
+    const [product, setProduct] = useState([])
+    const [loading, setLoading] = useState(true);
+
 
     const dispatch = useDispatch();
     const state = useSelector(state => state);
 
     useEffect(() => {
-        // dispatch({type: 'GET_CATEGORY'})
+        dispatch({type: 'GETPRODUCT'})
     }, [])
 
+
+
+    useEffect(()=>{
+        if(state.AddProduct.getProductStatusCode == 200){
+            setLoading(false)
+            setProduct(state.AddProduct.ProductList)
+        }
+
+    },[state.AddProduct.getProductStatusCode])
 
 
     const reports = [
@@ -89,10 +101,10 @@ function Product_List() {
 
     //  pagination
     const itemsPerPage = 10;
-    const totalPages = Math.ceil(products.length / itemsPerPage);
+    const totalPages = Math.ceil(product && product.length / itemsPerPage);
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const currentItems = products.slice(indexOfFirstItem, indexOfLastItem);
+    const currentItems = product && product.slice(indexOfFirstItem, indexOfLastItem);
 
     const handlePrevClick = () => {
         if (currentPage > 1) {
@@ -182,6 +194,16 @@ function Product_List() {
                     </div>
                 </div>
 
+
+                <div className="relative w-full mb-5">
+
+{loading && (
+<div className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-75 z-10">
+<div className="loader border-t-4 border-orange-500 border-solid rounded-full w-10 h-10 animate-spin"></div>
+</div>
+)}
+
+
                 <table className="w-full  text-left mb-5">
                     <thead>
                         
@@ -260,16 +282,16 @@ function Product_List() {
                                         type="checkbox"
                                         className="form-checkbox h-4 w-4 text-blue-600 border-neutral-500 cursor-pointer"
                                     /></td>
-                                <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{item.Product}</td>
-                                <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{item.ProductNumber}</td>
-                                <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{item.InventoryType}</td>
+                                <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{item.productName}</td>
+                                <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{item.productId}</td>
+                                <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{item.statusType}</td>
                                 <td className='p-2 font-semibold text-sm font-Manrope text-start text-neutral-900 '>
-                                    {item.Category}
+                                    {item.category}
                                 </td>
                                 <td className='p-2 font-semibold text-sm font-Manrope text-start text-neutral-900' >
-                                    {item.Price}
+                                    {item.wholesalePrice}
                                 </td>
-                                <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900">{item.Unit}</td>
+                                <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900">{item.unit}</td>
                                 <td className="p-2 text-gray-500 cursor-pointer w-8 "><img src={Dot} /></td>
                             </tr>
                         ))}
@@ -277,7 +299,7 @@ function Product_List() {
                 </table>
 
 
-
+</div>
 
 
 

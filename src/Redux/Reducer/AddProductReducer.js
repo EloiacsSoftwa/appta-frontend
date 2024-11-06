@@ -1,4 +1,5 @@
 import { GET_BRANDS_API_RESPONSE } from "../../utils/Constant";
+import { GetProduct } from "../Action/AddProductAction";
 // AddProductReducer
 const initialState = {
   category: [],
@@ -9,7 +10,9 @@ const initialState = {
   getCategoryStatusCode: 0,
   brands: [],
   getBrandStatusCode: 0,
-  AddBrandSuccessStatusCode: 0
+  AddBrandSuccessStatusCode: 0,
+  ProductList: [],
+  getProductStatusCode:0,
 };
 
 const AddProductReducer = (state = initialState, action) => {
@@ -42,6 +45,10 @@ const AddProductReducer = (state = initialState, action) => {
       return { ...state, AddBrandSuccessStatusCode: action.payload.statusCode }
     case 'REMOVE_ADD_BRAND_STATUS_CODE':
       return { ...state, AddBrandSuccessStatusCode: 0 }
+case 'GET_PRODUCT' : 
+return {...state, ProductList:action.payload.response, getProductStatusCode: action.payload.statusCode}
+case 'REMOVE_GET_PRODUCT_STATUS_CODE' : 
+return {...state,  getProductStatusCode: 0}
 
 
     default:
