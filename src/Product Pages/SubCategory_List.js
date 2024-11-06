@@ -8,6 +8,9 @@ import Search from '../Images/Sales/Search.svg'
 import Dot from '../Images/Sales/Dots.svg';
 import Add from '../Images/Sales/Add Green.svg';
 import SmallDot from '../Images/Sales/Smalldots.svg'
+import View from '../Images/Sales/view.svg'
+import Edit from '../Images/Sales/edit.svg'
+import Delete from '../Images/Sales/Delete.svg'
 import { ArrowRight2, ArrowLeft2, ArrowUp2, ArrowDown2, Import } from 'iconsax-react';
 import AddSubCategory from './AddSubCategory';
 import { useDispatch, useSelector } from 'react-redux';
@@ -22,6 +25,8 @@ function SubCategory_List() {
     const [currentPage, setCurrentPage] = useState(1);
     const [showAddCategory, setShowAddCategory] = useState(false)
     const [loading, setLoading] = useState(true);
+    const [dropdownIndex, setDropdownIndex] = useState(null);
+
 
 
     const handleAddCategory = () => {
@@ -31,7 +36,10 @@ function SubCategory_List() {
     const handleCloseAddCategory = () => {
         setShowAddCategory(false)
     }
-
+    
+    const toggleDropdown = (index) => {
+      setDropdownIndex(dropdownIndex === index ? null : index);
+    };
 
     useEffect(() => {
         dispatch({ type: 'GETSUBCATEGORY' });
@@ -315,18 +323,53 @@ function SubCategory_List() {
                                         type="checkbox"
                                         className="form-checkbox h-4 w-4 text-blue-600 border-neutral-500 cursor-pointer"
                                     /></td>
-                                <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{item.subCategoryName}</td>
-                                <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start ml-5">{item.CategoryCode || '-'}</td>
-                                <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-center">{item.categoryName}</td>
-                                <td className='p-2 font-semibold text-sm font-Manrope text-start text-neutral-900 '>
+                                <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start pl-6">{item.subCategoryName}</td>
+                                <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start pl-6">{item.CategoryCode || '-'}</td>
+                                <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start pl-6">{item.categoryName || '-'}</td>
+                                <td className='p-2 font-semibold text-sm font-Manrope  text-neutral-900 text-start pl-6 '>
                                     {item.createdBy}
                                 </td>
-                                <td className='p-2 font-semibold text-sm font-Manrope text-start text-neutral-900' >
+                                <td className='p-2 font-semibold text-sm font-Manrope  text-neutral-900 text-start pl-6' >
                                     {moment(item.createdAt, "DD-MM-YYYY HH:mm:ss").format("DD-MMM-YY")}
 
                                 </td>
                                 {/* <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900">{item.Unit}</td> */}
-                                <td className="p-2 text-gray-500 cursor-pointer w-8 "><img src={Dot} /></td>
+                                <td className="p-2 text-gray-500 cursor-pointer w-8 relative"  onClick={() => toggleDropdown(index)}><img src={Dot}    className="cursor-pointer"/>
+                                
+                                
+                                {dropdownIndex === index && (
+                  <div className="absolute right-10 top-2 mt-2  bg-zinc-300 border border-zinc-200 rounded-lg shadow-lg z-20  w-32 p-2">
+                    <div className='flex items-center justify-evenly w-auto'>
+
+                    <div>
+                            <img src={View} className='size-6 cursor-pointer' />
+                        </div>
+                        <div>
+                            <img src={Edit} className='size-6 cursor-pointer' />
+                        </div>
+                        <div>
+                            <img src={Delete} className='size-6  cursor-pointer' />
+                        </div>
+                        </div>
+                    {/* <button
+                      onClick={() => console.log("Edit clicked")}
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => console.log("Delete clicked")}
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
+                    >
+                      Delete
+                    </button> */}
+                  </div>
+                )}
+                                
+                                
+                                
+                                
+                                </td>
                             </tr>
                         ))}
                     </tbody>
