@@ -11,13 +11,13 @@ function* Sub_Category(args) {
 
     const response = yield call(SubCategory, args.payload);
     console.log("response for subCategory",response)
-    if (response.status === 200 || response.statusCode === 200) {
-      yield put({ type: 'GET_SUBCATEGORY', payload: {response:response.data.data , statusCode: response.status  || response.statusCode}});
+    if (response.status === 200 || response.code === 200) {
+      yield put({ type: 'GET_SUBCATEGORY', payload: {response:response.data.data , statusCode: response.status  || response.code}});
             
     }
     // if (response.status === 403 || response.statusCode === 403)
     else {
-      yield put({ type: 'ERROR', payload: { statusCode:response.status  || response.statusCode  } });
+      yield put({ type: 'ERROR', payload: { statusCode:response.status  || response.code  } });
     }
   if (response) {
     ExpireToken(response)
@@ -29,12 +29,12 @@ function* Sub_Category(args) {
 function* MainCategory(args) {
 
     const response = yield call(Category, args.payload);
-    if (response.status === 200 || response.statusCode === 200) {
-      yield put({ type: 'GET_CATEGORY', payload: {response:response.data.data, statusCode: response.status  || response.statusCode}});
+    if (response.status === 200 || response.code === 200) {
+      yield put({ type: 'GET_CATEGORY', payload: {response:response.data.data, statusCode: response.status  || response.code}});
             
     }
        else {
-      yield put({ type: 'ERROR', payload: { statusCode:response.status  || response.statusCode  } });
+      yield put({ type: 'ERROR', payload: { statusCode:response.status  || response.code  } });
     }
     if (response) {
       ExpireToken(response)
@@ -44,12 +44,12 @@ function* MainCategory(args) {
   function* getAllBrandsAPIRequest(args) {
     const response = yield call(getAllBrands, args.payload);
 
-    if (response.status === 200 || response.statusCode === 200) {
-      yield put({ type: GET_BRANDS_API_RESPONSE, payload: {response:response.data.data , statusCode: response.status  || response.statusCode}});
+    if (response.status === 200 || response.code === 200) {
+      yield put({ type: GET_BRANDS_API_RESPONSE, payload: {response:response.data.data , statusCode: response.status  || response.code}});
             
     }
        else {
-      yield put({ type: 'ERROR', payload: { statusCode:response.status  || response.statusCode  } });
+      yield put({ type: 'ERROR', payload: { statusCode:response.status  || response.code  } });
     }
     if (response) {
       ExpireToken(response)
@@ -59,12 +59,12 @@ function* MainCategory(args) {
   function* AddProduct_Details(args) {
 
     const response = yield call(AddProductDetails, args.payload);
-    if (response.status === 200 || response.statusCode === 200) {
-      yield put({ type: 'ADD_PRODUCT_DETAILS', payload: {response:response.data , statusCode: response.status  || response.statusCode}});
+    if (response.status === 200 || response.code === 200) {
+      yield put({ type: 'ADD_PRODUCT_DETAILS', payload: {response:response.data , statusCode: response.status  || response.code}});
             
     }
        else {
-      yield put({ type: 'ERROR', payload: { statusCode:response.status  || response.statusCode  } });
+      yield put({ type: 'ERROR', payload: { statusCode:response.status  || response.code  } });
     }
     if (response) {
       ExpireToken(response)
@@ -91,8 +91,8 @@ function* MainCategory(args) {
     };
 
 
-    if (response.status === 200 || response.statusCode === 200) {
-      yield put({ type: 'ADD_BRAND', payload: {response:response.data , statusCode: response.status  || response.statusCode}});
+    if (response.status === 200 || response.code === 200) {
+      yield put({ type: 'ADD_BRAND', payload: {response:response.data , statusCode: response.status  || response.code}});
       toast.success('Brand Successfully Created', {
         position: "top-center",
         autoClose: 2000,
@@ -106,7 +106,7 @@ function* MainCategory(args) {
       });   
     }
        else {
-      yield put({ type: 'ERROR', payload: { statusCode:response.status  || response.statusCode  } });
+      yield put({ type: 'ERROR', payload: { statusCode:response.status  || response.code  } });
     }
     if (response) {
       ExpireToken(response)
@@ -115,7 +115,7 @@ function* MainCategory(args) {
 
 
   function ExpireToken(response) {
-    if (response.data.code === 204) {
+    if (response.data.code === 204 || response.data.code === 403) {
       const message = response.data.code
       const cookies = new Cookies()
       cookies.set('access-denied', message, { path: '/' });
