@@ -28,11 +28,11 @@ const  Pos = () => {
 
   useEffect(() => {
 
-    const barcodes = ['rgtgerteyy']; 
+    // const barcodes = ['rgtgerteyy']; 
   
-    barcodes.forEach(barcode => {
-      dispatch({ type: 'BARCODE_GET_PRODUCT', payload: barcode });
-    });
+    // barcodes.forEach(barcode => {
+      dispatch({ type: 'BARCODE_GET_PRODUCT', payload: "rgtgerteyy" });
+    // });
 
     setPosData(State.PosReducer.BarcodeproductData)
   }, [dispatch]);
