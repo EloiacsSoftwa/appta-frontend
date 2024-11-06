@@ -28,6 +28,7 @@ module.exports = {
       SourceSansPro :['SourceSansPro','sans-serif']
     },
     height: {
+      '100px': '100px',
       '114px' :'114px'
     },
     spacing: {
