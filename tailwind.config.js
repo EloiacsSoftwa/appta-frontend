@@ -13,19 +13,23 @@ module.exports = {
       'light_gray' : '#F6F6F6',
       'Dim-gray' : '#D9D9D93B',
       'Dim-red' : '#EA580C0A',
+      'second-gray': '#EAEAEA',
  },
      boxShadow: {
       'custom': '0px 0px 7px 0px #00000040',
     },
     borderColor: {
-    'Dim-grey'  :'#BDBDBD'
+    'Dim-grey'  :'#BDBDBD',
+    
     },
     fontSize: {
       '22': '22px',
     },
     fontFamily: {
       Manrope: ['Manrope', 'sans-serif'],
-      SourceSansPro :['SourceSansPro','sans-serif']
+      SourceSansPro :['SourceSansPro','sans-serif'],
+      Poppins :['Poppins', 'sans-serif'],
+      Roboto: ['Roboto', 'sans-serif'],
     },
     height: {
       '100px': '100px',
@@ -34,6 +38,11 @@ module.exports = {
     spacing: {
       22: '5.5rem', // Custom height of 88px
     },
+    width: {
+      '250' : '250px',
+      '555' :'555px',
+      
+    }
      
     },
   },
