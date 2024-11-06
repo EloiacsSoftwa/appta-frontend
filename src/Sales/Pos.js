@@ -16,26 +16,49 @@ import { useDispatch, useSelector } from 'react-redux';
 
 
 
-const  Pos = () => {
+    const  Pos = () => {
 
     const dispatch = useDispatch();
-  const State = useSelector(state => state);
+    const State = useSelector(state => state);
+
+    //  const [loading, setLoading] = useState(false);
+
+     const [posdata, setPosData] = useState([])
+
+       const[barcode, setBarcode] = useState('56676');
 
 
-  const [posdata, setPosData] = useState([])
-  console.log("posdata",posdata);
-  
 
-  useEffect(() => {
+       const BarcodeGetData = () => {
+        // setLoading(false);
+        dispatch({ type: 'BARCODE_GET_PRODUCT', payload: barcode });
+       setTimeout(() => {
+        if (State.PosReducer.BarcodeproductData && State.PosReducer.BarcodeproductData != '') {
+            setPosData([State.PosReducer.BarcodeproductData]); 
+        }
+       }, 200);
+       
+        
+        // setTimeout(() => {
+        //   setLoading(true);
+        // }, 500);
+      };
+      
+      useEffect(() => {
+        if (State.PosReducer.BarcodeproductData && State.PosReducer.BarcodeproductData != '') {
+            // setLoading(true);
 
-    const barcodes = ['rgtgerteyy']; 
-  
-    barcodes.forEach(barcode => {
-      dispatch({ type: 'BARCODE_GET_PRODUCT', payload: barcode });
-    });
-
-    setPosData(State.PosReducer.BarcodeproductData)
-  }, [dispatch]);
+            // const dataArray = [...State.PosReducer.BarcodeproductData,State.PosReducer.BarcodeproductData];
+            //  console.log("dataArray", dataArray)
+            //  setPosData(dataArray)
+          setPosData([...posdata, {...State.PosReducer.BarcodeproductData}]);
+        }
+      }, [State.PosReducer.BarcodeproductData]);
+      
+      
+      
+    
+      
 
     const [showModal, setShowModal] = useState(false);
 
@@ -76,64 +99,11 @@ const  Pos = () => {
         borderRadius: '30px',
       };
 
-    const PosData = [
-        {
-            No : "1",
-            code : "DMC0123",
-            product : "Dairy Milk",
-            quantity : "02",
-            unit_price : "50",
-            amount:'50',
-            total: '₹ 2,000',
-        },
-        {
-            No : "2",
-            code : "DMC0123",
-            product : "Face Wash",
-            quantity : "02",
-            unit_price : "50",
-            amount:'50',
-            total: '₹ 2,000'
-        },
-        {
-            No : "3",
-            code : "DMC0123",
-            product : "Egg",
-            quantity : "02",
-            unit_price : "50",
-            amount:'50',
-            total: '₹ 2,500',
-        },
-        {
-            No : "4",
-            code : "DMC0123",
-            product : "Butter",
-            quantity : "02",
-            unit_price : "50",
-            amount:'50',
-            total: '₹ 2,500',
-        },
-        {
-            No : "5",
-            code : "DMC0123",
-            product : "Butter",
-            quantity : "02",
-            unit_price : "50",
-            amount:'50',
-            total: '₹ 2,500',
-        },
-        {
-            No : "6",
-            code : "DMC0123",
-            product : "Butter",
-            quantity : "02",
-            unit_price : "50",
-            amount:'50',
-            total: '₹ 2,500',
-        },
-    ];
+    
 
   console.log("State.PosReducer.BarcodeproductData",State.PosReducer.BarcodeproductData);
+  
+  console.log("posdata",posdata);
   
 
     return(<>
@@ -156,7 +126,7 @@ const  Pos = () => {
                             />
                         </div>
                         <div className='bg-zinc-300 ms-2 items-center rounded'>
-                            <img  src={Barcode} className='p-1' alt='barcode'/>
+                            <img  src={Barcode} className='p-1' alt='barcode' onClick={BarcodeGetData}/>
                         </div>
                     </div>
                     <div className='flex items-center gap-2 '>
@@ -166,7 +136,16 @@ const  Pos = () => {
                         </div>
                     </div>
                 </div>
-                <table className="w-full text-left mb-5 table-auto">
+
+                <div className="relative w-full mb-5">
+
+                {/* {loading && (
+<div className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-75 z-10">
+<div className="loader border-t-4 border-orange-500 border-solid rounded-full w-10 h-10 animate-spin"></div>
+</div>
+)} */}
+
+<table className="w-full text-left mb-5 table-auto">
                     <thead>
                         <tr className="bg-gray-200 border-0">
                         <th className="p-1 flex items-center justify-start  h-full">
@@ -233,29 +212,46 @@ const  Pos = () => {
                     
                         </tr>
                     </thead>
-  <tbody>
-  {State.PosReducer.BarcodeproductData ? (
-      <tr  className="hover:bg-gray-50 border-0">
-        <td className="p-2 mt-1 flex items-center justify-start">
-          <input type="checkbox" className="form-checkbox h-3 w-3 text-blue-600 border-neutral-500 cursor-pointer" />
-        </td>
-        <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{State.PosReducer.BarcodeproductData.unitId || '-'}</td>
-        <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{State.PosReducer.BarcodeproductData.barcodeNo || '-'}</td>
-        <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{State.PosReducer.BarcodeproductData.productName || '-'}</td>
-        <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{State.PosReducer.BarcodeproductData.quantity || '-'}</td>
-        <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">₹{State.PosReducer.BarcodeproductData.wholesalePrice || '0'}</td>
-        <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">₹{(State.PosReducer.BarcodeproductData.quantity * State.PosReducer.BarcodeproductData.wholesalePrice) || '0'}</td>
-        <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{State.PosReducer.BarcodeproductData.wholesalePricePercentage || '-'}</td>
-        <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">₹{((State.PosReducer.BarcodeproductData.quantity * State.PosReducer.BarcodeproductData.wholesalePrice) * (State.PosReducer.BarcodeproductData.wholesalePricePercentage / 100)) || '0'}</td>
-        <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">₹{(State.PosReducer.BarcodeproductData.quantity * State.PosReducer.BarcodeproductData.wholesalePrice) - ((State.PosReducer.BarcodeproductData.quantity * State.PosReducer.BarcodeproductData.wholesalePrice) * (State.PosReducer.BarcodeproductData.wholesalePricePercentage / 100)) || '0'}</td>
-      </tr>
-    ) : ""
-  }
+                    <tbody>
+  {posdata && posdata.length > 0 ? (
+    posdata.map((item, index) => 
+      item ? ( // Only render row if `item` is truthy
+        <tr key={index} className="hover:bg-gray-50 border-0">
+          <td className="p-2 mt-1 flex items-center justify-start">
+            <input type="checkbox" className="form-checkbox h-3 w-3 text-blue-600 border-neutral-500 cursor-pointer" />
+          </td>
+          <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{item.unitId || '-'}</td>
+          <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{item.barcodeNo || '-'}</td>
+          <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{item.productName || '-'}</td>
+          <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{item.quantity || '-'}</td>
+          <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">₹{item.wholesalePrice || '0'}</td>
+          <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">₹{(item.quantity * item.wholesalePrice) || '0'}</td>
+          <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{item.wholesalePricePercentage || '-'}</td>
+          <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">₹{((item.quantity * item.wholesalePrice) * (item.wholesalePricePercentage / 100)) || '0'}</td>
+          <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">₹{(item.quantity * item.wholesalePrice) - ((item.quantity * item.wholesalePrice) * (item.wholesalePricePercentage / 100)) || '0'}</td>
+        </tr>
+      ) : null // Skip if item is undefined or null
+    )
+  ) : (
+    <tr>
+      <td colSpan="10" className="p-2 text-center text-sm text-neutral-500">
+        No data available
+      </td>
+    </tr>
+  )}
 </tbody>
 
 
 
+
+
+
                 </table>
+
+
+
+              
+                </div>
 
 
 

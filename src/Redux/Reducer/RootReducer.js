@@ -4,6 +4,7 @@ import PosReducer from "./PosReducer";
 import categoryReducer from "./CategoryReducer";
 import AddProductReducer from "./AddProductReducer";
 import SubCategoryReducer from './SubCategoryReducer'
+import CustomerReducer from "./CustomerReducer";
 
 
 
@@ -13,7 +14,7 @@ const RootReducer = combineReducers({
     categoryReducer: categoryReducer,
     AddProduct : AddProductReducer,
     SubCategory : SubCategoryReducer,
-
+    Customer : CustomerReducer,
 
 
 })

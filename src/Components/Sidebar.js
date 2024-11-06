@@ -23,6 +23,7 @@ import CategoryList from '../Product Pages/Category_List';
 import BrandList from "../Brand Pages/BrandList";
 import Pos from "../Sales/Pos";
 import SubCategory_List from "../Product Pages/SubCategory_List";
+import Customer_List from "../Contact/Customer_List";
 import { useDispatch, useSelector } from 'react-redux';
 import CryptoJS from "crypto-js";
 
@@ -238,7 +239,11 @@ const handleLogout = () => {
   </div>
 )}
 
-
+{selectedMenu === 'Customer' && (
+  <div className="bg-white mt-2">
+    <Customer_List />
+  </div>
+)}
 
 
 

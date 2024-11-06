@@ -26,11 +26,13 @@ function* handleBarcodeGetProduct(args) {
 }
 
 function ExpireToken(response) {
-    if (response.data.code === 204) {
-        const cookies = new Cookies();
-        cookies.set('access-denied', response.data.code, { path: '/' });
+
+    const code = response.data?.code ?? response.code;
+    if (code === 204 || code === 403) {
+      const cookies = new Cookies();
+      cookies.set('access-denied', code, { path: '/' });
     }
-}
+  }
 
 function* PosSaga() {
     yield takeEvery('BARCODE_GET_PRODUCT', handleBarcodeGetProduct);
