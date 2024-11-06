@@ -9,7 +9,7 @@ const AddProductModal = ({ onClose }) => {
   const [activeTab, setActiveTab] = useState("Product Details");
 
   const [formData, setFormData] = useState({
-    
+
     images: [],
     Name: "",
     productId: '',
@@ -37,16 +37,16 @@ const AddProductModal = ({ onClose }) => {
     wholesalePricePercentage: 1,
     threshold: 0,
     freebieProductId: 0,
-    barcodeNo:0,
-    statusTypeId:1
+    barcodeNo: 0,
+    statusTypeId: 1
   });
   const dispatch = useDispatch();
   const state = useSelector(state => state);
 
   useEffect(() => {
     // dispatch({ type: 'GETSUBCATEGORY' });
-    dispatch({ type: 'GETCATEGORY'});
-    dispatch({type: GET_BRANDS_API_CALL})
+    dispatch({ type: 'GETCATEGORY' });
+    dispatch({ type: GET_BRANDS_API_CALL })
   }, []);
 
   const handleNext = () => {
@@ -101,7 +101,7 @@ const ProductDetailsForm = ({ handleNext, formData, setFormData }) => {
   const state = useSelector(state => state);
   const dispatch = useDispatch();
   const [selectedCategory, setSelectedCategory] = useState()
-let fileInputRef = useRef()
+  let fileInputRef = useRef()
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -116,12 +116,12 @@ let fileInputRef = useRef()
     if (file) {
       const reader = new FileReader();
       reader.onload = (e) => {
-        const base64String = e.target.result.split(',')[1];  
+        const base64String = e.target.result.split(',')[1];
         // setMainImg(base64String);
         setFormData({
-                ...formData,
-                images: base64String,
-              });
+          ...formData,
+          images: base64String,
+        });
 
         fileInputRef.current.value = '';
       };
@@ -179,13 +179,6 @@ let fileInputRef = useRef()
       </div>
 
       <div className="flex flex-col flex-1 gap-4">
-        <div>
-          <label className="text-left block text-sm font-medium text-gray-700">Product Type</label>
-          <select name="productType" value={formData.productId} onChange={(e) => { setFormData({ ...formData, productId: e.target.value,statusTypeId : e.target.value }) }} className="mt-1 block w-full border border-gray-300 rounded-md">
-            <option value={1}>Tracked</option>
-            <option value={2}>Bill Of Materials</option>
-          </select>
-        </div>
 
         <div className="flex gap-4">
           <div className="flex-1">
@@ -227,7 +220,30 @@ let fileInputRef = useRef()
           </div>
         </div>
 
+        <div className="flex flex-1 flex-row">
+
+          <div className="flex flex-row flex-1">
+            <div className="flex-1 mr-4">
+              <label className="text-left block text-sm font-medium text-gray-700">Size</label>
+              <select name="productType" value={formData.productId} onChange={(e) => { setFormData({ ...formData, productId: e.target.value, statusTypeId: e.target.value }) }} className="mt-1 block w-full border border-gray-300 rounded-md">
+                <option value={1}>Tracked</option>
+                <option value={2}>Bill Of Materials</option>
+              </select>
+            </div>
+
+            <div className="flex-1">
+              <label className="text-left block text-sm font-medium text-gray-700">Product Type</label>
+              <select name="productType" value={formData.productId} onChange={(e) => { setFormData({ ...formData, productId: e.target.value, statusTypeId: e.target.value }) }} className="mt-1 block w-full border border-gray-300 rounded-md">
+                <option value={1}>Tracked</option>
+                <option value={2}>Bill Of Materials</option>
+              </select>
+            </div>
+          </div>
+
+        </div>
+
         <div className="flex gap-4">
+
           <div className="flex-1">
             <label className="text-left block text-sm font-medium text-gray-700">Unit</label>
             <select name="unit" value={formData.unitId} onChange={(e) => { setFormData({ ...formData, unitId: e.target.value }) }} className="mt-1 block w-full border border-gray-300 rounded-md">
@@ -250,18 +266,22 @@ let fileInputRef = useRef()
           </div>
         </div>
         <div className="flex gap-4">
-        <div className="flex-1">
-          <label className="text-left block text-sm font-medium text-gray-700">Barcode</label>
-          <input type="number" name="quantity" value={formData.barcodeNo} onChange={(e) => { setFormData({ ...formData, barcodeNo: e.target.value }) }} className="mt-1 block w-full border border-gray-300 rounded-md" />
+          <div className="flex-1">
+            <label className="text-left block text-sm font-medium text-gray-700">Barcode</label>
+            <input type="number" name="quantity" value={formData.barcodeNo} onChange={(e) => { setFormData({ ...formData, barcodeNo: e.target.value }) }} className="mt-1 block w-full border border-gray-300 rounded-md" />
+          </div>
+
+          <div className="flex-1"></div>
         </div>
 
         <div className="flex-1">
           <label className="text-left block text-sm font-medium text-gray-700">description</label>
-          <input type="text" name="quantity" value={formData.description} onChange={(e) => { setFormData({ ...formData, description: e.target.value }) }} className="mt-1 block w-full border border-gray-300 rounded-md" />
-        </div>
+          <input type="text" name="quantity" value={formData.description} onChange={(e) => { setFormData({ ...formData, description: e.target.value }) }} className="mt-1 block w-full border border-gray-300 rounded-md h-100px" />
         </div>
 
-        <button type="submit" className="mt-4 bg-orange-500 text-white py-2 rounded-md w-full sm:w-auto">Next</button>
+        <div className="flex justify-end">
+          <button type="submit" className="mt-4 bg-orange-500 text-white py-2 px-4 rounded-md sm:w-auto">Next</button>
+        </div>
       </div>
     </form>
   );
@@ -274,15 +294,15 @@ const AccountingDetailsForm = ({ handleNext, handleBack, formData, setFormData }
       <div className="flex gap-4">
         <div className="flex-1">
           <label className="text-left block text-sm font-medium text-gray-700">Purchase Price</label>
-          <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Watch" value={formData.purchasePrice} onChange={(e) => { setFormData({ ...formData, purchasePrice: e.target.value }) }}/>
+          <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Watch" value={formData.purchasePrice} onChange={(e) => { setFormData({ ...formData, purchasePrice: e.target.value }) }} />
         </div>
         <div className="flex-1">
           <label className="text-left block text-sm font-medium text-gray-700">Purchase Percentage</label>
-          <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Brand" value={formData.purchasePercentage} onChange={(e) => { setFormData({ ...formData, purchasePercentage: e.target.value }) }}/>
+          <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Brand" value={formData.purchasePercentage} onChange={(e) => { setFormData({ ...formData, purchasePercentage: e.target.value }) }} />
         </div>
         <div className="flex-1">
           <label className="text-left block text-sm font-medium text-gray-700">Sales Price</label>
-          <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Brand" value={formData.salesPrice} onChange={(e) => { setFormData({ ...formData, salesPrice: e.target.value }) }}/>
+          <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Brand" value={formData.salesPrice} onChange={(e) => { setFormData({ ...formData, salesPrice: e.target.value }) }} />
         </div>
       </div>
 
@@ -290,25 +310,25 @@ const AccountingDetailsForm = ({ handleNext, handleBack, formData, setFormData }
       <div className="w-full">
         <div className="flex-1">
           <label className="text-left block text-sm font-medium text-gray-700">MRP</label>
-          <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Brand" value={formData.mrp} onChange={(e) => { setFormData({ ...formData, mrp: e.target.value }) }}/>
+          <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Brand" value={formData.mrp} onChange={(e) => { setFormData({ ...formData, mrp: e.target.value }) }} />
         </div>
       </div>
 
       <div className="flex gap-4">
         <div className="flex-1">
           <label className="text-left block text-sm font-medium text-gray-700">Whole sale Price</label>
-          <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Watch" value={formData.wholeSalePrice} onChange={(e) => { setFormData({ ...formData, wholeSalePrice: e.target.value }) }}/>
+          <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Watch" value={formData.wholeSalePrice} onChange={(e) => { setFormData({ ...formData, wholeSalePrice: e.target.value }) }} />
         </div>
         <div className="flex-1">
           <label className="text-left block text-sm font-medium text-gray-700">Whole sale Percentage</label>
-          <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Brand" value={formData.wholeSalePercentage} onChange={(e) => { setFormData({ ...formData, wholeSalePercentage: e.target.value }) }}/>
+          <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Brand" value={formData.wholeSalePercentage} onChange={(e) => { setFormData({ ...formData, wholeSalePercentage: e.target.value }) }} />
         </div>
       </div>
 
       <div className="w-full">
         <div className="flex-1">
           <label className="text-left block text-sm font-medium text-gray-700">Product Threshold</label>
-          <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Brand" value={formData.threshold} onChange={(e) => { setFormData({ ...formData, threshold: e.target.value }) }}/>
+          <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Brand" value={formData.threshold} onChange={(e) => { setFormData({ ...formData, threshold: e.target.value }) }} />
         </div>
       </div>
 
@@ -478,68 +498,68 @@ const AccountingDetailsForm = ({ handleNext, handleBack, formData, setFormData }
 //   );
 // };
 
-function BillOfMaterials({handleBack, formData, setFormData}) {
-    const dispatch = useDispatch();
-    const [billOfMaterialsList, setbillOfMaterialsList] = useState([
-      { productName: 'Computer',billOfMaterialsProductId:1, billOfMaterialsProductQuantity: 0, costName: 'Assemble', billOfMaterialsProductCost: 0 }
-    
-    ]);
-  
-    // const [additionalCosts, setAdditionalCosts] = useState([
-    //   { costName: 'Assemble', billOfMaterialsProductCost: 0 },
-    // ]);
-  
-    
-    const addComponent = () => {
-        setbillOfMaterialsList([...billOfMaterialsList, { productName: '', billOfMaterialsProductQuantity: '' }]);
-    };
-  
-  
-    const deleteComponent = (index) => {
-        setbillOfMaterialsList(billOfMaterialsList.filter((_, i) => i !== index));
-    };
-  
-   
-    const addAdditionalCost = () => {
-      setbillOfMaterialsList([...billOfMaterialsList, { costName: '', subtotal: '' }]);
-    };
-  
-    const deleteAdditionalCost = (index) => {
-      setbillOfMaterialsList(billOfMaterialsList.filter((_, i) => i !== index));
-    };
-  
-    var handleSubmit = () => {
-        setFormData({...formData,billOfMaterialsList})
-        // const formattedBillOfMaterials = billOfMaterialsList.map(item => ({
-        //     billOfMaterialsProductId: item.billOfMaterialsProductId || 0,
-        //     billOfMaterialsProductQuantity: item.billOfMaterialsProductQuantity || 0,
-        //     billOfMaterialsProductCost: 0  // Set to 0 if not applicable
-        // }));
-        
-        // const formattedAdditionalCosts = additionalCosts.map(item => ({
-        //     billOfMaterialsProductId: 0, // Set to 0 if not applicable
-        //     billOfMaterialsProductQuantity: 0,
-        //     billOfMaterialsProductCost: item.billOfMaterialsProductCost || 0
-        // }));
-        
-        // Merge both formatted arrays into a single array
-        // const unifiedBillOfMaterialsList = [...formattedBillOfMaterials];
-        
-        // Wrap in the desired object structure
-        // const finalData = {
-        //     billOfMaterialsList: unifiedBillOfMaterialsList
-        // };
-        // let temp1 = [...finalData.billOfMaterialsList]
-        let temp = {...formData,billOfMaterialsList:[]}
-        console.log(temp);
-            dispatch({ type: "ADDPRODUCTDETAILS", payload: temp })
-          }
+function BillOfMaterials({ handleBack, formData, setFormData }) {
+  const dispatch = useDispatch();
+  const [billOfMaterialsList, setbillOfMaterialsList] = useState([
+    { productName: 'Computer', billOfMaterialsProductId: 1, billOfMaterialsProductQuantity: 0, costName: 'Assemble', billOfMaterialsProductCost: 0 }
 
-    return (
-        // min-h-screen
-      <div className="flex justify-center items-center">
-        <div className="bg-white rounded-lg shadow-lg w-full max-w-xl overflow-y-auto border border-orange-500">
-        
+  ]);
+
+  // const [additionalCosts, setAdditionalCosts] = useState([
+  //   { costName: 'Assemble', billOfMaterialsProductCost: 0 },
+  // ]);
+
+
+  const addComponent = () => {
+    setbillOfMaterialsList([...billOfMaterialsList, { productName: '', billOfMaterialsProductQuantity: '' }]);
+  };
+
+
+  const deleteComponent = (index) => {
+    setbillOfMaterialsList(billOfMaterialsList.filter((_, i) => i !== index));
+  };
+
+
+  const addAdditionalCost = () => {
+    setbillOfMaterialsList([...billOfMaterialsList, { costName: '', subtotal: '' }]);
+  };
+
+  const deleteAdditionalCost = (index) => {
+    setbillOfMaterialsList(billOfMaterialsList.filter((_, i) => i !== index));
+  };
+
+  var handleSubmit = () => {
+    setFormData({ ...formData, billOfMaterialsList })
+    // const formattedBillOfMaterials = billOfMaterialsList.map(item => ({
+    //     billOfMaterialsProductId: item.billOfMaterialsProductId || 0,
+    //     billOfMaterialsProductQuantity: item.billOfMaterialsProductQuantity || 0,
+    //     billOfMaterialsProductCost: 0  // Set to 0 if not applicable
+    // }));
+
+    // const formattedAdditionalCosts = additionalCosts.map(item => ({
+    //     billOfMaterialsProductId: 0, // Set to 0 if not applicable
+    //     billOfMaterialsProductQuantity: 0,
+    //     billOfMaterialsProductCost: item.billOfMaterialsProductCost || 0
+    // }));
+
+    // Merge both formatted arrays into a single array
+    // const unifiedBillOfMaterialsList = [...formattedBillOfMaterials];
+
+    // Wrap in the desired object structure
+    // const finalData = {
+    //     billOfMaterialsList: unifiedBillOfMaterialsList
+    // };
+    // let temp1 = [...finalData.billOfMaterialsList]
+    let temp = { ...formData, billOfMaterialsList: [] }
+    console.log(temp);
+    dispatch({ type: "ADDPRODUCTDETAILS", payload: temp })
+  }
+
+  return (
+    // min-h-screen
+    <div className="flex justify-center items-center">
+      <div className="bg-white rounded-lg shadow-lg w-full max-w-xl overflow-y-auto border border-orange-500">
+
         <div className='p-6'>
           <div className="my-4">
             <h3 className="text-lg font-semibold font-Manrope text-orange-500">Component</h3>
@@ -581,7 +601,7 @@ function BillOfMaterials({handleBack, formData, setFormData}) {
                     </td>
                     <td className="text-center">
                       <button onClick={() => deleteComponent(index)} className="text-red-500 hover:text-red-700">
-                       <img src={Delete} className="w-7 h-7 ml-1"></img>
+                        <img src={Delete} className="w-7 h-7 ml-1"></img>
                       </button>
                     </td>
                   </tr>
@@ -589,12 +609,12 @@ function BillOfMaterials({handleBack, formData, setFormData}) {
               </tbody>
             </table>
             <div onClick={addComponent} className="text-blue-500 hover:text-blue-700 mt-4 flex items-center">
-              <span className=""><img src={Vector}className="w-4 h-4 ml-1"></img></span> 
+              <span className=""><img src={Vector} className="w-4 h-4 ml-1"></img></span>
               <span className="ml-3 font-Manrope font-semibold text-sm text-neutral-900">Add a component product</span>
             </div>
           </div>
-  
-        
+
+
           <div className="my-4">
             <h3 className="text-lg font-semibold text-orange-500">Additional Cost</h3>
             <table className="w-full mt-2 border-none lg:w-96">
@@ -635,7 +655,7 @@ function BillOfMaterials({handleBack, formData, setFormData}) {
                     </td>
                     <td className=" text-center">
                       <button onClick={() => deleteAdditionalCost(index)} className="text-red-500 hover:text-red-700">
-                      <img src={Delete}className="w-7 h-7 ml-1"></img>
+                        <img src={Delete} className="w-7 h-7 ml-1"></img>
                       </button>
                     </td>
                   </tr>
@@ -643,24 +663,24 @@ function BillOfMaterials({handleBack, formData, setFormData}) {
               </tbody>
             </table>
             <div onClick={addAdditionalCost} className="text-blue-500 hover:text-blue-700 mt-4 flex items-center">
-              <span className=""><img src={Vector}className="w-4 h-4 ml-1"></img></span> 
+              <span className=""><img src={Vector} className="w-4 h-4 ml-1"></img></span>
               <span className="ml-1 font-Manrope font-semibold text-sm text-neutral-900 ">Add an additional cost</span>
             </div>
-            
+
           </div>
-  
-          </div>
-  
-        
-          <div className="flex justify-end mt-4 pr-4 space-x-4 bg-zinc-300 py-2">
-            <button className="bg-orange-500 hover:bg-gray-400 text-black font-semibold py-1 px-4 rounded" onClick={handleBack}>Back</button>
-            <button className="bg-orange-500 hover:bg-orange-600 text-black font-semibold py-1 px-4 rounded" onClick={handleSubmit}>Submit</button>
-          </div>
+
+        </div>
+
+
+        <div className="flex justify-end mt-4 pr-4 space-x-4 bg-zinc-300 py-2">
+          <button className="bg-orange-500 hover:bg-gray-400 text-black font-semibold py-1 px-4 rounded" onClick={handleBack}>Back</button>
+          <button className="bg-orange-500 hover:bg-orange-600 text-black font-semibold py-1 px-4 rounded" onClick={handleSubmit}>Submit</button>
         </div>
       </div>
-    );
-  }
-  
+    </div>
+  );
+}
+
 //   export default BillMaterial;
 
 

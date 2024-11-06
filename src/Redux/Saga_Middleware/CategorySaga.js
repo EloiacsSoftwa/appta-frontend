@@ -52,47 +52,6 @@ function* handleaddCategory (args) {
   } 
 
 
-//   function* handleGetCategoryList (action){
-//     const response = yield call (GetCategory, action.payload);
-//     console.log("response for get category",response)
-
-//   function* handleGetCategoryList (action){
-//     const response = yield call (GetCategory, action.payload);
-//     console.log("response for compliance",response)
-
-    
-//     if (response.status === 200 || response.statusCode === 200){
-//        yield put ({type : 'GET-CATEGORY' ,payload:{response: response.data.data, statusCode:response.status || response.statusCode}})
-//     }
- 
-//     else {
-//        yield put ({type:'ERROR', payload:response.data.message})
-//     }
-//     if(response){
-//       refreshToken(response)
-//    }
-// }
-//   }
-
-
-//   function refreshToken(response) {
-//     console.log("response",response);
-    
-//     if (response.data && response.data) {
-//        const refreshTokenGet = response.data
-//        console.log("refreshTokenGet", refreshTokenGet)
-//        const cookies = new Cookies()
-//        cookies.set('token', refreshTokenGet, { path: '/' });
-//     } 
-//     else if (response.data == 'Token expired') {
-//        const message = response.data
-//        const cookies = new Cookies()
-//        cookies.set('access-denied', message, { path: '/' });
- 
-//     }
- 
-//  }
-
 function ExpireToken(response) {
    if (response.data.code === 204) {
      const message = response.data.code
