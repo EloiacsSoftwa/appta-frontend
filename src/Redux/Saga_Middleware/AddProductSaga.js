@@ -1,5 +1,5 @@
 import { call, takeEvery, put } from 'redux-saga/effects';
-import { Category,SubCategory,AddProductDetails,AddBrand } from '../Action/AddProductAction';
+import { Category,SubCategory,AddProductDetails,AddBrand, GetProduct } from '../Action/AddProductAction';
 import { GET_BRANDS_API_CALL, GET_BRANDS_API_RESPONSE } from '../../utils/Constant';
 import { getAllBrands } from '../Action/AddProductAction';
 import { toast } from 'react-toastify';
@@ -114,15 +114,55 @@ function* MainCategory(args) {
   } 
 
 
-  function ExpireToken(response) {
-    if (response.data.code === 204 || response.data.code === 403) {
-      const message = response.data.code
-      const cookies = new Cookies()
-      cookies.set('access-denied', message, { path: '/' });
+
+  function* handleGetProduct() {
+
+    const response = yield call(GetProduct);
+    console.log("response",response)
+    if (response.status === 200 || response.code === 200) {
+      yield put({ type: 'GET_PRODUCT', payload: {response:response.data.data , statusCode: response.status  || response.code}});
+            
     }
+    // if (response.status === 403 || response.statusCode === 403)
+    else {
+      yield put({ type: 'ERROR', payload: { statusCode:response.status  || response.code  } });
+    }
+  if (response) {
+    ExpireToken(response)
+   }
+  }  
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function ExpireToken(response) {
+
+  const code = response.data?.code ?? response.code;
+  if (code === 204 || code === 403) {
+    const cookies = new Cookies();
+    cookies.set('access-denied', code, { path: '/' });
+  }
 }
-
 
 
   function* AddProductSaga() {
@@ -131,6 +171,8 @@ function* MainCategory(args) {
   yield takeEvery('ADDPRODUCTDETAILS', AddProduct_Details);
   yield takeEvery(GET_BRANDS_API_CALL, getAllBrandsAPIRequest)
   yield takeEvery('ADDBRAND', handleAddBrand);
+    yield takeEvery('GETPRODUCT', handleGetProduct);
+
 
 //   ADD_PRODUCT_DETAILS
 }

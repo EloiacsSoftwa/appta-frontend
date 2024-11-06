@@ -75,13 +75,13 @@ function* handleGetCustomer() {
 
 
   function ExpireToken(response) {
-    if (response.data.code === 204 || response.data.code === 403) {
-       const message = response.data.code
-       const cookies = new Cookies()
-       cookies.set('access-denied', message, { path: '/' });
-     }
- 
- }
+
+    const code = response.data?.code ?? response.code;
+    if (code === 204 || code === 403) {
+      const cookies = new Cookies();
+      cookies.set('access-denied', code, { path: '/' });
+    }
+  }
 
 
   function* CustomerSaga() {

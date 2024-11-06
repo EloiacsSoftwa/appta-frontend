@@ -61,3 +61,11 @@ export function getAllBrands(payloads) {
          data:payload
       })
     }
+
+    
+
+
+    export async function GetProduct() {
+      return await AxiosConfig.post('/products/getProducts',{
+              })
+    }
