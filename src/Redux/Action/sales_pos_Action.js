@@ -1,19 +1,18 @@
-import config from '../../WebService/Config';
-import axios from 'axios'
+import AxiosConfig from "../../WebService/AxiosConfig";
 
 
-// export  function PosGetbyBarcode(payload) {
 
-//  return  axios.post(`${config.apiBaseUrl}/products/getProductByBarcode`, payload)
-//  .then(response=>response)
-//  .catch(error=>{console.log(error,"catch")
-//     return error
-//  });
- 
-// }
-
-export async function PosGetbyBarcode(payload) {
-    return await axios.post(`${config.apiBaseUrl}/products/getProductByBarcode`, payload, {
-        params: payload
-    })
+export async function PosGetbyBarcode(barcode) {
+    try {
+      const response = await AxiosConfig.post("/products/getProductByBarcode", {}, {
+        params: {
+          barcode: barcode,
+        },
+      });
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching product by barcode:", error);
+      return null;
+    }
   }
+  

@@ -22,9 +22,20 @@ const  Pos = () => {
   const State = useSelector(state => state);
 
 
-  useEffect(()=> {
-    dispatch({ type: 'BARCODE_GET_PRODUCT', payload: { barcode:'rgtgerteyy' }})
-  },[])
+  const [posdata, setPosData] = useState([])
+  console.log("posdata",posdata);
+  
+
+  useEffect(() => {
+
+    const barcodes = ['rgtgerteyy']; 
+  
+    barcodes.forEach(barcode => {
+      dispatch({ type: 'BARCODE_GET_PRODUCT', payload: barcode });
+    });
+
+    setPosData(State.PosReducer.BarcodeproductData)
+  }, [dispatch]);
 
     const [showModal, setShowModal] = useState(false);
 
@@ -121,6 +132,9 @@ const  Pos = () => {
             total: '₹ 2,500',
         },
     ];
+
+  console.log("State.PosReducer.BarcodeproductData",State.PosReducer.BarcodeproductData);
+  
 
     return(<>
         <div className='h-4/5 bg-white p-4 w-full'>
@@ -219,29 +233,28 @@ const  Pos = () => {
                     
                         </tr>
                     </thead>
-                    <tbody>
-                        {PosData.map((item, index) => (
-                            <tr key={index} className="hover:bg-gray-50 border-0">
-                                <td className="p-2 mt-1 flex items-center justify-start">
-                                    <input
-                                        type="checkbox"
-                                        className="form-checkbox h-3 w-3 text-blue-600 border-neutral-500 cursor-pointer"
-                                    /></td>
-                                <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{item.No}</td>
-                                <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{item.code}</td>
-                                <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{item.product}</td>
-                                <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{item.quantity}</td>
-                                <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">₹{item.unit_price}</td>
-                                <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">₹{item.amount}</td>
-                                <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">-</td>
-                                <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">-</td>
-                                <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900">{item.total}</td>
-                            
+  <tbody>
+  {State.PosReducer.BarcodeproductData ? (
+      <tr  className="hover:bg-gray-50 border-0">
+        <td className="p-2 mt-1 flex items-center justify-start">
+          <input type="checkbox" className="form-checkbox h-3 w-3 text-blue-600 border-neutral-500 cursor-pointer" />
+        </td>
+        <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{State.PosReducer.BarcodeproductData.unitId || '-'}</td>
+        <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{State.PosReducer.BarcodeproductData.barcodeNo || '-'}</td>
+        <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{State.PosReducer.BarcodeproductData.productName || '-'}</td>
+        <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{State.PosReducer.BarcodeproductData.quantity || '-'}</td>
+        <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">₹{State.PosReducer.BarcodeproductData.wholesalePrice || '0'}</td>
+        <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">₹{(State.PosReducer.BarcodeproductData.quantity * State.PosReducer.BarcodeproductData.wholesalePrice) || '0'}</td>
+        <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{State.PosReducer.BarcodeproductData.wholesalePricePercentage || '-'}</td>
+        <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">₹{((State.PosReducer.BarcodeproductData.quantity * State.PosReducer.BarcodeproductData.wholesalePrice) * (State.PosReducer.BarcodeproductData.wholesalePricePercentage / 100)) || '0'}</td>
+        <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">₹{(State.PosReducer.BarcodeproductData.quantity * State.PosReducer.BarcodeproductData.wholesalePrice) - ((State.PosReducer.BarcodeproductData.quantity * State.PosReducer.BarcodeproductData.wholesalePrice) * (State.PosReducer.BarcodeproductData.wholesalePricePercentage / 100)) || '0'}</td>
+      </tr>
+    ) : ""
+  }
+</tbody>
 
-                              
-                            </tr>
-                        ))}
-                    </tbody>
+
+
                 </table>
 
 
