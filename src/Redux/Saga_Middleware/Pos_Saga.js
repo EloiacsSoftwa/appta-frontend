@@ -26,7 +26,7 @@ function* handleBarcodeGetProduct(args) {
 }
 
 function ExpireToken(response) {
-    if (response.data.code === 204) {
+    if (response.data.code === 204 || response.data.code === 403) {
         const cookies = new Cookies();
         cookies.set('access-denied', response.data.code, { path: '/' });
     }

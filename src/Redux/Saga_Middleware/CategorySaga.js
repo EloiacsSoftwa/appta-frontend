@@ -24,9 +24,9 @@ function* handleaddCategory (args) {
       padding: "10px",
      
     };
-    if (response.status === 200 || response.statusCode === 200) {
+    if (response.status === 200 || response.code === 200) {
       const token = response.data;
-      yield put({ type: 'ADD-CATEGORY', payload: { statusCode: response.status  || response.statusCode}});
+      yield put({ type: 'ADD-CATEGORY', payload: { statusCode: response.status  || response.code}});
       toast.success('Category Successfully Created', {
          position: "top-center",
          autoClose: 2000,
@@ -40,7 +40,7 @@ function* handleaddCategory (args) {
        });  
     }
     else{
-        yield put({ type: 'ERROR', payload: {response:response.data.message , statusCode: response.status  || response.statusCode}});
+        yield put({ type: 'ERROR', payload: {response:response.data.message , statusCode: response.status  || response.code}});
 
     }
 
@@ -53,7 +53,7 @@ function* handleaddCategory (args) {
 
 
 function ExpireToken(response) {
-   if (response.data.code === 204) {
+  if (response.data.code === 204 || response.data.code === 403) {
      const message = response.data.code
      const cookies = new Cookies()
      cookies.set('access-denied', message, { path: '/' });
