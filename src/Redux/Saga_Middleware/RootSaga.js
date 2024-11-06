@@ -4,6 +4,7 @@ import PosSaga from './Pos_Saga';
 import CategorySaga  from './CategorySaga';
 import SubCategorySaga from './Sub_Category_Saga';
 import AddProductSaga from './AddProductSaga';
+import CustomerSaga from './CustomerSaga';
 
 
 
@@ -15,6 +16,7 @@ yield all([
   CategorySaga(),
   AddProductSaga(),
   SubCategorySaga(),
+  CustomerSaga(),
 
 ])
 }
