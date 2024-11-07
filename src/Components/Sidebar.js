@@ -52,10 +52,17 @@ function App() {
     items.map((item) => (
       <li
         key={item}
-        className="flex items-start text-xs font-normal font-manrope"
+        className="flex items-center gap-8 text-xs font-normal font-manrope"
         onClick={() => setSelectedMenu(item)}
       >
-        <img src={Elipse14} alt="Submenu Icon" className="mr-8 mt-1" /> {item}
+        
+        <div
+        className={`w-2 h-2 rounded-full ${
+          selectedMenu === item ? 'bg-orange-600' : 'bg-gray-200'
+        }`}
+      ></div>
+
+         {item}
       </li>
     ));
 
