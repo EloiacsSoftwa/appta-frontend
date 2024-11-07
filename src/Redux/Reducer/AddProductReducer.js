@@ -12,7 +12,9 @@ const initialState = {
   AddBrandSuccessStatusCode: 0,
   ProductList: [],
   getProductStatusCode: 0,
-  units: []
+  units: [],
+  getFreebieName :[],
+  getFreebieStatusCode :0
 };
 
 const AddProductReducer = (state = initialState, action) => {
@@ -53,6 +55,10 @@ const AddProductReducer = (state = initialState, action) => {
     case GET_ALL_UNITS_API_RESPONSE: {
       return {...state, units: action.payload}
     }
+    // GET_FREEBIE_NAME
+    case 'GET_FREEBIE_NAME':
+        return { ...state, getFreebieStatusCode: action.payload.statusCode, getFreebieName: action.payload.response };
+      
 
     default:
       return state;

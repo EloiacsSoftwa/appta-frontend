@@ -6,9 +6,10 @@ import Add from '../Images/Vector (3).svg';
 import dropdown from '../Images/Vector (4).svg';
 import Dot from '../Images/Sales/Dots.svg';
 import DateIcon from '../Images/Sales/Vector (5).svg'
+import UpArrow from '../Images/Sales/Vector (6).svg';
+import DownArrow from '../Images/Sales/Vector (7).svg'
 
-
-function AddInvoice() {
+function AddQuotation() {
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [selectedDate, setSelectedDate] = useState(null);
     const datePickerRef = useRef(null);
@@ -29,6 +30,7 @@ function AddInvoice() {
       Productcode: "HP48617O",
       HSNCode: "8945 6132",
       Quantity: "5 pcs",
+      Exdate : '12-09-2024',
       Price: "₹ 5,000",
       Discount: "₹ 200",
       TaxableAmount: '₹ 4,800',
@@ -42,7 +44,7 @@ function AddInvoice() {
     <div className="container mx-auto px-4">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mt-4">
         <p className="text-start font-semibold text-xl mb-2 md:mb-0">
-          Sales - Invoice - <span className="text-orange-600">Create Invoice</span>
+          Sales - Invoice - <span className="text-orange-600">Create Quotation</span>
         </p>
         <div className="flex gap-2">
           <button className="flex items-center gap-2 w-16 h-7 px-2 rounded border border-orange-600 text-orange-600 font-semibold text-sm">
@@ -141,6 +143,24 @@ Tamil Nadu 629002
         placeholder="Auto Generate" 
       />
     </div>
+
+    <div className="relative w-full">
+      <label className="block font-semibold mb-1 text-sm text-start font-SourceSansPro">Expiration Date</label>
+      <DatePicker
+        selected={selectedDate}
+        onChange={(date) => setSelectedDate(date)}
+        dateFormat="MM/dd/yyyy"
+        placeholderText="DD / MM / YYYY"
+        className="w-full border rounded px-3 py-2 text-sm md:text-base" 
+        ref={datePickerRef}
+      />
+      <img 
+        src={DateIcon} 
+        alt="Date Icon" 
+        className="absolute top-10 right-4 sm:right-40 md:right-4 lg:right-6 cursor-pointer" 
+        onClick={handleIconClick}
+      />
+    </div>
   </div>
 </div>
 
@@ -148,7 +168,7 @@ Tamil Nadu 629002
         </div>
 
         <div className="flex flex-col md:flex-row justify-between items-center">
-          <div className="flex items-center mt-28 sm:mr-44">
+          <div className="flex items-center mt-6 sm:mr-44">
             <p className="font-bold text-lg text-orange-600 mr-4 font-Manrope">Products</p>
             <img src={Rectangle} alt="Product icon" />
             <p className="font-semibold text-base ml-4">Inter State Supply</p>
@@ -161,14 +181,20 @@ Tamil Nadu 629002
             <thead>
               <tr className="bg-gray-200">
                 <th className="px-2 py-2 border border-white font-Manrope font-semibold text-base">Product</th>
-                <th className="px-2 py-2 border border-white font-Manrope font-semibold text-base">Product Code</th>
-                <th className="px-2 py-2 border border-white font-Manrope font-semibold text-base">HSN Code</th>
+                <th className="px-2 py-2 border border-white font-Manrope font-semibold text-base whitespace-nowrap">Product Code</th>
+                <th className="px-2 py-2 border border-white font-Manrope font-semibold text-base whitespace-nowrap">HSN Code
+                <div className="flex flex-col items-end ml-4">
+                    <img src={UpArrow} alt="Up Arrow" className="cursor-pointer mb-1" />
+                    <img src={DownArrow} alt="Down Arrow" className="cursor-pointer mt-1" />
+                  </div>
+                </th>
                 <th className="px-2 py-2 border border-white font-Manrope font-semibold text-base">Quantity</th>
+                <th className="px-2 py-2 border border-white font-Manrope font-semibold text-base">Ex Date</th>
                 <th className="px-2 py-2 border border-white font-Manrope font-semibold text-base">Price</th>
                 <th className="px-2 py-2 border border-white font-Manrope font-semibold text-base">Discount</th>
-                <th className="px-2 py-2 border border-white font-Manrope font-semibold text-base">Taxable Amount</th>
+                <th className="px-2 py-2 border border-white font-Manrope font-semibold text-base whitespace-nowrap">Taxable Amount</th>
                 <th className="px-2 py-2 border border-white font-Manrope font-semibold text-base">IGST</th>
-                <th className="px-2 py-2 border border-white font-Manrope font-semibold text-base">Tax Amount</th>
+                <th className="px-2 py-2 border border-white font-Manrope font-semibold text-base whitespace-nowrap">Tax Amount</th>
                 <th className="px-2 py-2 border-white  border border-r-0 font-Manrope font-semibold text-base">Total</th>
                 <th className="px-2 py-2 border-white  border border-l-0 border-white font-Manrope font-semibold text-base"></th>
               </tr>
@@ -178,14 +204,15 @@ Tamil Nadu 629002
                 <tr key={index} className="bg-gray-100">
                   <td className="px-2 py-2 border border-white font-Manrope font-semibold text-base">{data.Product}</td>
                   <td className="px-2 py-2 border border-white font-Manrope font-semibold text-base">{data.Productcode}</td>
-      <td className="px-2 py-2 border border-white font-Manrope font-semibold text-base">{data.HSNCode}</td>
+      <td className="px-2 py-2 border border-white font-Manrope font-semibold text-base whitespace-nowrap">{data.HSNCode}</td>
       <td className="px-2 py-2 border border-white font-Manrope font-semibold text-base">{data.Quantity}</td>
-      <td className="px-2 py-2 border border-white font-Manrope font-semibold text-base">{data.Price}</td>
+      <td className="px-2 py-2 border border-white font-Manrope font-semibold text-base whitespace-nowrap">{data.Exdate}</td>
+      <td className="px-2 py-2 border border-white font-Manrope font-semibold text-base whitespace-nowrap">{data.Price}</td>
       <td className="px-2 py-2 border border-white font-Manrope font-semibold text-base">{data.Discount}</td>
       <td className="px-2 py-2 border border-white font-Manrope font-semibold text-base">{data.TaxableAmount}</td>
       <td className="px-2 py-2 border border-white font-Manrope font-semibold text-base">{data.IGST}</td>
       <td className="px-2 py-2 border border-white font-Manrope font-semibold text-base">{data.Taxamount}</td>
-                  <td className="px-2 py-2 border-white  border border-r-0 font-Manrope font-semibold text-base">{data.Total}</td>
+                  <td className="px-2 py-2 border-white  border border-r-0 font-Manrope font-semibold text-base whitespace-nowrap">{data.Total}</td>
                   <td className="p-2 py-2 border-white  border border-l-0 text-gray-500 cursor-pointer w-8"><img src={Dot} alt="Options" /></td>
                 </tr>
               ))}
@@ -205,7 +232,7 @@ Tamil Nadu 629002
             { label: "Discount (-)", value: "0.00" },
             { label: "+ Add Charges", value: "0.00" },
             { label: "Before- Tax", value: "0.00" },
-            { label: "Tax (+) >",  },
+            { label: "Tax (+) >", },
             { label: "IGST", value: "0.00" },
            { label: "Rounding Off", value: "0.00" }
           ].map((item) => (
@@ -227,4 +254,4 @@ Tamil Nadu 629002
   );
 }
 
-export default AddInvoice;
+export default AddQuotation;

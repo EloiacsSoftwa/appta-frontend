@@ -118,16 +118,19 @@ const ProductDetailsForm = ({ handleNext, formData, setFormData }) => {
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
+    console.log("file",file);
+    
     if (file) {
       const reader = new FileReader();
       reader.onload = (e) => {
         const base64String = e.target.result.split(',')[1];
+// console.log("base64String",base64String);
 
         setFormData({
           ...formData,
-          images: [base64String],
+          images: file,
         });
-
+// [base64String]
         // fileInputRef.current.value = '';
       };
       reader.onerror = (error) => {
@@ -150,7 +153,13 @@ const ProductDetailsForm = ({ handleNext, formData, setFormData }) => {
     setSelectedCategory(id)
     dispatch({ type: 'GETSUBCATEGORY', payload: id });
   }
-
+// getFreebieName
+const handleFreebieName = (e) =>{
+    setFormData({ ...formData, Name: e.target.value });
+    setTimeout(() => {
+        dispatch({type:"GETFREEBIENAME", payload : e.target.value})
+    }, 4000);
+}
   return (
     <form className="flex flex-wrap gap-4" onSubmit={(e) => { e.preventDefault(); handleNext(); }}>
       <div className="relative w-40 h-40 flex-shrink-0">
@@ -179,7 +188,7 @@ const ProductDetailsForm = ({ handleNext, formData, setFormData }) => {
         </div>
         <div>
           <label className="text-left text-sm font-medium text-gray-700">Name</label>
-          <input type="text" name="productName" value={formData.Name} onChange={(e) => { setFormData({ ...formData, Name: e.target.value }) }} className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Freebie" />
+          <input type="text" name="productName" value={formData.Name} onChange={(e) => { handleFreebieName(e) }} className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Freebie" />
         </div>
       </div>
 
