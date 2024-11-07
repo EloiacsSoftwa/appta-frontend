@@ -13,6 +13,7 @@ import TextField from '@mui/material/TextField';
 import Modal from '@mui/material/Modal';
 import {  FormControlLabel, Checkbox } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
+import AddCustomer from '../Contact/AddCustomer';
 
 
 
@@ -140,14 +141,28 @@ import { useDispatch, useSelector } from 'react-redux';
         SetCustomerform(true)
      }
 
-     const handleClosecustomer = () => {
+     const handleCloseAddCustomer = () => {
         SetCustomerform(false)
      }
+
+     useEffect(() => {
+      if (State.Customer.addCustomerStatusCode == 200) {
+          dispatch({ type: 'GETCUSTOMER' })
+          SetCustomerform(false)
+          setTimeout(() => {
+              dispatch({ type: 'REMOVE_ADD_CUSTOMER_STATUS_CODE' })
+          }, 2000)
+      }
+
+  }, [State.Customer.addCustomerStatusCode])
+
+
+
 
     // Function to handle the create action
     const handleCreate = () => {
       console.log("Creating new customer...");   
-      handleClosecustomer();
+      // handleClosecustomer();
     }
 
     const style = {
@@ -650,94 +665,9 @@ import { useDispatch, useSelector } from 'react-redux';
 
 {/* //add customer  */}
 
-<Modal
-  open={customerform}
-  onClose={handleClosecustomer}
-  aria-labelledby="modal-modal-title"
-  aria-describedby="modal-modal-description"
-  className="border border-solid border-[#EA580C] rounded"
->
-  <Box sx={{ ...style, borderRadius: '8px', overflow: 'hidden' }}>
-    {/* Header with white background */}
-    <Box sx={{ bgcolor: 'white', p: 2 }}>
-
-        <div className="flex items-center justify-between">
-            <div></div>
-        <img src={cancelbtn} alt="Cancel" className="cursor-pointer" onClick={handleClosecustomer} />
-
-        </div>
-      <div className="flex items-center justify-between">
-      <h2 
-  id="modal-modal-title" 
-  style={{ fontWeight: 700, fontSize: '24px', lineHeight: '12px',color:'#EA580C', marginBottom:'30px' }} 
-  className="mx-auto">
-    Add New Customer
-</h2>
-      </div>
-     
-    </Box>
-
-   
-    <Box
-      component="form"
-      sx={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(2, 1fr)',
-        gap: 2,
-        p: 3,
-        backgroundColor: '#D9D9D9',
-        width: '100%',
-      }}
-      noValidate
-      autoComplete="off"
-    >
-      <TextField
-        id="outlined-basic"
-        label="Customer Name"
-        variant="outlined"
-        fullWidth
-      />
-      <TextField
-        id="outlined-basic"
-        label="Mobile Number"
-        variant="outlined"
-        fullWidth
-      />
-      <TextField
-        id="outlined-basic"
-        label="Email ID"
-        variant="outlined"
-        fullWidth
-      />
-      <TextField
-        id="outlined-basic"
-        label="Address"
-        variant="outlined"
-        fullWidth
-      />
-
-     
-      <TextField
-        id="paylater-field"
-        label="Pay Later"
-        variant="outlined"
-        fullWidth
-      
-      />
-     
-
-      
-      <Box sx={{ gridColumn: 'span 2', display: 'flex', justifyContent: 'center', mt: 2, gap: 2 }}>
-        <button className="bg-[#EA580C] text-[#000000] p-2 ps-4 pe-4 rounded" onClick={handleCreate}>
-          Create
-        </button>
-        <button className="bg-white  text-[#000000] p-2 ps-4 pe-4 rounded" onClick={handleClosecustomer}>
-          Cancel
-        </button>
-      </Box>
-    </Box>
-  </Box>
-</Modal>
+{
+  customerform && <AddCustomer  handleClose={handleCloseAddCustomer}/>
+}
 
 
 </>    

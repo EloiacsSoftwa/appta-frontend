@@ -144,7 +144,7 @@ function* getAllUnits() {
 function ExpireToken(response) {
 
   const code = response.data?.code ?? response.code;
-  if (code === 403) {
+  if ( code === 403) {
     const cookies = new Cookies();
     cookies.set('access-denied', code, { path: '/' });
   }
