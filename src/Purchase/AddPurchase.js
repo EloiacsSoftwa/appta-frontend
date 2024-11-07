@@ -48,7 +48,7 @@ function AddPurchase() {
         <div className="grid gap-2">
           <div className="flex flex-col md:flex-row justify-start p-2">
             <div className={`relative mb-4 lg:mb-0 md:mb-0 ${dropdownOpen ? 'sm:mb-32' : ''}`}>
-              <p className="font-bold text-lg text-orange-600 mb-4">Supplier Details</p>
+              <p className="font-bold text-lg text-orange-600 mb-4 font-Manrope">Supplier Details</p>
               <button
                 onClick={toggleDropdown}
                 className="flex items-center text-black bg-grey font-medium w-full md:w-56 sm:w-56 px-5 py-2 text-sm rounded-t-xl"
@@ -91,7 +91,7 @@ function AddPurchase() {
 
         <div className="flex flex-col md:flex-row justify-between items-center">
           <div className="flex items-center mt-12 sm:mr-44">
-            <p className="font-bold text-lg text-orange-600 mr-4">Products</p>
+            <p className="font-bold text-lg text-orange-600 mr-4 font-Manrope">Products</p>
             <img src={Rectangle} alt="Product icon" />
             <p className="font-semibold text-base ml-4">On Credit</p>
           </div>
@@ -116,7 +116,7 @@ function AddPurchase() {
                 <th className="px-2 py-2 border border-white font-Manrope font-semibold text-base">Price</th>
                 <th className="px-2 py-2 border border-white font-Manrope font-semibold text-base">Discount</th>
                 <th className="px-2 py-2 border border-white font-Manrope font-semibold text-base">Taxable Amount</th>
-                <th className="px-2 py-2 border border-white font-Manrope font-semibold text-base">CGST</th>
+                <th className="px-2 py-2 border border-white font-Manrope font-semibold text-base">IGST</th>
                 <th className="px-2 py-2 border border-white font-Manrope font-semibold text-base">Tax Amount</th>
                 <th className="px-2 py-2 border-white  border border-r-0 font-Manrope font-semibold text-base">Total</th>
                 <th className="px-2 py-2 border-white  border border-l-0 border-white font-Manrope font-semibold text-base"></th>
@@ -154,10 +154,9 @@ function AddPurchase() {
             { label: "Discount (-)", value: "0.00" },
             { label: "+ Add Charges", value: "0.00" },
             { label: "Before- Tax", value: "0.00" },
-            { label: "Tax (+) >", value: "0.00" },
-            { label: "CGST", value: "0.00" },
-            { label: "SGST", value: "0.00" },
-            { label: "Rounding Off", value: "0.00" }
+            { label: "Tax (+) >",  },
+            { label: "IGST", value: "0.00" },
+           { label: "Rounding Off", value: "0.00" }
           ].map((item) => (
             <div key={item.label} className="flex justify-between mt-4">
               <p className="font-semibold text-sm">{item.label}</p>
