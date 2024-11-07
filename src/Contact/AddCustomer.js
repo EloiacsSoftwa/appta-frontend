@@ -302,7 +302,7 @@ const [payLaterError, setPayLaterError] = useState("");
 
           <div className="flex justify-center gap-4 mt-8 flex-wrap">
             <button onClick={handleCreate} className="bg-orange-600 w-20 h-8 rounded-lg font-Roboto font-medium text-lg">Create</button>
-            <button onClick={handleClose} className="bg-gray-400 w-20 h-8 rounded-lg font-Roboto font-medium text-lg">Cancel</button>
+            <button onClick={handleClose} className="bg-second-gray w-20 h-8 rounded-lg font-Roboto font-medium text-lg">Cancel</button>
           </div>
         </div>
 
