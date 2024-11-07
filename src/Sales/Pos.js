@@ -24,10 +24,11 @@ import AddCustomer from '../Contact/AddCustomer';
 
     //  const [loading, setLoading] = useState(false);
 
-     const [posdata, setPosData] = useState([])
+      const [posdata, setPosData] = useState([])
 
        const[barcode, setBarcode] = useState('56676');
-
+   
+       const [productid , setProductId] = useState('')
 
 
        const BarcodeGetData = () => {
@@ -57,9 +58,72 @@ import AddCustomer from '../Contact/AddCustomer';
       }, [State.PosReducer.BarcodeproductData]);
       
       
+      useEffect(()=> {
+        dispatch({ type: 'GETPRODUCT'});
+        dispatch({ type: 'GETCUSTOMER'});
+             
+      },[])
+
+      const [searchQuery, setSearchQuery] = useState('');
+      const [selectedProductId, setSelectedProductId] = useState(null); // New state for productId
       
+      console.log("selectedProductId",selectedProductId);
+      
+      // Handle search input changes
+      const handleSearchChange = (e) => {
+        setSearchQuery(e.target.value.toLowerCase());
+        setSelectedProductId(null); // Reset productId on new search
+      };
+      
+      // Filter `ProductList` based on search query
+      const filteredData = State.AddProduct.ProductList.filter(item =>
+        item.productName.toLowerCase().includes(searchQuery) ||
+        item.barcodeNo.toLowerCase().includes(searchQuery)
+      );
     
+     const [searchfilterdata, setSearchFilterData] = useState('');
+     console.log("Productfilter",searchfilterdata);
+
+      useEffect(()=> {
+         const Productfilter = State.AddProduct.ProductList.filter((u)=> u.productId == selectedProductId)
+         
+         setSearchFilterData(Productfilter[0])
+      },[selectedProductId])
+
+      useEffect(()=> {
+       setPosData([...posdata,searchfilterdata])
+     },[searchfilterdata])
       
+
+
+     const [customerSearchQuery, setCustomerSearchQuery] = useState('');
+     const [selectedCustomerId, setSelectedCustomerId] = useState(null);
+     const [customerFilter, setCustomerFilter] = useState('');
+     
+     
+     
+     const handleCustomerSearchChange = (e) => {
+       setCustomerSearchQuery(e.target.value.toLowerCase());
+       setSelectedCustomerId(null);
+     };
+     
+     
+     const filteredCustomers = State.Customer.CustomerList.filter(customer => 
+       customer.customerName.toLowerCase().includes(customerSearchQuery)
+     );
+     
+  
+     useEffect(() => {
+       if (selectedCustomerId) {
+         const customerFilterResult = State.Customer.CustomerList.find(
+           (u) => u.id === selectedCustomerId
+         );
+         setCustomerFilter(customerFilterResult || '');
+       }
+     }, [selectedCustomerId])
+
+     console.log("customerFilter",customerFilter);
+     
 
     const [showModal, setShowModal] = useState(false);
 
@@ -129,17 +193,44 @@ import AddCustomer from '../Contact/AddCustomer';
            <div className="bg-white w-3/4 min-h-[70vh] shadow-custom overflow-x-auto">
                 <div className="flex items-center justify-between p-2 border-b bg-lightgray">
                     <div className="flex items-center ">
-                        {/* <div><img src={Frame1} className='w-6 h-6 cursor-pointer' /></div> */}
+                        
                         <div className="relative">
-                            <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none">
-                                <img src={Search} />
-                            </span>
-                            <input
-                                type="text"
-                                placeholder="Search for products"
-                                className=" rounded pl-10 py-1  bg-zinc-300  "
-                            />
-                        </div>
+  <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none">
+    <img src={Search} alt="Search Icon" />
+  </span>
+  <input
+    type="text"
+    placeholder="Search for products"
+    className="rounded pl-10 py-1 bg-zinc-300"
+    value={searchQuery}
+    onChange={handleSearchChange}
+  />
+  
+  
+  {searchQuery && filteredData.length > 0 && (
+    <div className="absolute w-full bg-white border border-gray-300 rounded mt-1 max-h-60 overflow-y-auto z-10">
+      {filteredData.map((item, index) => (
+        <div
+          key={index}
+          className="p-2 hover:bg-gray-100 cursor-pointer"
+          onClick={() => {
+            setSearchQuery('');
+            setSelectedProductId(item.productId);
+          }}
+        >
+          <div className="text-sm font-medium text-gray-900">{item.productName}</div>
+        </div>
+      ))}
+    </div>
+  )}
+
+  {/* No results message */}
+  {searchQuery && filteredData.length === 0 && (
+    <div className="absolute w-full bg-white border border-gray-300 rounded mt-1 p-2 text-sm text-gray-500">
+      No products match your search
+    </div>
+  )}
+</div>
                         <div className='bg-zinc-300 ms-2 items-center rounded'>
                             <img  src={Barcode} className='p-1' alt='barcode' onClick={BarcodeGetData}/>
                         </div>
@@ -230,7 +321,7 @@ import AddCustomer from '../Contact/AddCustomer';
                     <tbody>
   {posdata && posdata.length > 0 ? (
     posdata.map((item, index) => 
-      item ? ( // Only render row if `item` is truthy
+      item ? ( 
         <tr key={index} className="hover:bg-gray-50 border-0">
           <td className="p-2 mt-1 flex items-center justify-start">
             <input type="checkbox" className="form-checkbox h-3 w-3 text-blue-600 border-neutral-500 cursor-pointer" />
@@ -245,7 +336,7 @@ import AddCustomer from '../Contact/AddCustomer';
           <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">₹{((item.quantity * item.wholesalePrice) * (item.wholesalePricePercentage / 100)) || '0'}</td>
           <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">₹{(item.quantity * item.wholesalePrice) - ((item.quantity * item.wholesalePrice) * (item.wholesalePricePercentage / 100)) || '0'}</td>
         </tr>
-      ) : null // Skip if item is undefined or null
+      ) : null 
     )
   ) : (
     <tr>
@@ -282,16 +373,45 @@ import AddCustomer from '../Contact/AddCustomer';
                     <div className="flex items-center ">
                         {/* <div><img src={Frame1} className='w-6 h-6 cursor-pointer' /></div> */}
                         <div className="relative">
-                            <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none">
-                                <img src={Search} />
-                            </span>
-                            <input
-                                type="text"
-                                placeholder="Search for Customer"
-                                className=" rounded pl-10 py-1  bg-zinc-300  "
-                            />
-                        </div>
+    <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none">
+      <img src={Search} alt="Search Icon" />
+    </span>
+    <input
+      type="text"
+      placeholder="Search for Customer"
+      className="rounded pl-10 py-1 bg-zinc-300"
+      value={customerSearchQuery}
+      onChange={handleCustomerSearchChange}
+    />
+
+   
+    {customerSearchQuery && filteredCustomers.length > 0 && (
+      <div className="absolute w-full bg-white border border-gray-300 rounded mt-1 max-h-60 overflow-y-auto z-10">
+        {filteredCustomers.map((customer, index) => (
+          <div
+            key={index}
+            className="p-2 hover:bg-gray-100 cursor-pointer"
+            onClick={() => {
+                setCustomerSearchQuery('') 
+              setSelectedCustomerId(customer.id); 
+            }}
+          >
+            <div className="text-sm font-medium text-gray-900">{customer.customerName}</div>
+          </div>
+        ))}
+      </div>
+    )}
+
+    
+    {customerSearchQuery && filteredCustomers.length === 0 && (
+      <div className="absolute w-full bg-white border border-gray-300 rounded mt-1 p-2 text-sm text-gray-500">
+        No customers match your search
+      </div>
+    )}
+  </div>
+
                     </div>
+
                     <div className='flex items-center gap-2 '>
                     
                         <div>
@@ -303,16 +423,16 @@ import AddCustomer from '../Contact/AddCustomer';
                 <div class="bg-white p-2 rounded-lg shadow-lg m-2 ">
     <div class="flex flex-row justify-between">
           <div class="flex flex-col ">
-            <p className='text-sm font-semibold font-Manrope'>Robinson</p>
-            <p className='text-xs text-[#797979]'>+91 9584 654 254</p>
-            <p className='text-xs text-[#797979] me-2'>robinson@gmail.com</p>
+            <p className='text-sm font-semibold font-Manrope'>{customerFilter ? customerFilter.customerName : "Robinson"}</p>
+            <p className='text-xs text-[#797979]'>{customerFilter ? customerFilter.mobile : "+91 9584 654 254"}</p>
+            <p className='text-xs text-[#797979] me-2'>{customerFilter ? customerFilter.email : "robinson@gmail.com"}</p>
             </div>
           <div class="flex flex-col text-right">
 
             <div class="flex">
             <img src={Cup} className='w-6 h-6'/>
             <div>
-            <p className='text-xs  font-semibold font-Manrope ' style={{paddingLeft:'7px'}}>Loyalty Points</p>
+            <p className='text-xs  font-semibold font-Manrope ' style={{paddingLeft:'5px'}}>Loyalty Points</p>
             <p className='text-xs text-center text-[#797979] ' style={{paddingRight:'20px'}}>85 points</p>
           </div>
           </div>

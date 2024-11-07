@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import { useNavigate } from "react-router-dom";
+import cancelbtn from '../Images/Icons/cancelbtn.svg'
 import { useDispatch, useSelector } from 'react-redux';
 import Select from "@mui/material/Select";
 import InputLabel from '@mui/material/InputLabel';
@@ -296,6 +297,8 @@ const [payLaterError, setPayLaterError] = useState("");
             <button onClick={handleClose} className="bg-gray-400 w-20 h-8 rounded-lg font-Roboto font-medium text-lg">Cancel</button>
           </div>
         </div>
+
+        
       </div>
     </div>
   );
