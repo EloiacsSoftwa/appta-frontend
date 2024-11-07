@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import { HiOutlineArrowLeft, HiOutlineArrowRight } from "react-icons/hi";
 import Eloiacs from "../Images/Icons/Eloiacs.svg";
@@ -27,7 +27,7 @@ import Pos from "../Sales/Pos";
 import SubCategory_List from "../Product Pages/SubCategory_List";
 import Customer_List from "../Contact/Customer_List";
 import CryptoJS from "crypto-js";
-
+import Stock_Available from '../Inventry/Stock_Availability';
 
 
 
@@ -40,6 +40,9 @@ function App() {
   const [isExpanded, setIsExpanded] = useState(true);
   const [selectedMenu, setSelectedMenu] = useState('Product List');
   const [isSubmenuOpen, setIsSubmenuOpen] = useState({});
+  const [isHide, setIsHide] = useState(true)
+  const state = useSelector(state => state);
+
 
   const toggleSidebar = () => {
     setIsExpanded(!isExpanded);
@@ -50,12 +53,42 @@ function App() {
     setIsSubmenuOpen((prev) => ({ ...prev, [menu]: !prev[menu] }));
   };
 
+
+
+
+
+
+const handleSelectedMenu = (title) => {
+setSelectedMenu(title)
+console.log("title",title)
+localStorage.setItem('currentPage', title);
+}
+
+
+
+
+
+useEffect(() => {
+  setSelectedMenu(localStorage.getItem('currentPage'));
+}, [selectedMenu]);
+
+console.log("selectedPage",localStorage.getItem('currentPage'))
+
+
+useEffect(() => {
+  if (state.LoginReducer?.isLoggedIn) {
+    setSelectedMenu('Product List')
+  }
+}, [state.LoginReducer?.isLoggedIn])
+
+
+
   const renderSubmenuItems = (items) =>
     items.map((item) => (
       <li
         key={item}
         className="flex items-center gap-8 text-xs font-normal font-manrope"
-        onClick={() => setSelectedMenu(item)}
+        onClick={() => handleSelectedMenu(item)}
       >
         
         <div
@@ -117,7 +150,7 @@ function App() {
     {
       icon: Inventory,
       title: "Inventory",
-      submenu: ["Stock Transfer", "Ware house"],
+      submenu: ["Stock Adjustment", "Stock Transfer", "Ware house", "Stock Availability"],
     },
     {
       icon: Contact,
@@ -137,10 +170,25 @@ function App() {
   }
 
 
+  useEffect(()=>{
+    if(selectedMenu == 'Stock Availability'){
+      setIsHide(false)
+    }
 
+  },[selectedMenu])
+
+
+
+  const handleCloseForStock = () =>{
+    setIsHide(true)
+    setSelectedMenu('Product List')
+    localStorage.setItem('currentPage', 'Product List');
+
+  }
 
   return (
     <div className="flex h-screen">
+      {isHide ? <>
       {/* Sidebar */}
       <div
         className={`${isExpanded ? "w-64" : "w-20"} bg-black text-white flex flex-col transition-width duration-300 h-screen overflow-y-auto fixed `}
@@ -254,11 +302,24 @@ function App() {
             </div>
           )}
 
-         
+
 
         </div>
 
       </div>
+      </>
+: 
+  <>
+      {selectedMenu === 'Stock Availability' && (
+            <div className="bg-white mt-2">
+              <Stock_Available  handleClose={handleCloseForStock}/>
+            </div>
+          )}
+ </>
+        }
+
+       
+
     </div>
 
   );
