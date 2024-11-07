@@ -70,3 +70,12 @@ export function getAllBrands(payloads) {
     export async function getAllUnitsCall() {
       return await AxiosConfig.post('/unit/getUnit')
     }
+
+    export async function getFreebie(payload) {
+        return await AxiosConfig.post('/products/getProductsByBarcodeOrName', {
+        }, {
+           params: {
+            inputText : payload
+           }
+        })
+      }

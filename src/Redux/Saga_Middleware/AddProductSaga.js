@@ -1,5 +1,5 @@
 import { call, takeEvery, put } from 'redux-saga/effects';
-import { Category, SubCategory, AddProductDetails, AddBrand, GetProduct, getAllUnitsCall } from '../Action/AddProductAction';
+import { Category, SubCategory, AddProductDetails, AddBrand, GetProduct, getAllUnitsCall, getFreebie } from '../Action/AddProductAction';
 import { GET_BRANDS_API_CALL, GET_BRANDS_API_RESPONSE, GET_ALL_UNITS_API_CALL, GET_ALL_UNITS_API_RESPONSE } from '../../utils/Constant';
 import { getAllBrands } from '../Action/AddProductAction';
 import { toast } from 'react-toastify';
@@ -15,7 +15,6 @@ function* Sub_Category(args) {
     yield put({ type: 'GET_SUBCATEGORY', payload: { response: response.data.data, statusCode: response.status || response.code } });
 
   }
-  // if (response.status === 403 || response.statusCode === 403)
   else {
     yield put({ type: 'ERROR', payload: { statusCode: response.status || response.code } });
   }
@@ -40,6 +39,22 @@ function* MainCategory(args) {
     ExpireToken(response)
   }
 }
+
+function* GetFreebieName(args) {
+
+    const response = yield call(getFreebie, args.payload);
+    if (response.status === 200 || response.code === 200) {
+      yield put({ type: 'GET_FREEBIE_NAME', payload: { response: response.data.data, statusCode: response.status || response.code } });
+  
+    }
+    else {
+      yield put({ type: 'ERROR', payload: { statusCode: response.status || response.code } });
+    }
+    if (response) {
+      ExpireToken(response)
+    }
+  }
+
 
 function* getAllBrandsAPIRequest(args) {
   const response = yield call(getAllBrands, args.payload);
@@ -158,7 +173,9 @@ function* AddProductSaga() {
   yield takeEvery(GET_BRANDS_API_CALL, getAllBrandsAPIRequest)
   yield takeEvery('ADDBRAND', handleAddBrand);
   yield takeEvery('GETPRODUCT', handleGetProduct);
-  yield takeEvery(GET_ALL_UNITS_API_CALL, getAllUnits)
+  yield takeEvery(GET_ALL_UNITS_API_CALL, getAllUnits);
+//   GET_FREEBIE_NAME
+  yield takeEvery('GETFREEBIENAME', GetFreebieName);
 
 }
 
