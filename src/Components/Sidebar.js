@@ -186,6 +186,22 @@ useEffect(() => {
 
   }
 
+  useEffect(()=>{
+    if(selectedMenu == 'POS'){
+      setIsHide(false)
+    }
+
+  },[selectedMenu])
+
+
+
+  const handleCloseForPos = () =>{
+    setIsHide(true)
+    setSelectedMenu('Sales List')
+    localStorage.setItem('currentPage', 'Sales List');
+
+  }
+
   return (
     <div className="flex h-screen">
       {isHide ? <>
@@ -247,11 +263,7 @@ useEffect(() => {
               <ProductList />
             </div>
           )}
-          {selectedMenu === 'POS' && (
-            <div className="bg-white  mt-2">
-              <Pos />
-            </div>
-          )}
+        
           {selectedMenu === 'Sales List' && (
             <div className="bg-white  mt-2">
               <Sales_List />
@@ -313,6 +325,12 @@ useEffect(() => {
       {selectedMenu === 'Stock Availability' && (
             <div className="bg-white mt-2">
               <Stock_Available  handleClose={handleCloseForStock}/>
+            </div>
+          )}
+
+{selectedMenu === 'POS' && (
+            <div className="bg-white  mt-2">
+              <Pos  handleClosed={handleCloseForPos}/>
             </div>
           )}
  </>

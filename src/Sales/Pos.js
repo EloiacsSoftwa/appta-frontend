@@ -18,10 +18,20 @@ import { Setting } from 'iconsax-react';
 
 
 
-    const  Pos = () => {
+    const  Pos = ({handleClosed}) => {
 
     const dispatch = useDispatch();
     const State = useSelector(state => state);
+
+    useEffect(() => {
+        const handleKeyDown = (event) => {
+            if (event.key === 'Escape') {
+                handleClosed()
+            }
+        };
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, [handleClosed]);
 
     //  const [loading, setLoading] = useState(false);
 
@@ -78,7 +88,101 @@ import { Setting } from 'iconsax-react';
     //   };
 
 
+   
+      
+      // Barcode scan function
+      const BarcodeGetData = () => {
+        dispatch({ type: 'BARCODE_GET_PRODUCT', payload: barcode });
+        
+        setTimeout(() => {
+          if (State.PosReducer.BarcodeproductData && State.PosReducer.BarcodeproductData !== '') {
+            handleProductUpdate(State.PosReducer.BarcodeproductData); // Correctly update posdata
+          }
+        }, 1000);
+      };
+      
+      // Search filter logic
+      const [searchQuery, setSearchQuery] = useState('');
+      const [selectedProductId, setSelectedProductId] = useState('');
+      
+      
+     const handleproductName = (item) => {
+        console.log("allwin",item);
+        setSearchQuery('');
+        
+        setSelectedProductId(item)
+     }
+
+      // State for selected productId
+      
+      const handleSearchChange = (e) => {
+        setSearchQuery(e.target.value.toLowerCase());
+        
+        // setSelectedProductId(searchQuery); // Reset productId on new search
+      };
+      
+      // Filter `ProductList` based on search query
+      const filteredData = State.AddProduct.ProductList.filter((item) =>
+        item.productName.toLowerCase().includes(searchQuery) ||
+        item.barcodeNo.toLowerCase().includes(searchQuery)
+      );
+      
+      
+      const [searchfilterdata, setSearchFilterData] = useState(null);
+      
+      useEffect(() => {
+        if (selectedProductId) {
+            console.log("selectedProductId", selectedProductId);
+            dispatch({ type: 'GETFREEBIENAME', payload: selectedProductId });
+        }
+        setSelectedProductId('')
+    }, [selectedProductId]);
+    
+  
+    useEffect(() => {
+        if (State.AddProduct.getFreebieName && Array.isArray(State.AddProduct.getFreebieName) && State.AddProduct.getFreebieName.length > 0) {
+            console.log("getFreebieName updated", State.AddProduct.getFreebieName);
+            
+            // Iterate over each item in the array and send it to handleProductUpdate
+            State.AddProduct.getFreebieName.forEach((productData) => {
+                handleProductUpdate(productData);
+            });
+        }
+    }, [State.AddProduct.getFreebieName]);
+    
+      
+
+// useEffect(()=>{
+//   if(State.PosReducer.barcodeStatuscode){
+    
+//     handleProductUpdate(State.PosReducer.BarcodeproductData)
+//   }
+//   setTimeout(()=>{
+//     dispatch({ type: 'REMOVE_GET_BARCODE_PRODUCT_STATUS_CODE'})
+//      },1000)
+
+// },[State.PosReducer.barcodeStatuscode,selectedProductId , State.PosReducer.BarcodeproductData])
+
+
+
+      
+      console.log("state", State)
+// console.log("selectedProductId",selectedProductId)
+
+console.log("filterData",searchfilterdata)
+
+    //   useEffect(() => {
+    //     if (searchfilterdata && searchfilterdata.productId ) {
+    //       handleProductUpdate(searchfilterdata); 
+    //     }
+    //   }, [searchfilterdata]);
+      
+  
+
     const handleProductUpdate = (productData) => {
+
+        console.log("productData",productData);
+        
         if (productData && productData.productId && productData.quantity >= 0) {
           setPosData((prevData) => {
             // Check if the product already exists in posdata
@@ -116,87 +220,6 @@ import { Setting } from 'iconsax-react';
 
           
         }
-      };
-      
-      // Barcode scan function
-      const BarcodeGetData = () => {
-        dispatch({ type: 'BARCODE_GET_PRODUCT', payload: barcode });
-        setTimeout(() => {
-          if (State.PosReducer.BarcodeproductData && State.PosReducer.BarcodeproductData !== '') {
-            handleProductUpdate(State.PosReducer.BarcodeproductData); // Correctly update posdata
-          }
-        }, 200);
-      };
-      
-      // Search filter logic
-      const [searchQuery, setSearchQuery] = useState('');
-      const [selectedProductId, setSelectedProductId] = useState(null); // State for selected productId
-      
-      const handleSearchChange = (e) => {
-        setSearchQuery(e.target.value.toLowerCase());
-        
-        // setSelectedProductId(searchQuery); // Reset productId on new search
-      };
-      
-      // Filter `ProductList` based on search query
-      const filteredData = State.AddProduct.ProductList.filter((item) =>
-        item.productName.toLowerCase().includes(searchQuery) ||
-        item.barcodeNo.toLowerCase().includes(searchQuery)
-      );
-      
-      // Handle product selection from search filter
-      const [searchfilterdata, setSearchFilterData] = useState(null);
-      
-      useEffect(() => {
-        if(selectedProductId){
-
-          dispatch({ type: 'BARCODE_GET_PRODUCT', payload: selectedProductId });
-          // const Productfilter = State.AddProduct?.ProductList?.filter((u) => u.productId == selectedProductId);
-          // console.log("Productfilter",Productfilter)
-          // if (Productfilter && Productfilter.length > 0) {
-          //   setSearchFilterData(Productfilter[0]);
-          // }
-          
-        }
-        
-      }, [selectedProductId]);
-      
-
-useEffect(()=>{
-  if(State.PosReducer.barcodeStatuscode){
-
-    setSearchFilterData(State.PosReducer.BarcodeproductData)
-
-    setTimeout(()=>{
-dispatch({ type: 'REMOVE_GET_BARCODE_PRODUCT_STATUS_CODE'})
-    },3000)
-
-
-  }
-
-},[State.PosReducer.barcodeStatuscode])
-
-
-
-      
-      console.log("state", State)
-console.log("selectedProductId",selectedProductId)
-
-console.log("filterData",searchfilterdata)
-
-      useEffect(() => {
-        if (searchfilterdata && searchfilterdata.productId && searchfilterdata.quantity >= 0) {
-          handleProductUpdate(searchfilterdata); // Correctly update posdata
-        }
-      }, [searchfilterdata]);
-      
-      const handleSearchFilterProductSelect = (selectedProduct) => {
-        const productData = {
-          productId: selectedProduct.productId,
-          quantity: 1, // or any increment/decrement logic you want to apply
-        };
-      
-        handleProductUpdate(productData); // Update posdata based on search filter
       };
       
       // Dispatch actions to get products and customers
@@ -369,13 +392,13 @@ console.log("Search Filter Data:", searchfilterdata);
 
     
 
-  console.log("State.PosReducer.BarcodeproductData",State.PosReducer.BarcodeproductData);
+//   console.log("State.PosReducer.BarcodeproductData",State.PosReducer.BarcodeproductData);
   
-  console.log("posdata",posdata);
+//   console.log("posdata",posdata);
   
 
     return(<>
-    <div className='h-screen'>
+    <div className='w-screen h-screen ' >
         <div className='h-4/5 bg-white p-4 w-full'>
            
             <div className='flex flex-row w-full h-full gap-4'>
@@ -406,9 +429,15 @@ console.log("Search Filter Data:", searchfilterdata);
           key={item.productId}  // Use productId for key instead of index
           className="p-2 hover:bg-gray-100 cursor-pointer"
           onClick={() => {
-            setSearchQuery('');
-            setSelectedProductId(item.barcodeNo);
+            handleproductName(item.productName)
+            // setSearchQuery(''); 
+            // Clear the search query
+            // setSelectedProductId(item.productName);
+             // Store the selected product name or ID
+            // You can also send additional actions here if needed, e.g. dispatching data
           }}
+
+        //   onChange={(e)=>handleproductName(e)}
         >
           <div className="text-sm font-medium text-gray-900">{item.productName}</div>
         </div>
