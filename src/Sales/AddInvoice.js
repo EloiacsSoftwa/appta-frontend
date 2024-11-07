@@ -1,17 +1,27 @@
-import React, { useState } from "react";
-import Rectangle from '../Images/Rectangle 52.svg';
+import React, { useState,useRef } from "react";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import Rectangle from '../Images/Sales/Radio.svg';
 import Add from '../Images/Vector (3).svg';
 import dropdown from '../Images/Vector (4).svg';
 import Dot from '../Images/Sales/Dots.svg';
+import DateIcon from '../Images/Sales/Vector (5).svg'
 
-function AddPurchase() {
-  const [dropdownOpen, setDropdownOpen] = useState(false);
+
+function AddInvoice() {
+    const [dropdownOpen, setDropdownOpen] = useState(false);
+    const [selectedDate, setSelectedDate] = useState(null);
+    const datePickerRef = useRef(null);
 
   const toggleDropdown = () => {
     setDropdownOpen(!dropdownOpen);
   };
 
-  
+  const handleIconClick = () => {
+    if (datePickerRef.current) {
+      datePickerRef.current.setOpen(true);
+    }
+  };
 
   const tableData = [
     {
@@ -32,11 +42,14 @@ function AddPurchase() {
     <div className="container mx-auto px-4">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mt-4">
         <p className="text-start font-semibold text-xl mb-2 md:mb-0">
-          Purchases - Purchase List - <span className="text-orange-600">Add Purchases</span>
+          Sales - Invoice - <span className="text-orange-600">Create Invoice</span>
         </p>
         <div className="flex gap-2">
           <button className="flex items-center gap-2 w-16 h-7 px-2 rounded border border-orange-600 text-orange-600 font-semibold text-sm">
             Cancel
+          </button>
+          <button className="flex items-center gap-2 w-28 h-7 px-3 rounded border border-black bg-orange-600 text-black font-semibold text-sm">
+            View Invoice
           </button>
           <button className="flex items-center gap-2 w-28 h-7 px-3 rounded border border-black bg-orange-600 text-black font-semibold text-sm">
             Save & Close
@@ -47,21 +60,25 @@ function AddPurchase() {
       <div className="w-full rounded-xl shadow-custom mt-4 p-4 mb-4">
         <div className="grid gap-2">
           <div className="flex flex-col md:flex-row justify-start p-2">
+            
             <div className={`relative mb-4 lg:mb-0 md:mb-0 ${dropdownOpen ? 'sm:mb-32' : ''}`}>
-              <p className="font-bold text-lg text-orange-600 mb-4">Supplier Details</p>
+              <p className="font-bold text-lg text-orange-600 mb-4">Contact Deails</p>
               <button
                 onClick={toggleDropdown}
-                className="flex items-center text-black bg-grey font-medium w-full md:w-56 sm:w-56 px-5 py-2 text-sm rounded-t-xl"
+                className="flex items-center text-black bg-grey font-medium w-260 md:w-260 sm:w-260 px-5 py-2 text-sm rounded-t-xl"
               >
-                Supplier
+                Shipping From
                 <img className="ml-28 md:ml-28 sm:ml-10" src={dropdown} />
               </button>
               {dropdownOpen && (
-                <div className="absolute z-50 bg-light_gray divide-y divide-gray-100 shadow md:w-56 w-56 h-28 sm:w-56">
+                <div className="absolute z-50 bg-light_gray divide-y divide-gray-100 shadow md:w-260 w-260 h-28 sm:w-260">
                   <ul className="py-2 text-sm text-black font-Manrope font-medium text-start">
                     <li>
-                      <a href="#" className="block px-2 py-2">
-                        24/D2 BALAN PERUMAL COMPOUND, Thattan Vilai Rd, Ramanputhur, KELLA, Nagercoil, Tamil Nadu 629002
+                      <a href="#" className="block px-4 py-2">
+                      Krishnam Coil, <br/>
+                      Vadiveeswaram Village, <br/>
+                       Nagercoil, Tamil Nadu <br/>
+                        629001
                       </a>
                     </li>
                   </ul>
@@ -69,40 +86,74 @@ function AddPurchase() {
               )}
             </div>
 
-            <div className="w-full md:w-1/2 md:ml-20 mt-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block font-semibold mb-1 text-sm text-start font-SourceSansPro">Order Date <span className="text-red-500">*</span></label>
-                  <input type="text" className="w-full border rounded px-3 py-2 text-sm" placeholder="MM / DD / YYYY" />
+            <div className={`relative lg:ml-6 md:ml-6 sm:ml-0 mt-11 mb-4 lg:mb-0 md:mb-0 ${dropdownOpen ? 'sm:mb-32' : ''}`}>
+            
+              <button
+                onClick={toggleDropdown}
+                className="flex items-center text-black bg-grey font-medium w-260 md:w-260 sm:w-260 px-5 py-2 text-sm rounded-t-xl"
+              >
+                Shipping To
+                <img className="ml-28 md:ml-28 sm:ml-10" src={dropdown} />
+              </button>
+              {dropdownOpen && (
+                <div className="absolute z-50 bg-light_gray divide-y divide-gray-100 shadow md:w-260 w-260 h-28 sm:w-260">
+                  <ul className="py-2 text-sm text-black font-Manrope font-medium text-start">
+                    <li>
+                      <a href="#" className="block px-4 py-2">
+                      24/D2 BALAN PERUMAL COMPOUND,
+Thattan Vilai Rd, Ramanputhur,
+KELLA, Nagercoil,
+Tamil Nadu 629002
+                      </a>
+                    </li>
+                  </ul>
                 </div>
-                <div>
-                  <label className="block font-semibold mb-1 text-sm text-start font-SourceSansPro">Invoice ID <span className="text-red-500">*</span></label>
-                  <input type="text" className="w-full border rounded px-3 py-2 text-sm" placeholder="P7895233" />
-                </div>
-
-                <div className="mt-6">
-                  <label className="block font-semibold mb-1 text-sm text-start font-SourceSansPro">Delivered Date <span className="text-red-500">*</span></label>
-                  <input type="text" className="w-full border rounded px-3 py-2 text-sm" placeholder="MM / DD / YYYY" />
-                </div>
-              </div>
+              )}
             </div>
+
+            <div className="w-full md:w-1/2 lg:ml-8 sm:ml-0 mt-10">
+  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+    
+  <div className="relative w-full">
+      <label className="block font-semibold mb-1 text-sm text-start font-SourceSansPro">Date</label>
+      <DatePicker
+        selected={selectedDate}
+        onChange={(date) => setSelectedDate(date)}
+        dateFormat="MM/dd/yyyy"
+        placeholderText="DD / MM / YYYY"
+        className="w-full border rounded px-3 py-2 text-sm md:text-base" 
+        ref={datePickerRef}
+      />
+      <img 
+        src={DateIcon} 
+        alt="Date Icon" 
+        className="absolute top-10 right-4 sm:right-40 md:right-4 lg:right-6 cursor-pointer" 
+        onClick={handleIconClick}
+      />
+    </div>
+
+
+    <div>
+      <label className="block font-semibold mb-1 text-sm text-start font-SourceSansPro">Invoice No</label>
+      <input 
+        type="text" 
+        className="w-full border rounded px-3 py-2 text-sm" 
+        placeholder="Auto Generate" 
+      />
+    </div>
+  </div>
+</div>
+
           </div>
         </div>
 
         <div className="flex flex-col md:flex-row justify-between items-center">
-          <div className="flex items-center mt-12 sm:mr-44">
+          <div className="flex items-center mt-28 sm:mr-44">
             <p className="font-bold text-lg text-orange-600 mr-4">Products</p>
             <img src={Rectangle} alt="Product icon" />
-            <p className="font-semibold text-base ml-4">On Credit</p>
+            <p className="font-semibold text-base ml-4">Inter State Supply</p>
           </div>
-          <div className="w-full md:w-auto mt-4">
-            <label className="block font-normal mb-1 text-sm text-start font-SourceSansPro">Purchase ID</label>
-            <input
-              type="text"
-              className="w-full border rounded px-3 py-2 text-sm bg-Dim-red"
-              placeholder="Auto Generate"
-            />
-          </div>
+        
         </div>
 
         <div className="overflow-x-auto mt-6">
@@ -146,7 +197,7 @@ function AddPurchase() {
           <p className="font-semibold text-sm ml-4">Add Products</p>
         </div>
 
-        <div className="mt-4 border border-y-black w-full"></div>
+        <div className="mt-10 border border-y-black w-full"></div>
 
         <div className="ml-4 mr-4">
           {[
@@ -177,4 +228,4 @@ function AddPurchase() {
   );
 }
 
-export default AddPurchase;
+export default AddInvoice;

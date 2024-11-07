@@ -8,7 +8,7 @@ import Search from '../Images/Sales/Search.svg'
 import Dot from '../Images/Sales/Dots.svg';
 import SmallDot from '../Images/Sales/Smalldots.svg'
 import Add from '../Images/Sales/Add Green.svg';
-
+import AddInvoice from './AddInvoice';
 
 import { ArrowRight2, ArrowLeft2 ,ArrowUp2, ArrowDown2} from 'iconsax-react';
 
@@ -17,7 +17,7 @@ function Invoice() {
 
    
     const [currentPage, setCurrentPage] = useState(1);
-   
+    const [showAddInvoice, setShowAddInvoice] = useState(false);
 
 
     const reports = [
@@ -120,7 +120,9 @@ function Invoice() {
     };
 
 
-
+const  handleCreateInvoice = () => {
+setShowAddInvoice(true);
+}
 
    
 
@@ -134,6 +136,10 @@ function Invoice() {
 
 
     return (
+        <>
+           {showAddInvoice ? (
+             <AddInvoice /> 
+            ) : (
         <div className='h-screen bg-white p-4 w-full'>
             <div className='flex justify-between items-center gap-2 mb-2.5'>
             <div className='flex justify-start items-center gap-2 mb-2.5'>
@@ -142,6 +148,7 @@ function Invoice() {
 
             <div>
               <button 
+              onClick={handleCreateInvoice}
                  type="submit" 
                  class="flex items-center w-full justify-center bg-white px-3 py-1.5 text-sm font-semibold text-orange-600 border border-[#648D68] shadow-sm hover:bg-[#648D68] hover:text-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#648D68]">
                 <img src={Add} alt="Add" class="mr-2" /> 
@@ -336,6 +343,8 @@ function Invoice() {
                 </div>
             </div>
               </div>
+            )}
+              </>
     )
 }
 
