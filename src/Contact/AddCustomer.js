@@ -139,16 +139,24 @@ const [payLaterError, setPayLaterError] = useState("");
        <div className="rounded-xl flex items-center justify-center p-4">
 
       
-        <button
+        {/* <button
           onClick={handleClose}
           className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 focus:outline-none"
         >
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="w-6 h-6">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-          </svg>
-        </button>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="w-6 h-6">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+        </button> */}
 
-        <p className="font-Poppins font-bold text-2xl text-orange-600 text-center pt-4 pb-4 ">Add New Customer</p>
+<p className="font-Poppins font-bold text-2xl text-orange-600 text-center flex-grow">
+            Add New Customer
+          </p>
+          <img
+            src={cancelbtn}
+            alt="Cancel"
+            className="cursor-pointer w-4 h-4"
+            onClick={handleClose}
+          />
         </div>
 
 
