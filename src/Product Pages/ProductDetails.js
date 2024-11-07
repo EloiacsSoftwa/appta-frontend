@@ -2,15 +2,15 @@ import React, { useState } from 'react';
 import Circle_Minus from '../Images/Icons/Circle_Minus.svg';
 import IrishButter from '../Images/Icons/IrishButter.svg';
 
-function ProductDetails() {
-    const [isVisible, setIsVisible] = useState(true);
-
-    const handleClose = () => {
-        setIsVisible(false);
-    };
+function ProductDetails({productDetails, handleClose}) {
+    
+console.log("productDetails",productDetails)
+   
 
     return (
-        isVisible && (
+        
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+
             <div className="flex flex-col md:flex-row mx-auto px-4 my-8">
                 <section className="bg-white shadow-xl rounded-md w-full h-full mb-10">
                     <div className="p-4 flex items-center justify-between mb-3 border-b-2 border-neutral-500">
@@ -119,8 +119,8 @@ function ProductDetails() {
                     <div className="border-b-2 border-neutral-500 mb-8 -mt-2"></div>
                 </section>
             </div>
-        )
-    );
+            </div>
+            );
 }
 
 export default ProductDetails;

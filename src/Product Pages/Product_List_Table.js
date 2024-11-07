@@ -12,6 +12,7 @@ import { ArrowRight2, ArrowLeft2, ArrowUp2, ArrowDown2 } from 'iconsax-react';
 import AddProductModal from './AddProduct';
 import { useDispatch, useSelector } from 'react-redux';
 import ProductDetails from './ProductDetails';
+import { ListItem } from '@mui/material';
 
 
 function Product_List({item}) {
@@ -22,11 +23,18 @@ function Product_List({item}) {
     const [product, setProduct] = useState([])
     const [loading, setLoading] = useState(true);
     const [showDetails, setShowDetails] = useState(false);
+const [productDetails, setProductDetails] = useState('')
 
-    const handleClick = () => {
+
+    const handleClick = (item) => {
       setShowDetails(true);
+      setProductDetails(item)
     };
 
+
+    const handleCloseShowDetails = () =>{
+        setShowDetails(false);
+    }
 
     const dispatch = useDispatch();
     const state = useSelector(state => state);
@@ -293,7 +301,7 @@ function Product_List({item}) {
                                             className="form-checkbox h-4 w-4 text-blue-600 border-neutral-500 cursor-pointer"
                                         /></td>
                                     {/* <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{item.productName}</td> */}
-                                    <td className=" cursor-pointer p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start"onClick={handleClick}>
+                                    <td className=" cursor-pointer p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start" onClick={()=>handleClick(item)}>
                                         <span className="underline decoration-orange-500 underline-offset-4 ">{item.productName}</span>
                                     </td>
                                     <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{item.productId}</td>
@@ -339,9 +347,9 @@ function Product_List({item}) {
             </div>
             {showModal && <AddProductModal onClose={() => setShowModal(false)} />}
             {showDetails && (
-        <div className="product-details">
-          <ProductDetails item={item} />
-        </div>
+        
+          <ProductDetails  productDetails={productDetails} handleClose={handleCloseShowDetails} />
+        
       )}
 
       
