@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import { useNavigate } from "react-router-dom";
-
+import cancelbtn from '../Images/Icons/cancelbtn.svg'
 function AddCustomer() {
   const [isOpen, setIsOpen] = useState(true);
 
@@ -20,28 +20,20 @@ function AddCustomer() {
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
       <div className="relative bg-white rounded-xl w-11/12 sm:w-5/12 p-6 mx-4 border-x-4 border-t-4 border-b-2 border-orange-600">
-        <button
-          onClick={onClose}
-          className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 focus:outline-none"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            className="w-6 h-6"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M6 18L18 6M6 6l12 12"
-            />
-          </svg>
-        </button>
 
-        <p className="font-Poppins font-bold text-2xl text-orange-600 text-center pt-4 pb-4">Add New Customer</p>
-
+       
+        <div className="flex justify-between items-center  pb-4 mb-4">
+          <p className="font-Poppins font-bold text-2xl text-orange-600 text-center flex-grow">
+            Add New Customer
+          </p>
+          <img
+            src={cancelbtn}
+            alt="Cancel"
+            className="cursor-pointer w-4 h-4"
+            onClick={onClose}
+          />
+        </div>
+        
         <div className="bg-gray-300 pb-4 mt-4 w-full border-2">
           <Box
             component="form"
@@ -158,6 +150,8 @@ function AddCustomer() {
             </button>
           </div>
         </div>
+
+        
       </div>
     </div>
   );
