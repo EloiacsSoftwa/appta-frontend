@@ -24,75 +24,181 @@ import AddCustomer from '../Contact/AddCustomer';
 
     //  const [loading, setLoading] = useState(false);
 
-      const [posdata, setPosData] = useState([])
+    const [currentDate, setCurrentDate] = useState('');
+
+    useEffect(() => {
+      const date = new Date();
+      const formattedDate = date.toLocaleDateString('en-GB', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+      });
+      setCurrentDate(formattedDate);
+    }, []);
+
+    //   const [posdata, setPosData] = useState([]);
+
+
 
        const[barcode, setBarcode] = useState('56676');
    
        const [productid , setProductId] = useState('')
 
+       const [posdata, setPosData] = useState([]);
+    //    const [posdata, setPosData] = useState([]);
 
-       const BarcodeGetData = () => {
-        // setLoading(false);
-        dispatch({ type: 'BARCODE_GET_PRODUCT', payload: barcode });
-       setTimeout(() => {
-        if (State.PosReducer.BarcodeproductData && State.PosReducer.BarcodeproductData != '') {
-            setPosData([State.PosReducer.BarcodeproductData]); 
+       // Function to update or add product in posdata (either from barcode or search)
+       const handleProductUpdate = (productData) => {
+        if (productData && productData.productId && productData.quantity >= 0) {
+          setPosData((prevData) => {
+            // Check if the product already exists in posdata
+            const existingProductIndex = prevData.findIndex((item) => item.productId === productData.productId);
+          console.log("existingProductIndex",existingProductIndex);
+          
+             
+            if (existingProductIndex !== -1) {
+              // If the product exists, update the quantity
+              const updatedData = [...prevData];
+             console.log("updatedData",updatedData);
+             
+              // Add the quantity to the existing quantity (do not multiply)
+              updatedData[existingProductIndex].quantity += productData.quantity; // Correctly adding the new quantity
+      
+              return updatedData;
+            } else {
+              // If product doesn't exist, add the product to posdata with its quantity from the API
+              return [...prevData, { ...productData, quantity: productData.quantity }];
+            }
+          });
         }
-       }, 200);
+      };
+      
+      
+       
+       // Barcode scan function
+       const BarcodeGetData = () => {
+         dispatch({ type: 'BARCODE_GET_PRODUCT', payload: barcode });
+         setTimeout(() => {
+           if (State.PosReducer.BarcodeproductData && State.PosReducer.BarcodeproductData !== '') {
+             handleProductUpdate(State.PosReducer.BarcodeproductData); // Correctly update posdata
+           }
+         }, 200);
+       };
+       
+       // Search filter logic
+       const [searchQuery, setSearchQuery] = useState('');
+       const [selectedProductId, setSelectedProductId] = useState(null); // State for selected productId
+       
+       const handleSearchChange = (e) => {
+         setSearchQuery(e.target.value.toLowerCase());
+         setSelectedProductId(null); // Reset productId on new search
+       };
+       
+       // Filter `ProductList` based on search query
+       const filteredData = State.AddProduct.ProductList.filter((item) =>
+         item.productName.toLowerCase().includes(searchQuery) ||
+         item.barcodeNo.toLowerCase().includes(searchQuery)
+       );
+       
+       // Handle product selection from search filter
+       const [searchfilterdata, setSearchFilterData] = useState(null);
+       
+       useEffect(() => {
+         const Productfilter = State.AddProduct.ProductList.filter((u) => u.productId === selectedProductId);
+         if (Productfilter && Productfilter.length > 0) {
+           setSearchFilterData(Productfilter[0]);
+         }
+       }, [selectedProductId]);
+       
+       // Update posdata when searchfilterdata changes
+       useEffect(() => {
+         if (searchfilterdata && searchfilterdata.productId && searchfilterdata.quantity >= 0) {
+           handleProductUpdate(searchfilterdata); // Correctly update posdata
+         }
+       }, [searchfilterdata]);
+       
+       // Dispatch actions to get products and customers
+       useEffect(() => {
+         dispatch({ type: 'GETPRODUCT' });
+         dispatch({ type: 'GETCUSTOMER' });
+       }, []);
+       
+       
+  
+  
+       
+       
+      
+console.log("Search Filter Data:", searchfilterdata);
+
+
+
+    //    const BarcodeGetData = () => {
+        
+    //     dispatch({ type: 'BARCODE_GET_PRODUCT', payload: barcode });
+    //    setTimeout(() => {
+    //     if (State.PosReducer.BarcodeproductData && State.PosReducer.BarcodeproductData != '') {
+    //         setPosData([State.PosReducer.BarcodeproductData]); 
+    //     }
+    //    }, 200);
        
         
-        // setTimeout(() => {
-        //   setLoading(true);
-        // }, 500);
-      };
       
-      useEffect(() => {
-        if (State.PosReducer.BarcodeproductData && State.PosReducer.BarcodeproductData != '') {
-            // setLoading(true);
-
-            // const dataArray = [...State.PosReducer.BarcodeproductData,State.PosReducer.BarcodeproductData];
-            //  console.log("dataArray", dataArray)
-            //  setPosData(dataArray)
-          setPosData([...posdata, {...State.PosReducer.BarcodeproductData}]);
-        }
-      }, [State.PosReducer.BarcodeproductData]);
+    //   };
+      
+    //   useEffect(() => {
+    //     if (State.PosReducer.BarcodeproductData && State.PosReducer.BarcodeproductData !== '' && State.PosReducer.BarcodeproductData !== undefined) {
+    //         setPosData(prevData => {
+    //             // Add new valid data and filter out invalid entries (e.g., '', undefined)
+    //             const updatedData = [...prevData, State.PosReducer.BarcodeproductData].filter(item => item != '' && item != undefined && item != "undefined");
+    //             return updatedData;
+    //         });
+    //     }
+    // }, [State.PosReducer.BarcodeproductData]);
       
       
-      useEffect(()=> {
-        dispatch({ type: 'GETPRODUCT'});
-        dispatch({ type: 'GETCUSTOMER'});
+    //   useEffect(()=> {
+    //     dispatch({ type: 'GETPRODUCT'});
+    //     dispatch({ type: 'GETCUSTOMER'});
              
-      },[])
+    //   },[])
 
-      const [searchQuery, setSearchQuery] = useState('');
-      const [selectedProductId, setSelectedProductId] = useState(null); // New state for productId
+    //   const [searchQuery, setSearchQuery] = useState('');
+    //   const [selectedProductId, setSelectedProductId] = useState(null); // New state for productId
       
-      console.log("selectedProductId",selectedProductId);
+    //   console.log("selectedProductId", selectedProductId);
       
       // Handle search input changes
-      const handleSearchChange = (e) => {
-        setSearchQuery(e.target.value.toLowerCase());
-        setSelectedProductId(null); // Reset productId on new search
-      };
+    //   const handleSearchChange = (e) => {
+    //     setSearchQuery(e.target.value.toLowerCase());
+    //     setSelectedProductId(null); // Reset productId on new search
+    //   };
       
-      // Filter `ProductList` based on search query
-      const filteredData = State.AddProduct.ProductList.filter(item =>
-        item.productName.toLowerCase().includes(searchQuery) ||
-        item.barcodeNo.toLowerCase().includes(searchQuery)
-      );
-    
-     const [searchfilterdata, setSearchFilterData] = useState('');
-     console.log("Productfilter",searchfilterdata);
-
-      useEffect(()=> {
-         const Productfilter = State.AddProduct.ProductList.filter((u)=> u.productId == selectedProductId)
-         
-         setSearchFilterData(Productfilter[0])
-      },[selectedProductId])
-
-      useEffect(()=> {
-       setPosData([...posdata,searchfilterdata])
-     },[searchfilterdata])
+    //   // Filter `ProductList` based on search query
+    //   const filteredData = State.AddProduct.ProductList.filter(item =>
+    //     item.productName.toLowerCase().includes(searchQuery) ||
+    //     item.barcodeNo.toLowerCase().includes(searchQuery)
+    //   );
+      
+    //   const [searchfilterdata, setSearchFilterData] = useState(null); // Default to null for better validation
+    //   console.log("Productfilter", searchfilterdata);
+      
+    //   // Update searchfilterdata when selectedProductId changes
+    //   useEffect(() => {
+    //     const Productfilter = State.AddProduct.ProductList.filter((u) => u.productId === selectedProductId);
+    //     if (Productfilter && Productfilter.length > 0) {
+    //       setSearchFilterData(Productfilter[0]);
+    //     }
+    //   }, [selectedProductId]);
+      
+    //   // Update posdata with valid searchfilterdata
+    //   useEffect(() => {
+    //     if (searchfilterdata && Object.keys(searchfilterdata).length > 0) {
+    //       // Ensure the data is valid (not empty or undefined)
+    //       setPosData((prevData) => [...prevData, searchfilterdata]);
+    //     }
+    //   }, [searchfilterdata]);
+      
       
 
 
@@ -186,6 +292,7 @@ import AddCustomer from '../Contact/AddCustomer';
   
 
     return(<>
+    <div className='h-screen'>
         <div className='h-4/5 bg-white p-4 w-full'>
            
             <div className='flex flex-row w-full h-full gap-4'>
@@ -433,7 +540,7 @@ import AddCustomer from '../Contact/AddCustomer';
             <img src={Cup} className='w-6 h-6'/>
             <div>
             <p className='text-xs  font-semibold font-Manrope ' style={{paddingLeft:'5px'}}>Loyalty Points</p>
-            <p className='text-xs text-center text-[#797979] ' style={{paddingRight:'20px'}}>85 points</p>
+            <p className='text-xs text-center text-[#797979] ' style={{paddingRight:'20px'}}>0 points</p>
           </div>
           </div>
 
@@ -458,18 +565,19 @@ import AddCustomer from '../Contact/AddCustomer';
    <div className='flex flex-col'>
 
     <div className='flex flex-row mt-2'>
-    <img src={Radiobox}  className='ps-2'/>
+               <input type="checkbox" className="form-checkbox h-3 w-3 mt-1 ms-2 text-blue-600 border-neutral-500 cursor-pointer" />
+
     <p className='text-[#131313] text-sm  font-semibold font-Manrope ps-2'>Add Loyalty Points</p>
     </div>
 
     <div className='flex flex-row justify-between' >
     <p className='text-[#131313] text-sm  font-semibold font-Manrope ps-2'>Date: </p>
-    <p className='text-[#131313] text-sm  font-semibold font-Manrope pe-2'>12-09-2024</p>
+    <p className='text-[#131313] text-sm  font-semibold font-Manrope pe-2'>{currentDate}</p>
     </div>
    
     <div className='flex flex-row justify-between' >
     <p className='text-[#131313] text-sm  font-semibold font-Manrope ps-2'>Total Items : </p>
-    <p className='text-[#131313] text-sm  font-semibold font-Manrope pe-2'>056</p>
+    <p className='text-[#131313] text-sm  font-semibold font-Manrope pe-2'>{posdata&& posdata.length}</p>
     </div>
 
     <div className='flex flex-row justify-between' >
@@ -669,7 +777,7 @@ import AddCustomer from '../Contact/AddCustomer';
   customerform && <AddCustomer  handleClose={handleCloseAddCustomer}/>
 }
 
-
+</div>
 </>    
     )
 }
