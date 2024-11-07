@@ -13,6 +13,7 @@ import TextField from '@mui/material/TextField';
 import Modal from '@mui/material/Modal';
 import {  FormControlLabel, Checkbox } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
+import AddCustomer from '../Contact/AddCustomer';
 
 
 
@@ -23,75 +24,230 @@ import { useDispatch, useSelector } from 'react-redux';
 
     //  const [loading, setLoading] = useState(false);
 
-      const [posdata, setPosData] = useState([])
+    const [currentDate, setCurrentDate] = useState('');
+
+    const [total_amount ,setTotalAmount] = useState('')
+
+    useEffect(() => {
+      const date = new Date();
+      const formattedDate = date.toLocaleDateString('en-GB', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+      });
+      setCurrentDate(formattedDate);
+    }, []);
+
+    //   const [posdata, setPosData] = useState([]);
+
+
 
        const[barcode, setBarcode] = useState('56676');
    
        const [productid , setProductId] = useState('')
 
+       const [posdata, setPosData] = useState([]);
+    //    const [posdata, setPosData] = useState([]);
 
-       const BarcodeGetData = () => {
-        // setLoading(false);
-        dispatch({ type: 'BARCODE_GET_PRODUCT', payload: barcode });
-       setTimeout(() => {
-        if (State.PosReducer.BarcodeproductData && State.PosReducer.BarcodeproductData != '') {
-            setPosData([State.PosReducer.BarcodeproductData]); 
+       // Function to update or add product in posdata (either from barcode or search)
+    //    const handleProductUpdate = (productData) => {
+    //     if (productData && productData.productId && productData.quantity >= 0) {
+    //       setPosData((prevData) => {
+    //         // Check if the product already exists in posdata
+    //         const existingProductIndex = prevData.findIndex((item) => item.productId === productData.productId);
+    //       console.log("existingProductIndex",existingProductIndex);
+          
+             
+    //         if (existingProductIndex !== -1) {
+    //           // If the product exists, update the quantity
+    //           const updatedData = [...prevData];
+    //          console.log("updatedData",updatedData);
+             
+    //           // Add the quantity to the existing quantity (do not multiply)
+    //          var new_data= updatedData[existingProductIndex].quantity + productData.quantity; // Correctly adding the new quantity
+    //          console.log("new_data",new_data);
+             
+    //           return updatedData;
+    //         } else {
+    //           // If product doesn't exist, add the product to posdata with its quantity from the API
+    //           return [...prevData, { ...productData, quantity: productData.quantity }];
+    //         }
+    //       });
+    //     }
+    //   };
+    const handleProductUpdate = (productData) => {
+        if (productData && productData.productId && productData.quantity >= 0) {
+          setPosData((prevData) => {
+            // Check if the product already exists in posdata
+            const existingProductIndex = prevData.findIndex((item) => item.productId === productData.productId);
+      
+            console.log("existingProductIndex", existingProductIndex);
+      
+            if (existingProductIndex !== -1) {
+              // If the product exists, update the quantity
+              const updatedData = [...prevData];
+              console.log("updatedData before quantity update", updatedData);
+      
+              // Correctly add the new quantity to the existing quantity
+              updatedData[existingProductIndex] = {
+                ...updatedData[existingProductIndex],
+                quantity: updatedData[existingProductIndex].quantity + productData.quantity, // Correct quantity update
+              };
+      
+              console.log("updatedData after quantity update", updatedData);
+              const totalAmount = updatedData.reduce((acc, item) => {
+                return acc + (item.quantity * item.wholesalePrice); // Sum up the total amount
+              }, 0);
+
+              setTotalAmount(totalAmount)
+              console.log("totalAmount:", totalAmount);
+              // Return the updated data
+              return updatedData;
+
+              
+            } else {
+              // If product doesn't exist, add the product to posdata with its quantity from the API
+              return [...prevData, { ...productData, quantity: productData.quantity }];
+            }
+          });
+
+          
         }
-       }, 200);
-       
-        
-        // setTimeout(() => {
-        //   setLoading(true);
-        // }, 500);
       };
       
-      useEffect(() => {
-        if (State.PosReducer.BarcodeproductData && State.PosReducer.BarcodeproductData != '') {
-            // setLoading(true);
-
-            // const dataArray = [...State.PosReducer.BarcodeproductData,State.PosReducer.BarcodeproductData];
-            //  console.log("dataArray", dataArray)
-            //  setPosData(dataArray)
-          setPosData([...posdata, {...State.PosReducer.BarcodeproductData}]);
-        }
-      }, [State.PosReducer.BarcodeproductData]);
+      // Barcode scan function
+      const BarcodeGetData = () => {
+        dispatch({ type: 'BARCODE_GET_PRODUCT', payload: barcode });
+        setTimeout(() => {
+          if (State.PosReducer.BarcodeproductData && State.PosReducer.BarcodeproductData !== '') {
+            handleProductUpdate(State.PosReducer.BarcodeproductData); // Correctly update posdata
+          }
+        }, 200);
+      };
       
-      
-      useEffect(()=> {
-        dispatch({ type: 'GETPRODUCT'});
-        dispatch({ type: 'GETCUSTOMER'});
-             
-      },[])
-
+      // Search filter logic
       const [searchQuery, setSearchQuery] = useState('');
-      const [selectedProductId, setSelectedProductId] = useState(null); // New state for productId
+      const [selectedProductId, setSelectedProductId] = useState(null); // State for selected productId
       
-      console.log("selectedProductId",selectedProductId);
-      
-      // Handle search input changes
       const handleSearchChange = (e) => {
         setSearchQuery(e.target.value.toLowerCase());
         setSelectedProductId(null); // Reset productId on new search
       };
       
       // Filter `ProductList` based on search query
-      const filteredData = State.AddProduct.ProductList.filter(item =>
+      const filteredData = State.AddProduct.ProductList.filter((item) =>
         item.productName.toLowerCase().includes(searchQuery) ||
         item.barcodeNo.toLowerCase().includes(searchQuery)
       );
-    
-     const [searchfilterdata, setSearchFilterData] = useState('');
-     console.log("Productfilter",searchfilterdata);
+      
+      // Handle product selection from search filter
+      const [searchfilterdata, setSearchFilterData] = useState(null);
+      
+      useEffect(() => {
+        const Productfilter = State.AddProduct.ProductList.filter((u) => u.productId === selectedProductId);
+        if (Productfilter && Productfilter.length > 0) {
+          setSearchFilterData(Productfilter[0]);
+        }
+      }, [selectedProductId]);
+      
+      useEffect(() => {
+        if (searchfilterdata && searchfilterdata.productId && searchfilterdata.quantity >= 0) {
+          handleProductUpdate(searchfilterdata); // Correctly update posdata
+        }
+      }, [searchfilterdata]);
+      
+      const handleSearchFilterProductSelect = (selectedProduct) => {
+        const productData = {
+          productId: selectedProduct.productId,
+          quantity: 1, // or any increment/decrement logic you want to apply
+        };
+      
+        handleProductUpdate(productData); // Update posdata based on search filter
+      };
+      
+      // Dispatch actions to get products and customers
+      useEffect(() => {
+        dispatch({ type: 'GETPRODUCT' });
+        dispatch({ type: 'GETCUSTOMER' });
+      }, []);
+      
+       
+       
+  
+  
+       
+       
+      
+console.log("Search Filter Data:", searchfilterdata);
 
-      useEffect(()=> {
-         const Productfilter = State.AddProduct.ProductList.filter((u)=> u.productId == selectedProductId)
-         
-         setSearchFilterData(Productfilter[0])
-      },[selectedProductId])
 
-      useEffect(()=> {
-       setPosData([...posdata,searchfilterdata])
-     },[searchfilterdata])
+
+    //    const BarcodeGetData = () => {
+        
+    //     dispatch({ type: 'BARCODE_GET_PRODUCT', payload: barcode });
+    //    setTimeout(() => {
+    //     if (State.PosReducer.BarcodeproductData && State.PosReducer.BarcodeproductData != '') {
+    //         setPosData([State.PosReducer.BarcodeproductData]); 
+    //     }
+    //    }, 200);
+       
+        
+      
+    //   };
+      
+    //   useEffect(() => {
+    //     if (State.PosReducer.BarcodeproductData && State.PosReducer.BarcodeproductData !== '' && State.PosReducer.BarcodeproductData !== undefined) {
+    //         setPosData(prevData => {
+    //             // Add new valid data and filter out invalid entries (e.g., '', undefined)
+    //             const updatedData = [...prevData, State.PosReducer.BarcodeproductData].filter(item => item != '' && item != undefined && item != "undefined");
+    //             return updatedData;
+    //         });
+    //     }
+    // }, [State.PosReducer.BarcodeproductData]);
+      
+      
+    //   useEffect(()=> {
+    //     dispatch({ type: 'GETPRODUCT'});
+    //     dispatch({ type: 'GETCUSTOMER'});
+             
+    //   },[])
+
+    //   const [searchQuery, setSearchQuery] = useState('');
+    //   const [selectedProductId, setSelectedProductId] = useState(null); // New state for productId
+      
+    //   console.log("selectedProductId", selectedProductId);
+      
+      // Handle search input changes
+    //   const handleSearchChange = (e) => {
+    //     setSearchQuery(e.target.value.toLowerCase());
+    //     setSelectedProductId(null); // Reset productId on new search
+    //   };
+      
+    //   // Filter `ProductList` based on search query
+    //   const filteredData = State.AddProduct.ProductList.filter(item =>
+    //     item.productName.toLowerCase().includes(searchQuery) ||
+    //     item.barcodeNo.toLowerCase().includes(searchQuery)
+    //   );
+      
+    //   const [searchfilterdata, setSearchFilterData] = useState(null); // Default to null for better validation
+    //   console.log("Productfilter", searchfilterdata);
+      
+    //   // Update searchfilterdata when selectedProductId changes
+    //   useEffect(() => {
+    //     const Productfilter = State.AddProduct.ProductList.filter((u) => u.productId === selectedProductId);
+    //     if (Productfilter && Productfilter.length > 0) {
+    //       setSearchFilterData(Productfilter[0]);
+    //     }
+    //   }, [selectedProductId]);
+      
+    //   // Update posdata with valid searchfilterdata
+    //   useEffect(() => {
+    //     if (searchfilterdata && Object.keys(searchfilterdata).length > 0) {
+    //       // Ensure the data is valid (not empty or undefined)
+    //       setPosData((prevData) => [...prevData, searchfilterdata]);
+    //     }
+    //   }, [searchfilterdata]);
+      
       
 
 
@@ -140,14 +296,28 @@ import { useDispatch, useSelector } from 'react-redux';
         SetCustomerform(true)
      }
 
-     const handleClosecustomer = () => {
+     const handleCloseAddCustomer = () => {
         SetCustomerform(false)
      }
+
+     useEffect(() => {
+      if (State.Customer.addCustomerStatusCode == 200) {
+          dispatch({ type: 'GETCUSTOMER' })
+          SetCustomerform(false)
+          setTimeout(() => {
+              dispatch({ type: 'REMOVE_ADD_CUSTOMER_STATUS_CODE' })
+          }, 2000)
+      }
+
+  }, [State.Customer.addCustomerStatusCode])
+
+
+
 
     // Function to handle the create action
     const handleCreate = () => {
       console.log("Creating new customer...");   
-      handleClosecustomer();
+      // handleClosecustomer();
     }
 
     const style = {
@@ -171,6 +341,7 @@ import { useDispatch, useSelector } from 'react-redux';
   
 
     return(<>
+    <div className='h-screen'>
         <div className='h-4/5 bg-white p-4 w-full'>
            
             <div className='flex flex-row w-full h-full gap-4'>
@@ -179,7 +350,7 @@ import { useDispatch, useSelector } from 'react-redux';
                 <div className="flex items-center justify-between p-2 border-b bg-lightgray">
                     <div className="flex items-center ">
                         
-                        <div className="relative">
+                    <div className="relative">
   <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none">
     <img src={Search} alt="Search Icon" />
   </span>
@@ -189,14 +360,16 @@ import { useDispatch, useSelector } from 'react-redux';
     className="rounded pl-10 py-1 bg-zinc-300"
     value={searchQuery}
     onChange={handleSearchChange}
+    aria-label="Search for products"
+    role="search"
   />
-  
-  
+
+  {/* Search result dropdown */}
   {searchQuery && filteredData.length > 0 && (
     <div className="absolute w-full bg-white border border-gray-300 rounded mt-1 max-h-60 overflow-y-auto z-10">
-      {filteredData.map((item, index) => (
+      {filteredData.map((item) => (
         <div
-          key={index}
+          key={item.productId}  // Use productId for key instead of index
           className="p-2 hover:bg-gray-100 cursor-pointer"
           onClick={() => {
             setSearchQuery('');
@@ -216,6 +389,7 @@ import { useDispatch, useSelector } from 'react-redux';
     </div>
   )}
 </div>
+
                         <div className='bg-zinc-300 ms-2 items-center rounded'>
                             <img  src={Barcode} className='p-1' alt='barcode' onClick={BarcodeGetData}/>
                         </div>
@@ -418,7 +592,7 @@ import { useDispatch, useSelector } from 'react-redux';
             <img src={Cup} className='w-6 h-6'/>
             <div>
             <p className='text-xs  font-semibold font-Manrope ' style={{paddingLeft:'5px'}}>Loyalty Points</p>
-            <p className='text-xs text-center text-[#797979] ' style={{paddingRight:'20px'}}>85 points</p>
+            <p className='text-xs text-center text-[#797979] ' style={{paddingRight:'20px'}}>0 points</p>
           </div>
           </div>
 
@@ -443,23 +617,24 @@ import { useDispatch, useSelector } from 'react-redux';
    <div className='flex flex-col'>
 
     <div className='flex flex-row mt-2'>
-    <img src={Radiobox}  className='ps-2'/>
+               <input type="checkbox" className="form-checkbox h-3 w-3 mt-1 ms-2 text-blue-600 border-neutral-500 cursor-pointer" />
+
     <p className='text-[#131313] text-sm  font-semibold font-Manrope ps-2'>Add Loyalty Points</p>
     </div>
 
     <div className='flex flex-row justify-between' >
     <p className='text-[#131313] text-sm  font-semibold font-Manrope ps-2'>Date: </p>
-    <p className='text-[#131313] text-sm  font-semibold font-Manrope pe-2'>12-09-2024</p>
+    <p className='text-[#131313] text-sm  font-semibold font-Manrope pe-2'>{currentDate}</p>
     </div>
    
     <div className='flex flex-row justify-between' >
     <p className='text-[#131313] text-sm  font-semibold font-Manrope ps-2'>Total Items : </p>
-    <p className='text-[#131313] text-sm  font-semibold font-Manrope pe-2'>056</p>
+    <p className='text-[#131313] text-sm  font-semibold font-Manrope pe-2'>{posdata&& posdata.length}</p>
     </div>
 
     <div className='flex flex-row justify-between' >
     <p className='text-[#131313] text-sm  font-semibold font-Manrope ps-2'>Amount :</p>
-    <p className='text-[#131313] text-sm  font-semibold font-Manrope pe-2'>₹ 230.00</p>
+    <p className='text-[#131313] text-sm  font-semibold font-Manrope pe-2'>{total_amount}</p>
     </div>
 
     <div className='flex flex-row justify-between' >
@@ -488,7 +663,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
     <div className='flex flex-row justify-between  mb-2 mt-2' >
     <p className='text-[#131313] text-sm  font-semibold font-Manrope ps-2'>Total :</p>
-    <p className='text-[#131313] text-sm  font-semibold font-Manrope pe-2'>₹ 1240.00</p>
+    <p className='text-[#131313] text-sm  font-semibold font-Manrope pe-2'>₹ {total_amount}</p>
     </div>
 
     <div class="border border-dotted border-black ">
@@ -496,7 +671,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
     <div className='flex flex-col items-center mt-1' >
     <p className='font-semibold font-Manrope text-[#131313] font-bold text-xl '>Amount to Pay</p>
-    <p className='font-semibold font-Manrope text-[#131313] font-bold text-xl '>₹ 1240.00</p>
+    <p className='font-semibold font-Manrope text-[#131313] font-bold text-xl '>₹ {total_amount}</p>
     </div>
 
    </div>
@@ -611,30 +786,99 @@ import { useDispatch, useSelector } from 'react-redux';
       noValidate
       autoComplete="off"
     >
-      <TextField
-        id="outlined-basic"
-        label="Amount to be paid"
-        variant="outlined"
-        fullWidth
-      />
-      <TextField
+  
+ <TextField
+                label="Amount to be paid"
+                value={total_amount}
+                // onChange={handleCustomerNameChange}
+                fullWidth
+                className="font-Roboto font-semibold text-xs"
+                InputLabelProps={{ shrink: true }}
+               
+//   helperText={customerNameError}
+                sx={{ 
+                  '& .MuiInputLabel-root': { color: 'black' },
+                  '& .MuiOutlinedInput-root': {
+                    '& fieldset': { borderColor: '#797979' },
+                    '&:hover fieldset': { borderColor: '#797979' },
+                    '&.Mui-focused fieldset': { borderColor: '#797979' },
+                  },
+                  '& .MuiInputLabel-root.Mui-focused': { color: 'black' },
+                  '& .MuiFormHelperText-root': { color: 'red' },
+                }}
+              />
+
+<TextField
+                label="Cash Received"
+                // value={total_amount}
+                // onChange={handleCustomerNameChange}
+                fullWidth
+                className="font-Roboto font-semibold text-xs"
+                InputLabelProps={{ shrink: true }}
+               
+//   helperText={customerNameError}
+                sx={{ 
+                  '& .MuiInputLabel-root': { color: 'black' },
+                  '& .MuiOutlinedInput-root': {
+                    '& fieldset': { borderColor: '#797979' },
+                    '&:hover fieldset': { borderColor: '#797979' },
+                    '&.Mui-focused fieldset': { borderColor: '#797979' },
+                  },
+                  '& .MuiInputLabel-root.Mui-focused': { color: 'black' },
+                  '& .MuiFormHelperText-root': { color: 'red' },
+                }}
+              />
+
+      {/* <TextField
         id="outlined-basic"
         label="Cash Received"
         variant="outlined"
         fullWidth
-      />
-      <TextField
-        id="outlined-basic"
-        label="Change to Return"
-        variant="outlined"
-        fullWidth
-      />
-      <TextField
-        id="outlined-basic"
-        label="Receipt Number"
-        variant="outlined"
-        fullWidth
-      />
+      /> */}
+
+<TextField
+                label="Change to Return"
+                // value={total_amount}
+                // onChange={handleCustomerNameChange}
+                fullWidth
+                className="font-Roboto font-semibold text-xs"
+                InputLabelProps={{ shrink: true }}
+               
+//   helperText={customerNameError}
+                sx={{ 
+                  '& .MuiInputLabel-root': { color: 'black' },
+                  '& .MuiOutlinedInput-root': {
+                    '& fieldset': { borderColor: '#797979' },
+                    '&:hover fieldset': { borderColor: '#797979' },
+                    '&.Mui-focused fieldset': { borderColor: '#797979' },
+                  },
+                  '& .MuiInputLabel-root.Mui-focused': { color: 'black' },
+                  '& .MuiFormHelperText-root': { color: 'red' },
+                }}
+              />
+   
+   <TextField
+                label="Receipt Number"
+                // value={total_amount}
+                // onChange={handleCustomerNameChange}
+                fullWidth
+                className="font-Roboto font-semibold text-xs"
+                InputLabelProps={{ shrink: true }}
+               
+//   helperText={customerNameError}
+                sx={{ 
+                  '& .MuiInputLabel-root': { color: 'black' },
+                  '& .MuiOutlinedInput-root': {
+                    '& fieldset': { borderColor: '#797979' },
+                    '&:hover fieldset': { borderColor: '#797979' },
+                    '&.Mui-focused fieldset': { borderColor: '#797979' },
+                  },
+                  '& .MuiInputLabel-root.Mui-focused': { color: 'black' },
+                  '& .MuiFormHelperText-root': { color: 'red' },
+                }}
+              />
+
+   
 
       {/* Centered Payment Button */}
       <Box sx={{ gridColumn: 'span 2', display: 'flex', justifyContent: 'center', mt: 2 }}>
@@ -650,96 +894,11 @@ import { useDispatch, useSelector } from 'react-redux';
 
 {/* //add customer  */}
 
-<Modal
-  open={customerform}
-  onClose={handleClosecustomer}
-  aria-labelledby="modal-modal-title"
-  aria-describedby="modal-modal-description"
-  className="border border-solid border-[#EA580C] rounded"
->
-  <Box sx={{ ...style, borderRadius: '8px', overflow: 'hidden' }}>
-    {/* Header with white background */}
-    <Box sx={{ bgcolor: 'white', p: 2 }}>
+{
+  customerform && <AddCustomer  handleClose={handleCloseAddCustomer}/>
+}
 
-        <div className="flex items-center justify-between">
-            <div></div>
-        <img src={cancelbtn} alt="Cancel" className="cursor-pointer" onClick={handleClosecustomer} />
-
-        </div>
-      <div className="flex items-center justify-between">
-      <h2 
-  id="modal-modal-title" 
-  style={{ fontWeight: 700, fontSize: '24px', lineHeight: '12px',color:'#EA580C', marginBottom:'30px' }} 
-  className="mx-auto">
-    Add New Customer
-</h2>
-      </div>
-     
-    </Box>
-
-   
-    <Box
-      component="form"
-      sx={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(2, 1fr)',
-        gap: 2,
-        p: 3,
-        backgroundColor: '#D9D9D9',
-        width: '100%',
-      }}
-      noValidate
-      autoComplete="off"
-    >
-      <TextField
-        id="outlined-basic"
-        label="Customer Name"
-        variant="outlined"
-        fullWidth
-      />
-      <TextField
-        id="outlined-basic"
-        label="Mobile Number"
-        variant="outlined"
-        fullWidth
-      />
-      <TextField
-        id="outlined-basic"
-        label="Email ID"
-        variant="outlined"
-        fullWidth
-      />
-      <TextField
-        id="outlined-basic"
-        label="Address"
-        variant="outlined"
-        fullWidth
-      />
-
-     
-      <TextField
-        id="paylater-field"
-        label="Pay Later"
-        variant="outlined"
-        fullWidth
-      
-      />
-     
-
-      
-      <Box sx={{ gridColumn: 'span 2', display: 'flex', justifyContent: 'center', mt: 2, gap: 2 }}>
-        <button className="bg-[#EA580C] text-[#000000] p-2 ps-4 pe-4 rounded" onClick={handleCreate}>
-          Create
-        </button>
-        <button className="bg-white  text-[#000000] p-2 ps-4 pe-4 rounded" onClick={handleClosecustomer}>
-          Cancel
-        </button>
-      </Box>
-    </Box>
-  </Box>
-</Modal>
-
-
+</div>
 </>    
     )
 }

@@ -8,7 +8,7 @@ import Search from '../Images/Sales/Search.svg'
 import Dot from '../Images/Sales/Dots.svg';
 import SmallDot from '../Images/Sales/Smalldots.svg'
 import Add from '../Images/Sales/Add Green.svg';
-
+import AddQuotation from './AddQuotation';
 
 import { ArrowRight2, ArrowLeft2 ,ArrowUp2, ArrowDown2} from 'iconsax-react';
 
@@ -17,7 +17,7 @@ function Quotation() {
 
    
     const [currentPage, setCurrentPage] = useState(1);
-   
+    const [showAddQuotation, setShowAddQuotation] = useState(false);
 
 
     const reports = [
@@ -122,7 +122,9 @@ function Quotation() {
         }
     };
 
-
+    const  handleCreateQuotation = () => {
+        setShowAddQuotation(true);
+        }
 
 
    
@@ -137,6 +139,10 @@ function Quotation() {
 
 
     return (
+        <>
+        {showAddQuotation ? (
+             <AddQuotation /> 
+            ) : (
         <div className='h-screen bg-white p-4 w-full'>
             <div className='flex justify-between items-center gap-2 mb-2.5'>
             <div className='flex justify-start items-center gap-2 mb-2.5'>
@@ -145,6 +151,7 @@ function Quotation() {
 
             <div>
               <button 
+               onClick={handleCreateQuotation}
                  type="submit" 
                  class="flex items-center w-full justify-center bg-white px-3 py-1.5 text-sm font-semibold text-orange-600 border border-[#648D68] shadow-sm hover:bg-[#648D68] hover:text-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#648D68]">
                 <img src={Add} alt="Add" class="mr-2" /> 
@@ -341,6 +348,8 @@ function Quotation() {
                 </div>
             </div>
               </div>
+            )}
+              </>
     )
 }
 

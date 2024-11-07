@@ -10,7 +10,7 @@ import CryptoJS from "crypto-js";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-import ProductDetails from "./Product Pages/ProductDetails";
+
 
 function App() {
 
@@ -30,7 +30,7 @@ function App() {
 
 
   useEffect(() => {
-    if (tokenAccessDenied == 204 || tokenAccessDenied == 403) {
+    if ( tokenAccessDenied == 403) {
       dispatch({ type: 'LOG-OUT' })
       setSuccess(false)
       cookies.set('access-denied', null, { path: '/', expires: new Date(0) });
@@ -77,7 +77,7 @@ function App() {
       </Routes>
     </Router>
 
-    <ProductDetails/>
+   
   
     </>
   );

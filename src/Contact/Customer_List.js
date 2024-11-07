@@ -49,7 +49,7 @@ function Customer_List() {
     useEffect(() => {
         if (state.Customer.addCustomerStatusCode == 200) {
             dispatch({ type: 'GETCUSTOMER' })
-
+            setShowAddCustomer(false);
             setTimeout(() => {
                 dispatch({ type: 'REMOVE_ADD_CUSTOMER_STATUS_CODE' })
             }, 2000)
@@ -142,13 +142,15 @@ function Customer_List() {
         setShowAddCustomer(true);
     }
 
-
+const handleCloseAddCustomer = () =>{
+    setShowAddCustomer(false);
+}
 
     return (
         <>
-            {showAddCustomer ? (
-                <AddCustomer />
-            ) : (
+            {showAddCustomer &&
+                <AddCustomer  handleClose={handleCloseAddCustomer} /> }
+          
                 <div className='h-screen bg-white p-4 w-full'>
 
                     <div className='flex justify-between items-center gap-2 mb-2.5'>
@@ -357,7 +359,7 @@ function Customer_List() {
                         </div>
                     </div>
                 </div>
-            )}
+            
         </>
     )
 }
