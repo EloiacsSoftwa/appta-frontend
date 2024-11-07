@@ -6,12 +6,12 @@ function* handleBarcodeGetProduct(args) {
 
     const response = yield call(PosGetbyBarcode, args.payload);
   
-    console.log("response",response);
+    console.log("response",response.code);
     
-    if (response && (response.status === 200 || response.code === 200)) {
+    if (response && (response.code === 200 || response.status === 200 || response.data.code === 200   )) {
         yield put({ 
           type: 'BARCODE_GET_PRODUCT_SUCCESS', 
-          payload: { data: response.data, statusCode: response.status || response.code } 
+          payload: { data: response.data, statusCode: response.status || response.data.code ||  response.code  } 
         });
     } else {
         yield put({ 

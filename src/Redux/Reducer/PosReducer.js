@@ -21,6 +21,7 @@ const PosReducer = (state = initialState, action) => {
         BarcodeproductData:  action.payload.data,
         barcodeStatuscode: action.payload.statusCode,
       };
+    
 
     case 'BARCODE_GET_PRODUCT_FAILURE':
       return {

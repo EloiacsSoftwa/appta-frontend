@@ -14,6 +14,7 @@ import Modal from '@mui/material/Modal';
 import {  FormControlLabel, Checkbox } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import AddCustomer from '../Contact/AddCustomer';
+import { Setting } from 'iconsax-react';
 
 
 
@@ -75,6 +76,8 @@ import AddCustomer from '../Contact/AddCustomer';
     //       });
     //     }
     //   };
+
+
     const handleProductUpdate = (productData) => {
         if (productData && productData.productId && productData.quantity >= 0) {
           setPosData((prevData) => {
@@ -131,7 +134,8 @@ import AddCustomer from '../Contact/AddCustomer';
       
       const handleSearchChange = (e) => {
         setSearchQuery(e.target.value.toLowerCase());
-        setSelectedProductId(null); // Reset productId on new search
+        
+        // setSelectedProductId(searchQuery); // Reset productId on new search
       };
       
       // Filter `ProductList` based on search query
@@ -144,12 +148,42 @@ import AddCustomer from '../Contact/AddCustomer';
       const [searchfilterdata, setSearchFilterData] = useState(null);
       
       useEffect(() => {
-        const Productfilter = State.AddProduct.ProductList.filter((u) => u.productId === selectedProductId);
-        if (Productfilter && Productfilter.length > 0) {
-          setSearchFilterData(Productfilter[0]);
+        if(selectedProductId){
+
+          dispatch({ type: 'BARCODE_GET_PRODUCT', payload: selectedProductId });
+          // const Productfilter = State.AddProduct?.ProductList?.filter((u) => u.productId == selectedProductId);
+          // console.log("Productfilter",Productfilter)
+          // if (Productfilter && Productfilter.length > 0) {
+          //   setSearchFilterData(Productfilter[0]);
+          // }
+          
         }
+        
       }, [selectedProductId]);
       
+
+useEffect(()=>{
+  if(State.PosReducer.barcodeStatuscode){
+
+    setSearchFilterData(State.PosReducer.BarcodeproductData)
+
+    setTimeout(()=>{
+dispatch({ type: 'REMOVE_GET_BARCODE_PRODUCT_STATUS_CODE'})
+    },3000)
+
+
+  }
+
+},[State.PosReducer.barcodeStatuscode])
+
+
+
+      
+      console.log("state", State)
+console.log("selectedProductId",selectedProductId)
+
+console.log("filterData",searchfilterdata)
+
       useEffect(() => {
         if (searchfilterdata && searchfilterdata.productId && searchfilterdata.quantity >= 0) {
           handleProductUpdate(searchfilterdata); // Correctly update posdata
@@ -373,7 +407,7 @@ console.log("Search Filter Data:", searchfilterdata);
           className="p-2 hover:bg-gray-100 cursor-pointer"
           onClick={() => {
             setSearchQuery('');
-            setSelectedProductId(item.productId);
+            setSelectedProductId(item.barcodeNo);
           }}
         >
           <div className="text-sm font-medium text-gray-900">{item.productName}</div>
