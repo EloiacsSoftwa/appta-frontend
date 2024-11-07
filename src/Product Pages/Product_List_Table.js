@@ -11,16 +11,30 @@ import SmallDot from '../Images/Sales/Smalldots.svg'
 import { ArrowRight2, ArrowLeft2, ArrowUp2, ArrowDown2 } from 'iconsax-react';
 import AddProductModal from './AddProduct';
 import { useDispatch, useSelector } from 'react-redux';
+import ProductDetails from './ProductDetails';
+import { ListItem } from '@mui/material';
 
 
-function Product_List() {
+function Product_List({item}) {
 
     // const [showModal, setShowModal] = useState(false);   
     const [currentPage, setCurrentPage] = useState(1);
     const [showModal, setShowModal] = useState(false);
     const [product, setProduct] = useState([])
     const [loading, setLoading] = useState(true);
+    const [showDetails, setShowDetails] = useState(false);
+const [productDetails, setProductDetails] = useState('')
 
+
+    const handleClick = (item) => {
+      setShowDetails(true);
+      setProductDetails(item)
+    };
+
+
+    const handleCloseShowDetails = () =>{
+        setShowDetails(false);
+    }
 
     const dispatch = useDispatch();
     const state = useSelector(state => state);
@@ -286,7 +300,10 @@ function Product_List() {
                                             type="checkbox"
                                             className="form-checkbox h-4 w-4 text-blue-600 border-neutral-500 cursor-pointer"
                                         /></td>
-                                    <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{item.productName}</td>
+                                    {/* <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{item.productName}</td> */}
+                                    <td className=" cursor-pointer p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start" onClick={()=>handleClick(item)}>
+                                        <span className="underline decoration-orange-500 underline-offset-4 ">{item.productName}</span>
+                                    </td>
                                     <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{item.productId}</td>
                                     <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{item.statusType}</td>
                                     <td className='p-2 font-semibold text-sm font-Manrope text-start text-neutral-900 '>
@@ -329,6 +346,13 @@ function Product_List() {
                 </div>
             </div>
             {showModal && <AddProductModal onClose={() => setShowModal(false)} />}
+            {showDetails && (
+        
+          <ProductDetails  productDetails={productDetails} handleClose={handleCloseShowDetails} />
+        
+      )}
+
+      
         </div>
     )
 }
