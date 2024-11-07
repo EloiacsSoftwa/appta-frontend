@@ -10,7 +10,7 @@ import CryptoJS from "crypto-js";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-import ProductDetails from "./Product Pages/ProductDetails";
+
 
 function App() {
 
@@ -77,7 +77,7 @@ function App() {
       </Routes>
     </Router>
 
-    <ProductDetails/>
+   
   
     </>
   );
