@@ -58,35 +58,7 @@ import { Setting } from 'iconsax-react';
        const [productid , setProductId] = useState('')
 
        const [posdata, setPosData] = useState([]);
-    //    const [posdata, setPosData] = useState([]);
-
-       // Function to update or add product in posdata (either from barcode or search)
-    //    const handleProductUpdate = (productData) => {
-    //     if (productData && productData.productId && productData.quantity >= 0) {
-    //       setPosData((prevData) => {
-    //         // Check if the product already exists in posdata
-    //         const existingProductIndex = prevData.findIndex((item) => item.productId === productData.productId);
-    //       console.log("existingProductIndex",existingProductIndex);
-          
-             
-    //         if (existingProductIndex !== -1) {
-    //           // If the product exists, update the quantity
-    //           const updatedData = [...prevData];
-    //          console.log("updatedData",updatedData);
-             
-    //           // Add the quantity to the existing quantity (do not multiply)
-    //          var new_data= updatedData[existingProductIndex].quantity + productData.quantity; // Correctly adding the new quantity
-    //          console.log("new_data",new_data);
-             
-    //           return updatedData;
-    //         } else {
-    //           // If product doesn't exist, add the product to posdata with its quantity from the API
-    //           return [...prevData, { ...productData, quantity: productData.quantity }];
-    //         }
-    //       });
-    //     }
-    //   };
-
+  
 
    
       
@@ -113,16 +85,13 @@ import { Setting } from 'iconsax-react';
         setSelectedProductId(item)
      }
 
-      // State for selected productId
       
       const handleSearchChange = (e) => {
         setSearchQuery(e.target.value.toLowerCase());
         
-        // setSelectedProductId(searchQuery); // Reset productId on new search
       };
       
-      // Filter `ProductList` based on search query
-      const filteredData = State.AddProduct?.ProductList?.filter((item) =>
+      const filteredData =State.AddProduct?.ProductList && State.AddProduct?.ProductList?.filter((item) =>
         item?.productName?.toLowerCase().includes(searchQuery) ||
         item?.barcodeNo?.toLowerCase().includes(searchQuery)
       ) || [];
@@ -144,7 +113,6 @@ import { Setting } from 'iconsax-react';
         if (State.AddProduct.getFreebieName && Array.isArray(State.AddProduct.getFreebieName) && State.AddProduct.getFreebieName.length > 0) {
             console.log("getFreebieName updated", State.AddProduct.getFreebieName);
             
-            // Iterate over each item in the array and send it to handleProductUpdate
             State.AddProduct.getFreebieName.forEach((productData) => {
                 handleProductUpdate(productData);
             });
@@ -153,16 +121,7 @@ import { Setting } from 'iconsax-react';
     
       
 
-// useEffect(()=>{
-//   if(State.PosReducer.barcodeStatuscode){
-    
-//     handleProductUpdate(State.PosReducer.BarcodeproductData)
-//   }
-//   setTimeout(()=>{
-//     dispatch({ type: 'REMOVE_GET_BARCODE_PRODUCT_STATUS_CODE'})
-//      },1000)
 
-// },[State.PosReducer.barcodeStatuscode,selectedProductId , State.PosReducer.BarcodeproductData])
 
 
 
@@ -181,49 +140,37 @@ console.log("filterData",searchfilterdata)
   
 
     const handleProductUpdate = (productData) => {
-
-        console.log("productData",productData);
+        console.log("productData", productData);
         
-        if (productData && productData.productId && productData.quantity >= 0) {
-          setPosData((prevData) => {
-            // Check if the product already exists in posdata
-            const existingProductIndex = prevData.findIndex((item) => item.productId === productData.productId);
-      
-            console.log("existingProductIndex", existingProductIndex);
-      
-            if (existingProductIndex !== -1) {
-              // If the product exists, update the quantity
-              const updatedData = [...prevData];
-              console.log("updatedData before quantity update", updatedData);
-      
-              // Correctly add the new quantity to the existing quantity
-              updatedData[existingProductIndex] = {
-                ...updatedData[existingProductIndex],
-                quantity: updatedData[existingProductIndex].quantity + productData.quantity, // Correct quantity update
-              };
-      
-              console.log("updatedData after quantity update", updatedData);
-              const totalAmount = updatedData.reduce((acc, item) => {
-                return acc + (item.quantity * item.wholesalePrice); // Sum up the total amount
-              }, 0);
-
-              setTotalAmount(totalAmount)
-              console.log("totalAmount:", totalAmount);
-              // Return the updated data
-              return updatedData;
-
-              
-            } else {
-              // If product doesn't exist, add the product to posdata with its quantity from the API
-              return [...prevData, { ...productData, quantity: productData.quantity }];
-            }
-          });
-
-          
+        if (productData && productData.productId) {
+            setPosData((prevData) => {
+               
+                const existingProductIndex = prevData.findIndex((item) => item.productId === productData.productId);
+    
+                if (existingProductIndex !== -1) {
+                  
+                    const updatedData = [...prevData];
+                    updatedData[existingProductIndex] = {
+                        ...updatedData[existingProductIndex],
+                        quantity: updatedData[existingProductIndex].quantity + 1, 
+                    };
+    
+                   
+                    const totalAmount = updatedData.reduce((acc, item) => acc + (item.quantity * item.wholesalePrice), 0);
+                    setTotalAmount(totalAmount);
+                    console.log("Updated totalAmount:", totalAmount);
+    
+                    return updatedData;
+    
+                } else {
+                    return [...prevData, { ...productData, quantity: 1 }];
+                }
+            });
         }
-      };
+    };
+    
       
-      // Dispatch actions to get products and customers
+  
       useEffect(() => {
         dispatch({ type: 'GETPRODUCT' });
         dispatch({ type: 'GETCUSTOMER' });
@@ -240,71 +187,7 @@ console.log("Search Filter Data:", searchfilterdata);
 
 
 
-    //    const BarcodeGetData = () => {
-        
-    //     dispatch({ type: 'BARCODE_GET_PRODUCT', payload: barcode });
-    //    setTimeout(() => {
-    //     if (State.PosReducer.BarcodeproductData && State.PosReducer.BarcodeproductData != '') {
-    //         setPosData([State.PosReducer.BarcodeproductData]); 
-    //     }
-    //    }, 200);
-       
-        
-      
-    //   };
-      
-    //   useEffect(() => {
-    //     if (State.PosReducer.BarcodeproductData && State.PosReducer.BarcodeproductData !== '' && State.PosReducer.BarcodeproductData !== undefined) {
-    //         setPosData(prevData => {
-    //             // Add new valid data and filter out invalid entries (e.g., '', undefined)
-    //             const updatedData = [...prevData, State.PosReducer.BarcodeproductData].filter(item => item != '' && item != undefined && item != "undefined");
-    //             return updatedData;
-    //         });
-    //     }
-    // }, [State.PosReducer.BarcodeproductData]);
-      
-      
-    //   useEffect(()=> {
-    //     dispatch({ type: 'GETPRODUCT'});
-    //     dispatch({ type: 'GETCUSTOMER'});
-             
-    //   },[])
-
-    //   const [searchQuery, setSearchQuery] = useState('');
-    //   const [selectedProductId, setSelectedProductId] = useState(null); // New state for productId
-      
-    //   console.log("selectedProductId", selectedProductId);
-      
-      // Handle search input changes
-    //   const handleSearchChange = (e) => {
-    //     setSearchQuery(e.target.value.toLowerCase());
-    //     setSelectedProductId(null); // Reset productId on new search
-    //   };
-      
-    //   // Filter `ProductList` based on search query
-    //   const filteredData = State.AddProduct.ProductList.filter(item =>
-    //     item.productName.toLowerCase().includes(searchQuery) ||
-    //     item.barcodeNo.toLowerCase().includes(searchQuery)
-    //   );
-      
-    //   const [searchfilterdata, setSearchFilterData] = useState(null); // Default to null for better validation
-    //   console.log("Productfilter", searchfilterdata);
-      
-    //   // Update searchfilterdata when selectedProductId changes
-    //   useEffect(() => {
-    //     const Productfilter = State.AddProduct.ProductList.filter((u) => u.productId === selectedProductId);
-    //     if (Productfilter && Productfilter.length > 0) {
-    //       setSearchFilterData(Productfilter[0]);
-    //     }
-    //   }, [selectedProductId]);
-      
-    //   // Update posdata with valid searchfilterdata
-    //   useEffect(() => {
-    //     if (searchfilterdata && Object.keys(searchfilterdata).length > 0) {
-    //       // Ensure the data is valid (not empty or undefined)
-    //       setPosData((prevData) => [...prevData, searchfilterdata]);
-    //     }
-    //   }, [searchfilterdata]);
+ 
       
       
 
@@ -321,7 +204,7 @@ console.log("Search Filter Data:", searchfilterdata);
      };
      
      
-     const filteredCustomers = State.Customer.CustomerList.filter(customer => 
+     const filteredCustomers = State.Customer.CustomerList &&  State?.Customer?.CustomerList.filter(customer => 
        customer.customerName.toLowerCase().includes(customerSearchQuery)
      );
      
@@ -338,7 +221,7 @@ console.log("Search Filter Data:", searchfilterdata);
      console.log("customerFilter",customerFilter);
      
 
-    const [showModal, setShowModal] = useState(false);
+    const [showModal, setShowModal] = useState(false);    
 
 
     const [open, setOpen] = useState(false);
@@ -371,6 +254,15 @@ console.log("Search Filter Data:", searchfilterdata);
 
 
 
+  const [cashReceived,setCashReceived] = useState('')
+  const [changeto_return,setChangeToReturn] = useState('')
+  const [receipt_number,setReceiptNumber] = useState('')
+
+  const handleCashReceived = (e) => {
+    setCashReceived(e.target.value)
+    const Return_amount = total_amount ? (total_amount - e.target.value) : 0 
+    setChangeToReturn(Return_amount)
+  }
 
     // Function to handle the create action
     const handleCreate = () => {
@@ -646,9 +538,10 @@ console.log("Search Filter Data:", searchfilterdata);
                 <div class="bg-white p-2 rounded-lg shadow-lg m-2 ">
     <div class="flex flex-row justify-between">
           <div class="flex flex-col ">
-            <p className='text-sm font-semibold font-Manrope'>{customerFilter ? customerFilter.customerName : "Robinson"}</p>
-            <p className='text-xs text-[#797979]'>{customerFilter ? customerFilter.mobile : "+91 9584 654 254"}</p>
-            <p className='text-xs text-[#797979] me-2'>{customerFilter ? customerFilter.email : "robinson@gmail.com"}</p>
+          <p className={customerFilter?.customerName ? 'text-sm font-semibold font-Manrope': 'text-xs text-[#797979]'}>
+                  {customerFilter?.customerName || "xyz"}</p>
+            <p className='text-xs text-[#797979]'>{customerFilter ? customerFilter.mobile : "+91 9876543210"}</p>
+            <p className='text-xs text-[#797979] me-2'>{customerFilter ? customerFilter.email : "xyz@gmail.com"}</p>
             </div>
           <div class="flex flex-col text-right">
 
@@ -727,7 +620,7 @@ console.log("Search Filter Data:", searchfilterdata);
 
     <div className='flex flex-row justify-between  mb-2 mt-2' >
     <p className='text-[#131313] text-sm  font-semibold font-Manrope ps-2'>Total :</p>
-    <p className='text-[#131313] text-sm  font-semibold font-Manrope pe-2'>₹ {total_amount}</p>
+    <p className='text-[#131313] text-sm  font-semibold font-Manrope pe-2'>₹ {total_amount ? total_amount : 0}</p>
     </div>
 
     <div class="border border-dotted border-black ">
@@ -735,7 +628,7 @@ console.log("Search Filter Data:", searchfilterdata);
 
     <div className='flex flex-col items-center mt-1' >
     <p className='font-semibold font-Manrope text-[#131313] font-bold text-xl '>Amount to Pay</p>
-    <p className='font-semibold font-Manrope text-[#131313] font-bold text-xl '>₹ {total_amount}</p>
+    <p className='font-semibold font-Manrope text-[#131313] font-bold text-xl '>₹ {total_amount ? total_amount : 0}</p>
     </div>
 
    </div>
@@ -853,8 +746,8 @@ console.log("Search Filter Data:", searchfilterdata);
   
  <TextField
                 label="Amount to be paid"
-                value={total_amount}
-                // onChange={handleCustomerNameChange}
+                value={total_amount ? total_amount : 0}
+                // onChange={handleTotalChange}
                 fullWidth
                 className="font-Roboto font-semibold text-xs"
                 InputLabelProps={{ shrink: true }}
@@ -874,8 +767,8 @@ console.log("Search Filter Data:", searchfilterdata);
 
 <TextField
                 label="Cash Received"
-                // value={total_amount}
-                // onChange={handleCustomerNameChange}
+                value={cashReceived}
+                onChange={handleCashReceived}
                 fullWidth
                 className="font-Roboto font-semibold text-xs"
                 InputLabelProps={{ shrink: true }}
@@ -902,7 +795,7 @@ console.log("Search Filter Data:", searchfilterdata);
 
 <TextField
                 label="Change to Return"
-                // value={total_amount}
+                value={changeto_return}
                 // onChange={handleCustomerNameChange}
                 fullWidth
                 className="font-Roboto font-semibold text-xs"
@@ -923,7 +816,7 @@ console.log("Search Filter Data:", searchfilterdata);
    
    <TextField
                 label="Receipt Number"
-                // value={total_amount}
+                value={receipt_number}
                 // onChange={handleCustomerNameChange}
                 fullWidth
                 className="font-Roboto font-semibold text-xs"
