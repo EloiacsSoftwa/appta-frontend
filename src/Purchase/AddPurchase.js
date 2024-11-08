@@ -4,7 +4,7 @@ import Add from '../Images/Vector (3).svg';
 import dropdown from '../Images/Vector (4).svg';
 import Dot from '../Images/Sales/Dots.svg';
 
-function AddPurchase() {
+function AddPurchase({handleClose}) {
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const toggleDropdown = () => {
@@ -35,7 +35,7 @@ function AddPurchase() {
           Purchases - Purchase List - <span className="text-orange-600">Add Purchases</span>
         </p>
         <div className="flex gap-2">
-          <button className="flex items-center gap-2 w-16 h-7 px-2 rounded border border-orange-600 text-orange-600 font-semibold text-sm">
+          <button onClick={handleClose} className="flex items-center gap-2 w-16 h-7 px-2 rounded border border-orange-600 text-orange-600 font-semibold text-sm">
             Cancel
           </button>
           <button className="flex items-center gap-2 w-28 h-7 px-3 rounded border border-black bg-orange-600 text-black font-semibold text-sm">

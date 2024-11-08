@@ -125,7 +125,9 @@ setShowAddInvoice(true);
 }
 
    
-
+const handleCloseAddInvoice = () => {
+    setShowAddInvoice(false);
+}
    
 
 
@@ -138,7 +140,7 @@ setShowAddInvoice(true);
     return (
         <>
            {showAddInvoice ? (
-             <AddInvoice /> 
+             <AddInvoice handleClose={handleCloseAddInvoice} /> 
             ) : (
         <div className='h-screen bg-white p-4 w-full'>
             <div className='flex justify-between items-center gap-2 mb-2.5'>

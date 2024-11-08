@@ -127,7 +127,9 @@ function Quotation() {
         }
 
 
-   
+   const handleCloseAddQuotation = () => {
+    setShowAddQuotation(false)
+   }
 
    
 
@@ -141,7 +143,7 @@ function Quotation() {
     return (
         <>
         {showAddQuotation ? (
-             <AddQuotation /> 
+             <AddQuotation handleClose={handleCloseAddQuotation} /> 
             ) : (
         <div className='h-screen bg-white p-4 w-full'>
             <div className='flex justify-between items-center gap-2 mb-2.5'>
