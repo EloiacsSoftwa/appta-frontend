@@ -102,7 +102,7 @@ useEffect(() => {
     ));
 
   const renderMenuItem = (icon, title, submenuItems) => (
-    <li key={title}>
+    <li key={title} className="">
       <div
         onClick={() => toggleSubmenu(title)}
         className="flex items-center cursor-pointer text-white pl-4 hover:bg-gray-700 rounded-md"
