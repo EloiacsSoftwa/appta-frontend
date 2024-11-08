@@ -122,10 +122,11 @@ import { Setting } from 'iconsax-react';
       };
       
       // Filter `ProductList` based on search query
-      const filteredData = State.AddProduct.ProductList.filter((item) =>
-        item.productName.toLowerCase().includes(searchQuery) ||
-        item.barcodeNo.toLowerCase().includes(searchQuery)
-      );
+      const filteredData = State.AddProduct?.ProductList?.filter((item) =>
+        item?.productName?.toLowerCase().includes(searchQuery) ||
+        item?.barcodeNo?.toLowerCase().includes(searchQuery)
+      ) || [];
+      
       
       
       const [searchfilterdata, setSearchFilterData] = useState(null);

@@ -292,7 +292,7 @@ const [productDetails, setProductDetails] = useState('')
                             </tr>
                         </thead>
                         <tbody>
-                            {currentItems.map((item, index) => (
+                            {currentItems && currentItems.length > 0 && currentItems.map((item, index) => (
                                 <tr key={index} className="hover:bg-gray-50 border-0">
                                     <td className="p-2 mt-1 flex items-center justify-start">
                                         <img src={SmallDot} className="mr-1.5" />
