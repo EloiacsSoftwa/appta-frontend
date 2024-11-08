@@ -103,12 +103,14 @@ function Purchase_List() {
     setShowAddPurchase(true);
   }
 
-
+const handleCloseAddPurchase = () => {
+    setShowAddPurchase(false)
+}
 
     return (
         <>
         {showAddPurchase ? (
-             <AddPurchase /> 
+             <AddPurchase handleClose={handleCloseAddPurchase} /> 
             ) : (
         <div className='h-screen bg-white p-4 w-full'>
 
