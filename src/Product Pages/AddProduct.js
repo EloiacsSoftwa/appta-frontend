@@ -166,97 +166,104 @@ const ProductDetailsForm = ({ handleNext, formData, setFormData }) => {
             dispatch({ type: "GETFREEBIENAME", payload: e.target.value })
         }, 4000);
     }
+    const handleSubmit = () => {
+        setFormData({ ...formData, billOfMaterialsList: [] })
+        let temp = { ...formData, billOfMaterialsList: [] }
+        console.log(temp);
+        dispatch({ type: "ADDPRODUCTDETAILS", payload: temp })
+    }
     return (
-        <form className="flex-col flex-wrap gap-4" onSubmit={(e) => { e.preventDefault(); handleNext(); }}>
+        // onSubmit={(e) => { e.preventDefault(); handleNext(); }}
+        <form className="flex-col flex-wrap gap-4" >
             <div className="flex flex-row flex-wrap gap-4">
-            <div className="relative w-40 h-40 flex-shrink-0">
-                <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleImageChange}
-                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                />
-                <div className="w-full h-full border border-dashed border-gray-300 rounded-md bg-gray-100 flex items-center justify-center cursor-pointer overflow-hidden">
-                    {formData.images != "" ? (
-                        <img src={formData.images} alt="Uploaded" className="object-cover w-full h-full" />
-                    ) : (
-                        <span className="text-gray-400 text-sm">+ Add image</span>
-                    )}
-                </div>
-                <div className="flex items-center mt-2">
+                <div className="relative w-40 h-40 flex-shrink-0">
                     <input
-                        type="checkbox"
-                        name="isChecked"
-                        checked={formData.freebie}
-                        onChange={handleInputChange}
-                        className="h-4 w-4 text-orange-600 border-gray-300 rounded focus:ring-orange-500"
+                        type="file"
+                        accept="image/*"
+                        onChange={handleImageChange}
+                        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                     />
-                    <label className="ml-2 text-sm font-medium text-gray-700 cursor-pointer" onClick={handleInputChange}>Freebie</label>
-                </div>
-                <div>
-                    <label className="text-left text-sm font-medium text-gray-700">Name</label>
-                    <input type="text" name="productName" value={formData.Name} onChange={(e) => { handleFreebieName(e) }} className="mt-1 block w-full border border-gray-300 rounded-md h-9" placeholder="Freebie" />
-                </div>
-            </div>
-
-            <div className="flex flex-col flex-1 gap-4">
-                <div className="flex flex-row flex-1 gap-4">
-                    <div className="flex-1">
-                        <label className="text-left block text-sm font-medium text-gray-700">Product Type</label>
-                        <select name="productType" value={formData.productId} onChange={(e) => { setFormData({ ...formData, productId: e.target.value, statusTypeId: e.target.value, billOfMaterials: e.target.value == 2 ? true : false }) }} className="mt-1 block w-full border border-gray-300 rounded-md h-9">
-                            <option value={1}>Tracked</option>
-                            <option value={2}>Bill Of Materials</option>
-                        </select>
-
+                    <div className="w-full h-full border border-dashed border-gray-300 rounded-md bg-gray-100 flex items-center justify-center cursor-pointer overflow-hidden">
+                        {formData.images != "" ? (
+                            <img src={formData.images} alt="Uploaded" className="object-cover w-full h-full" />
+                        ) : (
+                            <span className="text-gray-400 text-sm">+ Add image</span>
+                        )}
                     </div>
-
-                    <div className="flex-1">
-
+                    <div className="flex items-center mt-2">
+                        <input
+                            type="checkbox"
+                            name="isChecked"
+                            checked={formData.freebie}
+                            onChange={handleInputChange}
+                            className="h-4 w-4 text-orange-600 border-gray-300 rounded focus:ring-orange-500"
+                        />
+                        <label className="ml-2 text-sm font-medium text-gray-700 cursor-pointer" onClick={handleInputChange}>Freebie</label>
                     </div>
-                </div>
-                <div className="flex gap-4">
-                    <div className="flex-1">
-                        <label className="text-left block text-sm font-medium text-gray-700">Product Name</label>
-                        <input type="text" name="productName" value={formData.productName} onChange={(e) => { setFormData({ ...formData, productName: e.target.value }) }} className="mt-1 block w-full border border-gray-300 rounded-md h-9" placeholder="Watch" />
-                    </div>
-                    <div className="flex-1">
-                        <label className="text-left block text-sm font-medium text-gray-700">Brand</label>
-                        <select name="subCategory" value={formData.brandId} onChange={(e) => { setFormData({ ...formData, brandId: e.target.value }) }} className="mt-1 block w-full border border-gray-300 rounded-md h-9">
-                            <option>Select Brand</option>
-                            {state.AddProduct?.brands && state.AddProduct.brands.map((v, i) => (
-                                <option key={v.id} value={v.id}>{v.brandName}</option>
-                            ))}
-                        </select>
+                    <div>
+                        <label className="text-left text-sm font-medium text-gray-700">Name</label>
+                        <input type="text" name="productName" value={formData.Name} onChange={(e) => { handleFreebieName(e) }} className="mt-1 block w-full border border-gray-300 rounded-md h-9" placeholder="Freebie" />
                     </div>
                 </div>
 
-                <div className="flex gap-4">
-                    <div className="flex-1">
-                        <label className="text-left block text-sm font-medium text-gray-700">Category</label>
-                        <select name="category" value={formData.categoryId} onChange={(e) => {
-                            setFormData({ ...formData, categoryId: e.target.value })
-                            handleSelectCategory(e.target.value)
-                        }} className="mt-1 block w-full border border-gray-300 rounded-md h-9">
-                            <option>Select One</option>
-                            {state.AddProduct?.category && state.AddProduct.category?.map((v, i) => (
-                                <option key={v.id} value={v.id}>{v.categoryName}</option>
-                            ))}
-                        </select>
-                    </div>
-                    <div className="flex-1">
-                        <label className="text-left block text-sm font-medium text-gray-700">Sub Category</label>
-                        <select name="subCategory" value={formData.subCategoryId} onChange={(e) => { setFormData({ ...formData, subCategoryId: e.target.value }) }} className="mt-1 block w-full border border-gray-300 rounded-md h-9">
-                            <option>Select One</option>
-                            {state.AddProduct?.subcategory && state.AddProduct.subcategory.map((v, i) => (
-                                <option key={v.id} value={v.id}>{v.subCategoryName}</option>
-                            ))}
-                        </select>
-                    </div>
-                </div>
+                <div className="flex flex-col flex-1 gap-4">
+                    <div className="flex flex-row flex-1 gap-4">
+                        <div className="flex-1">
+                            <label className="text-left block text-sm font-medium text-gray-700">Product Type</label>
+                            <select name="productType" value={formData.productId} onChange={(e) => { setFormData({ ...formData, productId: e.target.value, statusTypeId: e.target.value, billOfMaterials: e.target.value == 2 ? true : false }) }} className="mt-1 block w-full border border-gray-300 rounded-md h-9">
+                                <option value={1}>Tracked</option>
+                                <option value={2}>Bill Of Materials</option>
+                            </select>
 
-                <div className="flex flex-1 flex-row">
+                        </div>
 
-                    {/* <div className="flex flex-row flex-1">
+                        <div className="flex-1">
+
+                        </div>
+                    </div>
+                    <div className="flex gap-4">
+                        <div className="flex-1">
+                            <label className="text-left block text-sm font-medium text-gray-700">Product Name</label>
+                            <input type="text" name="productName" value={formData.productName} onChange={(e) => { setFormData({ ...formData, productName: e.target.value }) }} className="mt-1 block w-full border border-gray-300 rounded-md h-9" placeholder="Watch" />
+                        </div>
+                        <div className="flex-1">
+                            <label className="text-left block text-sm font-medium text-gray-700">Brand</label>
+                            <select name="subCategory" value={formData.brandId} onChange={(e) => { setFormData({ ...formData, brandId: e.target.value }) }} className="mt-1 block w-full border border-gray-300 rounded-md h-9">
+                                <option>Select Brand</option>
+                                {state.AddProduct?.brands && state.AddProduct.brands.map((v, i) => (
+                                    <option key={v.id} value={v.id}>{v.brandName}</option>
+                                ))}
+                            </select>
+                        </div>
+                    </div>
+
+                    <div className="flex gap-4">
+                        <div className="flex-1">
+                            <label className="text-left block text-sm font-medium text-gray-700">Category</label>
+                            <select name="category" value={formData.categoryId} onChange={(e) => {
+                                setFormData({ ...formData, categoryId: e.target.value })
+                                handleSelectCategory(e.target.value)
+                            }} className="mt-1 block w-full border border-gray-300 rounded-md h-9">
+                                <option>Select One</option>
+                                {state.AddProduct?.category && state.AddProduct.category?.map((v, i) => (
+                                    <option key={v.id} value={v.id}>{v.categoryName}</option>
+                                ))}
+                            </select>
+                        </div>
+                        <div className="flex-1">
+                            <label className="text-left block text-sm font-medium text-gray-700">Sub Category</label>
+                            <select name="subCategory" value={formData.subCategoryId} onChange={(e) => { setFormData({ ...formData, subCategoryId: e.target.value }) }} className="mt-1 block w-full border border-gray-300 rounded-md h-9">
+                                <option>Select One</option>
+                                {state.AddProduct?.subcategory && state.AddProduct.subcategory.map((v, i) => (
+                                    <option key={v.id} value={v.id}>{v.subCategoryName}</option>
+                                ))}
+                            </select>
+                        </div>
+                    </div>
+
+                    <div className="flex flex-1 flex-row">
+
+                        {/* <div className="flex flex-row flex-1">
             <div className="flex-1 mr-4">
               <label className="text-left block text-sm font-medium text-gray-700">Size</label>
               <select name="productType" value={formData.sizeId} onChange={(e) => { setFormData({ ...formData, sizeId: e.target.value, statusTypeId: e.target.value }) }} className="mt-1 block w-full border border-gray-300 rounded-md">
@@ -271,25 +278,25 @@ const ProductDetailsForm = ({ handleNext, formData, setFormData }) => {
             </div>
           </div> */}
 
-                </div>
-
-                <div className="flex gap-4">
-
-                    <div className="flex-1">
-                        <label className="text-left block text-sm font-medium text-gray-700">Unit</label>
-                        <select name="unit" value={formData.unitId} onChange={(e) => { setFormData({ ...formData, unitId: e.target.value }) }} className="mt-1 block w-full border border-gray-300 rounded-md h-9">
-                            <option>Select Unit</option>
-                            {state.AddProduct?.units && state.AddProduct.units.map((v, i) => (
-                                <option key={v.id} value={v.id}>{v.unitSmall} - {v.unitName}</option>
-                            ))}
-                        </select>
-                    </div>
-                    <div className="flex-1">
-                        <label className="text-left block text-sm font-medium text-gray-700">Product Threshold</label>
-                        <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md h-9" placeholder="Brand" value={formData.threshold} onChange={(e) => { setFormData({ ...formData, threshold: e.target.value }) }} />
                     </div>
 
-                    {/* <div className="flex gap-4">
+                    <div className="flex gap-4">
+
+                        <div className="flex-1">
+                            <label className="text-left block text-sm font-medium text-gray-700">Unit</label>
+                            <select name="unit" value={formData.unitId} onChange={(e) => { setFormData({ ...formData, unitId: e.target.value }) }} className="mt-1 block w-full border border-gray-300 rounded-md h-9">
+                                <option>Select Unit</option>
+                                {state.AddProduct?.units && state.AddProduct.units.map((v, i) => (
+                                    <option key={v.id} value={v.id}>{v.unitSmall} - {v.unitName}</option>
+                                ))}
+                            </select>
+                        </div>
+                        <div className="flex-1">
+                            <label className="text-left block text-sm font-medium text-gray-700">Product Threshold</label>
+                            <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md h-9" placeholder="Brand" value={formData.threshold} onChange={(e) => { setFormData({ ...formData, threshold: e.target.value }) }} />
+                        </div>
+
+                        {/* <div className="flex gap-4">
             <div className="flex-1">
               <label className="text-left block text-sm font-medium text-gray-700">Qty</label>
               <input type="number" name="qty" value={formData.quantity} onChange={(e) => { setFormData({ ...formData, quantity: e.target.value }) }} className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Qty" />
@@ -299,45 +306,51 @@ const ProductDetailsForm = ({ handleNext, formData, setFormData }) => {
               <input type="number" name="minQty" value={formData.minPurchaseQuantity} onChange={(e) => { setFormData({ ...formData, minPurchaseQuantity: e.target.value }) }} className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Min Qty" />
             </div>
           </div> */}
-                </div>
-                <div className="flex gap-4">
-                    <div className="flex-1">
-                        <label className="text-left block text-sm font-medium text-gray-700">Barcode</label>
-                        <select name="barcode" value={formData.barcodeType} onChange={(e) => { setFormData({ ...formData, barcodeType: e.target.value }) }} className="mt-1 block w-full border border-gray-300 rounded-md h-9">
-                            <option value={0}>Selecte one</option>
-                            <option value={1} key={1}>Auto GEnerate</option>
-                            <option value={2} key={2}>Scan code</option>
-                            <option value={3} key={3}>Manual</option>
-                        </select>
+                    </div>
+                    <div className="flex gap-4">
+                        <div className="flex-1">
+                            <label className="text-left block text-sm font-medium text-gray-700">Barcode</label>
+                            <select name="barcode" value={formData.barcodeType} onChange={(e) => { setFormData({ ...formData, barcodeType: e.target.value }) }} className="mt-1 block w-full border border-gray-300 rounded-md h-9">
+                                <option value={0}>Selecte one</option>
+                                <option value={1} key={1}>Auto GEnerate</option>
+                                <option value={2} key={2}>Scan code</option>
+                                <option value={3} key={3}>Manual</option>
+                            </select>
+                        </div>
+
+                        <div className="flex-1">
+                            {/* <label className="text-left block text-sm font-medium text-gray-700">Barcode</label> */}
+                            <input type="text" name="quantity" value={formData.barcodeNo} onChange={(e) => { setFormData({ ...formData, barcodeNo: e.target.value }) }} className="mt-6 block w-full border border-gray-300 rounded-md h-9" />
+
+                            {/* <label className="text-left block text-sm font-medium text-gray-700">Barcode</label> */}
+                            {/* <input type="number" name="quantity" value={formData.barcodeNo} onChange={(e) => { setFormData({ ...formData, barcodeNo: e.target.value }) }} className="mt-1 block w-full border border-gray-300 rounded-md" /> */}
+
+                        </div>
                     </div>
 
                     <div className="flex-1">
-                        {/* <label className="text-left block text-sm font-medium text-gray-700">Barcode</label> */}
-                        <input type="text" name="quantity" value={formData.barcodeNo} onChange={(e) => { setFormData({ ...formData, barcodeNo: e.target.value }) }} className="mt-6 block w-full border border-gray-300 rounded-md h-9" />
-
-                        {/* <label className="text-left block text-sm font-medium text-gray-700">Barcode</label> */}
-                        {/* <input type="number" name="quantity" value={formData.barcodeNo} onChange={(e) => { setFormData({ ...formData, barcodeNo: e.target.value }) }} className="mt-1 block w-full border border-gray-300 rounded-md" /> */}
-
+                        <label className="text-left block text-sm font-medium text-gray-700">description</label>
+                        <input type="text" name="quantity" value={formData.description} onChange={(e) => { setFormData({ ...formData, description: e.target.value }) }} className="mt-1 block w-full border border-gray-300 rounded-md h-100px" />
                     </div>
-                </div>
 
-                <div className="flex-1">
-                    <label className="text-left block text-sm font-medium text-gray-700">description</label>
-                    <input type="text" name="quantity" value={formData.description} onChange={(e) => { setFormData({ ...formData, description: e.target.value }) }} className="mt-1 block w-full border border-gray-300 rounded-md h-100px" />
-                </div>
-
-                {/* <div className="flex justify-end w-full bg-zinc-300">
+                    {/* <div className="flex justify-end w-full bg-zinc-300">
                     <button type="submit" className="mt-4 bg-orange-500 text-white py-2 px-4 rounded-md sm:w-auto">Next</button>
                 </div> */}
+                </div>
             </div>
-</div>
             {/* <div className="flex justify-end w-full bg-zinc-300 mt-4">
                     <button type="submit" className="mt-4 bg-orange-500 text-white py-2 px-4 rounded-md sm:w-auto">Next</button>
                 </div> */}
-                 <div className="flex justify-end mt-4 pr-4 space-x-4 bg-zinc-300 py-2 -mr-6 -ml-6 -mb-6">
-                    {/* <button className="bg-orange-500 hover:bg-gray-400 text-black font-semibold py-1 px-4 rounded" >Back</button> */}
-                    <button type="submit" className="bg-orange-500 hover:bg-orange-600 text-black font-semibold py-1 px-4 rounded" >Next</button>
-                </div>
+
+            <div className="flex justify-end mt-4 pr-4 space-x-4 bg-zinc-300 py-2 -mr-6 -ml-6 -mb-6">
+                {
+                    formData.billOfMaterials == true ?
+                        <button className="bg-orange-500 hover:bg-orange-600 text-black font-semibold py-1 px-4 rounded" onClick={handleNext}>Next</button>
+                        :
+                        <button className="bg-orange-500 hover:bg-orange-600 text-black font-semibold py-1 px-4 rounded" onClick={handleSubmit}>Submit</button>
+                }
+
+            </div>
         </form>
     );
 };
@@ -575,7 +588,7 @@ function BillOfMaterials({ handleBack, formData, setFormData }) {
     const dispatch = useDispatch();
     // , costName: 'Assemble', billOfMaterialsProductCost: 0 
     const [billOfMaterialsList, setbillOfMaterialsList] = useState([
-        { productName: 'Computer', billOfMaterialsProductId: 1, billOfMaterialsProductQuantity: 0}
+        { productName: 'Computer', billOfMaterialsProductId: 1, billOfMaterialsProductQuantity: 0 }
 
     ]);
 
@@ -604,14 +617,14 @@ function BillOfMaterials({ handleBack, formData, setFormData }) {
 
     var handleSubmit = () => {
         setFormData({ ...formData, billOfMaterialsList })
-        let temp = { ...formData, billOfMaterialsList: [...billOfMaterialsList,...additionalCosts] }
+        let temp = { ...formData, billOfMaterialsList: [...billOfMaterialsList, ...additionalCosts] }
         console.log(temp);
         const combinedObject = billOfMaterialsList.reduce((obj, keyObj, index) => {
             obj[keyObj.key] = additionalCosts[index].value;
             return obj;
-          }, {});
-          
-          console.log(combinedObject);
+        }, {});
+
+        console.log(combinedObject);
         dispatch({ type: "ADDPRODUCTDETAILS", payload: temp })
     }
 
