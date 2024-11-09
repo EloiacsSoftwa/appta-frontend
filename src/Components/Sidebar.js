@@ -28,7 +28,7 @@ import SubCategory_List from "../Product Pages/SubCategory_List";
 import Customer_List from "../Contact/Customer_List";
 import CryptoJS from "crypto-js";
 import Stock_Available from '../Inventry/Stock_Availability';
-
+import StockTransform from "../Inventry/Stock_Transform";
 
 
 function App() {
@@ -87,7 +87,7 @@ useEffect(() => {
     items.map((item) => (
       <li
         key={item}
-        className="flex items-center gap-8 text-xs font-normal font-manrope"
+        className="flex items-center gap-8 text-xs font-normal font-manrope "
         onClick={() => handleSelectedMenu(item)}
       >
         
@@ -102,10 +102,10 @@ useEffect(() => {
     ));
 
   const renderMenuItem = (icon, title, submenuItems) => (
-    <li key={title}>
+    <li key={title} className="">
       <div
         onClick={() => toggleSubmenu(title)}
-        className="flex items-center cursor-pointer text-white pl-4 hover:bg-gray-700 rounded-md"
+        className="flex items-center cursor-pointer text-white pl-4 pt-1.5 pb-1.5 hover:bg-gray-700 rounded-md"
       >
         <img src={icon} alt={`${title} Icon`} className="w-5 h-5" />
         {isExpanded && <span className="ml-6 text-base font-normal font-manrope">{title}</span>}
@@ -311,6 +311,12 @@ useEffect(() => {
           {selectedMenu === 'Customer' && (
             <div className="bg-white mt-2">
               <Customer_List />
+            </div>
+          )}
+
+{selectedMenu === 'Stock Transfer' && (
+            <div className="">
+              <StockTransform />
             </div>
           )}
 

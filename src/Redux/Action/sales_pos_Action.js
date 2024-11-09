@@ -15,4 +15,10 @@ export async function PosGetbyBarcode(barcode) {
       return null;
     }
   }
+
+
+  export async function CreateOrder() {
+    return await AxiosConfig.post('/order/createOrder',{
+            })
+  }
   

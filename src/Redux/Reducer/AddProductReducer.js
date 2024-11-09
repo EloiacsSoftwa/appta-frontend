@@ -14,7 +14,10 @@ const initialState = {
   getProductStatusCode: 0,
   units: [],
   getFreebieName :[],
-  getFreebieStatusCode :0
+  getFreebieStatusCode :0,
+  // Get product by name
+  ProductByName: [],
+  getProductByNameStatusCode: 0
 };
 
 const AddProductReducer = (state = initialState, action) => {
@@ -59,6 +62,10 @@ const AddProductReducer = (state = initialState, action) => {
     case 'GET_FREEBIE_NAME':
         return { ...state, getFreebieStatusCode: action.payload.statusCode, getFreebieName: action.payload.response };
       
+      // Get product by name
+    case 'GET_PRODUCT_DETAILS_BY_ID':
+      return { ...state, ProductByName: action.payload.response, getProductByNameStatusCode: action.payload.statusCode }
+    
 
     default:
       return state;
