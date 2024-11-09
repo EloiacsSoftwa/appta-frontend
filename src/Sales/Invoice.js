@@ -152,7 +152,8 @@ const handleCloseAddInvoice = () => {
               <button 
               onClick={handleCreateInvoice}
                  type="submit" 
-                 class="flex items-center w-full justify-center bg-white px-3 py-1.5 text-sm font-semibold text-orange-600 border border-[#648D68] shadow-sm hover:bg-[#648D68] hover:text-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#648D68]">
+                 className='cursor-pointer flex items-center gap-2 w-auto h-auto text-orange-600 border border-orange-600 rounded px-2 py-1 font-Manrope font-semibold text-sm '
+                >
                 <img src={Add} alt="Add" class="mr-2" /> 
                  Create Invoice
                </button>
