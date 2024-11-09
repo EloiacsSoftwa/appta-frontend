@@ -26,6 +26,7 @@ import BrandList from "../Brand Pages/BrandList";
 import Pos from "../Sales/Pos";
 import SubCategory_List from "../Product Pages/SubCategory_List";
 import Customer_List from "../Contact/Customer_List";
+import SupplierTable from '../Contact/SupplierTable';
 import CryptoJS from "crypto-js";
 import Stock_Available from '../Inventry/Stock_Availability';
 import StockTransform from "../Inventry/Stock_Transform";
@@ -311,6 +312,11 @@ useEffect(() => {
           {selectedMenu === 'Customer' && (
             <div className="bg-white mt-2">
               <Customer_List />
+            </div>
+          )}
+           {selectedMenu === 'Supplier' && (
+            <div className="bg-white mt-2">
+              <SupplierTable />
             </div>
           )}
 
