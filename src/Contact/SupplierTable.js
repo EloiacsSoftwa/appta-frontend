@@ -1,20 +1,21 @@
 // import React, { useState } from 'react';
-// import Frame1 from '../Images/Sales/Frame.svg'
-// import Frame2 from '../Images/Sales/Frame2.svg'
-// import Frame3 from '../Images/Sales/Frame 3.svg'
-// import Frame4 from '../Images/Sales/Frame4.svg'
-// import Search from '../Images/Sales/Search.svg'
+// import { useDispatch, useSelector } from 'react-redux';
+// import Frame1 from '../Images/Sales/Frame.svg';
+// import Frame2 from '../Images/Sales/Frame2.svg';
+// import Frame3 from '../Images/Sales/Frame 3.svg';
+// import Frame4 from '../Images/Sales/Frame4.svg';
+// import Search from '../Images/Sales/Search.svg';
 // import Dot from '../Images/Sales/Dots.svg';
 // import Add from '../Images/Sales/Add Green.svg';
-// import SmallDot from '../Images/Sales/Smalldots.svg'
+// import SmallDot from '../Images/Sales/Smalldots.svg';
+// import Circle_Minus from '../Images/Icons/Circle_Minus.svg';
 // import { ArrowRight2, ArrowLeft2, ArrowUp2, ArrowDown2 } from 'iconsax-react';
-// import Supplier_Tabs from './Supplier_Tabs'
+// import Supplier_Tabs from './Supplier_Tabs';
 
-// function SupplierTable({item}) {
+// function SupplierTable() {
 //     const [currentPage, setCurrentPage] = useState(1);
 //     const [showModal, setShowModal] = useState(false);
-//     const [showDetails, setShowDetails] = useState(false);
-//     const [supplierforms, setSupplierforms] = useState('');
+//     const [supplierforms, setSupplierforms] = useState(null);
 
 //     const handleClick = (item) => {
 //         setShowModal(true);
@@ -22,8 +23,8 @@
 //     };
 
 //     const handleCloseShowDetails = () => {
-//         setShowDetails(false);
 //         setShowModal(false);
+//         setSupplierforms(null);
 //     };
 
 //     const reports = [
@@ -60,17 +61,20 @@
 
 //     return (
 //         <div className='h-screen bg-white p-4 w-full'>
+          
 //             <div className='flex justify-between items-center gap-2 mb-3'>
 //                 <div>
 //                     <label className='font-semibold text-22 text-neutral-900 font-Manrope'>Contacts - </label> 
 //                     <label className='font-bold text-22 text-orange-600 font-Manrope'> Supplier</label>
 //                 </div>
-//                 <div onClick={() => setShowModal(true)} className='cursor-pointer flex items-center gap-2 w-auto h-auto text-orange-600 border border-orange-600 rounded px-2 py-1'>
+//                 <div onClick={() => setShowModal(true)} className='cursor-pointer flex justify-between items-center gap-2 w-auto h-auto text-orange-600 border border-orange-600 rounded px-2 py-1'>
 //                     <img src={Add} className='w-4 h-4' />
 //                     <label className="cursor-pointer text-sm text-orange-600 font-semibold font-Manrope">Add Supplier</label>
+                   
 //                 </div>
 //             </div>
 
+//             {/* Reports section */}
 //             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 md:grid-cols-3 gap-x-7 gap-y-4 mb-6">
 //                 {reports.map((report, index) => (
 //                     <div key={index} className="bg-white p-4 rounded-xl shadow-custom">
@@ -83,6 +87,7 @@
 //                 ))}
 //             </div>
 
+//             {/* Table section */}
 //             <div className="bg-white rounded-lg shadow-custom overflow-x-auto">
 //                 <div className="flex items-center justify-between p-4 border-b">
 //                     <div className="flex items-center gap-2">
@@ -167,17 +172,14 @@
 //     <th className="p-1 font-semibold text-base text-neutral-900  min-w-[40px]"></th>
 // </tr>
 // </thead>
-
-                    
 //                     <tbody>
 //                         {currentItems.map((item, index) => (
-//                             <tr key={index} className="hover:bg-gray-50">
+//                             <tr key={index} className="hover:bg-gray-50" onClick={() => handleClick(item)}>
 //                                 <td className="p-3 flex items-center">
 //                                     <img src={SmallDot} className="mr-1.5" />
 //                                     <input type="checkbox" className="form-checkbox h-4 w-4 text-blue-600 border-neutral-500 cursor-pointer" />
 //                                 </td>
-//                                 <td className="cursor-pointer p-2 font-semibold text-sm font-Manrope text-neutral-900">{item.SupplierCode}
-//                                 </td>
+//                                 <td className="cursor-pointer p-2 font-semibold text-sm font-Manrope text-neutral-900">{item.SupplierCode}</td>
 //                                 <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900">{item.SupplierName}</td>
 //                                 <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900">{item.Status}</td>
 //                                 <td className='p-2 font-semibold text-sm font-Manrope text-neutral-900'>{item.ContactNumber}</td>
@@ -189,34 +191,22 @@
 //                 </table>
 
 //                 <div className="flex items-center justify-center space-x-3 mt-10 mb-5">
-//                     <ArrowLeft2 className='cursor-pointer' size="16" color="#797979" onClick={handlePrevClick} disabled={currentPage === 1} />
+//                     <ArrowLeft2 className='cursor-pointer' size="16" color="#797979" onClick={handlePrevClick} />
 //                     <span className="font-bold text-neutral-900 text-xs">
 //                         <span className="font-bold text-xs text-neutral-900">{String(currentPage).padStart(2, '0')}</span> of {totalPages.toString().padStart(2, '0')}
 //                     </span>
-//                     <ArrowRight2 className='cursor-pointer' size="16" color="#797979" onClick={handleNextClick} disabled={currentPage === totalPages} />
+//                     <ArrowRight2 className='cursor-pointer' size="16" color="#797979" onClick={handleNextClick} />
 //                 </div>
 //             </div>
 
-//             {showDetails && (
-//                 <div className="absolute top-0 left-0 w-full h-full flex justify-center items-center bg-black bg-opacity-50">
-//                     <div className="bg-white p-4 rounded-lg">
-//                         <button onClick={handleCloseShowDetails} className="text-gray-600">Close</button>
-
-//                         <p>Supplier Code: {supplierforms.SupplierCode}</p>
-//                         <p>Supplier Name: {supplierforms.SupplierName}</p>
-//                         <p>Status: {supplierforms.Status}</p>
-//                         <p>Contact Number: {supplierforms.ContactNumber}</p>
-//                         <p>Email: {supplierforms.Email}</p>
+           
+//             {showModal && (
+//                 <div className="fixed inset-0 left-44 flex items-center justify-center bg-black bg-opacity-50">
+//                     <div className="">
+//                         <Supplier_Tabs supplierforms={supplierforms} handleClose={handleCloseShowDetails} />
 //                     </div>
 //                 </div>
 //             )}
-
-
-//             {showDetails && (
-        
-//           <Supplier_Tabs  supplierforms={supplierforms} handleClose={handleCloseShowDetails} />
-        
-//       )}
 //         </div>
 //     );
 // }
@@ -225,12 +215,8 @@
 
 
 
-
-
-
-
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import Frame1 from '../Images/Sales/Frame.svg';
 import Frame2 from '../Images/Sales/Frame2.svg';
 import Frame3 from '../Images/Sales/Frame 3.svg';
@@ -239,7 +225,6 @@ import Search from '../Images/Sales/Search.svg';
 import Dot from '../Images/Sales/Dots.svg';
 import Add from '../Images/Sales/Add Green.svg';
 import SmallDot from '../Images/Sales/Smalldots.svg';
-import Circle_Minus from '../Images/Icons/Circle_Minus.svg';
 import { ArrowRight2, ArrowLeft2, ArrowUp2, ArrowDown2 } from 'iconsax-react';
 import Supplier_Tabs from './Supplier_Tabs';
 
@@ -247,6 +232,9 @@ function SupplierTable() {
     const [currentPage, setCurrentPage] = useState(1);
     const [showModal, setShowModal] = useState(false);
     const [supplierforms, setSupplierforms] = useState(null);
+    const [showAddSupplier, setShowAddSupplier] = useState(false);
+    const [loading, setLoading] = useState(true);
+    const [supplier, setSupplier] = useState([]);
 
     const handleClick = (item) => {
         setShowModal(true);
@@ -257,6 +245,45 @@ function SupplierTable() {
         setShowModal(false);
         setSupplierforms(null);
     };
+
+    const dispatch = useDispatch();
+    const state = useSelector(state => state);
+
+    
+
+    useEffect(() => {
+        dispatch({ type: 'GETSUPPLIER' })
+    }, [])
+
+    console.log("state", state)
+
+
+    useEffect(() => {
+        if (state.Supplier.getSupplierrStatusCode == 200) {
+            setLoading(false)
+            setSupplier(state.Supplier.SupplierList)
+            setTimeout(() => {
+                dispatch({ type: 'REMOVE_GET_SUPPLIER_STATUS_CODE' })
+            }, 2000)
+        }
+
+    }, [state.Supplier.getSupplierStatusCode])
+
+
+
+
+    useEffect(() => {
+        if (state.Supplier.addSupplierStatusCode == 200) {
+            dispatch({ type: 'GETSUPPLIER' })
+            setShowAddSupplier(false);
+            setTimeout(() => {
+                dispatch({ type: 'REMOVE_ADD_SUPPLIER_STATUS_CODE' })
+            }, 2000)
+        }
+
+    }, [state.Supplier.addSupplierStatusCode])
+
+
 
     const reports = [
         { title: "Total Products", value: "2,420" },
@@ -442,4 +469,4 @@ function SupplierTable() {
     );
 }
 
-export default SupplierTable;
+export default SupplierTable;  
