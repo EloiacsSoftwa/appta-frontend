@@ -32,6 +32,7 @@ function AddPurchase({ handleClose }) {
   const [ productId, setProductID] =useState([])
   const [selectedOption, setSelectedOption] = useState('');
   const [showProductDropdown, setShowProductDropdown] = useState([]);
+  const [productIDWithName, setProductIDWithName] = useState('')
 
   // const [addCharges, setAddCharges] = useState(0);
   // const [globalDiscount, setGlobalDiscount] = useState(0);
@@ -122,7 +123,8 @@ const handleInputChange = (e, field, index) => {
 
   const { Quantity, PurchasePrice } = updatedProducts[index];
   updatedProducts[index].Total = Quantity * PurchasePrice;
-
+  console.log("Updated Products:", updatedProducts);
+  setProductIDWithName(updatedProducts[0]?.Product)
   setProducts(updatedProducts);
 };
 
@@ -171,27 +173,35 @@ const handleInputChange = (e, field, index) => {
 
 
 useEffect(() => {
-  const delayDebounceFn = setTimeout(() => {
-    if (products[0]?.Product) {
-      dispatch({
-        type: 'GET_PRODUCT_BY_NAME',
-        payload: { productName: products[0].Product },
-      });
-      console.log("Dispatched with Product:", products[0].Product);
-    }
-  }, 500);
- 
-  return () => clearTimeout(delayDebounceFn);
-}, [products]);
+  
+    // if (productIDWithName) {
+    //   dispatch({
+    //     type: 'GET_PRODUCT_BY_NAME',
+    //     payload: { productName: productIDWithName },
+    //   });
+    //       }
+if(productIDWithName){
+  const filteredProduct = state.AddProduct.ProductList.filter((product) => {
+    return product.productName.toLowerCase().includes(productIDWithName.toLowerCase());
+  });
+  
+  console.log('filteredProduct', filteredProduct);
+  setProductID(filteredProduct)
+}
+   
+ }, [productIDWithName]);
 
 
-useEffect(()=>{
-  if(state.AddProduct?.getProductByNameStatusCode == 200){
-    // setProductID(state.AddProduct.ProductByName?.data[0]?.productId)
-    setProductID(state.AddProduct.ProductByName?.data)
-  }
 
-},[state.AddProduct?.getProductByNameStatusCode])
+console.log("productIDWithName",productIDWithName)
+
+// useEffect(()=>{
+//   if(state.AddProduct?.getProductByNameStatusCode == 200){
+//     // setProductID(state.AddProduct.ProductByName?.data[0]?.productId)
+//     setProductID(state.AddProduct.ProductByName?.data)
+//   }
+
+// },[state.AddProduct?.getProductByNameStatusCode])
 
 
 
