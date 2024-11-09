@@ -9,11 +9,15 @@ import "react-datepicker/dist/react-datepicker.css";
 import View from '../Images/Sales/view.svg'
 import Edit from '../Images/Sales/edit.svg'
 import Delete from '../Images/Sales/Delete.svg'
-
+import { useDispatch, useSelector } from 'react-redux';
 
 
 function AddPurchase({ handleClose }) {
-  const [dropdownOpen, setDropdownOpen] = useState(true);
+
+  const dispatch = useDispatch();
+  const state = useSelector(state => state);
+  const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState(null);
   const datePickerRef = useRef(null);
   const [orderDate, setOrderDate] = useState(null);
@@ -25,6 +29,10 @@ function AddPurchase({ handleClose }) {
   const [taxTotal, setTaxTotal] = useState(0);
   const [total, setTotal] = useState(0);
   const [dropdownIndex, setDropdownIndex] = useState(null);
+  const [ productId, setProductID] =useState([])
+  const [selectedOption, setSelectedOption] = useState('');
+  const [showProductDropdown, setShowProductDropdown] = useState([]);
+  const [productIDWithName, setProductIDWithName] = useState('')
 
   // const [addCharges, setAddCharges] = useState(0);
   // const [globalDiscount, setGlobalDiscount] = useState(0);
@@ -32,7 +40,7 @@ function AddPurchase({ handleClose }) {
 
 
   const toggleDropdown = () => {
-    setDropdownOpen(!dropdownOpen);
+    setDropdownOpen(true);
   };
 
   const handleIconClickForDelivery = () => {
@@ -42,9 +50,7 @@ function AddPurchase({ handleClose }) {
   };
 
   const handleIconClickForOrder = () => {
-    if (datePickerRef.current) {
-      datePickerRef.current.setOpen(true);
-    }
+    setIsDatePickerOpen((prev) => !prev);
   };
 
   const handleInvoiceIdChange = (e) => {
@@ -53,6 +59,7 @@ function AddPurchase({ handleClose }) {
 
   const handleOrderDateChange = (date) => {
     setOrderDate(date);
+    setIsDatePickerOpen(false);
   };
 
   const handleDeliveredDateChange = (date) => {
@@ -62,40 +69,40 @@ function AddPurchase({ handleClose }) {
 
 
 
+console.log("state add Purchase",state)
 
+const [products, setProducts] = useState([
+  {
+    Product: '',
+    productID: '',
+    Quantity: 1,
+    PurchasePrice: '',
+    MRP: '',
+    SalesPercentage: '',
+    SalesPrice: '',
+    WholeSalePercentage: '',
+    WholeSalePrice: '',
+    Total: 0,
+  },
+]);
 
-  const [products, setProducts] = useState([
-    {
-      Product: '',
-      ProductCode: '',
-      HSNCode: '',
-      Quantity: 1,
-      Price: '',
-      Discount: '',
-      TaxableAmount: '',
-      IGST: '',
-      TaxAmount: '',
-      Total: 0,
-    },
-   
-  ]);
-
-
+ 
 
   const handleAddRow = () => {
     const newRow = {
       Product: '',
-      ProductCode: '',
-      HSNCode: '',
+      productID: '',
       Quantity: '',
-      Price: '',
-      Discount: '',
-      TaxableAmount: '',
-      IGST: '',
-      TaxAmount: '',
-      Total: '',
+      PurchasePrice: '',
+      MRP: '',
+      SalesPercentage: '',
+      SalesPrice: '',
+      WholeSalePercentage: '',
+      WholeSalePrice: '',
+      Total: 0,
     };
     setProducts([...products, newRow]);
+    setShowProductDropdown([...showProductDropdown, false]);
   };
 
 //   const handleInputChange = (e, field, index) => {
@@ -111,23 +118,14 @@ function AddPurchase({ handleClose }) {
 
 const handleInputChange = (e, field, index) => {
   const value = e.target.value;
-  const newData = [...products];
-  
+  const updatedProducts = [...products];
+  updatedProducts[index][field] = value;
 
-  newData[index][field] = value;
-  
-
-  const { Quantity, Price, Discount, IGST } = newData[index];
-  // const taxableAmount = Quantity * Price - Discount;
-  // const taxAmount = taxableAmount * (IGST / 100);
-  const total = Quantity * Price;
-  
-
-  // newData[index].TaxableAmount = taxableAmount;
-  // newData[index].TaxAmount = taxAmount;
-  newData[index].Total = total;
-  
-  setProducts(newData);
+  const { Quantity, PurchasePrice } = updatedProducts[index];
+  updatedProducts[index].Total = Quantity * PurchasePrice;
+  console.log("Updated Products:", updatedProducts);
+  setProductIDWithName(updatedProducts[0]?.Product)
+  setProducts(updatedProducts);
 };
 
 
@@ -148,8 +146,15 @@ const handleInputChange = (e, field, index) => {
 
 
 
+  const [showProductNameDropdown, setShowProductNameDropdown] = useState([]);
 
-
+  const handleproductNameDropDown = (index) => {
+    const updatedDropdown = [...showProductDropdown];
+    updatedDropdown[index] = !updatedDropdown[index]; 
+    setShowProductDropdown(updatedDropdown);
+  };
+  
+  
   const handleDropDown = (index) => {
     setDropdownIndex(dropdownIndex === index ? null : index);
   };
@@ -167,6 +172,94 @@ const handleInputChange = (e, field, index) => {
 
 
 
+useEffect(() => {
+  
+    // if (productIDWithName) {
+    //   dispatch({
+    //     type: 'GET_PRODUCT_BY_NAME',
+    //     payload: { productName: productIDWithName },
+    //   });
+    //       }
+if(productIDWithName){
+  const filteredProduct = state.AddProduct.ProductList.filter((product) => {
+    return product.productName.toLowerCase().includes(productIDWithName.toLowerCase());
+  });
+  
+  console.log('filteredProduct', filteredProduct);
+  setProductID(filteredProduct)
+}
+   
+ }, [productIDWithName]);
+
+
+
+console.log("productIDWithName",productIDWithName)
+
+// useEffect(()=>{
+//   if(state.AddProduct?.getProductByNameStatusCode == 200){
+//     // setProductID(state.AddProduct.ProductByName?.data[0]?.productId)
+//     setProductID(state.AddProduct.ProductByName?.data)
+//   }
+
+// },[state.AddProduct?.getProductByNameStatusCode])
+
+
+
+const handleProductName = (item, index) => {
+  const updatedProducts = [...products];
+  updatedProducts[index].Product = item.productName; 
+  updatedProducts[index].productID = item.productId ; 
+
+  setProducts(updatedProducts);
+
+  const updatedDropdown = [...showProductDropdown];
+  updatedDropdown[index] = false; 
+  setShowProductDropdown(updatedDropdown); 
+};
+
+
+
+
+const handleOptionSelect = (option) => {
+  setSelectedOption(option);
+  setDropdownOpen(false); 
+};
+
+
+console.log("productIDDDDDDDDDD",productId)
+
+const handleAddPurchase = () => {
+  if(orderDate && invoiceId && products){
+
+    const formattedDate = new Date(orderDate).toLocaleDateString('en-GB'); 
+   const purchaseItems = products.map(product => ({
+    productId: product.productID,       
+    quantity: product.Quantity,         
+    purchasePrice: product.PurchasePrice, 
+    mrp: product.MRP,                  
+    salesPercentage: product.SalesPercentage, 
+    salesPrice: product.SalesPrice,     
+    wholesalePercentage: product.WholeSalePercentage, 
+    wholesalePrice: product.WholeSalePrice  
+  }));
+
+ 
+  dispatch({
+    type: 'ADDPURCHASE',
+    payload: {
+      supplierId: 1,                  
+      purchaseDate:formattedDate,         
+      invoiceId: invoiceId,   
+      invoiceImage: "string",        
+      purchaseItems: purchaseItems    
+    }
+  });
+}
+};
+
+
+
+
 
 
 
@@ -180,7 +273,7 @@ const handleInputChange = (e, field, index) => {
           <button onClick={handleClose} className="flex items-center gap-2 w-16 h-7 px-2 rounded border border-orange-600 text-orange-600 font-semibold text-sm">
             Cancel
           </button>
-          <button className="flex items-center gap-2 w-28 h-7 px-3 rounded border border-black bg-orange-600 text-black font-semibold text-sm">
+          <button  onClick={handleAddPurchase} className="flex items-center gap-2 w-28 h-7 px-3 rounded border border-black bg-orange-600 text-black font-semibold text-sm">
             Save & Close
           </button>
         </div>
@@ -188,30 +281,67 @@ const handleInputChange = (e, field, index) => {
 
       <div className="w-full rounded-xl shadow-custom mt-4 p-4 mb-4">
         <div className="grid gap-2">
-          <div className="flex flex-col md:flex-row justify-start p-2">
-            <div className={`relative mb-4 lg:mb-0 md:mb-0 ${dropdownOpen ? 'sm:mb-32' : ''}`}>
-              <p className="font-bold text-lg text-orange-600 mb-4 font-Manrope">Supplier Details</p>
-              <button
-                onClick={toggleDropdown}
-                className="flex items-center text-black bg-grey font-medium w-full md:w-56 sm:w-56 px-5 py-2 text-sm rounded-t-xl"
-              >
-                Supplier
-                <img className="ml-28 md:ml-28 sm:ml-10" src={dropdown} />
-              </button>
-              {dropdownOpen && (
-                <div className="absolute z-50 bg-light_gray divide-y divide-gray-100 shadow md:w-56 w-56 h-28 sm:w-56">
-                  <ul className="py-2 text-sm text-black font-Manrope font-medium text-start">
-                    <li>
-                      <a href="#" className="block px-2 py-2">
-                        24/D2 BALAN PERUMAL COMPOUND, Thattan Vilai Rd, Ramanputhur, KELLA, Nagercoil, Tamil Nadu 629002
-                      </a>
-                    </li>
-                  </ul>
-                </div>
-              )}
-            </div>
+          <div className="flex flex-col md:flex-row justify-start p-2 items-center gap-5">
+          
 
-            <div className="w-full md:w-1/2 md:ml-20 mt-6">
+            <div className="relative mb-4 lg:mb-0 md:mb-0">
+      <p className="font-bold text-lg text-orange-600 mb-4 font-Manrope">Shipment From</p>
+      <button
+  onClick={toggleDropdown}
+  className="flex items-center justify-between text-black whitespace-nowrap bg-grey font-medium w-full md:w-56 sm:w-56 px-5 py-2 text-sm rounded-t-xl"
+>
+  {selectedOption || 'Supplier'}
+
+  {/* Icon will stay on the far right responsively */}
+  <img className="w-4 h-4" src={dropdown} alt="Dropdown Icon" />
+</button>
+
+      {dropdownOpen && (
+        <div className="absolute z-50 bg-light_gray divide-y divide-gray-100 shadow md:w-56 w-56 sm:w-56">
+          <ul className="py-2 text-sm text-black font-Manrope font-medium text-start">
+            <li onClick={() => handleOptionSelect('Brazil')} className="px-2 py-2 cursor-pointer hover:bg-gray-200">Brazil</li>
+            <li onClick={() => handleOptionSelect('Bucharest')} className="px-2 py-2 cursor-pointer hover:bg-gray-200">Bucharest</li>
+            <li onClick={() => handleOptionSelect('London')} className="px-2 py-2 cursor-pointer hover:bg-gray-200">London</li>
+            <li onClick={() => handleOptionSelect('Washington')} className="px-2 py-2 cursor-pointer hover:bg-gray-200">Washington</li>
+          </ul>
+        </div>
+      )}
+    
+      
+        <div className="bg-light_gray p-4 rounded shadow h-32">
+          <p className="text-black font-Manrope font-medium">{selectedOption || 'Select Supplier'}</p>
+        </div>
+          </div>
+
+
+          <div className="relative mb-4 lg:mb-0 md:mb-0 ">
+    <p className="font-bold text-lg text-orange-600 mb-4 font-Manrope">Shipment To</p>
+    <div className="flex items-center justify-between text-black whitespace-nowrap bg-grey font-medium w-full md:w-56 sm:w-56 px-5 py-2 text-sm rounded-t-xl">
+      <span>APPTA</span>
+    </div>
+
+    <div className="bg-light_gray p-4 rounded shadow h-32">
+          <p className="text-black font-Manrope font-medium">Appta</p>
+          <p className="text-black font-Manrope font-medium">Street</p>
+          <p className="text-black font-Manrope font-medium">Nagarkoil</p>
+        </div>
+
+
+
+  </div>
+
+
+           
+          </div>
+
+
+
+
+
+        </div>
+
+
+        <div className="w-full md:w-1/2  mt-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 
 
@@ -219,28 +349,29 @@ const handleInputChange = (e, field, index) => {
 
 
 
-                <div className="relative">
-                  <label className="block font-semibold mb-1 text-sm text-start font-SourceSansPro">
-                    Order Date <span className="text-red-500">*</span>
-                  </label>
+              <div className="relative">
+      <label className="block font-semibold mb-1 text-sm text-start font-SourceSansPro">
+        Purchase Date <span className="text-red-500">*</span>
+      </label>
 
+      <DatePicker
+        selected={orderDate}
+        onChange={handleOrderDateChange}
+        dateFormat="MM/dd/yyyy"
+        placeholderText="DD / MM / YYYY"
+        className="w-full border rounded px-3 py-2 pr-12 text-sm md:text-base focus:border-orange-600"
+        open={isDatePickerOpen}
+        onClickOutside={() => setIsDatePickerOpen(false)}
+        ref={datePickerRef}
+      />
 
-
-                  <DatePicker
-                    selected={orderDate}
-                    onChange={handleOrderDateChange}
-                    dateFormat="MM/dd/yyyy"
-                    placeholderText="DD / MM / YYYY"
-                    className="w-full border rounded px-3 py-2 pr-12 text-sm md:text-base focus:border-orange-600"
-                    ref={datePickerRef}
-                  />
-                  <img
-                    src={DateIcon}
-                    alt="Date Icon"
-                    className="absolute top-12 transform -translate-y-1/2 right-3 md:right-4 lg:right-5 cursor-pointer"
-                    onClick={handleIconClickForOrder}
-                  />
-                </div>
+      <img
+        src={DateIcon}
+        alt="Date Icon"
+        className="absolute top-12 transform -translate-y-1/2 right-3 md:right-4 lg:right-5 cursor-pointer"
+        onClick={handleIconClickForOrder}
+      />
+    </div>
 
                 <div>
                   <label className="block font-semibold mb-1 text-sm text-start font-SourceSansPro">Invoice ID <span className="text-red-500">*</span></label>
@@ -250,29 +381,15 @@ const handleInputChange = (e, field, index) => {
                   className="w-full border rounded px-3 py-2 text-sm focus:border-orange-600" placeholder="P7895233" />
                 </div>
 
-                <div className="mt-6 relative">
-                  <label className="block font-semibold mb-1 text-sm text-start font-SourceSansPro">Delivered Date <span className="text-red-500">*</span></label>
-                  <DatePicker
-                    selected={deliveredDate}
-                    onChange={handleDeliveredDateChange}
-                    dateFormat="MM/dd/yyyy"
-                    placeholderText="DD / MM / YYYY"
-                    className="w-full border rounded px-3 py-2 pr-12 text-sm md:text-base"
-                    ref={datePickerRef}
-                  />
-                  <img
-                    src={DateIcon}
-                    alt="Date Icon"
-                    className="absolute top-12 transform -translate-y-1/2 right-3 md:right-4 lg:right-5 cursor-pointer"
-                    onClick={handleIconClickForDelivery}
-                  />
-                </div>
+               
               </div>
             </div>
-          </div>
-        </div>
 
-        <div className="flex flex-col md:flex-row justify-between items-center">
+
+
+
+
+        {/* <div className="flex flex-col md:flex-row justify-between items-center">
           <div className="flex items-center mt-12 sm:mr-44">
             <p className="font-bold text-lg text-orange-600 mr-4 font-Manrope">Products</p>
            <input type="checkbox" className="bg-zinc-300 border border-black"/>
@@ -286,7 +403,7 @@ const handleInputChange = (e, field, index) => {
               placeholder="Auto Generate"
             />
           </div>
-        </div>
+        </div> */}
 
 
 
@@ -300,117 +417,132 @@ const handleInputChange = (e, field, index) => {
 
 
        
-          <table className="table-auto  border border-gray-300 rounded-lg  w-full overflow-x-auto mt-6">
-            <thead>
-            <tr className="bg-gray-200">
-        <th className="p-2 border border-white font-Manrope font-semibold text-sm ">Product</th>
-        <th className="p-2 border border-white font-Manrope font-semibold text-sm ">Product Code</th>
-        {/* <th className="px-2 py-2 border border-white font-Manrope font-semibold text-sm min-w-[120px]">HSN Code</th> */}
-        <th className="p-2 border border-white font-Manrope font-semibold text-sm ">Quantity</th>
-        <th className="p-2 border border-white font-Manrope font-semibold text-sm ">Price</th>
-        <th className="p-2 border border-white font-Manrope font-semibold text-sm ">Discount</th>
-        <th className="p-2 border border-white font-Manrope font-semibold text-sm  whitespace-nowrap">Taxable Amount</th>
-        <th className="p-2 border border-white font-Manrope font-semibold text-sm ">IGST</th>
-        <th className="p-2 border border-white font-Manrope font-semibold text-sm">Tax Amount</th>
-        <th className="p-2 border-white border border-r-0 font-Manrope font-semibold text-sm ">Total</th>
-        <th className="p-2 border-white border border-l-0 text-gray-500 cursor-pointer w-8">
-         
-        </th>
-      </tr>
-            </thead>
-            <tbody>
-        
-            {products && products.length > 0 && products.map((product, index) => (
-        <tr key={index} className="bg-gray-100">
-          <td className="p-2 border border-white font-Manrope font-semibold text-base">
-            <input
-              type="text"
-              value={product.Product}
-              onChange={(e) => handleInputChange(e, 'Product', index)}
-              className="border p-1 rounded w-full"
-            />
-          </td>
-          <td className="p-2 border border-white font-Manrope font-semibold text-base">
-            <input
-              type="text"
-              value={product.ProductCode}
-              onChange={(e) => handleInputChange(e, 'ProductCode', index)}
-              className="border p-1 rounded w-full"
-            />
-          </td>
-          {/* <td className="px-2 py-2 border border-white font-Manrope font-semibold text-base">
-            <input
-              type="text"
-              value={product.HSNCode}
-              onChange={(e) => handleInputChange(e, 'HSNCode', index)}
-              className="border p-1 rounded"
-            />
-          </td> */}
-          <td className="p-2 border border-white font-Manrope font-semibold text-base">
-            <input
-              type="number"
-              value={product.Quantity}
-              onChange={(e) => handleInputChange(e, 'Quantity', index)}
-              className="border p-1 rounded w-full"
-              min="0"
-            />
-          </td>
-          <td className="p-2 border border-white font-Manrope font-semibold text-base">
-            <input
-              type="number"
-              value={product.Price}
-              onChange={(e) => handleInputChange(e, 'Price', index)}
-              className="border p-1 rounded w-full"
-              min="0"
-            />
-          </td>
-          <td className="p-2 border border-white font-Manrope font-semibold text-base">
-            <input
-              type="number"
-              value={product.Discount}
-              onChange={(e) => handleInputChange(e, 'Discount', index)}
-              className="border p-1 rounded w-full"
-              min="0"
-            />
-          </td>
-          <td className="p-2 border border-white font-Manrope font-semibold text-base">
-            <input
-              type="number"
-              value={product.TaxableAmount}
-              onChange={(e) => handleInputChange(e, 'TaxableAmount', index)}
-              className="border p-1 rounded w-full"
-              min="0"
-            />
-          </td>
-          <td className="p-2 border border-white font-Manrope font-semibold text-base">
-            <input
-              type="number"
-              value={product.IGST}
-              onChange={(e) => handleInputChange(e, 'IGST', index)}
-              className="border p-1 rounded w-full"
-              min="0"
-            />
-          </td>
-          <td className="p-2 border border-white font-Manrope font-semibold text-base">
-            <input
-              type="number"
-              value={product.TaxAmount}
-              onChange={(e) => handleInputChange(e, 'TaxAmount', index)}
-              className="border p-1 rounded w-full"
-              min="0"
-            />
-          </td>
-          <td className="p-2 border-white border border-r-0 font-Manrope font-semibold text-base">
-            <input
-              type="number"
-              readOnly
-              value={(product.Quantity * product.Price)}
-              onChange={(e) => handleInputChange(e, 'Total', index)}
-              className="border p-1 rounded w-full"
-              min="0"
-            />
-          </td>
-                <td className="p-2 border-white border border-l-0 text-gray-500 cursor-pointer w-8 relative" onClick={() => handleDropDown(index)}>
+      
+       
+
+          <table className="table-auto border border-gray-300 rounded-lg w-full overflow-x-auto mt-6">
+      <thead>
+        <tr className="bg-gray-200">
+          <th className="p-2 border font-semibold text-sm">Product</th>
+          <th className="p-2 border font-semibold text-sm">Quantity</th>
+          <th className="p-2 border font-semibold text-sm">Purchase Price</th>
+          <th className="p-2 border font-semibold text-sm">MRP</th>
+          <th className="p-2 border font-semibold text-sm">Sales %</th>
+          <th className="p-2 border font-semibold text-sm">Sales Price</th>
+          <th className="p-2 border font-semibold text-sm">Whole Sale %</th>
+          <th className="p-2 border font-semibold text-sm">Whole Sale Price</th>
+          <th className="p-2 border font-semibold text-sm">Total</th>
+          <th className="p-2 border font-semibold text-sm"></th>
+        </tr>
+      </thead>
+      <tbody>
+        {products.map((product, index) => (
+          <tr key={index} className="bg-gray-100">
+            <td className="p-2 border relative">
+              <input
+                type="text"
+                value={product.Product}
+                onChange={(e) => handleInputChange(e, 'Product', index)}
+                onClick={() => handleproductNameDropDown (index)}
+                className="border p-1 rounded w-full"
+              />
+
+{showProductDropdown[index]  && (
+    <div className="absolute z-50 bg-light_gray divide-y divide-gray-100 shadow md:w-56 w-56 sm:w-56">
+      <ul className="py-2 text-sm text-black font-Manrope font-medium text-start">
+        {productId?.map((item) => (
+          <li 
+            key={item.productId} 
+            onClick={() => handleProductName(item, index)} 
+            className="px-2 py-2 cursor-pointer hover:bg-gray-200"
+          >
+            {item.productName}
+          </li>
+        ))}
+      </ul>
+    </div>
+  )}
+
+
+
+
+
+
+
+            </td>
+            <td className="p-2 border">
+              <input
+                type="number"
+                value={product.Quantity}
+                onChange={(e) => handleInputChange(e, 'Quantity', index)}
+                className="border p-1 rounded w-full"
+                min="0"
+              />
+            </td>
+            <td className="p-2 border">
+              <input
+                type="number"
+                value={product.PurchasePrice}
+                onChange={(e) => handleInputChange(e, 'PurchasePrice', index)}
+                className="border p-1 rounded w-full"
+                min="0"
+              />
+            </td>
+            <td className="p-2 border">
+              <input
+                type="number"
+                value={product.MRP}
+                onChange={(e) => handleInputChange(e, 'MRP', index)}
+                className="border p-1 rounded w-full"
+                min="0"
+              />
+            </td>
+            <td className="p-2 border">
+              <input
+                type="number"
+                value={product.SalesPercentage}
+                onChange={(e) => handleInputChange(e, 'SalesPercentage', index)}
+                className="border p-1 rounded w-full"
+                min="0"
+              />
+            </td>
+            <td className="p-2 border">
+              <input
+                type="number"
+                value={product.SalesPrice}
+                onChange={(e) => handleInputChange(e, 'SalesPrice', index)}
+                className="border p-1 rounded w-full"
+                min="0"
+              />
+            </td>
+            <td className="p-2 border">
+              <input
+                type="number"
+                value={product.WholeSalePercentage}
+                onChange={(e) => handleInputChange(e, 'WholeSalePercentage', index)}
+                className="border p-1 rounded w-full"
+                min="0"
+              />
+            </td>
+            <td className="p-2 border">
+              <input
+                type="number"
+                value={product.WholeSalePrice}
+                onChange={(e) => handleInputChange(e, 'WholeSalePrice', index)}
+                className="border p-1 rounded w-full"
+                min="0"
+              />
+            </td>
+            <td className="p-2 border">
+              <input
+                type="number"
+                readOnly
+                value={product.Total}
+                className="border p-1 rounded w-full"
+              />
+            </td>
+          
+            <td className="p-2 border-white border border-l-0 text-gray-500 cursor-pointer w-8 relative" onClick={() => handleDropDown(index)}>
                   <img src={Dot} alt="Options" />
 
 
@@ -427,14 +559,12 @@ const handleInputChange = (e, field, index) => {
                   </div>
                 )}
                                 
-                </td>
-              </tr>
-            ))}
-            </tbody>
-          </table>
-       
-
-
+                
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
 
 
         <div className="flex items-center mt-4 cursor-pointer" >
@@ -452,6 +582,35 @@ const handleInputChange = (e, field, index) => {
 
         <div className="mt-4 border border-y-black w-full"></div>
 
+
+
+<div className="flex flex-cols justify-end items-center gap-10 m-2">
+
+<div>
+<label>Sub-total</label>
+</div>
+<div>
+<label>₹{subTotal || 0.00}</label>
+</div>
+
+  </div>
+
+  <div className="mt-4 border border-y-orange-600 w-full"></div>
+
+  <div className="flex flex-cols justify-end items-center gap-10 m-2">
+
+<div>
+<label>Total(INR)</label>
+</div>
+<div>
+<label>₹ {subTotal || 0.00}</label>
+</div>
+
+  </div>
+
+
+
+{/* 
         <div className="ml-4 mr-4">
   {[
    { label: "Sub-total", value: subTotal ? subTotal.toFixed(2) : '0.00' },
@@ -474,7 +633,7 @@ const handleInputChange = (e, field, index) => {
     <p className="font-semibold text-lg">Total (INR)</p>
     <p className="font-semibold text-lg">{total.toFixed(2)}</p>
   </div>
-</div>
+</div> */}
 
       </div>
     </div>
