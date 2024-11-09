@@ -79,3 +79,13 @@ export function getAllBrands(payloads) {
            }
         })
       }
+
+            //   getProductDetailsbyid
+      export async function getProductDetailsbyid(productName) {
+         return await AxiosConfig.post('/products/getProductsByBarcodeOrName', {
+         }, {
+            params: { 
+              inputText : productName
+            }
+         });
+       }
