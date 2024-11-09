@@ -15,6 +15,7 @@ import {  FormControlLabel, Checkbox } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import AddCustomer from '../Contact/AddCustomer';
 import { Setting } from 'iconsax-react';
+import Pos_Payment from './Pos_Payment';
 
 
 
@@ -831,7 +832,7 @@ console.log("Search Filter Data:", searchfilterdata);
     </div>
       
 
-    <Modal
+    {/* <Modal
   open={open}
   onClose={handleClose}
   aria-labelledby="modal-modal-title"
@@ -839,7 +840,6 @@ console.log("Search Filter Data:", searchfilterdata);
   className="border border-solid border-[#EA580C] rounded"
 >
   <Box sx={{ ...style, borderRadius: '8px', overflow: 'hidden' }}>
-    {/* Header with white background */}
     <Box sx={{ bgcolor: 'white', p: 2 }}>
     <div className="flex items-center justify-between " style={{marginBottom:'30px'}}>
     <h2 
@@ -861,7 +861,6 @@ console.log("Search Filter Data:", searchfilterdata);
 
     </Box>
 
-    {/* Modal body with #D9D9D9 background */}
     <Box
       component="form"
       sx={{
@@ -879,12 +878,10 @@ console.log("Search Filter Data:", searchfilterdata);
  <TextField
                 label="Amount to be paid"
                 value={total_amount ? total_amount : 0}
-                // onChange={handleTotalChange}
                 fullWidth
                 className="font-Roboto font-semibold text-xs"
                 InputLabelProps={{ shrink: true }}
                
-//   helperText={customerNameError}
                 sx={{ 
                   '& .MuiInputLabel-root': { color: 'black' },
                   '& .MuiOutlinedInput-root': {
@@ -905,7 +902,6 @@ console.log("Search Filter Data:", searchfilterdata);
                 className="font-Roboto font-semibold text-xs"
                 InputLabelProps={{ shrink: true }}
                
-//   helperText={customerNameError}
                 sx={{ 
                   '& .MuiInputLabel-root': { color: 'black' },
                   '& .MuiOutlinedInput-root': {
@@ -918,22 +914,15 @@ console.log("Search Filter Data:", searchfilterdata);
                 }}
               />
 
-      {/* <TextField
-        id="outlined-basic"
-        label="Cash Received"
-        variant="outlined"
-        fullWidth
-      /> */}
+     
 
 <TextField
                 label="Change to Return"
                 value={changeto_return}
-                // onChange={handleCustomerNameChange}
                 fullWidth
                 className="font-Roboto font-semibold text-xs"
                 InputLabelProps={{ shrink: true }}
                
-//   helperText={customerNameError}
                 sx={{ 
                   '& .MuiInputLabel-root': { color: 'black' },
                   '& .MuiOutlinedInput-root': {
@@ -949,12 +938,10 @@ console.log("Search Filter Data:", searchfilterdata);
    <TextField
                 label="Receipt Number"
                 value={receipt_number}
-                // onChange={handleCustomerNameChange}
                 fullWidth
                 className="font-Roboto font-semibold text-xs"
                 InputLabelProps={{ shrink: true }}
                
-//   helperText={customerNameError}
                 sx={{ 
                   '& .MuiInputLabel-root': { color: 'black' },
                   '& .MuiOutlinedInput-root': {
@@ -969,7 +956,6 @@ console.log("Search Filter Data:", searchfilterdata);
 
    
 
-      {/* Centered Payment Button */}
       <Box sx={{ gridColumn: 'span 2', display: 'flex', justifyContent: 'center', mt: 2 }}>
         <button className="text-center bg-[#EA580C] text-black p-2 rounded" onClick={handleClose}>
           Payment Completed
@@ -977,9 +963,11 @@ console.log("Search Filter Data:", searchfilterdata);
       </Box>
     </Box>
   </Box>
-</Modal>
+</Modal> */}
 
-
+ {
+  open && <Pos_Payment handleclose = {handleClose}/>
+ }
 
 {/* //add customer  */}
 
