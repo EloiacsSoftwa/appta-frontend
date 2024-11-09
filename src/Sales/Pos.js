@@ -38,42 +38,84 @@ import { Setting } from 'iconsax-react';
     const[barcode, setBarcode] = useState('56676');
    
     const [productid , setProductId] = useState('')
-
-    const [posdata, setPosData] = useState([]);
-
-    const [editingIndex, setEditingIndex] = useState(null);
-    const [quantity, setQuantity] = useState(0);
-
-    const handleQuantityClick = (index, currentQuantity) => {
-      setEditingIndex(index);
-      setQuantity(currentQuantity);
-    };
-    
-    const handleQuantityChange = (index, newQuantity) => {
-      const updatedData = posdata.map((item, i) =>      
-        i === index ? { ...item, quantity: newQuantity } : item       
-      );
-      setPosData(updatedData);
-      setEditingIndex(null); 
-    };
-    
-    const handleInputChange = (e) => {
-      const value = e.target.value;
-      const parsedValue = parseInt(value, 10); 
-      setQuantity(isNaN(parsedValue) ? '' : parsedValue);
-    };
-  
-    const handleKeyDown = (index, event) => {
-      if (event.key === 'Enter') {
-        handleQuantityChange(index, quantity);
-      }
-    };
-
     const [currentDate, setCurrentDate] = useState('');
 
     const [total_amount ,setTotalAmount] = useState('')
 
    const [order_id,setOrderID] = useState('')
+
+    const [posdata, setPosData] = useState([]);
+
+  
+const [editingIndex, setEditingIndex] = useState(null);
+const [quantity, setQuantity] = useState(0);
+
+
+const handleQuantityClick = (index, minPurchaseQuantity) => {
+  setEditingIndex(index);
+  setQuantity(minPurchaseQuantity);
+};
+
+
+const handleQuantityChange = (index, newQuantity) => {
+  const updatedData = posdata.map((item, i) =>      
+    i === index ? { ...item, minPurchaseQuantity: newQuantity } : item       
+  );
+  setPosData(updatedData);
+  setEditingIndex(null); 
+};
+
+
+const handleInputChange = (e) => {
+  const value = e.target.value;
+  const parsedValue = parseInt(value, 10); 
+  setQuantity(isNaN(parsedValue) ? '' : parsedValue);
+};
+
+
+const handleKeyDown = (index, event) => {
+  if (event.key === 'Enter') {
+    handleQuantityChange(index, quantity);
+  }
+};
+
+
+
+
+const [editingDiscountIndex, setEditingDiscountIndex] = useState(null);
+const [discountAmount, setDiscountAmount] = useState(0);
+
+
+const handleEditDiscountAmount = (index, currentDiscount) => {
+  setEditingDiscountIndex(index);
+  setDiscountAmount(currentDiscount || 0); 
+};
+
+
+const handleDiscountAmountChange = (e) => {
+  const value = e.target.value;
+  setDiscountAmount(value);  
+};
+
+
+const handleDiscountAmountSave = (index) => {
+  const updatedData = posdata.map((item, i) =>
+    i === index ? { ...item, discountAmount: discountAmount } : item
+  );
+  setPosData(updatedData);
+  setEditingDiscountIndex(null); 
+};
+
+
+const handleDiscountAmountKeyDown = (index, event) => {
+  if (event.key === 'Enter') {
+    handleDiscountAmountSave(index);
+  }
+};
+
+
+
+   
 
 
     useEffect(() => {
@@ -167,55 +209,44 @@ import { Setting } from 'iconsax-react';
         }
     }, [State.AddProduct.getFreebieName]);
     
-      
-
-
-
-
-
-      
+    
       console.log("state", State)
-// console.log("selectedProductId",selectedProductId)
 
 console.log("filterData",searchfilterdata)
 
-    //   useEffect(() => {
-    //     if (searchfilterdata && searchfilterdata.productId ) {
-    //       handleProductUpdate(searchfilterdata); 
-    //     }
-    //   }, [searchfilterdata]);
+   
       
   
 
     const handleProductUpdate = (productData) => {
-        console.log("productData", productData);
-        
-        if (productData && productData.productId) {
-            setPosData((prevData) => {
-               
-                const existingProductIndex = prevData.findIndex((item) => item.productId === productData.productId);
+      console.log("productData", productData);
     
-                if (existingProductIndex !== -1) {
-                  
-                    const updatedData = [...prevData];
-                    updatedData[existingProductIndex] = {
-                        ...updatedData[existingProductIndex],
-                        quantity: updatedData[existingProductIndex].quantity + 1, 
-                    };
+      if (productData && productData.productId) {
+        setPosData((prevData) => {
+          const existingProductIndex = prevData.findIndex((item) => item.productId === productData.productId);
     
-                   
-                    const totalAmount = updatedData.reduce((acc, item) => acc + (item.quantity * item.wholesalePrice), 0);
-                    setTotalAmount(totalAmount);
-                    console.log("Updated totalAmount:", totalAmount);
+          if (existingProductIndex !== -1) {
+
+            const updatedData = [...prevData];
+            updatedData[existingProductIndex] = {
+              ...updatedData[existingProductIndex],
+              quantity: updatedData[existingProductIndex].quantity + 1, 
+            };
     
-                    return updatedData;
+            // Calculate total amount
+            const totalAmount = updatedData.reduce((acc, item) => acc + (item.quantity * item.wholesalePrice), 0);
+            setTotalAmount(totalAmount);
+            console.log("Updated totalAmount:", totalAmount);
     
-                } else {
-                    return [...prevData, { ...productData, quantity: 1 }];
-                }
-            });
-        }
+            return updatedData;
+    
+          } else { 
+            return [...prevData, { ...productData, quantity: productData.minPurchaseQuantity }];
+          }
+        });
+      }
     };
+    
     
       
     console.log("posdata",posdata);
@@ -323,7 +354,7 @@ console.log("Search Filter Data:", searchfilterdata);
     setChangeToReturn(Return_amount)
   }
 
-    // Function to handle the create action
+   
     const handleCreate = () => {
       console.log("Creating new customer...");   
       // handleClosecustomer();
@@ -504,31 +535,53 @@ console.log("Search Filter Data:", searchfilterdata);
             <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{item.productName || '-'}</td>
             
             
+          
             <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">
-            {editingIndex === index ? (
-              <input
-                type="number"
-                value={quantity}
-                onChange={handleInputChange}
-                onBlur={() => handleQuantityChange(index, quantity)}
-                onKeyDown={(e) => handleKeyDown(index, e)}
-                className="border border-neutral-300 rounded px-1 py-0.5 w-16"
-              />
-            ) : (
-              <span onClick={() => handleQuantityClick(index, item.quantity)} className="cursor-pointer">
-                {item.quantity || '-'}
-              </span>
-            )}
-          </td>
+  {editingIndex === index ? (
+    <input
+      type="number"
+      value={quantity}
+      onChange={handleInputChange}
+      onBlur={() => handleQuantityChange(index, quantity)}
+      onKeyDown={(e) => handleKeyDown(index, e)}
+      className="border border-neutral-300 rounded px-1 py-0.5 w-16"
+    />
+  ) : (
+    <span onClick={() => handleQuantityClick(index, item.minPurchaseQuantity)} className="cursor-pointer">
+      {item.minPurchaseQuantity || '-'}
+    </span>
+  )}
+</td>
+
+
             
             <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">₹{item.wholesalePrice || '0'}</td>
-            <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">₹{(item.quantity * item.wholesalePrice) || '0'}</td>
+            <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">₹{(item.minPurchaseQuantity * item.wholesalePrice) || '-'}</td>
             <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{item.wholesalePricePercentage || '-'}</td>
+            {/* <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">
+             ₹{(item.minPurchaseQuantity * item.wholesalePrice * (item.wholesalePricePercentage / 100)) || '-'}</td> */}
+
+             <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">
+          {editingDiscountIndex === index ? (
+            <input
+              type="number"
+              value={discountAmount}
+              onChange={handleDiscountAmountChange}
+              onBlur={() => handleDiscountAmountSave(index)}  
+              onKeyDown={(e) => handleDiscountAmountKeyDown(index, e)}  
+              className="border border-neutral-300 rounded px-1 py-0.5 w-16"
+            />
+          ) : (
+            <span
+              onClick={() => handleEditDiscountAmount(index, item.discountAmount || 0)} 
+              className="cursor-pointer"
+            >
+              ₹{item.discountAmount || '-'}
+            </span>
+          )}
+        </td>
             <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">
-              ₹{((item.quantity * item.wholesalePrice) * (item.wholesalePricePercentage / 100)) || '0'}
-            </td>
-            <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">
-              ₹{(item.quantity * item.wholesalePrice) - ((item.quantity * item.wholesalePrice) * (item.wholesalePricePercentage / 100)) || '0'}
+              ₹{(item.minPurchaseQuantity * item.wholesalePrice) - ((item.minPurchaseQuantity * item.wholesalePrice) * (item.wholesalePricePercentage / 100)) || '0'}
             </td>
           </tr>
         ))
