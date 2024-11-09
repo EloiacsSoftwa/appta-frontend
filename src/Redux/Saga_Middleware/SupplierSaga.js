@@ -10,21 +10,21 @@ function* handleAddSupplier(args) {
 
     const response = yield call(AddSupplierList, args.payload);
    console.log("Response For Supplier ",response)
-//    const toastStyle = {
-//     backgroundColor: "#fff",
-//     color:'#38B000',
-//     width: "100%",
-//     borderRadius: "60px",
-//     height: "20px",
-//     fontFamily: "Manrope",
-//     fontWeight: 700,
-//     fontSize: 14,
-//     textAlign: "start",
-//     display: "flex",
-//     alignItems: "center", 
-//     padding: "10px",
+   const toastStyle = {
+    backgroundColor: "#fff",
+    color:'#38B000',
+    width: "100%",
+    borderRadius: "60px",
+    height: "20px",
+    fontFamily: "Manrope",
+    fontWeight: 700,
+    fontSize: 14,
+    textAlign: "start",
+    display: "flex",
+    alignItems: "center", 
+    padding: "10px",
    
-//   };
+  };
     if (response.status === 200 || response.code === 200) {
            yield put({ type: 'ADD_SUPPLIER', payload: {response:response.data , statusCode: response.status  || response.code}});
            toast.success('Supplierr Successfully Created', {
@@ -83,7 +83,6 @@ function* handleGetSupplier() {
   function* SupplierSaga() {
   yield takeEvery('GETSUPPLIER', handleGetSupplier);
   yield takeEvery('ADDSUPPLIER',  handleAddSupplier);
-
    }
 
 export default SupplierSaga;
