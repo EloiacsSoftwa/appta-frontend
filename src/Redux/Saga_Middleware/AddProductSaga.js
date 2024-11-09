@@ -1,5 +1,5 @@
 import { call, takeEvery, put } from 'redux-saga/effects';
-import { Category, SubCategory, AddProductDetails, AddBrand, GetProduct, getAllUnitsCall, getFreebie } from '../Action/AddProductAction';
+import { Category, SubCategory, AddProductDetails, AddBrand, GetProduct, getAllUnitsCall, getFreebie, getProductDetailsbyid } from '../Action/AddProductAction';
 import { GET_BRANDS_API_CALL, GET_BRANDS_API_RESPONSE, GET_ALL_UNITS_API_CALL, GET_ALL_UNITS_API_RESPONSE } from '../../utils/Constant';
 import { getAllBrands } from '../Action/AddProductAction';
 import { toast } from 'react-toastify';
@@ -165,6 +165,35 @@ function ExpireToken(response) {
   }
 }
 
+function* getProductDetails(action) {
+  try {
+    const { productName } = action.payload;
+    console.log("Fetching product details for:", productName);
+
+    // Call API with the correct parameter
+    const response = yield call(getProductDetailsbyid, productName);
+
+    if (response.status === 200 || response.code === 200) {
+      yield put({
+        type: 'GET_PRODUCT_DETAILS_BY_ID',
+        payload: { response: response.data, statusCode: response.status || response.code }
+      });
+    } else {
+      yield put({
+        type: 'ERROR',
+        payload: { statusCode: response.status || response.code }
+      });
+    }
+
+    if (response) {
+      ExpireToken(response);
+    }
+  } catch (error) {
+    console.error("Error fetching product details:", error);
+    yield put({ type: 'ERROR', payload: { statusCode: error.status || error.code } });
+  }
+}
+
 
 function* AddProductSaga() {
   yield takeEvery('GETSUBCATEGORY', Sub_Category);
@@ -176,6 +205,8 @@ function* AddProductSaga() {
   yield takeEvery(GET_ALL_UNITS_API_CALL, getAllUnits);
 //   GET_FREEBIE_NAME
   yield takeEvery('GETFREEBIENAME', GetFreebieName);
+   //   GET_GET_PRODUCT_BY_NAME
+  yield takeEvery('GET_PRODUCT_BY_NAME',getProductDetails);
 
 }
 

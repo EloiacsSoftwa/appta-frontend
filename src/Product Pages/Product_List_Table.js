@@ -12,7 +12,7 @@ import { ArrowRight2, ArrowLeft2, ArrowUp2, ArrowDown2 } from 'iconsax-react';
 import AddProductModal from './AddProduct';
 import { useDispatch, useSelector } from 'react-redux';
 import ProductDetails from './ProductDetails';
-import { ListItem } from '@mui/material';
+
 
 
 function Product_List({item}) {
@@ -29,6 +29,10 @@ const [productDetails, setProductDetails] = useState('')
     const handleClick = (item) => {
       setShowDetails(true);
       setProductDetails(item)
+    //   dispatch({ type: 'GET_PRODUCT_BY_NAME',params : item.productName })
+    dispatch({ type: 'GET_PRODUCT_BY_NAME', payload: { productName: item.productName } })
+   
+
     };
 
 
@@ -301,8 +305,8 @@ const [productDetails, setProductDetails] = useState('')
                                             className="form-checkbox h-4 w-4 text-blue-600 border-neutral-500 cursor-pointer"
                                         /></td>
                                     {/* <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{item.productName}</td> */}
-                                    <td className=" cursor-pointer p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start" onClick={()=>handleClick(item)}>
-                                        <span className="underline decoration-orange-500 underline-offset-4 ">{item.productName}</span>
+                                    <td className=" cursor-pointer p-2 font-semibold text-sm font-Manrope text-neutral-500 text-start" onClick={()=>handleClick(item)}>
+                                        <span className="underline decoration-zinc-400 underline-offset-4 ">{item.productName}</span>
                                     </td>
                                     <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{item.productId}</td>
                                     <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{item.statusType}</td>
@@ -357,4 +361,4 @@ const [productDetails, setProductDetails] = useState('')
     )
 }
 
-export default Product_List;
+export default Product_List
