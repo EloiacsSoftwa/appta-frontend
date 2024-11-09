@@ -28,7 +28,7 @@ import SubCategory_List from "../Product Pages/SubCategory_List";
 import Customer_List from "../Contact/Customer_List";
 import CryptoJS from "crypto-js";
 import Stock_Available from '../Inventry/Stock_Availability';
-
+import StockTransform from "../Inventry/Stock_Transform";
 
 
 function App() {
@@ -311,6 +311,12 @@ useEffect(() => {
           {selectedMenu === 'Customer' && (
             <div className="bg-white mt-2">
               <Customer_List />
+            </div>
+          )}
+
+{selectedMenu === 'Stock Transfer' && (
+            <div className="">
+              <StockTransform />
             </div>
           )}
 
