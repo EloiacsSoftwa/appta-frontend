@@ -39,7 +39,8 @@ const AddProductModal = ({ onClose }) => {
         freebieProductId: 0,
         barcodeNo: 0,
         statusTypeId: 1,
-        sizeId: 0
+        sizeId: 0,
+        hsnCode: ''
     });
     const dispatch = useDispatch();
     const state = useSelector(state => state);
@@ -121,17 +122,15 @@ const ProductDetailsForm = ({ handleNext, formData, setFormData }) => {
 
     const handleImageChange = (e) => {
         const file = e.target.files[0];
-        console.log("file", file);
 
         if (file) {
             const reader = new FileReader();
             reader.onload = (e) => {
                 const base64String = e.target.result.split(',')[1];
-                console.log("reader.result", reader.result);
 
                 setFormData({
                     ...formData,
-                    images: reader.result,
+                    images: [base64String],
                 });
                 // [base64String]
                 // fileInputRef.current.value = '';
@@ -207,24 +206,11 @@ const ProductDetailsForm = ({ handleNext, formData, setFormData }) => {
                 </div>
 
                 <div className="flex flex-col flex-1 gap-4">
-                    <div className="flex flex-row flex-1 gap-4">
-                        <div className="flex-1">
-                            <label className="text-left block text-sm font-medium text-gray-700">Product Type</label>
-                            <select name="productType" value={formData.productId} onChange={(e) => { setFormData({ ...formData, productId: e.target.value, statusTypeId: e.target.value, billOfMaterials: e.target.value == 2 ? true : false }) }} className="mt-1 block w-full border border-gray-300 rounded-md h-9">
-                                <option value={1}>Tracked</option>
-                                <option value={2}>Bill Of Materials</option>
-                            </select>
-
-                        </div>
-
-                        <div className="flex-1">
-
-                        </div>
-                    </div>
+                    
                     <div className="flex gap-4">
                         <div className="flex-1">
                             <label className="text-left block text-sm font-medium text-gray-700">Product Name</label>
-                            <input type="text" name="productName" value={formData.productName} onChange={(e) => { setFormData({ ...formData, productName: e.target.value }) }} className="mt-1 block w-full border border-gray-300 rounded-md h-9" placeholder="Watch" />
+                            <input type="text" name="productName" value={formData.productName} onChange={(e) => { setFormData({ ...formData, productName: e.target.value }) }} className="mt-1 block w-full border border-gray-300 rounded-md h-9 pl-2 pr-2" placeholder="Watch" />
                         </div>
                         <div className="flex-1">
                             <label className="text-left block text-sm font-medium text-gray-700">Brand</label>
@@ -263,21 +249,6 @@ const ProductDetailsForm = ({ handleNext, formData, setFormData }) => {
 
                     <div className="flex flex-1 flex-row">
 
-                        {/* <div className="flex flex-row flex-1">
-            <div className="flex-1 mr-4">
-              <label className="text-left block text-sm font-medium text-gray-700">Size</label>
-              <select name="productType" value={formData.sizeId} onChange={(e) => { setFormData({ ...formData, sizeId: e.target.value, statusTypeId: e.target.value }) }} className="mt-1 block w-full border border-gray-300 rounded-md">
-                <option value={0}>Please Select the size</option>
-                <option value={1}>100</option>
-                <option value={2}>20</option>
-              </select>
-            </div>
-
-            <div className="flex-1">
-             
-            </div>
-          </div> */}
-
                     </div>
 
                     <div className="flex gap-4">
@@ -292,27 +263,34 @@ const ProductDetailsForm = ({ handleNext, formData, setFormData }) => {
                             </select>
                         </div>
                         <div className="flex-1">
-                            <label className="text-left block text-sm font-medium text-gray-700">Product Threshold</label>
-                            <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md h-9" placeholder="Brand" value={formData.threshold} onChange={(e) => { setFormData({ ...formData, threshold: e.target.value }) }} />
+                            <label className="text-left block text-sm font-medium text-gray-700">Size</label>
+                            <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md h-9 pl-2 pr-2" placeholder="Brand" value={formData.sizeId} onChange={(e) => { setFormData({ ...formData, sizeId: e.target.value }) }} />
                         </div>
 
-                        {/* <div className="flex gap-4">
-            <div className="flex-1">
-              <label className="text-left block text-sm font-medium text-gray-700">Qty</label>
-              <input type="number" name="qty" value={formData.quantity} onChange={(e) => { setFormData({ ...formData, quantity: e.target.value }) }} className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Qty" />
-            </div>
-            <div className="flex-1">
-              <label className="text-left block text-sm font-medium text-gray-700">Min Qty</label>
-              <input type="number" name="minQty" value={formData.minPurchaseQuantity} onChange={(e) => { setFormData({ ...formData, minPurchaseQuantity: e.target.value }) }} className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Min Qty" />
-            </div>
-          </div> */}
                     </div>
+
+                    <div className="flex flex-row flex-1 gap-4">
+                        <div className="flex-1">
+                            <label className="text-left block text-sm font-medium text-gray-700">Product Type</label>
+                            <select name="productType" value={formData.productId} onChange={(e) => { setFormData({ ...formData, productId: e.target.value, statusTypeId: e.target.value, billOfMaterials: e.target.value == 2 ? true : false }) }} className="mt-1 block w-full border border-gray-300 rounded-md h-9">
+                                <option value={1}>Tracked</option>
+                                <option value={2}>Bill Of Materials</option>
+                            </select>
+
+                        </div>
+
+                        <div className="flex-1">
+                        <label className="text-left block text-sm font-medium text-gray-700">HSN Code</label>
+                        <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md h-9 pl-2 pr-2" placeholder="Hsn Code" value={formData.hsnCode} onChange={(e) => { setFormData({ ...formData, hsnCode: e.target.value }) }} />
+                        </div>
+                    </div>
+
                     <div className="flex gap-4">
                         <div className="flex-1">
                             <label className="text-left block text-sm font-medium text-gray-700">Barcode</label>
                             <select name="barcode" value={formData.barcodeType} onChange={(e) => { setFormData({ ...formData, barcodeType: e.target.value }) }} className="mt-1 block w-full border border-gray-300 rounded-md h-9">
                                 <option value={0}>Selecte one</option>
-                                <option value={1} key={1}>Auto GEnerate</option>
+                                <option value={1} key={1}>Auto Generate</option>
                                 <option value={2} key={2}>Scan code</option>
                                 <option value={3} key={3}>Manual</option>
                             </select>
@@ -347,7 +325,7 @@ const ProductDetailsForm = ({ handleNext, formData, setFormData }) => {
                     formData.billOfMaterials == true ?
                         <button className="bg-orange-500 hover:bg-orange-600 text-black font-semibold py-1 px-4 rounded" onClick={handleNext}>Next</button>
                         :
-                        <button className="bg-orange-500 hover:bg-orange-600 text-black font-semibold py-1 px-4 rounded" onClick={handleSubmit}>Submit</button>
+                        <div className="bg-orange-500 hover:bg-orange-600 text-black font-semibold py-1 px-4 rounded cursor:pointer" onClick={handleSubmit}>Submit</div>
                 }
 
             </div>
@@ -405,7 +383,7 @@ const AccountingDetailsForm = ({ handleNext, handleBack, formData, setFormData }
             <div className="w-full">
                 <div className="flex-1">
                     <label className="text-left block text-sm font-medium text-gray-700">Product Threshold</label>
-                    <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Brand" value={formData.threshold} onChange={(e) => { setFormData({ ...formData, threshold: e.target.value }) }} />
+                    <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md" placeholder="Brand" value={formData.sizeId} onChange={(e) => { setFormData({ ...formData, sizeId: e.target.value }) }} />
                 </div>
             </div>
 
@@ -432,156 +410,6 @@ const AccountingDetailsForm = ({ handleNext, handleBack, formData, setFormData }
         </div>
     )
 }
-
-
-// const BillOfMaterials = ({ handleBack, formData, setFormData }) => {
-//   const dispatch = useDispatch();
-//   // var [peroductList, setProductList] = useState(
-//   //     {
-//   //         productId: 0,
-//   //         productName: "string",
-//   //         statusTypeId: 0,
-//   //         categoryId: 0,
-//   //         subCategoryId: 0,
-//   //         brandId: 0,
-//   //         unitId: 0,
-//   //         quantity: 0,
-//   //         minPurchaseQuantity: 0,
-//   //         barcodeType: 0,
-//   //         barcodeNo: "string",
-//   //         description: "string",
-//   //         purchasePrice: 0,
-//   //         salesPricePercentage: 0,
-//   //         mrp: 0,
-//   //         wholesalePricePercentage: 0,
-//   //         threshold: 0,
-//   //         billOfMaterials: true,
-//   //         billOfMaterialsList: [
-//   //           {
-//   //             billOfMaterialsProductId: 0,
-//   //             billOfMaterialsProductQuantity: 0,
-//   //             billOfMaterialsProductCost: 0
-//   //           }
-//   //         ],
-//   //         freebie: true,
-//   //         freebieProductId: 0,
-//   //         images: [
-//   //           "string"
-//   //         ]
-//   //       }
-//   //   )
-//   var handleSubmit = () => {
-//     console.log("formData", formData);
-
-//     dispatch({ type: "ADDPRODUCTDETAILS", payload: formData })
-//   }
-
-//   // min-h-screen 
-//   return (
-//     <div className="flex items-center justify-center bg-gray-100">
-//       <div className="bg-white rounded-lg shadow-lg w-full max-w-xl overflow-y-auto">
-
-//         <div className="space-y-6 md:p-8">
-//           <div>
-//             <h3 className="font-semibold text-lg mb-2 text-orange-500">Component</h3>
-//             <div>
-//               <div className="flex items-center mb-px">
-//                 <input
-//                   type="text"
-//                   placeholder="Product Name"
-//                   className="w-52 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500 bg-zinc-300"
-
-//                 />
-//                 <input
-//                   type="text"
-//                   placeholder="Qty"
-//                   className="w-36 px-4 py-2 mx-0.5 focus:outline-none focus:ring-2 focus:ring-orange-500  bg-zinc-300"
-//                 />
-
-//               </div>
-//               <div className="flex items-center space-x-0.5">
-//                 <input
-//                   type="text"
-//                   placeholder="Computer"
-//                   className="w-52 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500 text-neutral-900 bg-zinc-100"
-//                 />
-//                 <input
-//                   type="text"
-//                   placeholder="10 pcs"
-//                   className="w-36 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500  bg-zinc-100"
-//                 />
-//                 <button className="text-gray-500 hover:text-red-500 mt-2">
-//                   <img className="ml-2" src={Delete}></img>
-//                 </button>
-//               </div>
-
-//               <button className="mt-4 text-neutral-900 text-sm font-manrope font-semibold text-left flex items-center space-x-2">
-//                 <span className="flex items-center justify-center w-4 h-4 rounded-full border border-black text-black text-xs">
-//                   <img src={Vector}></img>
-//                 </span>
-//                 <span>Add a component product</span>
-//               </button>
-
-//             </div>
-//           </div>
-
-//           <div>
-//             <h3 className="font-semibold text-lg mb-2 text-orange-500 mb-2 focus:outline-none focus:ring-2 focus:ring-orange-500">Additional Cost</h3>
-//             <div className="flex items-center mb-px">
-//               <input
-//                 type="text"
-//                 placeholder="Cost Name"
-//                 className="w-52 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500 bg-zinc-300"
-//               />
-//               <input
-//                 type="text"
-//                 placeholder="Sub Total"
-//                 className="w-36 px-4 py-2 mx-0.5 focus:outline-none focus:ring-2 focus:ring-orange-500  bg-zinc-300"
-//               />
-
-//             </div>
-//             <div className="flex items-center space-x-0.5">
-//               <input
-//                 type="text"
-//                 placeholder="Assemble"
-//                 className="w-52 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500 text-neutral-900 bg-zinc-100"
-//               />
-//               <input
-//                 type="text"
-//                 placeholder="₹ 11,000"
-//                 className="w-36 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500  bg-zinc-100"
-//               />
-//               <button className="text-gray-500 hover:text-red-500 mt-2">
-//                 <img className="ml-2" src={Delete}></img>
-//               </button>
-//             </div>
-
-//             <button className="mt-4 text-neutral-900 text-sm font-manrope font-semibold text-left flex items-center space-x-2">
-//               <span className="flex items-center justify-center w-4 h-4 rounded-full border border-black text-black text-xs">
-//                 <img src={Vector}></img>
-//               </span>
-//               <span>Add an additional cost</span>
-//             </button>
-//           </div>
-//         </div>
-
-//         <div className="w-full bg-zinc-300 mt-6 p-2">
-//           <div className="flex justify-end space-x-4">
-//             <button
-//               className="px-4 bg-orange-500 text-neutral-900 rounded-md hover:bg-gray-300" onClick={handleBack}
-//             >
-//               Back
-//             </button>
-//             <button className="px-4 py-1 bg-orange-500 text-neutral-900 rounded-md hover:bg-orange-600" onClick={handleSubmit}>
-//               Submit
-//             </button>
-//           </div>
-//         </div>
-
-//       </div>
-//     </div>
-//   );
-// };
 
 
 function BillOfMaterials({ handleBack, formData, setFormData }) {
