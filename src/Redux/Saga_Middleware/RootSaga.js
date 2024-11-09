@@ -5,7 +5,7 @@ import CategorySaga  from './CategorySaga';
 import SubCategorySaga from './Sub_Category_Saga';
 import AddProductSaga from './AddProductSaga';
 import CustomerSaga from './CustomerSaga';
-
+import PurchaseSaga from './PurchaseSaga'
 
 
 function* RootSaga() {
@@ -17,6 +17,7 @@ yield all([
   AddProductSaga(),
   SubCategorySaga(),
   CustomerSaga(),
+  PurchaseSaga(),
 
 ])
 }
