@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Vector from '../Images/Sales/Vector.svg'
 import Frame1 from '../Images/Sales/Frame.svg'
 import Frame2 from '../Images/Sales/Frame2.svg'
@@ -10,7 +10,7 @@ import Add from '../Images/Sales/Add Green.svg';
 import SmallDot from '../Images/Sales/Smalldots.svg'
 import { ArrowRight2, ArrowLeft2, ArrowUp2, ArrowDown2 } from 'iconsax-react';
 import AddPurchase from './AddPurchase';
-
+import { useDispatch, useSelector } from 'react-redux';
 
 
 function Purchase_List() {
@@ -18,7 +18,8 @@ function Purchase_List() {
 
     const [currentPage, setCurrentPage] = useState(1);
     const [showAddPurchase, setShowAddPurchase] = useState(false);
-
+    const dispatch = useDispatch();
+    const state = useSelector(state => state);
 
     const reports = [
         {
@@ -106,6 +107,26 @@ function Purchase_List() {
 const handleCloseAddPurchase = () => {
     setShowAddPurchase(false)
 }
+
+
+
+
+
+
+useEffect(()=>{
+    if(state.Purchase.addPurchaseStatusCode == 200){
+        setShowAddPurchase(false)
+    }
+
+},[state.Purchase.addPurchaseStatusCode])
+
+
+
+
+
+
+
+
 
     return (
         <>
