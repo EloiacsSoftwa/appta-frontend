@@ -5,7 +5,8 @@ import categoryReducer from "./CategoryReducer";
 import AddProductReducer from "./AddProductReducer";
 import SubCategoryReducer from './SubCategoryReducer'
 import CustomerReducer from "./CustomerReducer";
-import PurchaseReducer from './PurchaseReducer'
+import PurchaseReducer from './PurchaseReducer';
+import SupplierReducer from './SupplierReducer';
 
 
 const RootReducer = combineReducers({
@@ -16,6 +17,7 @@ const RootReducer = combineReducers({
     SubCategory : SubCategoryReducer,
     Customer : CustomerReducer,
     Purchase : PurchaseReducer,
+    Supplier : SupplierReducer,
 
 })
 export default RootReducer;
