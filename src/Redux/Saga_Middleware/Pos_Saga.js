@@ -1,5 +1,5 @@
 import { call, takeEvery, put } from 'redux-saga/effects';
-import { PosGetbyBarcode } from '../Action/sales_pos_Action';
+import { PosGetbyBarcode ,CreateOrder} from '../Action/sales_pos_Action';
 import Cookies from 'universal-cookie';
 
 function* handleBarcodeGetProduct(args) {
@@ -25,6 +25,24 @@ function* handleBarcodeGetProduct(args) {
     }
 }
 
+
+function* handleCreateOrder() {
+  
+  const response = yield call(CreateOrder);
+       console.log("resposne",response)
+  if (response.status === 200 || response.code === 200) {
+    yield put({ type: 'CREATE_ORDER', payload: { response: response.data.data, statusCode: response.status || response.code } });
+  }
+  else {
+    yield put({ type: 'ERROR', payload: { statusCode: response.status || response.code } });
+  }
+  if (response) {
+    ExpireToken(response)
+  }
+}
+
+
+
 function ExpireToken(response) {
 
     const code = response.data?.code ?? response.code;
@@ -36,6 +54,7 @@ function ExpireToken(response) {
 
 function* PosSaga() {
     yield takeEvery('BARCODE_GET_PRODUCT', handleBarcodeGetProduct);
+    yield takeEvery('CREATE-ORDER', handleCreateOrder);
 }
 
 export default PosSaga;

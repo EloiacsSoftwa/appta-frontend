@@ -35,9 +35,46 @@ import { Setting } from 'iconsax-react';
 
     //  const [loading, setLoading] = useState(false);
 
+    const[barcode, setBarcode] = useState('56676');
+   
+    const [productid , setProductId] = useState('')
+
+    const [posdata, setPosData] = useState([]);
+
+    const [editingIndex, setEditingIndex] = useState(null);
+    const [quantity, setQuantity] = useState(0);
+
+    const handleQuantityClick = (index, currentQuantity) => {
+      setEditingIndex(index);
+      setQuantity(currentQuantity);
+    };
+    
+    const handleQuantityChange = (index, newQuantity) => {
+      const updatedData = posdata.map((item, i) =>      
+        i === index ? { ...item, quantity: newQuantity } : item       
+      );
+      setPosData(updatedData);
+      setEditingIndex(null); 
+    };
+    
+    const handleInputChange = (e) => {
+      const value = e.target.value;
+      const parsedValue = parseInt(value, 10); 
+      setQuantity(isNaN(parsedValue) ? '' : parsedValue);
+    };
+  
+    const handleKeyDown = (index, event) => {
+      if (event.key === 'Enter') {
+        handleQuantityChange(index, quantity);
+      }
+    };
+
     const [currentDate, setCurrentDate] = useState('');
 
     const [total_amount ,setTotalAmount] = useState('')
+
+   const [order_id,setOrderID] = useState('')
+
 
     useEffect(() => {
       const date = new Date();
@@ -53,14 +90,25 @@ import { Setting } from 'iconsax-react';
 
 
 
-       const[barcode, setBarcode] = useState('56676');
-   
-       const [productid , setProductId] = useState('')
-
-       const [posdata, setPosData] = useState([]);
+        useEffect(()=> {
+          dispatch({ type: 'CREATE-ORDER'});
+        },[])
   
 
+        useEffect(() => {
+          if (State.PosReducer.CreateOrderStatuscode == 200) {
+            setOrderID(State.PosReducer.Order_Id)
+  
+              setTimeout(() => {
+                  dispatch({ type: 'REMOVE_CREATE_ORDER_STATUS_CODE' })
+              }, 2000)
+          }
+  
+      }, [State.PosReducer.CreateOrderStatuscode])
    
+
+      console.log("order_id",order_id);
+      
       
       // Barcode scan function
       const BarcodeGetData = () => {
@@ -79,7 +127,7 @@ import { Setting } from 'iconsax-react';
       
       
      const handleproductName = (item) => {
-        console.log("allwin",item);
+        console.log("item",item);
         setSearchQuery('');
         
         setSelectedProductId(item)
@@ -170,7 +218,9 @@ console.log("filterData",searchfilterdata)
     };
     
       
-  
+    console.log("posdata",posdata);
+    
+
       useEffect(() => {
         dispatch({ type: 'GETPRODUCT' });
         dispatch({ type: 'GETCUSTOMER' });
@@ -242,15 +292,24 @@ console.log("Search Filter Data:", searchfilterdata);
      }
 
      useEffect(() => {
-      if (State.Customer.addCustomerStatusCode == 200) {
-          dispatch({ type: 'GETCUSTOMER' })
-          SetCustomerform(false)
-          setTimeout(() => {
-              dispatch({ type: 'REMOVE_ADD_CUSTOMER_STATUS_CODE' })
-          }, 2000)
+      if (State.Customer.addCustomerStatusCode === 200) {
+        dispatch({ type: 'GETCUSTOMER' });
+        SetCustomerform(false);
+    
+        setTimeout(() => {
+          dispatch({ type: 'REMOVE_ADD_CUSTOMER_STATUS_CODE' });
+        }, 1000);
       }
+    }, [State.Customer.addCustomerStatusCode]);
+    
 
-  }, [State.Customer.addCustomerStatusCode])
+    useEffect(() => {
+      if (State.Customer.addCustomerStatusCode === 200 && State.Customer.CustomerList.length > 0) {
+        const lastCustomer = State.Customer.CustomerList[State.Customer.CustomerList.length - 1];
+        setCustomerFilter(lastCustomer);
+      }
+    }, [State.Customer.CustomerList]);
+    
 
 
 
@@ -434,33 +493,53 @@ console.log("Search Filter Data:", searchfilterdata);
                         </tr>
                     </thead>
                     <tbody>
-  {posdata && posdata.length > 0 ? (
-    posdata.map((item, index) => 
-      item ? ( 
-        <tr key={index} className="hover:bg-gray-50 border-0">
-          <td className="p-2 mt-1 flex items-center justify-start">
-            <input type="checkbox" className="form-checkbox h-3 w-3 text-blue-600 border-neutral-500 cursor-pointer" />
+      {posdata && posdata.length > 0 ? (
+        posdata.map((item, index) => (
+          <tr key={index} className="hover:bg-gray-50 border-0">
+            <td className="p-2 mt-1 flex items-center justify-start">
+              <input type="checkbox" className="form-checkbox h-3 w-3 text-blue-600 border-neutral-500 cursor-pointer" />
+            </td>
+            <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{item.unitId || '-'}</td>
+            <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{item.barcodeNo || '-'}</td>
+            <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{item.productName || '-'}</td>
+            
+            
+            <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">
+            {editingIndex === index ? (
+              <input
+                type="number"
+                value={quantity}
+                onChange={handleInputChange}
+                onBlur={() => handleQuantityChange(index, quantity)}
+                onKeyDown={(e) => handleKeyDown(index, e)}
+                className="border border-neutral-300 rounded px-1 py-0.5 w-16"
+              />
+            ) : (
+              <span onClick={() => handleQuantityClick(index, item.quantity)} className="cursor-pointer">
+                {item.quantity || '-'}
+              </span>
+            )}
           </td>
-          <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{item.unitId || '-'}</td>
-          <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{item.barcodeNo || '-'}</td>
-          <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{item.productName || '-'}</td>
-          <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{item.quantity || '-'}</td>
-          <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">₹{item.wholesalePrice || '0'}</td>
-          <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">₹{(item.quantity * item.wholesalePrice) || '0'}</td>
-          <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{item.wholesalePricePercentage || '-'}</td>
-          <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">₹{((item.quantity * item.wholesalePrice) * (item.wholesalePricePercentage / 100)) || '0'}</td>
-          <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">₹{(item.quantity * item.wholesalePrice) - ((item.quantity * item.wholesalePrice) * (item.wholesalePricePercentage / 100)) || '0'}</td>
+            
+            <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">₹{item.wholesalePrice || '0'}</td>
+            <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">₹{(item.quantity * item.wholesalePrice) || '0'}</td>
+            <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{item.wholesalePricePercentage || '-'}</td>
+            <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">
+              ₹{((item.quantity * item.wholesalePrice) * (item.wholesalePricePercentage / 100)) || '0'}
+            </td>
+            <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">
+              ₹{(item.quantity * item.wholesalePrice) - ((item.quantity * item.wholesalePrice) * (item.wholesalePricePercentage / 100)) || '0'}
+            </td>
+          </tr>
+        ))
+      ) : (
+        <tr>
+          <td colSpan="10" className="p-2 text-center text-sm text-neutral-500">
+            No data available
+          </td>
         </tr>
-      ) : null 
-    )
-  ) : (
-    <tr>
-      <td colSpan="10" className="p-2 text-center text-sm text-neutral-500">
-        No data available
-      </td>
-    </tr>
-  )}
-</tbody>
+      )}
+    </tbody>
 
 
 
@@ -500,7 +579,7 @@ console.log("Search Filter Data:", searchfilterdata);
     />
 
    
-    {customerSearchQuery && filteredCustomers.length > 0 && (
+    {customerSearchQuery && filteredCustomers && filteredCustomers.length > 0 && (
       <div className="absolute w-full bg-white border border-gray-300 rounded mt-1 max-h-60 overflow-y-auto z-10">
         {filteredCustomers.map((customer, index) => (
           <div
