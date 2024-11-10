@@ -37,7 +37,7 @@ const [supplierId,  setSupplierId] = useState('')
   // const [addCharges, setAddCharges] = useState(0);
   // const [globalDiscount, setGlobalDiscount] = useState(0);
   // const [roundingOff, setRoundingOff] = useState(0);
-
+  const [errors, setErrors] = useState({}); 
 console.log("supplierId",supplierId)
 
 const [orderDateError, setOrderDateError] = useState('');
@@ -142,7 +142,12 @@ if(value){
     setProductID(filteredProduct)
   }
    
-
+  if (value) {
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      [`${field}-${index}`]: '',
+    }));
+  }
   // setProductIDWithName(updatedProducts[0]?.Product)
   // if(updatedProducts[0]?.Product){
   //   const filteredProduct = state.AddProduct.ProductList.filter((product) => {
@@ -279,13 +284,13 @@ console.log("productIDDDDDDDDDD",productId)
 
 const handleAddPurchase = () => {
 
- setOrderDateError('');
+   setOrderDateError('');
     setInvoiceIdError('');
     setProductsError('');
     setSupplierIdError('');
-
+    setErrors({});
     let valid = true;
-
+    const newErrors = {};
   
     if (!orderDate) {
       setOrderDateError('Purchase date is required');
@@ -306,13 +311,50 @@ const handleAddPurchase = () => {
       setSupplierIdError('Supplier ID is required');
       valid = false;
     }
-
+    products.forEach((product, index) => {
+      if (!product.Product) {
+        newErrors[`Product-${index}`] = 'Product name is required';
+        valid = false;
+      }
+      if (!product.PurchasePrice || product.PurchasePrice <= 0) {
+        newErrors[`PurchasePrice-${index}`] = 'Purchase Price must be greater than 0';
+        valid = false;
+      }
+      if (!product.Quantity || product.Quantity <= 0) {
+        newErrors[`Quantity-${index}`] = 'Quantity must be greater than 0';
+        valid = false;
+      }
+      if (!product.MRP ) {
+        newErrors[`MRP-${index}`] = 'MRP must be greater than 0';
+        valid = false;
+      }
+      if (!product.SalesPercentage) {
+        newErrors[`SalesPercentage-${index}`] = 'Sales Percentage cannot be negative';
+        valid = false;
+      }
+      if (!product.SalesPrice) {
+        newErrors[`SalesPrice-${index}`] = 'Sales Price must be greater than 0';
+        valid = false;
+      }
+      if (!product.WholeSalePercentage) {
+        newErrors[`WholeSalePercentage-${index}`] = 'Wholesale Percentage cannot be negative';
+        valid = false;
+      }
+      if (!product.WholeSalePrice) {
+        newErrors[`WholeSalePrice-${index}`] = 'Wholesale Price must be greater than 0';
+        valid = false;
+      }
+    });
+  
+  
+    setErrors(newErrors); 
+  
     
     if (!valid) {
       return;
     }
 
-
+   
 
   if(orderDate && invoiceId && products && supplierId){
 
@@ -389,7 +431,7 @@ useEffect(() => {
 
 {
   state.Supplier?.SupplierList.map((view)=>{
-    return  <li key={view.id} value={view.id} onClick={() => handleOptionSelect(view.supplierCode , view.id)} className="px-2 py-2 cursor-pointer hover:bg-gray-200">{view.name || view.supplierCode }</li>
+    return  <li key={view.id} value={view.id} onClick={() => handleOptionSelect(view.name , view.id)} className="px-2 py-2 cursor-pointer hover:bg-gray-200">{view.name }</li>
   })
 }
              
@@ -511,7 +553,7 @@ useEffect(() => {
 
 
 
-{productsError && <p className="text-red-500 font-Manrope mt-1 text-sm">{productsError}</p>}
+{/* {productsError && <p className="text-red-500 font-Manrope mt-1 text-sm">{productsError}</p>} */}
        
       
        
@@ -540,8 +582,9 @@ useEffect(() => {
                 value={product.Product}
                 onChange={(e) => handleInputChange(e, 'Product', index)}
                 onClick={() => handleproductNameDropDown (index)}
-                className="border p-1 rounded w-full"
+                className={`border p-1 rounded w-full ${errors[`Product-${index}`] ? 'border-red-500' : ''}`}
               />
+
 
 {showProductDropdown[index] && (
   <div ref={dropdownRef} className="absolute z-50 bg-light_gray divide-y divide-gray-100 shadow md:w-56 w-56 sm:w-56">
@@ -569,25 +612,13 @@ useEffect(() => {
     </ul>
   </div>
 )}
-
-
-
-
-
-
-
-
-
-
-
-
             </td>
             <td className="p-2 border">
               <input
                 type="number"
                 value={product.Quantity}
                 onChange={(e) => handleInputChange(e, 'Quantity', index)}
-                className="border p-1 rounded w-full"
+                className={`border p-1 rounded w-full ${errors[`Quantity-${index}`] ? 'border-red-500' : ''}`}
                 min="0"
               />
             </td>
@@ -596,16 +627,17 @@ useEffect(() => {
                 type="number"
                 value={product.PurchasePrice}
                 onChange={(e) => handleInputChange(e, 'PurchasePrice', index)}
-                className="border p-1 rounded w-full"
+                className={`border p-1 rounded w-full ${errors[`PurchasePrice-${index}`] ? 'border-red-500' : ''}`} 
                 min="0"
               />
+              
             </td>
             <td className="p-2 border">
               <input
                 type="number"
                 value={product.MRP}
                 onChange={(e) => handleInputChange(e, 'MRP', index)}
-                className="border p-1 rounded w-full"
+                className={`border p-1 rounded w-full ${errors[`MRP-${index}`] ? 'border-red-500' : ''}`} 
                 min="0"
               />
             </td>
@@ -614,7 +646,7 @@ useEffect(() => {
                 type="number"
                 value={product.SalesPercentage}
                 onChange={(e) => handleInputChange(e, 'SalesPercentage', index)}
-                className="border p-1 rounded w-full"
+                className={`border p-1 rounded w-full ${errors[`SalesPercentage-${index}`] ? 'border-red-500' : ''}`} 
                 min="0"
               />
             </td>
@@ -623,7 +655,7 @@ useEffect(() => {
                 type="number"
                 value={product.SalesPrice}
                 onChange={(e) => handleInputChange(e, 'SalesPrice', index)}
-                className="border p-1 rounded w-full"
+                className={`border p-1 rounded w-full ${errors[`SalesPrice-${index}`] ? 'border-red-500' : ''}`}
                 min="0"
               />
             </td>
@@ -632,7 +664,7 @@ useEffect(() => {
                 type="number"
                 value={product.WholeSalePercentage}
                 onChange={(e) => handleInputChange(e, 'WholeSalePercentage', index)}
-                className="border p-1 rounded w-full"
+                className={`border p-1 rounded w-full ${errors[`WholeSalePercentage-${index}`] ? 'border-red-500' : ''}`}
                 min="0"
               />
             </td>
@@ -641,7 +673,7 @@ useEffect(() => {
                 type="number"
                 value={product.WholeSalePrice}
                 onChange={(e) => handleInputChange(e, 'WholeSalePrice', index)}
-                className="border p-1 rounded w-full"
+                className={`border p-1 rounded w-full ${errors[`WholeSalePrice-${index}`] ? 'border-red-500' : ''}`}
                 min="0"
               />
             </td>
