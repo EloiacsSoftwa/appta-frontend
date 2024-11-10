@@ -206,6 +206,7 @@ function Purchase_List(props) {
     <th className="p-1 font-semibold text-base text-neutral-900 min-w-[40px]"></th>
 </tr>
 </thead>
+
                         <tbody>
                             {currentItems.map((item, index) => (
                                 <tr key={index} className="hover:bg-gray-50">
