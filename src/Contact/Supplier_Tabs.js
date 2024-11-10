@@ -270,6 +270,7 @@ const SupplierForm = ({handleClose}) => {
                     </span>
                     <input type="text" 
                     value={phone}
+                    maxLength={10}
                     onChange={handlePhone}
                     
                     placeholder="XXX XXX XXXX" className="w-full p-2 placeholder-black border-l-0 mb-1" />
@@ -288,7 +289,7 @@ const SupplierForm = ({handleClose}) => {
                     <input type="text" 
                     value={altPhone}
                     onChange={handleAltPhone}
-                    
+                    maxLength={10}
                     placeholder="XXX XXX XXXX" className="w-full p-2 placeholder-black border-l-0 mb-1" />
                     
                   </div>
