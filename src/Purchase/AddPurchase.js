@@ -136,7 +136,7 @@ const handleInputChange = (e, field, index) => {
   console.log("Updated Products:", updatedProducts);
   
 if(value){
-    const filteredProduct = state.AddProduct.ProductList.filter((product) => {
+    const filteredProduct = state.AddProduct?.ProductList?.filter((product) => {
       return product.productName.toLowerCase().includes(value.toLowerCase());
     });
     setProductID(filteredProduct)
@@ -429,11 +429,25 @@ useEffect(() => {
         <div className="absolute z-50 bg-light_gray divide-y divide-gray-100 shadow md:w-56 w-56 sm:w-56">
           <ul className="py-2 text-sm text-black font-Manrope font-medium text-start">
 
-{
-  state.Supplier?.SupplierList.map((view)=>{
-    return  <li key={view.id} value={view.id} onClick={() => handleOptionSelect(view.name , view.id)} className="px-2 py-2 cursor-pointer hover:bg-gray-200">{view.name }</li>
-  })
+          {
+  state.Supplier?.SupplierList?.length > 0 ? (
+    state.Supplier.SupplierList.map((view) => {
+      return (
+        <li
+          key={view.id}
+          value={view.id}
+          onClick={() => handleOptionSelect(view.name, view.id)}
+          className="px-2 py-2 cursor-pointer hover:bg-gray-200"
+        >
+          {view.name}
+        </li>
+      );
+    })
+  ) : (
+    <label>No Supplier Available</label>
+  )
 }
+
              
          
           </ul>
@@ -516,9 +530,11 @@ useEffect(() => {
                    value={invoiceId}
                    onChange={handleInvoiceIdChange} 
                   className="w-full border rounded px-3 py-2 text-sm focus:border-orange-600" placeholder="P7895233" />
+                {invoiceIdError && <p className="text-red-500 font-Manrope mt-1 text-sm">{invoiceIdError}</p>}
+              
                 </div>
 
-                {invoiceIdError && <p className="text-red-500 font-Manrope mt-1 text-sm">{invoiceIdError}</p>}
+              
                
               </div>
             </div>

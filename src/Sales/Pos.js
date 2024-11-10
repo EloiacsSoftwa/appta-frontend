@@ -294,7 +294,7 @@ const Pos = ({ handleClosed }) => {
   };
 
 
-  const filteredCustomers = State.Customer.CustomerList && State?.Customer?.CustomerList.filter(customer =>
+  const filteredCustomers = State?.Customer?.CustomerList && State?.Customer?.CustomerList.filter(customer =>
     customer.customerName.toLowerCase().includes(customerSearchQuery)
   );
 
@@ -414,11 +414,7 @@ const Pos = ({ handleClosed }) => {
                           className="p-2 hover:bg-gray-100 cursor-pointer"
                           onClick={() => {
                             handleproductName(item.productId)
-                            // setSearchQuery(''); 
-                            // Clear the search query
-                            // setSelectedProductId(item.productName);
-                            // Store the selected product name or ID
-                            // You can also send additional actions here if needed, e.g. dispatching data
+                        
                           }}
 
                         //   onChange={(e)=>handleproductName(e)}
@@ -430,7 +426,7 @@ const Pos = ({ handleClosed }) => {
                   )}
 
                   {/* No results message */}
-                  {searchQuery && filteredData.length === 0 && (
+                  {searchQuery && filteredData &&  filteredData.length === 0 && (
                     <div className="absolute w-full bg-white border border-gray-300 rounded mt-1 p-2 text-sm text-gray-500">
                       No products match your search
                     </div>
@@ -654,7 +650,7 @@ const Pos = ({ handleClosed }) => {
                   )}
 
 
-                  {customerSearchQuery && filteredCustomers.length === 0 && (
+                  {customerSearchQuery && filteredCustomers && filteredCustomers.length === 0 && (
                     <div className="absolute w-full bg-white border border-gray-300 rounded mt-1 p-2 text-sm text-gray-500">
                       No customers match your search
                     </div>
@@ -685,7 +681,7 @@ const Pos = ({ handleClosed }) => {
                     <img src={Cup} className='w-6 h-6' />
                     <div>
                       <p className='text-xs  font-semibold font-Manrope ' style={{ paddingLeft: '5px' }}>Loyalty Points</p>
-                      <p className='text-xs text-center text-[#797979] ' style={{ paddingRight: '20px' }}>0 points</p>
+                      <p className='text-xs text-center text-[#797979] ' style={{ paddingRight: '20px' }}>{customerFilter ? customerFilter.loyaltyPoints : "0"} Points</p>
                     </div>
                   </div>
 
@@ -693,7 +689,8 @@ const Pos = ({ handleClosed }) => {
                     <img src={Paylater} className='w-6 h-6' />
                     <div>
                       <p className='text-xs  font-semibold font-Manrope' style={{ paddingRight: '7px' }}>Pay Later</p>
-                      <p className='text-xs text-center   text-[#797979] ' style={{ paddingLeft: '8px' }}>Not Eligible</p>
+                      <p className='text-xs text-center   text-[#797979] ' style={{ paddingLeft: '8px' }}> {customerFilter?.paylater === "false" ? " Eligible" : " Not Eligible"}
+                      </p>
                     </div>
                   </div>
                 </div>
