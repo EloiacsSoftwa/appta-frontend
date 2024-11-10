@@ -1,13 +1,17 @@
+import { ADD_ORDER_ITEMS_API_RESPONSE } from "../../utils/Constant";
 const initialState = {
   BarcodeproductData: [],
   barcodeStatuscode: 0,
   Order_Id:'',
   CreateOrderStatuscode :0,
-  Errormsg: ''
+  Errormsg: '',
+  orderItems: [],
+  totalPrice: 0,
+  totalAmount: 0,
+  totalDiscount: 0,
 };
 
 const PosReducer = (state = initialState, action) => {
-  console.log("action",action);
   
   switch (action.type) {
  
@@ -30,6 +34,11 @@ const PosReducer = (state = initialState, action) => {
 
     case 'CLEAR_BARCODE_GET_PRODUCT_FAILURE':
       return { ...state, Errormsg: '' };
+
+    case ADD_ORDER_ITEMS_API_RESPONSE: {
+      return {...state, orderItems: action.orderItems}
+    }
+
 
     default:
       return state;
