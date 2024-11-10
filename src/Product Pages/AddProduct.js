@@ -148,6 +148,10 @@ const ProductDetailsForm = ({ handleNext, formData, setFormData }) => {
         setFilteredSizes(filtered); 
     };
 
+    const barcodeScanned = (code) => {
+        setFormData(...formData, {barcodeNo: code})
+    } 
+
     
     const handleSuggestionClick = (size) => {
         setFormData({ ...formData, sizeId: size.sizeName });
@@ -187,12 +191,7 @@ const ProductDetailsForm = ({ handleNext, formData, setFormData }) => {
         //   });
         // }
     };
-
-    const barcodeScanned = (code) => {
-
-        setFormData(...formData, {barcodeNo: code})
-    }       
-
+          
     const handleSelectCategory = (id) => {
         setSelectedCategory(id)
         dispatch({ type: 'GETSUBCATEGORY', payload: id });
@@ -210,6 +209,10 @@ const ProductDetailsForm = ({ handleNext, formData, setFormData }) => {
         console.log(temp);
         dispatch({ type: "ADDPRODUCTDETAILS", payload: temp })
     }
+
+
+    useBarcodeScanner(barcodeScanned)
+
     return (
         // onSubmit={(e) => { e.preventDefault(); handleNext(); }}
         <form className="flex-col flex-wrap gap-4" >
