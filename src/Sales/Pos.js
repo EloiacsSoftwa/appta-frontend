@@ -685,7 +685,7 @@ const Pos = ({ handleClosed }) => {
                     <img src={Cup} className='w-6 h-6' />
                     <div>
                       <p className='text-xs  font-semibold font-Manrope ' style={{ paddingLeft: '5px' }}>Loyalty Points</p>
-                      <p className='text-xs text-center text-[#797979] ' style={{ paddingRight: '20px' }}>0 points</p>
+                      <p className='text-xs text-center text-[#797979] ' style={{ paddingRight: '20px' }}>{customerFilter ? customerFilter.loyaltyPoints : "0"} Points</p>
                     </div>
                   </div>
 
@@ -693,7 +693,8 @@ const Pos = ({ handleClosed }) => {
                     <img src={Paylater} className='w-6 h-6' />
                     <div>
                       <p className='text-xs  font-semibold font-Manrope' style={{ paddingRight: '7px' }}>Pay Later</p>
-                      <p className='text-xs text-center   text-[#797979] ' style={{ paddingLeft: '8px' }}>Not Eligible</p>
+                      <p className='text-xs text-center   text-[#797979] ' style={{ paddingLeft: '8px' }}> {customerFilter?.paylater === "false" ? " Eligible" : " Not Eligible"}
+                      </p>
                     </div>
                   </div>
                 </div>
