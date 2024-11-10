@@ -61,7 +61,6 @@ function App() {
 
 const handleSelectedMenu = (title) => {
 setSelectedMenu(title)
-console.log("title",title)
 localStorage.setItem('currentPage', title);
 }
 
@@ -69,11 +68,10 @@ localStorage.setItem('currentPage', title);
 
 
 
-useEffect(() => {
-  setSelectedMenu(localStorage.getItem('currentPage'));
-}, [selectedMenu]);
+// useEffect(() => {
+//   setSelectedMenu(localStorage.getItem('currentPage'));
+// }, [selectedMenu]);
 
-console.log("selectedPage",localStorage.getItem('currentPage'))
 
 
 useEffect(() => {

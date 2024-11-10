@@ -4,20 +4,21 @@ import axios from 'axios'
 
 export function Category(payload) {
 
-    return  AxiosConfig.post(`/category/getCategory`, 
-        {
-        }, {
-           params: {
-            categoryName: payload
-           }
-        }
-
-    ).then(response=>response).catch(error=>{console.log(error,"catch")
-       return error
-    });
-    
+   return AxiosConfig.post(`/category/getCategory`,
+      {
+      }, {
+      params: {
+         categoryName: payload
+      }
    }
-   
+
+   ).then(response => response).catch(error => {
+      console.log(error, "catch")
+      return error
+   });
+
+}
+
 // export  function SubCategory(payload) {
 
 
@@ -28,7 +29,7 @@ export async function SubCategory(payload) {
          subCategory: payload
       }
    })
- }
+}
 
 
 export function getAllBrands(payloads) {
@@ -38,7 +39,8 @@ export function getAllBrands(payloads) {
    }
    return AxiosConfig.post(`/brand/getBrand`, {}, {
       params: params
-   }).then(response=>response).catch(error=>{console.log(error,"catch")
+   }).then(response => response).catch(error => {
+      console.log(error, "catch")
       return error
    });
 }
@@ -46,46 +48,50 @@ export function getAllBrands(payloads) {
 
 
 
-   export async function AddProductDetails(payload) {
-      return await AxiosConfig.post('/products/addProduct',payload ,{
-         data:payload
-      })
-    }
+export async function AddProductDetails(payload) {
+   return await AxiosConfig.post('/products/addProduct', payload, {
+      data: payload
+   })
+}
 
 
 
-    
 
-    export async function AddBrand(payload) {
-      return await AxiosConfig.post('/brand/insertBrand',payload ,{
-         data:payload
-      })
-    }
 
-    export async function GetProduct() {
-      return await AxiosConfig.post('/products/getProducts',{
-              })
-    }
+export async function AddBrand(payload) {
+   return await AxiosConfig.post('/brand/insertBrand', payload, {
+      data: payload
+   })
+}
 
-    export async function getAllUnitsCall() {
-      return await AxiosConfig.post('/unit/getUnit')
-    }
+export async function GetProduct() {
+   return await AxiosConfig.post('/products/getProducts', {
+   })
+}
 
-    export async function getFreebie(payload) {
-        return await AxiosConfig.post('/products/getProductsByBarcodeOrName', {
-        }, {
-           params: {
-            inputText : payload
-           }
-        })
+export async function getAllUnitsCall() {
+   return await AxiosConfig.post('/unit/getUnit')
+}
+
+export async function getFreebie(payload) {
+   return await AxiosConfig.post('/products/getProductsByBarcodeOrName', {
+   }, {
+      params: {
+         inputText: payload
       }
+   })
+}
 
-            //   getProductDetailsbyid
-      export async function getProductDetailsbyid(productName) {
-         return await AxiosConfig.post('/products/getProductsByBarcodeOrName', {
-         }, {
-            params: { 
-              inputText : productName
-            }
-         });
-       }
+//   getProductDetailsbyid
+export async function getProductDetailsbyid(productName) {
+   return await AxiosConfig.post('/products/getProductsByBarcodeOrName', {
+   }, {
+      params: {
+         inputText: productName
+      }
+   });
+}
+
+export const getProductSizes = async () => {
+   return await AxiosConfig.post('/productSize/getProductSize')
+}
