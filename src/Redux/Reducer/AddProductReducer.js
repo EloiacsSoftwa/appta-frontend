@@ -1,4 +1,5 @@
-import { GET_BRANDS_API_RESPONSE, GET_ALL_UNITS_API_RESPONSE } from "../../utils/Constant";
+import { Size } from "iconsax-react";
+import { GET_BRANDS_API_RESPONSE, GET_ALL_UNITS_API_RESPONSE, GET_PRODUCT_SIZE_API_RESPONSE } from "../../utils/Constant";
 // AddProductReducer
 const initialState = {
   category: [],
@@ -17,7 +18,8 @@ const initialState = {
   getFreebieStatusCode :0,
   // Get product by name
   ProductByName: [],
-  getProductByNameStatusCode: 0
+  getProductByNameStatusCode: 0,
+  productSize: []
 };
 
 const AddProductReducer = (state = initialState, action) => {
@@ -66,6 +68,8 @@ const AddProductReducer = (state = initialState, action) => {
     case 'GET_PRODUCT_DETAILS_BY_ID':
       return { ...state, ProductByName: action.payload.response, getProductByNameStatusCode: action.payload.statusCode }
     
+    case GET_PRODUCT_SIZE_API_RESPONSE:
+      return {...state, productSize: action.payload}
 
     default:
       return state;

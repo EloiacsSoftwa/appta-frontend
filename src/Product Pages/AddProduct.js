@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from 'react-redux';
-import { GET_BRANDS_API_CALL, GET_ALL_UNITS_API_CALL } from "../utils/Constant";
+import { GET_BRANDS_API_CALL, GET_ALL_UNITS_API_CALL, GET_PRODUCT_SIZE_API_CALL } from "../utils/Constant";
 
 import Vector from '../Images/Icons/Vector.svg';
 import Delete from '../Images/Icons/Delete.svg';
@@ -50,6 +50,7 @@ const AddProductModal = ({ onClose }) => {
         dispatch({ type: 'GETCATEGORY' });
         dispatch({ type: GET_BRANDS_API_CALL })
         dispatch({ type: GET_ALL_UNITS_API_CALL })
+        dispatch({type: GET_PRODUCT_SIZE_API_CALL })
     }, []);
 
     const handleNext = () => {
