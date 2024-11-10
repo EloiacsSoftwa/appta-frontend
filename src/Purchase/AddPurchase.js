@@ -754,30 +754,7 @@ useEffect(() => {
 
 
 
-{/* 
-        <div className="ml-4 mr-4">
-  {[
-   { label: "Sub-total", value: subTotal ? subTotal.toFixed(2) : '0.00' },
-    { label: "Discount (-)", value: '0' },
-    { label: "+ Add Charges", value: '0' },
-    { label: "Before- Tax", value: beforeTax.toFixed(2) },
-    { label: "Tax (+)", value: taxTotal.toFixed(2) },
-    { label: "IGST", value: taxTotal.toFixed(2) },
-    { label: "Rounding Off", value: '0' }
-  ].map((item) => (
-    <div key={item.label} className="flex justify-between mt-4">
-      <p className="font-semibold text-sm">{item.label}</p>
-      <p className="font-semibold text-sm">{item.value}</p>
-    </div>
-  ))}
 
-  <div className="mt-4 border border-y-orange-600 w-full"></div>
-
-  <div className="flex justify-between mt-4">
-    <p className="font-semibold text-lg">Total (INR)</p>
-    <p className="font-semibold text-lg">{total.toFixed(2)}</p>
-  </div>
-</div> */}
 
       </div>
     </div>
