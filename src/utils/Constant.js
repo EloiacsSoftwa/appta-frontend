@@ -6,3 +6,5 @@ export const GET_PRODUCT_SIZE_API_CALL = "Get-All-Product-Size-Api-Call"
 export const GET_PRODUCT_SIZE_API_RESPONSE = "Get-All-Products-Size-Api-Response"
 export const ADD_ORDER_ITEMS_API_CALL = 'Get-Order-Items-Api-Call'
 export const ADD_ORDER_ITEMS_API_RESPONSE = 'Get-Order-Items-Api-Response'
+export const GET_SUB_CATEGORY_BASED_ON_CATEGORY_API_CALL = 'Get-SubCategory-Based-On-Parent-Api-Call'
+export const GET_SUB_CATEGORY_BASED_ON_CATEGORY_API_RESPONSE = 'Get-SubCategory-Based-On-Parent-Api-Response'

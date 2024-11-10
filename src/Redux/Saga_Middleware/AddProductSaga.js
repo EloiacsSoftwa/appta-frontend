@@ -1,6 +1,6 @@
 import { call, takeEvery, put, take } from 'redux-saga/effects';
-import { Category, SubCategory, AddProductDetails, AddBrand, GetProduct, getAllUnitsCall, getFreebie, getProductDetailsbyid } from '../Action/AddProductAction';
-import { GET_BRANDS_API_CALL, GET_BRANDS_API_RESPONSE, GET_ALL_UNITS_API_CALL, GET_ALL_UNITS_API_RESPONSE, GET_PRODUCT_SIZE_API_CALL, GET_PRODUCT_SIZE_API_RESPONSE } from '../../utils/Constant';
+import { Category, SubCategory, AddProductDetails, AddBrand, GetProduct, getAllUnitsCall, getFreebie, getProductDetailsbyid, SubCategoryBasedOnParent } from '../Action/AddProductAction';
+import { GET_BRANDS_API_CALL, GET_BRANDS_API_RESPONSE, GET_ALL_UNITS_API_CALL, GET_ALL_UNITS_API_RESPONSE, GET_PRODUCT_SIZE_API_CALL, GET_PRODUCT_SIZE_API_RESPONSE, GET_SUB_CATEGORY_BASED_ON_CATEGORY_API_CALL, GET_SUB_CATEGORY_BASED_ON_CATEGORY_API_RESPONSE } from '../../utils/Constant';
 import { getAllBrands, getProductSizes } from '../Action/AddProductAction';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -16,6 +16,22 @@ function* Sub_Category(args) {
     yield put({ type: 'GET_SUBCATEGORY', payload: { response: response.data.data, statusCode: response.status || response.code } });
     
 
+  }
+  
+  else {
+    yield put({ type: 'ERROR', payload: { statusCode: response.status || response.code } });
+  }
+  if (response) {
+    ExpireToken(response)
+  }
+}
+
+function* SubCategoryFromParent(args) {
+
+  const response = yield call(SubCategoryBasedOnParent, args.payload);
+  if (response.status === 200 || response.code === 200) {
+    yield put({ type: GET_SUB_CATEGORY_BASED_ON_CATEGORY_API_RESPONSE, payload: { response: response.data.data, statusCode: response.status || response.code } });
+    
   }
   
   else {
@@ -252,6 +268,7 @@ function* AddProductSaga() {
    //   GET_GET_PRODUCT_BY_NAME
   yield takeEvery('GET_PRODUCT_BY_NAME',getProductDetails);
   yield takeEvery(GET_PRODUCT_SIZE_API_CALL, getAllProductSizes)
+  yield takeEvery(GET_SUB_CATEGORY_BASED_ON_CATEGORY_API_CALL, SubCategoryFromParent)
 
 }
 

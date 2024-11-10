@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from 'react-redux';
-import { GET_BRANDS_API_CALL, GET_ALL_UNITS_API_CALL, GET_PRODUCT_SIZE_API_CALL } from "../utils/Constant";
+import { GET_BRANDS_API_CALL, GET_ALL_UNITS_API_CALL, GET_PRODUCT_SIZE_API_CALL, GET_SUB_CATEGORY_BASED_ON_CATEGORY_API_CALL} from "../utils/Constant";
 
 import Vector from '../Images/Icons/Vector.svg';
 import Delete from '../Images/Icons/Delete.svg';
@@ -41,7 +41,8 @@ const AddProductModal = ({ onClose }) => {
         barcodeNo: 0,
         statusTypeId: 1,
         sizeId: 0,
-        hsnCode: ''
+        hsnCode: '',
+        manualSize: true
     });
   
     
@@ -167,7 +168,9 @@ const ProductDetailsForm = ({ handleNext, formData, setFormData }) => {
     const state = useSelector(state => state);
     const dispatch = useDispatch();
     const [selectedCategory, setSelectedCategory] = useState()
+    const [enableBarcodeScanner, setBarcodeScannerEnabled] = useState(false)
     let fileInputRef = useRef()
+
 
     const handleInputChange = (e) => {
         const { name, value, type, checked } = e.target;
@@ -241,7 +244,7 @@ const ProductDetailsForm = ({ handleNext, formData, setFormData }) => {
           
     const handleSelectCategory = (id) => {
         setSelectedCategory(id)
-        dispatch({ type: 'GETSUBCATEGORY', payload: id });
+        dispatch({ type: GET_SUB_CATEGORY_BASED_ON_CATEGORY_API_CALL, payload: id });
     }
     // getFreebieName
     const handleFreebieName = (e) => {
@@ -403,7 +406,11 @@ const ProductDetailsForm = ({ handleNext, formData, setFormData }) => {
                                 
                                 if (e.target.value === 2) {
                                     // useBarcodeScanner(barcodeScanned)
+                                    setBarcodeScannerEnabled(true)
+                                }else {
+                                    setBarcodeScannerEnabled(false)
                                 }
+                                
                                 }} className="mt-1 block w-full border border-gray-300 rounded-md h-9">
                                 <option value={0}>Selecte one</option>
                                 <option value={1} key={1}>Auto Generate</option>

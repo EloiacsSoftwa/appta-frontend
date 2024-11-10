@@ -6,7 +6,7 @@ const useBarcodeScanner = (onChange, delay = 50) => {
 
     useEffect(() => {
         const handleKeyDown = (e) => {
-            if (e.key.length > 1) return;
+            if (e?.key?.length > 1) return;
 
             setBarcode(prev => prev + e.key);
 
