@@ -1,5 +1,5 @@
 import { call, takeEvery, put, take } from 'redux-saga/effects';
-import { PosGetbyBarcode ,CreateOrder, addOrderItemsApiCall} from '../Action/sales_pos_Action';
+import { PosGetbyBarcode ,CreateOrder, addOrderItemsApiCall,CompleteOrder ,getPaymentType} from '../Action/sales_pos_Action';
 import Cookies from 'universal-cookie';
 import { ADD_ORDER_ITEMS_API_CALL, ADD_ORDER_ITEMS_API_RESPONSE } from '../../utils/Constant';
 
@@ -42,6 +42,39 @@ function* handleCreateOrder() {
   }
 }
 
+function* handleGetPaymentType() {
+  
+  const response = yield call(getPaymentType);
+       console.log("resposne",response)
+  if (response.status === 200 || response.code === 200 || response.data.code === 200) {
+    yield put({ type: 'GET_PAYMENT_TYPE', payload: { response: response.data.data, statusCode: response.status || response.code } });
+  }
+  else {
+    yield put({ type: 'ERROR', payload: { statusCode: response.status || response.code } });
+  }
+  if (response) {
+    ExpireToken(response)
+  }
+}
+
+
+
+
+function* handleCompleteOrder() {
+  
+  const response = yield call(CompleteOrder);
+       console.log("resposne",response)
+  if (response.status === 200 || response.code === 200) {
+    yield put({ type: 'COMPLETE_ORDER', payload: { response: response.data.data, statusCode: response.status || response.code } });
+  }
+  else {
+    yield put({ type: 'ERROR', payload: { statusCode: response.status || response.code } });
+  }
+  if (response) {
+    ExpireToken(response)
+  }
+}
+
 
 
 function ExpireToken(response) {
@@ -65,6 +98,8 @@ function ExpireToken(response) {
 function* PosSaga() {
     yield takeEvery('BARCODE_GET_PRODUCT', handleBarcodeGetProduct);
     yield takeEvery('CREATE-ORDER', handleCreateOrder);
+    yield takeEvery('GET-PAYMENT-TYPE', handleGetPaymentType);
+    yield takeEvery('COMPLETE-ORDER', handleCompleteOrder);
     yield takeEvery(ADD_ORDER_ITEMS_API_CALL, addOrderItems)
 }
 
