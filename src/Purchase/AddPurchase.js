@@ -29,15 +29,23 @@ function AddPurchase({ handleClose }) {
   const [taxTotal, setTaxTotal] = useState(0);
   const [total, setTotal] = useState(0);
   const [dropdownIndex, setDropdownIndex] = useState(null);
-  const [ productId, setProductID] =useState([])
+  const [productId, setProductID] =useState(state.AddProduct?.ProductList)
   const [selectedOption, setSelectedOption] = useState('');
   const [showProductDropdown, setShowProductDropdown] = useState([]);
   const [productIDWithName, setProductIDWithName] = useState('')
-
+const [supplierId,  setSupplierId] = useState('')
   // const [addCharges, setAddCharges] = useState(0);
   // const [globalDiscount, setGlobalDiscount] = useState(0);
   // const [roundingOff, setRoundingOff] = useState(0);
 
+console.log("supplierId",supplierId)
+
+const [orderDateError, setOrderDateError] = useState('');
+  const [invoiceIdError, setInvoiceIdError] = useState('');
+  const [productsError, setProductsError] = useState('');
+  const [supplierIdError, setSupplierIdError] = useState('');
+
+  const dropdownRef = useRef(null);
 
   const toggleDropdown = () => {
     setDropdownOpen(true);
@@ -55,11 +63,13 @@ function AddPurchase({ handleClose }) {
 
   const handleInvoiceIdChange = (e) => {
     setInvoiceId(e.target.value); 
+    setInvoiceIdError('')
   };
 
   const handleOrderDateChange = (date) => {
     setOrderDate(date);
     setIsDatePickerOpen(false);
+    setOrderDateError('')
   };
 
   const handleDeliveredDateChange = (date) => {
@@ -124,7 +134,24 @@ const handleInputChange = (e, field, index) => {
   const { Quantity, PurchasePrice } = updatedProducts[index];
   updatedProducts[index].Total = Quantity * PurchasePrice;
   console.log("Updated Products:", updatedProducts);
-  setProductIDWithName(updatedProducts[0]?.Product)
+  
+if(value){
+    const filteredProduct = state.AddProduct.ProductList.filter((product) => {
+      return product.productName.toLowerCase().includes(value.toLowerCase());
+    });
+    setProductID(filteredProduct)
+  }
+   
+
+  // setProductIDWithName(updatedProducts[0]?.Product)
+  // if(updatedProducts[0]?.Product){
+  //   const filteredProduct = state.AddProduct.ProductList.filter((product) => {
+  //     return product.productName.toLowerCase().includes(updatedProducts[0]?.Product.toLowerCase());
+  //   });
+    
+ 
+   
+  // }
   setProducts(updatedProducts);
 };
 
@@ -169,31 +196,40 @@ const handleInputChange = (e, field, index) => {
 
 
 
-
-
-
-useEffect(() => {
+// useEffect(()=>{
+//   if(state.AddProduct?.ProductList.length > 0){
+//     setProductID(state.AddProduct?.ProductList)
+//   }
   
-    // if (productIDWithName) {
-    //   dispatch({
-    //     type: 'GET_PRODUCT_BY_NAME',
-    //     payload: { productName: productIDWithName },
-    //   });
-    //       }
-if(productIDWithName){
-  const filteredProduct = state.AddProduct.ProductList.filter((product) => {
-    return product.productName.toLowerCase().includes(productIDWithName.toLowerCase());
-  });
+// },[state.AddProduct?.ProductList])
+
+
+// useEffect(() => {
   
-  console.log('filteredProduct', filteredProduct);
-  setProductID(filteredProduct)
-}
+//     // if (productIDWithName) {
+//     //   dispatch({
+//     //     type: 'GET_PRODUCT_BY_NAME',
+//     //     payload: { productName: productIDWithName },
+//     //   });
+//     //       }
+// // if(productIDWithName){
+// //   const filteredProduct = state.AddProduct.ProductList.filter((product) => {
+// //     return product.productName.toLowerCase().includes(productIDWithName.toLowerCase());
+// //   });
+  
+// //   console.log('filteredProduct', filteredProduct);
+// //   setProductID(filteredProduct)
+// // }
    
- }, [productIDWithName]);
+//  }, [productIDWithName]);
 
 
 
-console.log("productIDWithName",productIDWithName)
+// console.log("productIDWithName",productIDWithName)
+
+console.log("productId",productId)
+
+
 
 // useEffect(()=>{
 //   if(state.AddProduct?.getProductByNameStatusCode == 200){
@@ -218,18 +254,67 @@ const handleProductName = (item, index) => {
 };
 
 
+useEffect(() => {
+  const handleClickOutside = (event) => {
+    if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+      setShowProductDropdown([]); 
+    }
+  };
 
+  document.addEventListener('mousedown', handleClickOutside);
+  return () => {
+    document.removeEventListener('mousedown', handleClickOutside);
+  };
+}, []);
 
-const handleOptionSelect = (option) => {
+const handleOptionSelect = (option,id) => {
   setSelectedOption(option);
   setDropdownOpen(false); 
+  setSupplierIdError('');
+  setSupplierId(id)
 };
 
 
 console.log("productIDDDDDDDDDD",productId)
 
 const handleAddPurchase = () => {
-  if(orderDate && invoiceId && products){
+
+ setOrderDateError('');
+    setInvoiceIdError('');
+    setProductsError('');
+    setSupplierIdError('');
+
+    let valid = true;
+
+  
+    if (!orderDate) {
+      setOrderDateError('Purchase date is required');
+      valid = false;
+    }
+
+    if (!invoiceId) {
+      setInvoiceIdError('Invoice ID is required');
+      valid = false;
+    }
+
+    if (!products || products.length === 0) {
+      setProductsError('At least one product is required');
+      valid = false;
+    }
+
+    if (!supplierId) {
+      setSupplierIdError('Supplier ID is required');
+      valid = false;
+    }
+
+    
+    if (!valid) {
+      return;
+    }
+
+
+
+  if(orderDate && invoiceId && products && supplierId){
 
     const formattedDate = new Date(orderDate).toLocaleDateString('en-GB'); 
    const purchaseItems = products.map(product => ({
@@ -247,7 +332,7 @@ const handleAddPurchase = () => {
   dispatch({
     type: 'ADDPURCHASE',
     payload: {
-      supplierId: 1,                  
+      supplierId: supplierId,                  
       purchaseDate:formattedDate,         
       invoiceId: invoiceId,   
       invoiceImage: "string",        
@@ -258,7 +343,9 @@ const handleAddPurchase = () => {
 };
 
 
-
+useEffect(() => {
+  dispatch({ type: 'GETSUPPLIER' });
+}, []);
 
 
 
@@ -299,10 +386,14 @@ const handleAddPurchase = () => {
       {dropdownOpen && (
         <div className="absolute z-50 bg-light_gray divide-y divide-gray-100 shadow md:w-56 w-56 sm:w-56">
           <ul className="py-2 text-sm text-black font-Manrope font-medium text-start">
-            <li onClick={() => handleOptionSelect('Brazil')} className="px-2 py-2 cursor-pointer hover:bg-gray-200">Brazil</li>
-            <li onClick={() => handleOptionSelect('Bucharest')} className="px-2 py-2 cursor-pointer hover:bg-gray-200">Bucharest</li>
-            <li onClick={() => handleOptionSelect('London')} className="px-2 py-2 cursor-pointer hover:bg-gray-200">London</li>
-            <li onClick={() => handleOptionSelect('Washington')} className="px-2 py-2 cursor-pointer hover:bg-gray-200">Washington</li>
+
+{
+  state.Supplier?.SupplierList.map((view)=>{
+    return  <li key={view.id} value={view.id} onClick={() => handleOptionSelect(view.supplierCode , view.id)} className="px-2 py-2 cursor-pointer hover:bg-gray-200">{view.name || view.supplierCode }</li>
+  })
+}
+             
+         
           </ul>
         </div>
       )}
@@ -311,8 +402,11 @@ const handleAddPurchase = () => {
         <div className="bg-light_gray p-4 rounded shadow h-32">
           <p className="text-black font-Manrope font-medium">{selectedOption || 'Select Supplier'}</p>
         </div>
-          </div>
 
+
+       
+          </div>
+          
 
           <div className="relative mb-4 lg:mb-0 md:mb-0 ">
     <p className="font-bold text-lg text-orange-600 mb-4 font-Manrope">Shipment To</p>
@@ -330,7 +424,7 @@ const handleAddPurchase = () => {
 
   </div>
 
-
+  
            
           </div>
 
@@ -340,7 +434,7 @@ const handleAddPurchase = () => {
 
         </div>
 
-
+        {supplierIdError && <p className="text-red-500 font-Manrope mt-1 text-sm">{supplierIdError}</p>}
         <div className="w-full md:w-1/2  mt-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 
@@ -371,6 +465,7 @@ const handleAddPurchase = () => {
         className="absolute top-12 transform -translate-y-1/2 right-3 md:right-4 lg:right-5 cursor-pointer"
         onClick={handleIconClickForOrder}
       />
+       {orderDateError && <p className="text-red-500 font-Manrope mt-1 text-sm">{orderDateError}</p>}
     </div>
 
                 <div>
@@ -381,6 +476,7 @@ const handleAddPurchase = () => {
                   className="w-full border rounded px-3 py-2 text-sm focus:border-orange-600" placeholder="P7895233" />
                 </div>
 
+                {invoiceIdError && <p className="text-red-500 font-Manrope mt-1 text-sm">{invoiceIdError}</p>}
                
               </div>
             </div>
@@ -415,7 +511,7 @@ const handleAddPurchase = () => {
 
 
 
-
+{productsError && <p className="text-red-500 font-Manrope mt-1 text-sm">{productsError}</p>}
        
       
        
@@ -447,21 +543,37 @@ const handleAddPurchase = () => {
                 className="border p-1 rounded w-full"
               />
 
-{showProductDropdown[index]  && (
-    <div className="absolute z-50 bg-light_gray divide-y divide-gray-100 shadow md:w-56 w-56 sm:w-56">
-      <ul className="py-2 text-sm text-black font-Manrope font-medium text-start">
-        {productId?.map((item) => (
-          <li 
-            key={item.productId} 
-            onClick={() => handleProductName(item, index)} 
-            className="px-2 py-2 cursor-pointer hover:bg-gray-200"
-          >
-            {item.productName}
-          </li>
-        ))}
-      </ul>
-    </div>
-  )}
+{showProductDropdown[index] && (
+  <div ref={dropdownRef} className="absolute z-50 bg-light_gray divide-y divide-gray-100 shadow md:w-56 w-56 sm:w-56">
+    <ul className="py-2 text-sm text-black font-Manrope font-medium text-start">
+      {productId.length > 0 ? Array.from(productId).map((item) => (
+        <li 
+          key={item.productId} 
+          onClick={() => handleProductName(item, index)} 
+          className="px-2 py-2 cursor-pointer hover:bg-gray-200"
+        >
+          {item.productName}
+        </li>
+      ))
+    :
+
+    <li 
+         
+          className="px-2 py-2 cursor-pointer hover:bg-gray-200"
+        >
+         No products
+        </li>
+    
+    
+    }
+    </ul>
+  </div>
+)}
+
+
+
+
+
 
 
 

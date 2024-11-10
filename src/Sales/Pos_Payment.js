@@ -9,11 +9,11 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import FormHelperText from '@mui/material/FormHelperText';
-import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+// import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-
+import DemoContainer  from '../Sales/DemoContainer'
 
 const Pos_Payment = ({ handleclose }) => {
 
@@ -671,9 +671,8 @@ const Pos_Payment = ({ handleclose }) => {
                 }}
               />
    
-   <LocalizationProvider dateAdapter={AdapterDayjs} >
-      {/* <div className="flex"> */}
-        {/* Calendar on the left side */}
+   {/* <LocalizationProvider dateAdapter={AdapterDayjs} >
+      
         <div className="w-full font-Roboto font-semibold text-xs"    
                   sx={{ 
                   '& .MuiInputLabel-root': { color: 'black' },
@@ -690,9 +689,35 @@ const Pos_Payment = ({ handleclose }) => {
           </DemoContainer>
         </div>
 
-        {/* Content on the right side */}
-        
-      {/* </div> */}
+       
+    </LocalizationProvider> */}
+
+
+<LocalizationProvider dateAdapter={AdapterDayjs}>
+      <div className="w-full font-Roboto font-semibold text-xs">
+        <DemoContainer components={['DatePicker']}>
+          <DatePicker
+            label="Payment Due Date"
+            // value={selectedDate}
+            // onChange={(newDate) => setSelectedDate(newDate)}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                sx={{
+                  '& .MuiInputLabel-root': { color: 'black' },
+                  '& .MuiOutlinedInput-root': {
+                    '& fieldset': { borderColor: '#797979' },
+                    '&:hover fieldset': { borderColor: '#797979' },
+                    '&.Mui-focused fieldset': { borderColor: '#797979' },
+                  },
+                  '& .MuiInputLabel-root.Mui-focused': { color: 'black' },
+                  '& .MuiFormHelperText-root': { color: 'red' },
+                }}
+              />
+            )}
+          />
+        </DemoContainer>
+      </div>
     </LocalizationProvider>
 
 <TextField
