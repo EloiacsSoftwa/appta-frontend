@@ -108,7 +108,7 @@ const [formValues, setFormValues] = useState({
                                         <label className="font-source-sans-pro text-sm font-semibold leading-5">Unit</label>
                                         <select name="unit" className="mt-1 pl-3 block border border-gray-300 py-2 font-source-sans-pro text-base placeholder-black rounded w-full"
                                         value={formValues.unit}>
-                                            <option>100gm</option>
+                                            {/* <option>100gm</option> */}
                                             <option>g</option>
                                             <option>Lt</option>
                                             <option>ml</option>
