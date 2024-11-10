@@ -169,6 +169,8 @@ const Pos = ({ handleClosed }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedProductId, setSelectedProductId] = useState('');
 
+  const [products,setProducts] = useState([])
+
 
   const handleproductName = (item) => {
     console.log("item", item);
@@ -183,8 +185,36 @@ const Pos = ({ handleClosed }) => {
     // setSelectedProductId(item)
 
     dispatch({type: ADD_ORDER_ITEMS_API_CALL, payload: payload})
+    
   }
 
+  useEffect(()=> {
+    if(State.PosReducer.orderItems && State.PosReducer.orderItems.length > 0){
+      setProducts(State.PosReducer.orderItems)
+    }
+   
+  },[State.PosReducer.orderItems])
+
+  const orderItems = useSelector((state) => state.PosReducer.orderItems);
+
+  useEffect(() => {
+    if (orderItems && orderItems.length > 0) {
+     
+      const updatedProducts = orderItems.map((item) => ({
+        ...item,
+        netAmount: item.quantity * item.totalAmount,
+      }));
+      setProducts(updatedProducts);
+
+    
+      const totalNetAmount = updatedProducts.reduce((sum, item) => sum + item.netAmount, 0);
+      setTotalAmount(totalNetAmount); 
+    }
+  }, [orderItems]);
+
+
+  console.log("products",products);
+  
 
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value.toLowerCase());
@@ -323,15 +353,7 @@ const Pos = ({ handleClosed }) => {
 
 
 
-  const [cashReceived, setCashReceived] = useState('')
-  const [changeto_return, setChangeToReturn] = useState('')
-  const [receipt_number, setReceiptNumber] = useState('')
-
-  const handleCashReceived = (e) => {
-    setCashReceived(e.target.value)
-    const Return_amount = total_amount ? (total_amount - e.target.value) : 0
-    setChangeToReturn(Return_amount)
-  }
+  
 
 
   const handleCreate = () => {
@@ -503,8 +525,8 @@ const Pos = ({ handleClosed }) => {
                   </tr>
                 </thead>
                 <tbody>
-                  {posdata && posdata.length > 0 ? (
-                    posdata.map((item, index) => (
+                  {State.PosReducer.orderItems && State.PosReducer.orderItems.length > 0 ? (
+                    State.PosReducer.orderItems.map((item, index) => (
                       <tr key={index} className="hover:bg-gray-50 border-0">
                         <td className="p-2 mt-1 flex items-center justify-start">
                           <input type="checkbox" className="form-checkbox h-3 w-3 text-blue-600 border-neutral-500 cursor-pointer" />
@@ -526,21 +548,21 @@ const Pos = ({ handleClosed }) => {
                               className="border border-neutral-300 rounded px-1 py-0.5 w-16"
                             />
                           ) : (
-                            <span onClick={() => handleQuantityClick(index, item.minPurchaseQuantity)} className="cursor-pointer">
-                              {item.minPurchaseQuantity || '-'}
+                            <span onClick={() => handleQuantityClick(index, item.quantity)} className="cursor-pointer">
+                              {item.quantity || '-'}
                             </span>
                           )}
                         </td>
 
 
 
-                        <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">₹{item.wholesalePrice || '0'}</td>
-                        <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">₹{(item.minPurchaseQuantity * item.wholesalePrice) || '-'}</td>
-                        <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{item.wholesalePricePercentage || '-'}</td>
+                        <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">₹{item.unitPrice || '0'}</td>
+                        <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">₹{item.totalAmount  || '-'}</td>
+                        <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{ '-'}</td>
                         {/* <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">
              ₹{(item.minPurchaseQuantity * item.wholesalePrice * (item.wholesalePricePercentage / 100)) || '-'}</td> */}
 
-                        <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">
+                        {/* <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">
                           {editingDiscountIndex === index ? (
                             <input
                               type="number"
@@ -555,12 +577,15 @@ const Pos = ({ handleClosed }) => {
                               onClick={() => handleEditDiscountAmount(index, item.discountAmount || 0)}
                               className="cursor-pointer"
                             >
-                              ₹{item.discountAmount || '-'}
+                              { '0'}
                             </span>
                           )}
+                        </td> */}
+                        <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">
+                          {'0'}
                         </td>
                         <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">
-                          ₹{(item.minPurchaseQuantity * item.wholesalePrice) - ((item.minPurchaseQuantity * item.wholesalePrice) * (item.wholesalePricePercentage / 100)) || '0'}
+                          ₹{(item.quantity * item.totalAmount)  || '0'}
                         </td>
                       </tr>
                     ))
@@ -678,7 +703,7 @@ const Pos = ({ handleClosed }) => {
 
             <div class="border border-solid border-black"> </div>
 
-            <div><p className='text-[#131313] text-xs  font-semibold font-Manrope ps-2'>Order No : ELT054686</p></div>
+            <div><p className='text-[#131313] text-xs  font-semibold font-Manrope ps-2'>Order No : {order_id}</p></div>
 
             <div class="border border-solid border-black"> </div>
 
@@ -697,7 +722,7 @@ const Pos = ({ handleClosed }) => {
 
               <div className='flex flex-row justify-between' >
                 <p className='text-[#131313] text-sm  font-semibold font-Manrope ps-2'>Total Items : </p>
-                <p className='text-[#131313] text-sm  font-semibold font-Manrope pe-2'>{posdata && posdata.length}</p>
+                <p className='text-[#131313] text-sm  font-semibold font-Manrope pe-2'>{State.PosReducer.orderItems && State.PosReducer.orderItems.length}</p>
               </div>
 
               <div className='flex flex-row justify-between' >
@@ -707,12 +732,12 @@ const Pos = ({ handleClosed }) => {
 
               <div className='flex flex-row justify-between' >
                 <p className='text-[#131313] text-sm  font-semibold font-Manrope ps-2'>Discounts :</p>
-                <p className='text-[#131313] text-sm  font-semibold font-Manrope pe-2'>₹ 50.00</p>
+                <p className='text-[#131313] text-sm  font-semibold font-Manrope pe-2'>₹ 00.00</p>
               </div>
 
               <div className='flex flex-row justify-between' >
                 <p className='text-[#131313] text-sm  font-semibold font-Manrope ps-2'>Before Tax : </p>
-                <p className='text-[#131313] text-sm  font-semibold font-Manrope pe-2'>₹ 230.00</p>
+                <p className='text-[#131313] text-sm  font-semibold font-Manrope pe-2'>₹ 00.00</p>
               </div>
 
               <div className='flex flex-row justify-between' >
@@ -721,12 +746,12 @@ const Pos = ({ handleClosed }) => {
 
               <div className='flex flex-row justify-between' >
                 <p className='text-[#131313] text-sm  font-semibold font-Manrope ps-2'>CGST : </p>
-                <p className='text-[#131313] text-sm  font-semibold font-Manrope pe-2'>₹ 230.00</p>
+                <p className='text-[#131313] text-sm  font-semibold font-Manrope pe-2'>₹ 00.00</p>
               </div>
 
               <div className='flex flex-row justify-between' >
                 <p className='text-[#131313] text-sm  font-semibold font-Manrope ps-2'>SGST : </p>
-                <p className='text-[#131313] text-sm  font-semibold font-Manrope pe-2'>₹ 230.00</p>
+                <p className='text-[#131313] text-sm  font-semibold font-Manrope pe-2'>₹ 00.00</p>
               </div>
 
               <div className='flex flex-row justify-between  mb-2 mt-2' >
@@ -944,7 +969,7 @@ const Pos = ({ handleClosed }) => {
 </Modal> */}
 
       {
-        open && <Pos_Payment handleclose={handleClose} />
+        open && <Pos_Payment handleclose={handleClose}  total_amount = {total_amount}/>
       }
 
       {/* //add customer  */}
