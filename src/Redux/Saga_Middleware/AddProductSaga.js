@@ -1,7 +1,7 @@
-import { call, takeEvery, put } from 'redux-saga/effects';
+import { call, takeEvery, put, take } from 'redux-saga/effects';
 import { Category, SubCategory, AddProductDetails, AddBrand, GetProduct, getAllUnitsCall, getFreebie, getProductDetailsbyid } from '../Action/AddProductAction';
-import { GET_BRANDS_API_CALL, GET_BRANDS_API_RESPONSE, GET_ALL_UNITS_API_CALL, GET_ALL_UNITS_API_RESPONSE } from '../../utils/Constant';
-import { getAllBrands } from '../Action/AddProductAction';
+import { GET_BRANDS_API_CALL, GET_BRANDS_API_RESPONSE, GET_ALL_UNITS_API_CALL, GET_ALL_UNITS_API_RESPONSE, GET_PRODUCT_SIZE_API_CALL, GET_PRODUCT_SIZE_API_RESPONSE } from '../../utils/Constant';
+import { getAllBrands, getProductSizes } from '../Action/AddProductAction';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Cookies from 'universal-cookie';
@@ -194,6 +194,17 @@ function* getProductDetails(action) {
   }
 }
 
+function* getAllProductSizes() {
+  const response = yield call(getProductSizes);
+
+  if (response.status == 200 && response.data.code == 200) {
+    yield put({
+      type: GET_PRODUCT_SIZE_API_RESPONSE,
+      payload: response.data.data 
+    });
+  }
+}
+
 
 function* AddProductSaga() {
   yield takeEvery('GETSUBCATEGORY', Sub_Category);
@@ -207,6 +218,7 @@ function* AddProductSaga() {
   yield takeEvery('GETFREEBIENAME', GetFreebieName);
    //   GET_GET_PRODUCT_BY_NAME
   yield takeEvery('GET_PRODUCT_BY_NAME',getProductDetails);
+  yield takeEvery(GET_PRODUCT_SIZE_API_CALL, getAllProductSizes)
 
 }
 

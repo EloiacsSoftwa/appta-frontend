@@ -38,7 +38,6 @@ function* handleAddSupplier(args) {
             pauseOnHover: true,
             draggable: true,
             progress: undefined,
-            style: toastStyle,
           });
     }
     else{
