@@ -42,6 +42,10 @@ const AddProductModal = ({ onClose }) => {
         sizeId: 0,
         hsnCode: ''
     });
+  
+    
+    
+
     const dispatch = useDispatch();
     const state = useSelector(state => state);
 
@@ -70,6 +74,10 @@ const AddProductModal = ({ onClose }) => {
             setActiveTab("Product Details");
         }
     };
+
+
+ 
+
 
     return (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
@@ -119,6 +127,30 @@ const ProductDetailsForm = ({ handleNext, formData, setFormData }) => {
             ...formData,
             freebie: true
         });
+    };
+
+
+      
+     // productsize filter or input field value send
+    const [filteredSizes, setFilteredSizes] = useState([]); 
+    const productSizes = useSelector(state => state.AddProduct.productSize);
+
+   
+    const handleInputChanges = (e) => {
+        const value = e.target.value;
+        setFormData({ ...formData, sizeId: value });
+
+       
+        const filtered = productSizes.filter((size) => 
+            size.sizeName.toLowerCase().includes(value.toLowerCase())
+        );
+        setFilteredSizes(filtered); 
+    };
+
+    
+    const handleSuggestionClick = (size) => {
+        setFormData({ ...formData, sizeId: size.sizeName });
+        setFilteredSizes([]); 
     };
 
     const handleImageChange = (e) => {
@@ -264,9 +296,29 @@ const ProductDetailsForm = ({ handleNext, formData, setFormData }) => {
                             </select>
                         </div>
                         <div className="flex-1">
-                            <label className="text-left block text-sm font-medium text-gray-700">Size</label>
-                            <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md h-9 pl-2 pr-2" placeholder="Brand" value={formData.sizeId} onChange={(e) => { setFormData({ ...formData, sizeId: e.target.value }) }} />
+            <label className="text-left block text-sm font-medium text-gray-700">Size</label>
+            <input 
+                type="text" 
+                className="mt-1 block w-full border border-gray-300 rounded-md h-9 pl-2 pr-2" 
+                placeholder="Brand" 
+                value={formData.sizeId} 
+                onChange={handleInputChanges} 
+            />
+           
+            {filteredSizes.length > 0 && (
+                <div className="border border-gray-300 rounded-md mt-1">
+                    {filteredSizes.map((size) => (
+                        <div 
+                            key={size.id} 
+                            className="p-2 cursor-pointer hover:bg-gray-100" 
+                            onClick={() => handleSuggestionClick(size)}
+                        >
+                            {size.sizeName}
                         </div>
+                    ))}
+                </div>
+            )}
+        </div>
 
                     </div>
 
