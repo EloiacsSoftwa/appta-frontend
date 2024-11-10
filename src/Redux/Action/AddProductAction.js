@@ -23,10 +23,19 @@ export function Category(payload) {
 
 
 export async function SubCategory(payload) {
-   return await AxiosConfig.post('/subCategory/getSubCategory', {
+   return await AxiosConfig.post('/subCategory/getAllSubCategory', {
    }, {
       params: {
          subCategory: payload
+      }
+   })
+}
+
+export async function SubCategoryBasedOnParent(payload) {
+   return await AxiosConfig.post('/subCategory/getSubCategory', {
+   }, {
+      params: {
+         parentCategory: payload
       }
    })
 }

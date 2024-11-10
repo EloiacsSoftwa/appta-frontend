@@ -13,7 +13,6 @@ import 'react-toastify/dist/ReactToastify.css';
 function* handleSubCategory(args) {
 
     const response = yield call(AddSubCategory, args.payload);
-   console.log("Response For subcategory ",response)
    const toastStyle = {
     backgroundColor: "#fff",
     color:'#38B000',

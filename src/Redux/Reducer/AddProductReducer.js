@@ -1,5 +1,5 @@
 import { Size } from "iconsax-react";
-import { GET_BRANDS_API_RESPONSE, GET_ALL_UNITS_API_RESPONSE, GET_PRODUCT_SIZE_API_RESPONSE } from "../../utils/Constant";
+import { GET_BRANDS_API_RESPONSE, GET_ALL_UNITS_API_RESPONSE, GET_PRODUCT_SIZE_API_RESPONSE, GET_SUB_CATEGORY_BASED_ON_CATEGORY_API_RESPONSE } from "../../utils/Constant";
 // AddProductReducer
 const initialState = {
   category: [],
@@ -14,8 +14,8 @@ const initialState = {
   ProductList: [],
   getProductStatusCode: 0,
   units: [],
-  getFreebieName :[],
-  getFreebieStatusCode :0,
+  getFreebieName: [],
+  getFreebieStatusCode: 0,
   // Get product by name
   ProductByName: [],
   getProductByNameStatusCode: 0,
@@ -25,6 +25,9 @@ const initialState = {
 const AddProductReducer = (state = initialState, action) => {
   switch (action.type) {
     case 'GET_SUBCATEGORY':
+      return { ...state, getSubCategoryStatusCode: action.payload.statusCode, subcategory: action.payload.response };
+
+    case GET_SUB_CATEGORY_BASED_ON_CATEGORY_API_RESPONSE:
       return { ...state, getSubCategoryStatusCode: action.payload.statusCode, subcategory: action.payload.response };
     case 'REMOVE_GET_SUBCATEGORY_STATUS_CODE':
       return { ...state, getSubCategoryStatusCode: 0 }
@@ -39,14 +42,14 @@ const AddProductReducer = (state = initialState, action) => {
     case 'REMOVE_GET_CATEGORY_STATUS_CODE':
       return { ...state, getCategoryStatusCode: 0 }
 
-    case 'ADD_PRODUCT_DETAILS':             
-      return { ...state, add_Product_status_code: action.payload.statusCode };   
-      
-      case 'REMOVE_ADD_PRODUCT_STATUS_CODE':             
-      return { ...state, add_Product_status_code: 0 };   
+    case 'ADD_PRODUCT_DETAILS':
+      return { ...state, add_Product_status_code: action.payload.statusCode };
 
-      // case 'ADD_PRODUCT_VALIDATION':             
-      // return { ...state, add_Product_status_code: action.payload.statusCode };
+    case 'REMOVE_ADD_PRODUCT_STATUS_CODE':
+      return { ...state, add_Product_status_code: 0 };
+
+    // case 'ADD_PRODUCT_VALIDATION':             
+    // return { ...state, add_Product_status_code: action.payload.statusCode };
 
     case GET_BRANDS_API_RESPONSE:
       return { ...state, brands: action.payload.response, getBrandStatusCode: action.payload.statusCode }
@@ -64,18 +67,18 @@ const AddProductReducer = (state = initialState, action) => {
       return { ...state, getProductStatusCode: 0 }
 
     case GET_ALL_UNITS_API_RESPONSE: {
-      return {...state, units: action.payload}
+      return { ...state, units: action.payload }
     }
     // GET_FREEBIE_NAME
     case 'GET_FREEBIE_NAME':
-        return { ...state, getFreebieStatusCode: action.payload.statusCode, getFreebieName: action.payload.response };
-      
-      // Get product by name
+      return { ...state, getFreebieStatusCode: action.payload.statusCode, getFreebieName: action.payload.response };
+
+    // Get product by name
     case 'GET_PRODUCT_DETAILS_BY_ID':
       return { ...state, ProductByName: action.payload.response, getProductByNameStatusCode: action.payload.statusCode }
-    
+
     case GET_PRODUCT_SIZE_API_RESPONSE:
-      return {...state, productSize: action.payload}
+      return { ...state, productSize: action.payload }
 
     default:
       return state;

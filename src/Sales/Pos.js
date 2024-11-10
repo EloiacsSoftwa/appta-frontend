@@ -180,9 +180,9 @@ const Pos = ({ handleClosed }) => {
       orderId: order_id,
       productId: item,
       discount: 1,
-      quantity: 1
+      quantity: 1,
+      manuallyEntered: false
     }
-    // setSelectedProductId(item)
 
     dispatch({type: ADD_ORDER_ITEMS_API_CALL, payload: payload})
     
@@ -213,8 +213,6 @@ const Pos = ({ handleClosed }) => {
   }, [orderItems]);
 
 
-  console.log("products",products);
-  
 
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value.toLowerCase());
@@ -307,8 +305,6 @@ const Pos = ({ handleClosed }) => {
       setCustomerFilter(customerFilterResult || '');
     }
   }, [selectedCustomerId])
-
-  console.log("customerFilter", customerFilter);
 
 
   const [showModal, setShowModal] = useState(false);
@@ -419,7 +415,10 @@ const Pos = ({ handleClosed }) => {
 
                         //   onChange={(e)=>handleproductName(e)}
                         >
-                          <div className="text-sm font-medium text-gray-900">{item.productName}</div>
+                          <div className="text-sm font-medium text-gray-900 flex flex-col">
+                            <label>{item.productName} {item.subCategory}</label>
+                            <label>{item.size} {item.unit}</label>
+                            </div>
                         </div>
                       ))}
                     </div>
@@ -529,7 +528,7 @@ const Pos = ({ handleClosed }) => {
                         </td>
                         <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{item.unitId || '-'}</td>
                         <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{item.barcodeNo || '-'}</td>
-                        <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{item.productName || '-'}</td>
+                        <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{`${item.productName} - ${item.size}${item.unit}` || '-'}</td>
 
 
 

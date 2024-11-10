@@ -89,7 +89,6 @@ function ExpireToken(response) {
   function* addOrderItems(data) {
       const response = yield call(addOrderItemsApiCall, data.payload)
 
-      console.log(response)
       if (response.status === 200 && response.data.code === 200) {
         yield put({type: ADD_ORDER_ITEMS_API_RESPONSE, orderItems: response.data.data.orderItems})
       }
