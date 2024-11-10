@@ -11,49 +11,62 @@ import SmallDot from '../Images/Sales/Smalldots.svg';
 import { ArrowRight2, ArrowLeft2, ArrowUp2, ArrowDown2 } from 'iconsax-react';
 import Supplier_Tabs from './Supplier_Tabs';
 
-function SupplierTable({ item }) {
+function SupplierTable() {
     const [currentPage, setCurrentPage] = useState(1);
     const [showModal, setShowModal] = useState(false);
-    const [isAddSupplier, setIsAddSupplier] = useState(false);
+    const [supplierforms, setSupplierforms] = useState(null);
+    const [showAddSupplier, setShowAddSupplier] = useState(false);
     const [loading, setLoading] = useState(true);
     const [supplier, setSupplier] = useState([]);
+
+    const handleClick = (item) => {
+        setShowModal(true);
+        setSupplierforms(item);
+    };
+
+    const handleCloseShowDetails = () => {
+        setShowModal(false);
+        setSupplierforms(null);
+    };
 
     const dispatch = useDispatch();
     const state = useSelector(state => state);
 
-    useEffect(() => {
-        dispatch({ type: 'GETSUPPLIER' });
-    }, []);
+    console.log("Initial supplier:", supplier);
 
     useEffect(() => {
-        if (state.Supplier.getSupplierStatusCode === 200) {
-            setLoading(false);
-            setSupplier(state.Supplier.SupplierList);
+        dispatch({ type: 'GETSUPPLIER' })
+    }, [])
+
+    console.log("state", state)
+
+
+    useEffect(() => {
+               if ( state.Supplier.getSupplierStatusCode == 200) {
+            // setLoading(false)
+            setSupplier(state.Supplier.SupplierList)
             setTimeout(() => {
-                dispatch({ type: 'REMOVE_GET_SUPPLIER_STATUS_CODE' });
-            }, 2000);
+                dispatch({ type: 'REMOVE_GET_SUPPLIER_STATUS_CODE' })
+            }, 4000)
         }
-    }, [state.Supplier.getSupplierStatusCode]);
+
+    }, [state.Supplier.getSupplierStatusCode])
+
+
+
 
     useEffect(() => {
-        if (state.Supplier.addSupplierStatusCode === 200) {
-            dispatch({ type: 'GETSUPPLIER' });
-            setIsAddSupplier(false);
+        if (state.Supplier.addSupplierStatusCode == 200) {
+            dispatch({ type: 'GETSUPPLIER' })
+            setShowModal(false);
             setTimeout(() => {
-                dispatch({ type: 'REMOVE_ADD_SUPPLIER_STATUS_CODE' });
-            }, 2000);
+                dispatch({ type: 'REMOVE_ADD_SUPPLIER_STATUS_CODE' })
+            }, 2000)
         }
-    }, [state.Supplier.addSupplierStatusCode]);
 
-    const handleAddSupplier = () => {
-        setShowModal(true);
-        setIsAddSupplier(true);
-    };
+    }, [state.Supplier.addSupplierStatusCode])
 
-    const handleCloseModal = () => {
-        setShowModal(false);
-        setIsAddSupplier(false);
-    };
+
 
     const reports = [
         { title: "Total Products", value: "2,420" },
@@ -66,7 +79,7 @@ function SupplierTable({ item }) {
         { SupplierCode: "SU85695", SupplierName: "AGS Corporate", Status: "Active", ContactNumber: '+91 9586 478 275', Email: "ags@example.com" },
         { SupplierCode: "SU85695", SupplierName: "Suzlon Energy", Status: "Active", ContactNumber: '+91 9586 478 275', Email: "ags@example.com" },
         { SupplierCode: "SU85695", SupplierName: "Bcl Enterprices", Status: "Active", ContactNumber: '+91 9586 478 275', Email: "ags@example.com" },
-        { SupplierCode: "SU85695", SupplierName: "AGS Corporate", Status: "Active", ContactNumber: '+91 9586 478 275', Email: "ags@example.com" },
+        { SupplierCode: "SU85695", SupplierName: "AGS Corporate", Status: "Active", ContactNumber: '+91 9586 478 275', Email: "ags@example.com" }
     ];
 
     const itemsPerPage = 10;
@@ -94,46 +107,33 @@ console.log("currentItems",currentItems)
     return (
         <div className='h-screen bg-white p-4 w-full'>
           
-            <div className="flex justify-between items-center gap-2 mb-3">
+            <div className='flex justify-between items-center gap-2 mb-3'>
                 <div>
-                    <label className="font-semibold text-[22px] text-neutral-900 font-Manrope">Contacts - </label>
-                    <label className={`font-bold text-[22px] ${isAddSupplier ? 'text-orange-600' : 'text-neutral-900'} font-Manrope`}>
-                        Supplier {isAddSupplier && '- Add Supplier'}
-                    </label>
+                    <label className='font-semibold text-22 text-neutral-900 font-Manrope'>Contacts - </label> 
+                    <label className='font-bold text-22 text-orange-600 font-Manrope'> Supplier</label>
                 </div>
-                
-                {isAddSupplier ? (
-                    <div className="flex space-x-2">
-                        <button className="bg-orange-600 text-black font-semibold py-1 px-3 rounded">Save</button>
-                        <button className="bg-orange-600 text-black font-semibold py-1 px-3 rounded" onClick={handleCloseModal}>
-                            Discard
-                        </button>
-                    </div>
-                ) : (
-                    <div onClick={handleAddSupplier} className="cursor-pointer flex items-center gap-2 text-orange-600 border border-orange-600 rounded px-2 py-1">
-                        <img src={Add} className="w-4 h-4" alt="Add" />
-                        <label className="text-sm font-semibold font-Manrope">Add Supplier</label>
-                    </div>
-                )}
+                <div onClick={() => setShowModal(true)} className='cursor-pointer flex justify-between items-center gap-2 w-auto h-auto text-orange-600 border border-orange-600 rounded px-2 py-1'>
+                    <img src={Add} className='w-4 h-4' />
+                    <label className="cursor-pointer text-sm text-orange-600 font-semibold font-Manrope">Add Supplier</label>
+                   
+                </div>
             </div>
 
-          
-            {!isAddSupplier && (
-                <>
-                    
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 md:grid-cols-3 gap-x-7 gap-y-4 mb-6">
-                        {reports.map((report, index) => (
-                            <div key={index} className="bg-white p-4 rounded-xl shadow-custom">
-                                <p className="text-sm text-orange-600 font-semibold mb-4 font-Manrope">{report.title}</p>
-                                <div className='flex justify-between items-center'>
-                                    <p className="text-2xl font-medium text-black font-Manrope">{report.value}</p>
-                                    {report.extra && <div className='text-emerald-500 text-sm font-semibold font-Manrope'>{report.extra}</div>}
-                                </div>
-                            </div>
-                        ))}
+            {/* Reports section */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 md:grid-cols-3 gap-x-7 gap-y-4 mb-6">
+                {reports.map((report, index) => (
+                    <div key={index} className="bg-white p-4 rounded-xl shadow-custom">
+                        <p className="text-sm text-orange-600 font-semibold mb-4 font-Manrope">{report.title}</p>
+                        <div className='flex justify-between items-center'>
+                            <p className="text-2xl font-medium text-black font-Manrope">{report.value}</p>
+                            {report.extra && <div className='text-emerald-500 text-sm font-semibold font-Manrope'>{report.extra}</div>}
+                        </div>
                     </div>
+                ))}
+            </div>
 
-                    <div className="bg-white rounded-lg shadow-custom overflow-x-auto">
+            {/* Table section */}
+            <div className="bg-white rounded-lg shadow-custom overflow-x-auto">
                 <div className="flex items-center justify-between p-4 border-b">
                     <div className="flex items-center gap-2">
                         <img src={Frame1} className='w-6 h-6 cursor-pointer' />
@@ -218,8 +218,8 @@ console.log("currentItems",currentItems)
 </tr>
 </thead>
                     <tbody>
-                        {currentItems.map((item, index) => (
-                            <tr key={index} className="hover:bg-gray-50">
+                        { currentItems &&currentItems.length > 0 && currentItems.map((item, index) => (
+                            <tr key={index} className="hover:bg-gray-50" onClick={() => handleClick(item)}>
                                 <td className="p-3 flex items-center">
                                     <img src={SmallDot} className="mr-1.5" />
                                     <input type="checkbox" className="form-checkbox h-4 w-4 text-blue-600 border-neutral-500 cursor-pointer" />
@@ -244,14 +244,14 @@ console.log("currentItems",currentItems)
                     <ArrowRight2 className='cursor-pointer' size="16" color="#797979" onClick={handleNextClick} />
                 </div>
             </div>
-                    
-                </>
-            )}
 
-            {isAddSupplier && <Supplier_Tabs />}
+           
+            {showModal && (
+                <Supplier_Tabs supplierforms={supplierforms} handleClose={handleCloseShowDetails} />
+               
+            )}
         </div>
     );
 }
 
-export default SupplierTable;
-
+export default SupplierTable;  
