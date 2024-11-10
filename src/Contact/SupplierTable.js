@@ -226,7 +226,7 @@ console.log("currentItems",currentItems)
                                 </td>
                                 <td className="cursor-pointer p-2 font-semibold text-sm font-Manrope text-neutral-900">{item.supplierCode}</td>
                                 <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900">{item.name || '-'}</td>
-                                <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900">{item.Status ? 'Active' : 'DeActive'}
+                                <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900">{item.status ? 'Active' : 'DeActive'}
                                 </td>
                                 <td className='p-2 font-semibold text-sm font-Manrope text-neutral-900'>{item.phone}</td>
                                 <td className='p-2 font-semibold text-sm font-Manrope text-neutral-900'>{item.email}</td>
