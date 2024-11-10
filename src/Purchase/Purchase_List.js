@@ -109,9 +109,13 @@ const handleCloseAddPurchase = () => {
 }
 
 
+useEffect(() => {
+    dispatch({ type: 'GETPRODUCT' });
+    // dispatch({ type: 'GETCUSTOMER' });
+  }, []);
 
 
-
+  
 
 useEffect(()=>{
     if(state.Purchase.addPurchaseStatusCode == 200){

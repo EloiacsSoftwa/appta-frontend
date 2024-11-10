@@ -4,8 +4,11 @@ const initialState = {
   barcodeStatuscode: 0,
   Order_Id:'',
   CreateOrderStatuscode :0,
+  CompleteOrderStatuscode :0,
+  paymenttypestatuscode : 0,
   Errormsg: '',
   orderItems: [],
+  PaymentType:[],
   totalPrice: 0,
   totalAmount: 0,
   totalDiscount: 0,
@@ -19,6 +22,17 @@ const PosReducer = (state = initialState, action) => {
       return { ...state, Order_Id: action.payload.response.orderId, CreateOrderStatuscode: action.payload.statusCode }
     case 'REMOVE_CREATE_ORDER_STATUS_CODE':
       return { ...state, CreateOrderStatuscode: 0 }
+
+
+      case 'GET_PAYMENT_TYPE':
+        return { ...state, PaymentType: action.payload.response, paymenttypestatuscode: action.payload.statusCode }
+      case 'REMOVE_GET_PAYMENT_TYPE_STATUS_CODE':
+        return { ...state, paymenttypestatuscode: 0 }
+
+      case 'COMPLETE_ORDER':
+        return { ...state,  CompleteOrderStatuscode: action.payload.statusCode }
+      case 'REMOVE_COMPLETE_ORDER_STATUS_CODE':
+        return { ...state, CompleteOrderStatuscode: 0 }
 
     case 'BARCODE_GET_PRODUCT_SUCCESS':
       return {...state, BarcodeproductData:  action.payload.data, barcodeStatuscode: action.payload.statusCode,

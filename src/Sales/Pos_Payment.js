@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import cancelbtn from '../Images/Icons/cancelbtn.svg';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -9,19 +9,59 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import FormHelperText from '@mui/material/FormHelperText';
-import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+// import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import DemoContainer  from '../Sales/DemoContainer'
+import { useDispatch, useSelector } from 'react-redux';
 
 
-const Pos_Payment = ({ handleclose }) => {
+
+const Pos_Payment = ({ handleclose,total_amount }) => {
 
   const [activeTab, setActiveTab] = useState("Cash"); 
 
   const handleTabClick = (tabName) => {
     setActiveTab(tabName);
   };
+
+  const dispatch = useDispatch();
+  const State = useSelector(state => state);
+
+  const [payment_type, setPaymentType] = useState('');
+  const paymentTypes = useSelector(state => state.PosReducer.PaymentType);
+
+  const [cashReceived, setCashReceived] = useState('')
+  const [changeto_return, setChangeToReturn] = useState('')
+  const [receipt_number, setReceiptNumber] = useState('')
+
+  const handleCashReceived = (e) => {
+    setCashReceived(e.target.value)
+    const Return_amount = total_amount ? (total_amount - e.target.value) : 0
+    setChangeToReturn(Return_amount)
+  }
+    
+  useEffect(()=> {
+    dispatch({ type: 'GET-PAYMENT-TYPE' });
+  },[])
+
+
+
+   const handlepaymentcomplete = ()=> {
+
+    try {
+        dispatch({ type: 'COMPLETE-ORDER'  });  
+        handleclose();
+      } 
+      catch (error) {
+        console.error("Error completing the order:", error);
+      }
+    
+   }
+
+
+  
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
@@ -136,29 +176,32 @@ const Pos_Payment = ({ handleclose }) => {
       autoComplete="off"
     >
   
- <TextField
-                label="Amount to be paid"
-                // value={total_amount ? total_amount : 0}
-                fullWidth
-                className="font-Roboto font-semibold text-xs"
-                InputLabelProps={{ shrink: true }}
-               
-                sx={{ 
-                  '& .MuiInputLabel-root': { color: 'black' },
-                  '& .MuiOutlinedInput-root': {
-                    '& fieldset': { borderColor: '#797979' },
-                    '&:hover fieldset': { borderColor: '#797979' },
-                    '&.Mui-focused fieldset': { borderColor: '#797979' },
-                  },
-                  '& .MuiInputLabel-root.Mui-focused': { color: 'black' },
-                  '& .MuiFormHelperText-root': { color: 'red' },
-                }}
-              />
+  <TextField
+    label="Amount to be paid"
+    value={total_amount ? total_amount : 0}
+    fullWidth
+    className="font-Roboto font-semibold text-xs"
+    InputLabelProps={{ shrink: true }}
+    InputProps={{
+        readOnly: true, // Make the field read-only
+    }}
+    sx={{ 
+      '& .MuiInputLabel-root': { color: 'black' },
+      '& .MuiOutlinedInput-root': {
+        '& fieldset': { borderColor: '#797979' },
+        '&:hover fieldset': { borderColor: '#797979' },
+        '&.Mui-focused fieldset': { borderColor: '#797979' },
+      },
+      '& .MuiInputLabel-root.Mui-focused': { color: 'black' },
+      '& .MuiFormHelperText-root': { color: 'red' },
+    }}
+/>
+
 
 <TextField
                 label="Cash Received"
-                // value={cashReceived}
-                // onChange={handleCashReceived}
+                value={cashReceived}
+                onChange={handleCashReceived}
                 fullWidth
                 className="font-Roboto font-semibold text-xs"
                 InputLabelProps={{ shrink: true }}
@@ -179,10 +222,13 @@ const Pos_Payment = ({ handleclose }) => {
 
 <TextField
                 label="Change to Return"
-                // value={changeto_return}
+                value={changeto_return}
                 fullWidth
                 className="font-Roboto font-semibold text-xs"
                 InputLabelProps={{ shrink: true }}
+                InputProps={{
+                    readOnly: true, // Make the field read-only
+                }}
                
                 sx={{ 
                   '& .MuiInputLabel-root': { color: 'black' },
@@ -219,7 +265,7 @@ const Pos_Payment = ({ handleclose }) => {
 
       <Box sx={{ gridColumn: 'span 2', display: 'flex', justifyContent: 'center', mt: 2 }}>
         <button className="text-center bg-[#EA580C] text-black p-2 rounded" 
-        // onClick={handleClose}
+        onClick={handlepaymentcomplete}
         >
           Payment Completed
         </button>
@@ -392,7 +438,7 @@ const Pos_Payment = ({ handleclose }) => {
         </button>
         <button
   className="text-center bg-[#EA580C] text-black p-3 rounded-md font-roboto font-medium text-[18px] leading-[12px] tracking-[0.15px]"
-  // onClick={handleClose}
+  onClick={handlepaymentcomplete}
 >
   Payment Completed
 </button>
@@ -671,9 +717,8 @@ const Pos_Payment = ({ handleclose }) => {
                 }}
               />
    
-   <LocalizationProvider dateAdapter={AdapterDayjs} >
-      {/* <div className="flex"> */}
-        {/* Calendar on the left side */}
+   {/* <LocalizationProvider dateAdapter={AdapterDayjs} >
+      
         <div className="w-full font-Roboto font-semibold text-xs"    
                   sx={{ 
                   '& .MuiInputLabel-root': { color: 'black' },
@@ -690,9 +735,35 @@ const Pos_Payment = ({ handleclose }) => {
           </DemoContainer>
         </div>
 
-        {/* Content on the right side */}
-        
-      {/* </div> */}
+       
+    </LocalizationProvider> */}
+
+
+<LocalizationProvider dateAdapter={AdapterDayjs}>
+      <div className="w-full font-Roboto font-semibold text-xs">
+        <DemoContainer components={['DatePicker']}>
+          <DatePicker
+            label="Payment Due Date"
+            // value={selectedDate}
+            // onChange={(newDate) => setSelectedDate(newDate)}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                sx={{
+                  '& .MuiInputLabel-root': { color: 'black' },
+                  '& .MuiOutlinedInput-root': {
+                    '& fieldset': { borderColor: '#797979' },
+                    '&:hover fieldset': { borderColor: '#797979' },
+                    '&.Mui-focused fieldset': { borderColor: '#797979' },
+                  },
+                  '& .MuiInputLabel-root.Mui-focused': { color: 'black' },
+                  '& .MuiFormHelperText-root': { color: 'red' },
+                }}
+              />
+            )}
+          />
+        </DemoContainer>
+      </div>
     </LocalizationProvider>
 
 <TextField
