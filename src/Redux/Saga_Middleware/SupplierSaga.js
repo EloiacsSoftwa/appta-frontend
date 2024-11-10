@@ -10,21 +10,7 @@ function* handleAddSupplier(args) {
 
     const response = yield call(AddSupplierList, args.payload);
    console.log("Response For Supplier ",response)
-   const toastStyle = {
-    backgroundColor: "#fff",
-    color:'#38B000',
-    width: "100%",
-    borderRadius: "60px",
-    height: "20px",
-    fontFamily: "Manrope",
-    fontWeight: 700,
-    fontSize: 14,
-    textAlign: "start",
-    display: "flex",
-    alignItems: "center", 
-    padding: "10px",
-   
-  };
+  
 
 
 
