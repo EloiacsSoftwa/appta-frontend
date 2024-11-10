@@ -28,7 +28,7 @@ export const addOrderItemsApiCall = async (product) => {
 
 
 export async function CompleteOrder(orderId, paymentType) {
-  return await AxiosConfig.post('/order/completeOrder', null, {
+  return await AxiosConfig.post('/order/completeOrder', {}, {
     params: {
       orderId: orderId,
       paymentType: paymentType,

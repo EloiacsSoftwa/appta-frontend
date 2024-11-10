@@ -15,32 +15,58 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import DemoContainer  from '../Sales/DemoContainer'
 import { useDispatch, useSelector } from 'react-redux';
+// import { set } from "react-datepicker/dist/date_utils";
 
 
 
 const Pos_Payment = ({ handleclose,total_amount }) => {
 
-  const [activeTab, setActiveTab] = useState("Cash"); 
+    const State = useSelector(state => state);
 
-  const handleTabClick = (tabName) => {
+  const [activeTab, setActiveTab] = useState("Cash"); 
+  const [payment_type, setPaymentType] = useState('');
+  console.log("payment_type",payment_type);
+
+  const [receipt_number, setReceiptNumber] = useState('')
+  const [transcation_id,setTransaction_ID] = useState('')
+
+
+
+
+const handleTabClick = (tabName) => {
     setActiveTab(tabName);
-  };
+    const PaymentFilter = State?.PosReducer?.PaymentType?.filter((u) => u.paymentType === tabName);
+    setPaymentType(PaymentFilter);
+    setReceiptNumber(PaymentFilter && PaymentFilter[0]?.receiptNumber || '');
+    setTransaction_ID(PaymentFilter && PaymentFilter[0]?.transactionId || '');
+};
+
+
+useEffect(() => {
+    const defaultPaymentFilter = State?.PosReducer?.PaymentType?.filter((u) => u.paymentType === "Cash");
+    setPaymentType(defaultPaymentFilter);
+    setReceiptNumber(defaultPaymentFilter && defaultPaymentFilter[0]?.receiptNumber || '');
+    setTransaction_ID(defaultPaymentFilter && defaultPaymentFilter[0]?.transactionId || '');
+}, [State?.PosReducer?.PaymentType]);
 
   const dispatch = useDispatch();
-  const State = useSelector(state => state);
 
-  const [payment_type, setPaymentType] = useState('');
-  const paymentTypes = useSelector(state => state.PosReducer.PaymentType);
+
+
+
 
   const [cashReceived, setCashReceived] = useState('')
   const [changeto_return, setChangeToReturn] = useState('')
-  const [receipt_number, setReceiptNumber] = useState('')
+  
 
   const handleCashReceived = (e) => {
-    setCashReceived(e.target.value)
-    const Return_amount = total_amount ? (total_amount - e.target.value) : 0
-    setChangeToReturn(Return_amount)
-  }
+    const cashReceivedValue = e.target.value;
+    setCashReceived(cashReceivedValue);
+
+    const Return_amount = total_amount ? (cashReceivedValue - total_amount).toFixed(2) : 0;
+    setChangeToReturn(parseFloat(Return_amount));
+}
+
     
   useEffect(()=> {
     dispatch({ type: 'GET-PAYMENT-TYPE' });
@@ -48,17 +74,25 @@ const Pos_Payment = ({ handleclose,total_amount }) => {
 
 
 
-   const handlepaymentcomplete = ()=> {
+  const handlepaymentcomplete = () => {
+    if (payment_type && payment_type.length > 0) {
+        const orderId = payment_type[0].orderId;
+        const paymentType = payment_type[0].paymentTypeId;
 
-    try {
-        dispatch({ type: 'COMPLETE-ORDER'  });  
-        handleclose();
-      } 
-      catch (error) {
-        console.error("Error completing the order:", error);
-      }
-    
-   }
+        if (orderId && paymentType) {
+            dispatch({
+                type: 'COMPLETE-ORDER',
+                payload: { orderId, paymentType }
+            });
+            handleclose();
+        } else {
+            console.log("Incomplete payment data", payment_type[0]);
+        }
+    } else {
+        console.log("Payment type is missing or invalid");
+    }
+};
+
 
 
   
@@ -102,11 +136,11 @@ const Pos_Payment = ({ handleclose,total_amount }) => {
   <li className="flex-auto text-center">
     <a
       className={`pt-1 ps-6 pe-6 pb-1 rounded-md cursor-pointer text-[#EAEAEA] ${
-        activeTab === "upi" ? "bg-[#EA580C]" : "bg-[#797979]"
+        activeTab === "UPI" ? "bg-[#EA580C]" : "bg-[#797979]"
       } font-Roboto`}
-      onClick={() => handleTabClick("upi")}
+      onClick={() => handleTabClick("UPI")}
       role="tab"
-      aria-selected={activeTab === "upi"}
+      aria-selected={activeTab === "UPI"}
       style={{
         fontWeight: 700,
         fontSize: '24px',
@@ -244,7 +278,7 @@ const Pos_Payment = ({ handleclose,total_amount }) => {
    
    <TextField
                 label="Receipt Number"
-                 value="#ELT054686"
+                value={receipt_number}
                 fullWidth
                 className="font-Roboto font-semibold text-xs"
                 InputLabelProps={{ shrink: true }}
@@ -276,8 +310,8 @@ const Pos_Payment = ({ handleclose,total_amount }) => {
   )}
 
 
-  {activeTab === "upi" && (
-    <div id="upi" role="tabpanel">
+  {activeTab === "UPI" && (
+    <div id="UPI" role="tabpanel">
       
       <Box
       component="form"
@@ -295,7 +329,7 @@ const Pos_Payment = ({ handleclose,total_amount }) => {
   
  <TextField
                 label="Amount to be paid"
-                // value={total_amount ? total_amount : 0}
+                value={total_amount ? total_amount : 0}
                 fullWidth
                 className="font-Roboto font-semibold text-xs"
                 InputLabelProps={{ shrink: true }}
@@ -314,7 +348,7 @@ const Pos_Payment = ({ handleclose,total_amount }) => {
 
 <TextField
                 label="Transaction Reference ID"
-                 value="TSD584678526"
+                 value={transcation_id}
                 // onChange={handleCashReceived}
                 fullWidth
                 className="font-Roboto font-semibold text-xs"
@@ -410,7 +444,7 @@ const Pos_Payment = ({ handleclose,total_amount }) => {
    
    <TextField
                 label="Receipt Number"
-                 value="#ELT054686"
+                 value={receipt_number}
                 fullWidth
                 className="font-Roboto font-semibold text-xs"
                 InputLabelProps={{ shrink: true }}
