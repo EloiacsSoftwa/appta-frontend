@@ -50,6 +50,27 @@ const AddProductModal = ({ onClose }) => {
     const dispatch = useDispatch();
     const state = useSelector(state => state);
 
+   
+   
+    // useEffect(() => {
+    //     if (state.AddProduct.add_Product_status_code == 200) {
+                      
+
+         
+    //     }
+
+    // }, [state.AddProduct.add_Product_status_code])
+
+
+    // useEffect(()=>{
+    //     if(state.AddProduct.add_Product_status_code == 200){
+    //         setFormData(false)
+    //     }
+    
+    // },[state.AddProduct.add_Product_Status_Code])
+    
+    
+
     useEffect(() => {
         // dispatch({ type: 'GETSUBCATEGORY' });
         dispatch({ type: 'GETCATEGORY' });
@@ -205,9 +226,41 @@ const ProductDetailsForm = ({ handleNext, formData, setFormData }) => {
     }
     const handleSubmit = () => {
         setFormData({ ...formData, billOfMaterialsList: [] })
+     
+            // setFormData({
+            //     images: [],
+            //     Name: "",
+            //     productId: '',
+            //     productName: '',
+            //     categoryId: '',
+            //     subCategoryId: '',
+            //     brandId: 1,
+            //     unitId: 0,
+            //     quantity: '',
+            //     minPurchaseQuantity: '',
+            //     barcodeType: 0,
+            //     barcodeNo: 1,
+            //     description: '',
+            //     billOfMaterials: false,
+            //     purchasePrice: 0,
+            //     salesPricePercentage: 1,
+            //     freebie: false,
+            //     purchasePercentage: 0,
+            //     salesPrice: 0,
+            //     mrp: 0,
+            //     wholesalePricePercentage: 1,
+            //     threshold: 0,
+            //     freebieProductId: 0,
+            //     barcodeNo: 0,
+            //     statusTypeId: 1,
+            //     sizeId: 0,
+            //     hsnCode: ''
+            // });
+      
         let temp = { ...formData, billOfMaterialsList: [] }
         console.log(temp);
         dispatch({ type: "ADDPRODUCTDETAILS", payload: temp })
+        
     }
 
 
