@@ -4,6 +4,7 @@ import { GET_BRANDS_API_CALL, GET_ALL_UNITS_API_CALL, GET_PRODUCT_SIZE_API_CALL 
 
 import Vector from '../Images/Icons/Vector.svg';
 import Delete from '../Images/Icons/Delete.svg';
+import useBarcodeScanner from "../utils/useBarcodeScanner";
 
 const AddProductModal = ({ onClose }) => {
     const [activeTab, setActiveTab] = useState("Product Details");
@@ -155,6 +156,11 @@ const ProductDetailsForm = ({ handleNext, formData, setFormData }) => {
         // }
     };
 
+    const barcodeScanned = (code) => {
+
+        setFormData(...formData, {barcodeNo: code})
+    }       
+
     const handleSelectCategory = (id) => {
         setSelectedCategory(id)
         dispatch({ type: 'GETSUBCATEGORY', payload: id });
@@ -289,7 +295,13 @@ const ProductDetailsForm = ({ handleNext, formData, setFormData }) => {
                     <div className="flex gap-4">
                         <div className="flex-1">
                             <label className="text-left block text-sm font-medium text-gray-700">Barcode</label>
-                            <select name="barcode" value={formData.barcodeType} onChange={(e) => { setFormData({ ...formData, barcodeType: e.target.value }) }} className="mt-1 block w-full border border-gray-300 rounded-md h-9">
+                            <select name="barcode" value={formData.barcodeType} onChange={(e) => { 
+                                setFormData({ ...formData, barcodeType: e.target.value }) 
+                                
+                                if (e.target.value === 2) {
+                                    // useBarcodeScanner(barcodeScanned)
+                                }
+                                }} className="mt-1 block w-full border border-gray-300 rounded-md h-9">
                                 <option value={0}>Selecte one</option>
                                 <option value={1} key={1}>Auto Generate</option>
                                 <option value={2} key={2}>Scan code</option>

@@ -1,4 +1,4 @@
-import React, { useState ,useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import Cup from '../Images/Icons/cup.svg'
 import Paylater from '../Images/Icons/paylater.svg'
 import Search from '../Images/Sales/Search.svg'
@@ -11,828 +11,806 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Modal from '@mui/material/Modal';
-import {  FormControlLabel, Checkbox } from '@mui/material';
+import { FormControlLabel, Checkbox } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import AddCustomer from '../Contact/AddCustomer';
 import { Setting } from 'iconsax-react';
 import Pos_Payment from './Pos_Payment';
 
+import { ADD_ORDER_ITEMS_API_CALL } from '../utils/Constant';
 
 
-    const  Pos = ({handleClosed}) => {
+const Pos = ({ handleClosed }) => {
 
-    const dispatch = useDispatch();
-    const State = useSelector(state => state);
+  const dispatch = useDispatch();
+  const State = useSelector(state => state);
 
-    useEffect(() => {
-        const handleKeyDown = (event) => {
-            if (event.key === 'Escape') {
-                handleClosed()
-            }
-        };
-        window.addEventListener('keydown', handleKeyDown);
-        return () => window.removeEventListener('keydown', handleKeyDown);
-    }, [handleClosed]);
-
-    //  const [loading, setLoading] = useState(false);
-
-    const[barcode, setBarcode] = useState('56676');
-   
-    const [productid , setProductId] = useState('')
-    const [currentDate, setCurrentDate] = useState('');
-
-    const [total_amount ,setTotalAmount] = useState('')
-
-   const [order_id,setOrderID] = useState('')
-
-    const [posdata, setPosData] = useState([]);
-
-  
-const [editingIndex, setEditingIndex] = useState(null);
-const [quantity, setQuantity] = useState(0);
-
-
-const handleQuantityClick = (index, minPurchaseQuantity) => {
-  setEditingIndex(index);
-  setQuantity(minPurchaseQuantity);
-};
-
-
-const handleQuantityChange = (index, newQuantity) => {
-  const updatedData = posdata.map((item, i) =>      
-    i === index ? { ...item, minPurchaseQuantity: newQuantity } : item       
-  );
-  setPosData(updatedData);
-  setEditingIndex(null); 
-};
-
-
-const handleInputChange = (e) => {
-  const value = e.target.value;
-  const parsedValue = parseInt(value, 10); 
-  setQuantity(isNaN(parsedValue) ? '' : parsedValue);
-};
-
-
-const handleKeyDown = (index, event) => {
-  if (event.key === 'Enter') {
-    handleQuantityChange(index, quantity);
-  }
-};
-
-
-
-
-const [editingDiscountIndex, setEditingDiscountIndex] = useState(null);
-const [discountAmount, setDiscountAmount] = useState(0);
-
-
-const handleEditDiscountAmount = (index, currentDiscount) => {
-  setEditingDiscountIndex(index);
-  setDiscountAmount(currentDiscount || 0); 
-};
-
-
-const handleDiscountAmountChange = (e) => {
-  const value = e.target.value;
-  setDiscountAmount(value);  
-};
-
-
-const handleDiscountAmountSave = (index) => {
-  const updatedData = posdata.map((item, i) =>
-    i === index ? { ...item, discountAmount: discountAmount } : item
-  );
-  setPosData(updatedData);
-  setEditingDiscountIndex(null); 
-};
-
-
-const handleDiscountAmountKeyDown = (index, event) => {
-  if (event.key === 'Enter') {
-    handleDiscountAmountSave(index);
-  }
-};
-
-
-
-   
-
-
-    useEffect(() => {
-      const date = new Date();
-      const formattedDate = date.toLocaleDateString('en-GB', {
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric',
-      });
-      setCurrentDate(formattedDate);
-    }, []);
-
-    //   const [posdata, setPosData] = useState([]);
-
-
-
-        useEffect(()=> {
-          dispatch({ type: 'CREATE-ORDER'});
-        },[])
-  
-
-        useEffect(() => {
-          if (State.PosReducer.CreateOrderStatuscode == 200) {
-            setOrderID(State.PosReducer.Order_Id)
-  
-              setTimeout(() => {
-                  dispatch({ type: 'REMOVE_CREATE_ORDER_STATUS_CODE' })
-              }, 2000)
-          }
-  
-      }, [State.PosReducer.CreateOrderStatuscode])
-   
-
-      console.log("order_id",order_id);
-      
-      
-      // Barcode scan function
-      const BarcodeGetData = () => {
-        dispatch({ type: 'BARCODE_GET_PRODUCT', payload: barcode });
-        
-        setTimeout(() => {
-          if (State.PosReducer.BarcodeproductData && State.PosReducer.BarcodeproductData !== '') {
-            handleProductUpdate(State.PosReducer.BarcodeproductData); // Correctly update posdata
-          }
-        }, 1000);
-      };
-      
-      // Search filter logic
-      const [searchQuery, setSearchQuery] = useState('');
-      const [selectedProductId, setSelectedProductId] = useState('');
-      
-      
-     const handleproductName = (item) => {
-        console.log("item",item);
-        setSearchQuery('');
-        
-        setSelectedProductId(item)
-     }
-
-      
-      const handleSearchChange = (e) => {
-        setSearchQuery(e.target.value.toLowerCase());
-        
-      };
-      
-      const filteredData =State.AddProduct?.ProductList && State.AddProduct?.ProductList?.filter((item) =>
-        item?.productName?.toLowerCase().includes(searchQuery) ||
-        item?.barcodeNo?.toLowerCase().includes(searchQuery)
-      ) || [];
-      
-      
-      
-      const [searchfilterdata, setSearchFilterData] = useState(null);
-      
-      useEffect(() => {
-        if (selectedProductId) {
-            console.log("selectedProductId", selectedProductId);
-            dispatch({ type: 'GETFREEBIENAME', payload: selectedProductId });
-        }
-        setSelectedProductId('')
-    }, [selectedProductId]);
-    
-  
-    useEffect(() => {
-        if (State.AddProduct.getFreebieName && Array.isArray(State.AddProduct.getFreebieName) && State.AddProduct.getFreebieName.length > 0) {
-            console.log("getFreebieName updated", State.AddProduct.getFreebieName);
-            
-            State.AddProduct.getFreebieName.forEach((productData) => {
-                handleProductUpdate(productData);
-            });
-        }
-    }, [State.AddProduct.getFreebieName]);
-    
-    
-      console.log("state", State)
-
-console.log("filterData",searchfilterdata)
-
-   
-      
-  
-
-    const handleProductUpdate = (productData) => {
-      console.log("productData", productData);
-    
-      if (productData && productData.productId) {
-        setPosData((prevData) => {
-          const existingProductIndex = prevData.findIndex((item) => item.productId === productData.productId);
-    
-          if (existingProductIndex !== -1) {
-
-            const updatedData = [...prevData];
-            updatedData[existingProductIndex] = {
-              ...updatedData[existingProductIndex],
-              quantity: updatedData[existingProductIndex].quantity + 1, 
-            };
-    
-            // Calculate total amount
-            const totalAmount = updatedData.reduce((acc, item) => acc + (item.quantity * item.wholesalePrice), 0);
-            setTotalAmount(totalAmount);
-            console.log("Updated totalAmount:", totalAmount);
-    
-            return updatedData;
-    
-          } else { 
-            return [...prevData, { ...productData, quantity: productData.minPurchaseQuantity }];
-          }
-        });
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape') {
+        handleClosed()
       }
     };
-    
-    
-      
-    console.log("posdata",posdata);
-    
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [handleClosed]);
 
-      useEffect(() => {
-        dispatch({ type: 'GETPRODUCT' });
-        dispatch({ type: 'GETCUSTOMER' });
-      }, []);
-      
-       
-       
-  
-  
-       
-       
-      
-console.log("Search Filter Data:", searchfilterdata);
+  //  const [loading, setLoading] = useState(false);
 
+  const [barcode, setBarcode] = useState('56676');
 
+  const [productid, setProductId] = useState('')
+  const [currentDate, setCurrentDate] = useState('');
 
- 
-      
-      
+  const [total_amount, setTotalAmount] = useState('')
+
+  const [order_id, setOrderID] = useState('')
+
+  const [posdata, setPosData] = useState([]);
+  const [filteredData, setFilteredData] = useState([])
+
+  const [editingIndex, setEditingIndex] = useState(null);
+  const [quantity, setQuantity] = useState(0);
 
 
-     const [customerSearchQuery, setCustomerSearchQuery] = useState('');
-     const [selectedCustomerId, setSelectedCustomerId] = useState(null);
-     const [customerFilter, setCustomerFilter] = useState('');
-     
-     
-     
-     const handleCustomerSearchChange = (e) => {
-       setCustomerSearchQuery(e.target.value.toLowerCase());
-       setSelectedCustomerId(null);
-     };
-     
-     
-     const filteredCustomers = State.Customer.CustomerList &&  State?.Customer?.CustomerList.filter(customer => 
-       customer.customerName.toLowerCase().includes(customerSearchQuery)
-     );
-     
-  
-     useEffect(() => {
-       if (selectedCustomerId) {
-         const customerFilterResult = State.Customer.CustomerList.find(
-           (u) => u.id === selectedCustomerId
-         );
-         setCustomerFilter(customerFilterResult || '');
-       }
-     }, [selectedCustomerId])
-
-     console.log("customerFilter",customerFilter);
-     
-
-    const [showModal, setShowModal] = useState(false);    
+  const handleQuantityClick = (index, minPurchaseQuantity) => {
+    setEditingIndex(index);
+    setQuantity(minPurchaseQuantity);
+  };
 
 
-    const [open, setOpen] = useState(false);
+  const handleQuantityChange = (index, newQuantity) => {
+    const updatedData = posdata.map((item, i) =>
+      i === index ? { ...item, minPurchaseQuantity: newQuantity } : item
+    );
+    setPosData(updatedData);
+    setEditingIndex(null);
+  };
 
-    const handleOpen = () => setOpen(true);
-    const handleClose = () => setOpen(false);
+
+  const handleInputChange = (e) => {
+    const value = e.target.value;
+    const parsedValue = parseInt(value, 10);
+    setQuantity(isNaN(parsedValue) ? '' : parsedValue);
+  };
 
 
-    const [isPayLaterEnabled, setIsPayLaterEnabled] = useState(false);
-    const [customerform, SetCustomerform] = useState(false)
+  const handleKeyDown = (index, event) => {
+    if (event.key === 'Enter') {
+      handleQuantityChange(index, quantity);
+    }
+  };
 
-     const handleOpencustomer = () => {
-        SetCustomerform(true)
-     }
 
-     const handleCloseAddCustomer = () => {
-        SetCustomerform(false)
-     }
 
-     useEffect(() => {
-      if (State.Customer.addCustomerStatusCode === 200) {
-        dispatch({ type: 'GETCUSTOMER' });
-        SetCustomerform(false);
-    
-        setTimeout(() => {
-          dispatch({ type: 'REMOVE_ADD_CUSTOMER_STATUS_CODE' });
-        }, 1000);
+
+  const [editingDiscountIndex, setEditingDiscountIndex] = useState(null);
+  const [discountAmount, setDiscountAmount] = useState(0);
+
+
+  const handleEditDiscountAmount = (index, currentDiscount) => {
+    setEditingDiscountIndex(index);
+    setDiscountAmount(currentDiscount || 0);
+  };
+
+
+  const handleDiscountAmountChange = (e) => {
+    const value = e.target.value;
+    setDiscountAmount(value);
+  };
+
+
+  const handleDiscountAmountSave = (index) => {
+    const updatedData = posdata.map((item, i) =>
+      i === index ? { ...item, discountAmount: discountAmount } : item
+    );
+    setPosData(updatedData);
+    setEditingDiscountIndex(null);
+  };
+
+
+  const handleDiscountAmountKeyDown = (index, event) => {
+    if (event.key === 'Enter') {
+      handleDiscountAmountSave(index);
+    }
+  };
+
+
+
+
+
+
+  useEffect(() => {
+    const date = new Date();
+    const formattedDate = date.toLocaleDateString('en-GB', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+    });
+    setCurrentDate(formattedDate);
+  }, []);
+
+  //   const [posdata, setPosData] = useState([]);
+
+
+
+  useEffect(() => {
+    dispatch({ type: 'CREATE-ORDER' });
+  }, [])
+
+
+  useEffect(() => {
+    if (State.PosReducer.CreateOrderStatuscode == 200) {
+      setOrderID(State.PosReducer.Order_Id)
+
+      setTimeout(() => {
+        dispatch({ type: 'REMOVE_CREATE_ORDER_STATUS_CODE' })
+      }, 2000)
+    }
+
+  }, [State.PosReducer.CreateOrderStatuscode])
+
+
+  console.log("order_id", order_id);
+
+
+  // Barcode scan function
+  const BarcodeGetData = () => {
+    dispatch({ type: 'BARCODE_GET_PRODUCT', payload: barcode });
+
+    setTimeout(() => {
+      if (State.PosReducer.BarcodeproductData && State.PosReducer.BarcodeproductData !== '') {
+        handleProductUpdate(State.PosReducer.BarcodeproductData); // Correctly update posdata
       }
-    }, [State.Customer.addCustomerStatusCode]);
-    
+    }, 1000);
+  };
 
-    useEffect(() => {
-      if (State.Customer.addCustomerStatusCode === 200 && State.Customer.CustomerList.length > 0) {
-        const lastCustomer = State.Customer.CustomerList[State.Customer.CustomerList.length - 1];
-        setCustomerFilter(lastCustomer);
-      }
-    }, [State.Customer.CustomerList]);
-    
+  // Search filter logic
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedProductId, setSelectedProductId] = useState('');
 
 
+  const handleproductName = (item) => {
+    console.log("item", item);
+    setSearchQuery('');
 
-  const [cashReceived,setCashReceived] = useState('')
-  const [changeto_return,setChangeToReturn] = useState('')
-  const [receipt_number,setReceiptNumber] = useState('')
+    const payload = {
+      orderId: order_id,
+      productId: item,
+      discount: 1,
+      quantity: 1
+    }
+    // setSelectedProductId(item)
+
+    dispatch({type: ADD_ORDER_ITEMS_API_CALL, payload: payload})
+  }
+
+
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value.toLowerCase());
+
+    if (e.target.value) {
+      setFilteredData(State.AddProduct?.ProductList && State.AddProduct?.ProductList?.filter((item) =>
+        item?.productName?.toLowerCase().includes(searchQuery) ||
+        item?.barcodeNo?.toLowerCase().includes(searchQuery)
+      ) || [])
+    }
+
+  };
+
+  useEffect(() => {
+    if (selectedProductId) {
+      console.log("selectedProductId", selectedProductId);
+      dispatch({ type: 'GETFREEBIENAME', payload: selectedProductId });
+    }
+    setSelectedProductId('')
+  }, [selectedProductId]);
+
+
+  useEffect(() => {
+    if (State.AddProduct.getFreebieName && Array.isArray(State.AddProduct.getFreebieName) && State.AddProduct.getFreebieName.length > 0) {
+      console.log("getFreebieName updated", State.AddProduct.getFreebieName);
+
+      State.AddProduct.getFreebieName.forEach((productData) => {
+        handleProductUpdate(productData);
+      });
+    }
+  }, [State.AddProduct.getFreebieName]);
+
+
+
+  const handleProductUpdate = (productData) => {
+    if (productData && productData.productId) {
+      setPosData((prevData) => {
+        const existingProductIndex = prevData.findIndex((item) => item.productId === productData.productId);
+
+        if (existingProductIndex !== -1) {
+
+          const updatedData = [...prevData];
+          updatedData[existingProductIndex] = {
+            ...updatedData[existingProductIndex],
+            quantity: updatedData[existingProductIndex].quantity + 1,
+          };
+
+          // Calculate total amount
+          const totalAmount = updatedData.reduce((acc, item) => acc + (item.quantity * item.wholesalePrice), 0);
+          setTotalAmount(totalAmount);
+          console.log("Updated totalAmount:", totalAmount);
+
+          return updatedData;
+
+        } else {
+          return [...prevData, { ...productData, quantity: productData.minPurchaseQuantity }];
+        }
+      });
+    }
+  };
+
+  useEffect(() => {
+    dispatch({ type: 'GETPRODUCT' });
+    dispatch({ type: 'GETCUSTOMER' });
+  }, []);
+
+
+  const [customerSearchQuery, setCustomerSearchQuery] = useState('');
+  const [selectedCustomerId, setSelectedCustomerId] = useState(null);
+  const [customerFilter, setCustomerFilter] = useState('');
+
+
+
+  const handleCustomerSearchChange = (e) => {
+    setCustomerSearchQuery(e.target.value.toLowerCase());
+    setSelectedCustomerId(null);
+  };
+
+
+  const filteredCustomers = State.Customer.CustomerList && State?.Customer?.CustomerList.filter(customer =>
+    customer.customerName.toLowerCase().includes(customerSearchQuery)
+  );
+
+
+  useEffect(() => {
+    if (selectedCustomerId) {
+      const customerFilterResult = State.Customer.CustomerList.find(
+        (u) => u.id === selectedCustomerId
+      );
+      setCustomerFilter(customerFilterResult || '');
+    }
+  }, [selectedCustomerId])
+
+  console.log("customerFilter", customerFilter);
+
+
+  const [showModal, setShowModal] = useState(false);
+
+
+  const [open, setOpen] = useState(false);
+
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
+
+  const [isPayLaterEnabled, setIsPayLaterEnabled] = useState(false);
+  const [customerform, SetCustomerform] = useState(false)
+
+  const handleOpencustomer = () => {
+    SetCustomerform(true)
+  }
+
+  const handleCloseAddCustomer = () => {
+    SetCustomerform(false)
+  }
+
+  useEffect(() => {
+    if (State.Customer.addCustomerStatusCode === 200) {
+      dispatch({ type: 'GETCUSTOMER' });
+      SetCustomerform(false);
+
+      setTimeout(() => {
+        dispatch({ type: 'REMOVE_ADD_CUSTOMER_STATUS_CODE' });
+      }, 1000);
+    }
+  }, [State.Customer.addCustomerStatusCode]);
+
+
+  useEffect(() => {
+    if (State.Customer.addCustomerStatusCode === 200 && State.Customer.CustomerList.length > 0) {
+      const lastCustomer = State.Customer.CustomerList[State.Customer.CustomerList.length - 1];
+      setCustomerFilter(lastCustomer);
+    }
+  }, [State.Customer.CustomerList]);
+
+
+
+
+  const [cashReceived, setCashReceived] = useState('')
+  const [changeto_return, setChangeToReturn] = useState('')
+  const [receipt_number, setReceiptNumber] = useState('')
 
   const handleCashReceived = (e) => {
     setCashReceived(e.target.value)
-    const Return_amount = total_amount ? (total_amount - e.target.value) : 0 
+    const Return_amount = total_amount ? (total_amount - e.target.value) : 0
     setChangeToReturn(Return_amount)
   }
 
-   
-    const handleCreate = () => {
-      console.log("Creating new customer...");   
-      // handleClosecustomer();
-    }
 
-    const style = {
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
-        width: 500,
-        bgcolor: 'background.paper',
-        boxShadow: 24,
-        // p: 4,
-        border:'2px solid #EA580C',
-        borderRadius: '30px',
-      };
+  const handleCreate = () => {
+    console.log("Creating new customer...");
+    // handleClosecustomer();
+  }
 
-    
+  const style = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 500,
+    bgcolor: 'background.paper',
+    boxShadow: 24,
+    // p: 4,
+    border: '2px solid #EA580C',
+    borderRadius: '30px',
+  };
 
-//   console.log("State.PosReducer.BarcodeproductData",State.PosReducer.BarcodeproductData);
-  
-//   console.log("posdata",posdata);
-  
 
-    return(<>
+
+  //   console.log("State.PosReducer.BarcodeproductData",State.PosReducer.BarcodeproductData);
+
+  //   console.log("posdata",posdata);
+
+
+  return (<>
     <div className='w-screen h-screen ' >
-        <div className='h-4/5 bg-white p-4 w-full'>
-           
-            <div className='flex flex-row w-full h-full gap-4'>
+      <div className='h-4/5 bg-white p-4 w-full'>
 
-           <div className="bg-white w-3/4 min-h-[70vh] shadow-custom overflow-x-auto">
-                <div className="flex items-center justify-between p-2 border-b bg-lightgray">
-                    <div className="flex items-center ">
-                        
-                    <div className="relative">
-  <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none">
-    <img src={Search} alt="Search Icon" />
-  </span>
-  <input
-    type="text"
-    placeholder="Search for products"
-    className="rounded pl-10 py-1 bg-zinc-300"
-    value={searchQuery}
-    onChange={handleSearchChange}
-    aria-label="Search for products"
-    role="search"
-  />
+        <div className='flex flex-row w-full h-full gap-4'>
 
-  {/* Search result dropdown */}
-  {searchQuery && filteredData.length > 0 && (
-    <div className="absolute w-full bg-white border border-gray-300 rounded mt-1 max-h-60 overflow-y-auto z-10">
-      {filteredData.map((item) => (
-        <div
-          key={item.productId}  // Use productId for key instead of index
-          className="p-2 hover:bg-gray-100 cursor-pointer"
-          onClick={() => {
-            handleproductName(item.productName)
-            // setSearchQuery(''); 
-            // Clear the search query
-            // setSelectedProductId(item.productName);
-             // Store the selected product name or ID
-            // You can also send additional actions here if needed, e.g. dispatching data
-          }}
+          <div className="bg-white w-3/4 min-h-[70vh] shadow-custom overflow-x-auto">
+            <div className="flex items-center justify-between p-2 border-b bg-lightgray">
+              <div className="flex items-center ">
 
-        //   onChange={(e)=>handleproductName(e)}
-        >
-          <div className="text-sm font-medium text-gray-900">{item.productName}</div>
-        </div>
-      ))}
-    </div>
-  )}
+                <div className="relative">
+                  <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none">
+                    <img src={Search} alt="Search Icon" />
+                  </span>
+                  <input
+                    type="text"
+                    placeholder="Search for products"
+                    className="rounded pl-10 py-1 bg-zinc-300"
+                    value={searchQuery}
+                    onChange={handleSearchChange}
+                    aria-label="Search for products"
+                    role="search"
+                  />
 
-  {/* No results message */}
-  {searchQuery && filteredData.length === 0 && (
-    <div className="absolute w-full bg-white border border-gray-300 rounded mt-1 p-2 text-sm text-gray-500">
-      No products match your search
-    </div>
-  )}
-</div>
+                  {/* Search result dropdown */}
+                  {searchQuery && filteredData.length > 0 && (
+                    <div className="absolute w-full bg-white border border-gray-300 rounded mt-1 max-h-60 overflow-y-auto z-10">
+                      {filteredData.map((item) => (
+                        <div
+                          key={item.productId}  // Use productId for key instead of index
+                          className="p-2 hover:bg-gray-100 cursor-pointer"
+                          onClick={() => {
+                            handleproductName(item.productId)
+                            // setSearchQuery(''); 
+                            // Clear the search query
+                            // setSelectedProductId(item.productName);
+                            // Store the selected product name or ID
+                            // You can also send additional actions here if needed, e.g. dispatching data
+                          }}
 
-                        <div className='bg-zinc-300 ms-2 items-center rounded'>
-                            <img  src={Barcode} className='p-1' alt='barcode' onClick={BarcodeGetData}/>
+                        //   onChange={(e)=>handleproductName(e)}
+                        >
+                          <div className="text-sm font-medium text-gray-900">{item.productName}</div>
                         </div>
+                      ))}
                     </div>
-                    <div className='flex items-center gap-2 '>
-                    
-                        <div>
-                            <img src={Delete} className='w-6 h-6 cursor-pointer' />
-                        </div>
+                  )}
+
+                  {/* No results message */}
+                  {searchQuery && filteredData.length === 0 && (
+                    <div className="absolute w-full bg-white border border-gray-300 rounded mt-1 p-2 text-sm text-gray-500">
+                      No products match your search
                     </div>
+                  )}
                 </div>
 
-                <div className="relative w-full mb-5">
+                <div className='bg-zinc-300 ms-2 items-center rounded'>
+                  <img src={Barcode} className='p-1' alt='barcode' onClick={BarcodeGetData} />
+                </div>
+              </div>
+              <div className='flex items-center gap-2 '>
 
-                {/* {loading && (
+                <div>
+                  <img src={Delete} className='w-6 h-6 cursor-pointer' />
+                </div>
+              </div>
+            </div>
+
+            <div className="relative w-full mb-5">
+
+              {/* {loading && (
 <div className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-75 z-10">
 <div className="loader border-t-4 border-orange-500 border-solid rounded-full w-10 h-10 animate-spin"></div>
 </div>
 )} */}
 
-<table className="w-full text-left mb-5 table-auto">
-                    <thead>
-                        <tr className="bg-gray-200 border-0">
-                        <th className="p-1 flex items-center justify-start  h-full">
-                               
-                            </th>
-                            <th className="p-1 font-semibold text-base text-neutral-900">
-                                <div className="flex items-center justify-start gap-2">
-                                   
-                                    <div className='font-semibold text-sm text-neutral-900 font-Manrope leading-0'>SNo</div>
-                                </div>
-                            </th>
+              <table className="w-full text-left mb-5 table-auto">
+                <thead>
+                  <tr className="bg-gray-200 border-0">
+                    <th className="p-1 flex items-center justify-start  h-full">
 
-                            <th className="p-1 font-semibold text-base text-neutral-900">
-                                <div className="flex items-center justify-start gap-2">
-                                 
-                                    <div className='font-semibold text-sm text-neutral-900 font-Manrope'>ICode</div>
-                                </div>
-                            </th>
-                            <th className="p-1 font-semibold text-base text-neutral-900">
-                                <div className="flex items-center justify-start gap-2">
-                                   
-                                    <div className='font-semibold text-sm text-neutral-900 font-Manrope'>Product</div>
-                                </div>
-                            </th>
-                            <th className="p-1 font-semibold text-base text-neutral-900">
-                                <div className="flex items-center justify-start gap-2">
-                                   
-                                    <div className='font-semibold text-sm text-neutral-900 font-Manrope'>Quantity</div>
-                                </div>
-                            </th>
-                            <th className="p-1 font-semibold text-base text-neutral-900">
-                                <div className="flex items-center justify-start gap-2">
-                                    
-                                    <div className='font-semibold text-sm text-neutral-900 font-Manrope'>Unit Price</div>
-                                </div>
-                            </th>
-                            <th className="p-1 font-semibold text-base text-neutral-900">
-                                <div className="flex items-center justify-start gap-2">
-                                   
-                                    <div className='font-semibold text-sm text-neutral-900 font-Manrope'>Amount </div>
-                                </div>
-                            </th>
-                            <th className="p-1 font-semibold text-base text-neutral-900">
-                                <div className="flex items-center justify-start gap-2">
-                                    
-                                    <div className='font-semibold text-sm text-neutral-900 font-Manrope'>%</div>
-                                </div>
-                            </th>
+                    </th>
+                    <th className="p-1 font-semibold text-base text-neutral-900">
+                      <div className="flex items-center justify-start gap-2">
 
-                            <th className="p-1 font-semibold text-base text-neutral-900">
-                                <div className="flex items-center justify-start gap-2">
-                                    
-                                    <div className='font-semibold text-sm text-neutral-900 font-Manrope'>Discount</div>
-                                </div>
-                            </th>
+                        <div className='font-semibold text-sm text-neutral-900 font-Manrope leading-0'>SNo</div>
+                      </div>
+                    </th>
 
-                            <th className="p-1 font-semibold text-base text-neutral-900">
-                                <div className="flex items-center justify-start gap-2">
-                                    
-                                    <div className='font-semibold text-sm text-neutral-900 font-Manrope'>Net Amount</div>
-                                </div>
-                            </th>
-                          
-                    
-                        </tr>
-                    </thead>
-                    <tbody>
-      {posdata && posdata.length > 0 ? (
-        posdata.map((item, index) => (
-          <tr key={index} className="hover:bg-gray-50 border-0">
-            <td className="p-2 mt-1 flex items-center justify-start">
-              <input type="checkbox" className="form-checkbox h-3 w-3 text-blue-600 border-neutral-500 cursor-pointer" />
-            </td>
-            <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{item.unitId || '-'}</td>
-            <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{item.barcodeNo || '-'}</td>
-            <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{item.productName || '-'}</td>
-            
-            
-          
-            <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">
-  {editingIndex === index ? (
-    <input
-      type="number"
-      value={quantity}
-      onChange={handleInputChange}
-      onBlur={() => handleQuantityChange(index, quantity)}
-      onKeyDown={(e) => handleKeyDown(index, e)}
-      className="border border-neutral-300 rounded px-1 py-0.5 w-16"
-    />
-  ) : (
-    <span onClick={() => handleQuantityClick(index, item.minPurchaseQuantity)} className="cursor-pointer">
-      {item.minPurchaseQuantity || '-'}
-    </span>
-  )}
-</td>
+                    <th className="p-1 font-semibold text-base text-neutral-900">
+                      <div className="flex items-center justify-start gap-2">
+
+                        <div className='font-semibold text-sm text-neutral-900 font-Manrope'>ICode</div>
+                      </div>
+                    </th>
+                    <th className="p-1 font-semibold text-base text-neutral-900">
+                      <div className="flex items-center justify-start gap-2">
+
+                        <div className='font-semibold text-sm text-neutral-900 font-Manrope'>Product</div>
+                      </div>
+                    </th>
+                    <th className="p-1 font-semibold text-base text-neutral-900">
+                      <div className="flex items-center justify-start gap-2">
+
+                        <div className='font-semibold text-sm text-neutral-900 font-Manrope'>Quantity</div>
+                      </div>
+                    </th>
+                    <th className="p-1 font-semibold text-base text-neutral-900">
+                      <div className="flex items-center justify-start gap-2">
+
+                        <div className='font-semibold text-sm text-neutral-900 font-Manrope'>Unit Price</div>
+                      </div>
+                    </th>
+                    <th className="p-1 font-semibold text-base text-neutral-900">
+                      <div className="flex items-center justify-start gap-2">
+
+                        <div className='font-semibold text-sm text-neutral-900 font-Manrope'>Amount </div>
+                      </div>
+                    </th>
+                    <th className="p-1 font-semibold text-base text-neutral-900">
+                      <div className="flex items-center justify-start gap-2">
+
+                        <div className='font-semibold text-sm text-neutral-900 font-Manrope'>%</div>
+                      </div>
+                    </th>
+
+                    <th className="p-1 font-semibold text-base text-neutral-900">
+                      <div className="flex items-center justify-start gap-2">
+
+                        <div className='font-semibold text-sm text-neutral-900 font-Manrope'>Discount</div>
+                      </div>
+                    </th>
+
+                    <th className="p-1 font-semibold text-base text-neutral-900">
+                      <div className="flex items-center justify-start gap-2">
+
+                        <div className='font-semibold text-sm text-neutral-900 font-Manrope'>Net Amount</div>
+                      </div>
+                    </th>
 
 
-            
-            <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">₹{item.wholesalePrice || '0'}</td>
-            <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">₹{(item.minPurchaseQuantity * item.wholesalePrice) || '-'}</td>
-            <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{item.wholesalePricePercentage || '-'}</td>
-            {/* <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">
+                  </tr>
+                </thead>
+                <tbody>
+                  {posdata && posdata.length > 0 ? (
+                    posdata.map((item, index) => (
+                      <tr key={index} className="hover:bg-gray-50 border-0">
+                        <td className="p-2 mt-1 flex items-center justify-start">
+                          <input type="checkbox" className="form-checkbox h-3 w-3 text-blue-600 border-neutral-500 cursor-pointer" />
+                        </td>
+                        <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{item.unitId || '-'}</td>
+                        <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{item.barcodeNo || '-'}</td>
+                        <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{item.productName || '-'}</td>
+
+
+
+                        <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">
+                          {editingIndex === index ? (
+                            <input
+                              type="number"
+                              value={quantity}
+                              onChange={handleInputChange}
+                              onBlur={() => handleQuantityChange(index, quantity)}
+                              onKeyDown={(e) => handleKeyDown(index, e)}
+                              className="border border-neutral-300 rounded px-1 py-0.5 w-16"
+                            />
+                          ) : (
+                            <span onClick={() => handleQuantityClick(index, item.minPurchaseQuantity)} className="cursor-pointer">
+                              {item.minPurchaseQuantity || '-'}
+                            </span>
+                          )}
+                        </td>
+
+
+
+                        <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">₹{item.wholesalePrice || '0'}</td>
+                        <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">₹{(item.minPurchaseQuantity * item.wholesalePrice) || '-'}</td>
+                        <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{item.wholesalePricePercentage || '-'}</td>
+                        {/* <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">
              ₹{(item.minPurchaseQuantity * item.wholesalePrice * (item.wholesalePricePercentage / 100)) || '-'}</td> */}
 
-             <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">
-          {editingDiscountIndex === index ? (
-            <input
-              type="number"
-              value={discountAmount}
-              onChange={handleDiscountAmountChange}
-              onBlur={() => handleDiscountAmountSave(index)}  
-              onKeyDown={(e) => handleDiscountAmountKeyDown(index, e)}  
-              className="border border-neutral-300 rounded px-1 py-0.5 w-16"
-            />
-          ) : (
-            <span
-              onClick={() => handleEditDiscountAmount(index, item.discountAmount || 0)} 
-              className="cursor-pointer"
-            >
-              ₹{item.discountAmount || '-'}
-            </span>
-          )}
-        </td>
-            <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">
-              ₹{(item.minPurchaseQuantity * item.wholesalePrice) - ((item.minPurchaseQuantity * item.wholesalePrice) * (item.wholesalePricePercentage / 100)) || '0'}
-            </td>
-          </tr>
-        ))
-      ) : (
-        <tr>
-          <td colSpan="10" className="p-2 text-center text-sm text-neutral-500">
-            No data available
-          </td>
-        </tr>
-      )}
-    </tbody>
+                        <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">
+                          {editingDiscountIndex === index ? (
+                            <input
+                              type="number"
+                              value={discountAmount}
+                              onChange={handleDiscountAmountChange}
+                              onBlur={() => handleDiscountAmountSave(index)}
+                              onKeyDown={(e) => handleDiscountAmountKeyDown(index, e)}
+                              className="border border-neutral-300 rounded px-1 py-0.5 w-16"
+                            />
+                          ) : (
+                            <span
+                              onClick={() => handleEditDiscountAmount(index, item.discountAmount || 0)}
+                              className="cursor-pointer"
+                            >
+                              ₹{item.discountAmount || '-'}
+                            </span>
+                          )}
+                        </td>
+                        <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">
+                          ₹{(item.minPurchaseQuantity * item.wholesalePrice) - ((item.minPurchaseQuantity * item.wholesalePrice) * (item.wholesalePricePercentage / 100)) || '0'}
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan="10" className="p-2 text-center text-sm text-neutral-500">
+                        No data available
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
 
 
 
 
 
 
-                </table>
-
-
-
-              
-                </div>
+              </table>
 
 
 
 
-
-
-              
             </div>
- 
+
+
+
+
+
+
+
+          </div>
+
 
           <div className="bg-white w-1/4 h-full shadow-custom overflow-x-auto">
-          <div className="flex items-center justify-between p-2 border-b bg-lightgray">
-                    <div className="flex items-center ">
-                        {/* <div><img src={Frame1} className='w-6 h-6 cursor-pointer' /></div> */}
-                        <div className="relative">
-    <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none">
-      <img src={Search} alt="Search Icon" />
-    </span>
-    <input
-      type="text"
-      placeholder="Search for Customer"
-      className="rounded pl-10 py-1 bg-zinc-300"
-      value={customerSearchQuery}
-      onChange={handleCustomerSearchChange}
-    />
+            <div className="flex items-center justify-between p-2 border-b bg-lightgray">
+              <div className="flex items-center ">
+                {/* <div><img src={Frame1} className='w-6 h-6 cursor-pointer' /></div> */}
+                <div className="relative">
+                  <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none">
+                    <img src={Search} alt="Search Icon" />
+                  </span>
+                  <input
+                    type="text"
+                    placeholder="Search for Customer"
+                    className="rounded pl-10 py-1 bg-zinc-300"
+                    value={customerSearchQuery}
+                    onChange={handleCustomerSearchChange}
+                  />
 
-   
-    {customerSearchQuery && filteredCustomers && filteredCustomers.length > 0 && (
-      <div className="absolute w-full bg-white border border-gray-300 rounded mt-1 max-h-60 overflow-y-auto z-10">
-        {filteredCustomers.map((customer, index) => (
-          <div
-            key={index}
-            className="p-2 hover:bg-gray-100 cursor-pointer"
-            onClick={() => {
-                setCustomerSearchQuery('') 
-              setSelectedCustomerId(customer.id); 
-            }}
-          >
-            <div className="text-sm font-medium text-gray-900">{customer.customerName}</div>
-          </div>
-        ))}
-      </div>
-    )}
 
-    
-    {customerSearchQuery && filteredCustomers.length === 0 && (
-      <div className="absolute w-full bg-white border border-gray-300 rounded mt-1 p-2 text-sm text-gray-500">
-        No customers match your search
-      </div>
-    )}
-  </div>
-
-                    </div>
-
-                    <div className='flex items-center gap-2 '>
-                    
-                        <div>
-                            <img src={Addcustomer} className='w-6 h-6 cursor-pointer' onClick={handleOpencustomer}/>
+                  {customerSearchQuery && filteredCustomers && filteredCustomers.length > 0 && (
+                    <div className="absolute w-full bg-white border border-gray-300 rounded mt-1 max-h-60 overflow-y-auto z-10">
+                      {filteredCustomers.map((customer, index) => (
+                        <div
+                          key={index}
+                          className="p-2 hover:bg-gray-100 cursor-pointer"
+                          onClick={() => {
+                            setCustomerSearchQuery('')
+                            setSelectedCustomerId(customer.id);
+                          }}
+                        >
+                          <div className="text-sm font-medium text-gray-900">{customer.customerName}</div>
                         </div>
+                      ))}
                     </div>
+                  )}
+
+
+                  {customerSearchQuery && filteredCustomers.length === 0 && (
+                    <div className="absolute w-full bg-white border border-gray-300 rounded mt-1 p-2 text-sm text-gray-500">
+                      No customers match your search
+                    </div>
+                  )}
                 </div>
 
-                <div class="bg-white p-2 rounded-lg shadow-lg m-2 ">
-    <div class="flex flex-row justify-between">
-          <div class="flex flex-col ">
-          <p className={customerFilter?.customerName ? 'text-sm font-semibold font-Manrope': 'text-xs text-[#797979]'}>
-                  {customerFilter?.customerName || "xyz"}</p>
-            <p className='text-xs text-[#797979]'>{customerFilter ? customerFilter.mobile : "+91 9876543210"}</p>
-            <p className='text-xs text-[#797979] me-2'>{customerFilter ? customerFilter.email : "xyz@gmail.com"}</p>
+              </div>
+
+              <div className='flex items-center gap-2 '>
+
+                <div>
+                  <img src={Addcustomer} className='w-6 h-6 cursor-pointer' onClick={handleOpencustomer} />
+                </div>
+              </div>
             </div>
-          <div class="flex flex-col text-right">
 
-            <div class="flex">
-            <img src={Cup} className='w-6 h-6'/>
-            <div>
-            <p className='text-xs  font-semibold font-Manrope ' style={{paddingLeft:'5px'}}>Loyalty Points</p>
-            <p className='text-xs text-center text-[#797979] ' style={{paddingRight:'20px'}}>0 points</p>
-          </div>
+            <div class="bg-white p-2 rounded-lg shadow-lg m-2 ">
+              <div class="flex flex-row justify-between">
+                <div class="flex flex-col ">
+                  <p className={customerFilter?.customerName ? 'text-sm font-semibold font-Manrope' : 'text-xs text-[#797979]'}>
+                    {customerFilter?.customerName || "xyz"}</p>
+                  <p className='text-xs text-[#797979]'>{customerFilter ? customerFilter.mobile : "+91 9876543210"}</p>
+                  <p className='text-xs text-[#797979] me-2'>{customerFilter ? customerFilter.email : "xyz@gmail.com"}</p>
+                </div>
+                <div class="flex flex-col text-right">
+
+                  <div class="flex">
+                    <img src={Cup} className='w-6 h-6' />
+                    <div>
+                      <p className='text-xs  font-semibold font-Manrope ' style={{ paddingLeft: '5px' }}>Loyalty Points</p>
+                      <p className='text-xs text-center text-[#797979] ' style={{ paddingRight: '20px' }}>0 points</p>
+                    </div>
+                  </div>
+
+                  <div class="flex flex-row text-right mt-1 pb-0">
+                    <img src={Paylater} className='w-6 h-6' />
+                    <div>
+                      <p className='text-xs  font-semibold font-Manrope' style={{ paddingRight: '7px' }}>Pay Later</p>
+                      <p className='text-xs text-center   text-[#797979] ' style={{ paddingLeft: '8px' }}>Not Eligible</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            <div class="border border-solid border-black"> </div>
+
+            <div><p className='text-[#131313] text-xs  font-semibold font-Manrope ps-2'>Order No : ELT054686</p></div>
+
+            <div class="border border-solid border-black"> </div>
+
+            <div className='flex flex-col'>
+
+              <div className='flex flex-row mt-2'>
+                <input type="checkbox" className="form-checkbox h-3 w-3 mt-1 ms-2 text-blue-600 border-neutral-500 cursor-pointer" />
+
+                <p className='text-[#131313] text-sm  font-semibold font-Manrope ps-2'>Add Loyalty Points</p>
+              </div>
+
+              <div className='flex flex-row justify-between' >
+                <p className='text-[#131313] text-sm  font-semibold font-Manrope ps-2'>Date: </p>
+                <p className='text-[#131313] text-sm  font-semibold font-Manrope pe-2'>{currentDate}</p>
+              </div>
+
+              <div className='flex flex-row justify-between' >
+                <p className='text-[#131313] text-sm  font-semibold font-Manrope ps-2'>Total Items : </p>
+                <p className='text-[#131313] text-sm  font-semibold font-Manrope pe-2'>{posdata && posdata.length}</p>
+              </div>
+
+              <div className='flex flex-row justify-between' >
+                <p className='text-[#131313] text-sm  font-semibold font-Manrope ps-2'>Amount :</p>
+                <p className='text-[#131313] text-sm  font-semibold font-Manrope pe-2'>{total_amount}</p>
+              </div>
+
+              <div className='flex flex-row justify-between' >
+                <p className='text-[#131313] text-sm  font-semibold font-Manrope ps-2'>Discounts :</p>
+                <p className='text-[#131313] text-sm  font-semibold font-Manrope pe-2'>₹ 50.00</p>
+              </div>
+
+              <div className='flex flex-row justify-between' >
+                <p className='text-[#131313] text-sm  font-semibold font-Manrope ps-2'>Before Tax : </p>
+                <p className='text-[#131313] text-sm  font-semibold font-Manrope pe-2'>₹ 230.00</p>
+              </div>
+
+              <div className='flex flex-row justify-between' >
+                <p className='text-[#131313] text-sm  font-semibold font-Manrope ps-2'> Tax : </p>
+              </div>
+
+              <div className='flex flex-row justify-between' >
+                <p className='text-[#131313] text-sm  font-semibold font-Manrope ps-2'>CGST : </p>
+                <p className='text-[#131313] text-sm  font-semibold font-Manrope pe-2'>₹ 230.00</p>
+              </div>
+
+              <div className='flex flex-row justify-between' >
+                <p className='text-[#131313] text-sm  font-semibold font-Manrope ps-2'>SGST : </p>
+                <p className='text-[#131313] text-sm  font-semibold font-Manrope pe-2'>₹ 230.00</p>
+              </div>
+
+              <div className='flex flex-row justify-between  mb-2 mt-2' >
+                <p className='text-[#131313] text-sm  font-semibold font-Manrope ps-2'>Total :</p>
+                <p className='text-[#131313] text-sm  font-semibold font-Manrope pe-2'>₹ {total_amount ? total_amount : 0}</p>
+              </div>
+
+              <div class="border border-dotted border-black ">
+              </div>
+
+              <div className='flex flex-col items-center mt-1' >
+                <p className='font-semibold font-Manrope text-[#131313] font-bold text-xl '>Amount to Pay</p>
+                <p className='font-semibold font-Manrope text-[#131313] font-bold text-xl '>₹ {total_amount ? total_amount : 0}</p>
+              </div>
+
+            </div>
+
+
           </div>
 
-          <div class="flex flex-row text-right mt-1 pb-0">
-          <img src={Paylater} className='w-6 h-6'/>
+        </div>
+      </div>
+
+
+
+      <div className='h-22 w-full shadow-custom overflow-x-auto bg-[#D9D9D9]'>
+        <div className='flex flex-row justify-center  justify-between items-center p-2 space-x-2'>
+          <div className='flex flex-row space-x-2 pt-3 ps-3 justify-evenly'>
+            <button
+              type="submit"
+              className="flex  items-center me-4 rounded justify-center bg-[#EA580C] text-white px-5 py-1.5 text-sm font-semibold  border border-[#EA580C] shadow-sm hover:bg-[#EA580C] hover:text-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#EA580C]">
+              Quotation
+            </button>
+
+            <div >
+              <button
+                type="submit"
+                style={{ marginRight: '2rem' }}
+                className="flex items-center   rounded justify-center bg-[#797979] px-5 py-1.5 text-sm font-semibold text-white border border-[#648D68] shadow-sm hover:bg-[#648D68] hover:text-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#648D68]">
+                Guest Check
+              </button>
+            </div>
+
+            <button
+              type="submit"
+              style={{ marginRight: '2rem' }}
+              className="flex items-center me-4  justify-center rounded bg-[#797979] px-5 py-1.5 text-sm font-semibold text-white border border-[#648D68] shadow-sm hover:bg-[#648D68] hover:text-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#648D68]">
+              Cancel Order
+            </button>
+
+            <button
+              type="submit"
+              style={{ marginRight: '2rem' }}
+              className="flex items-center me-4  justify-center rounded bg-[#EA580C] text-white px-5 py-1.5 text-sm font-semibold  border border-[#EA580C] shadow-sm hover:bg-[#EA580C] hover:text-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#EA580C]">
+              Hold Order
+            </button>
+
+            <button
+              type="submit"
+              className="flex items-center justify-center rounded bg-[#797979] px-5 py-1.5 text-sm font-semibold text-white border border-[#648D68] shadow-sm hover:bg-[#648D68] hover:text-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#648D68]">
+              Show Draft
+            </button>
+          </div>
+
           <div>
-             <p className='text-xs  font-semibold font-Manrope' style={{paddingRight:'7px'}}>Pay Later</p>
-            <p className='text-xs text-center   text-[#797979] ' style={{paddingLeft:'8px'}}>Not Eligible</p>
-            </div>
-            </div>
-          </div>
-    </div>
-    
-  </div>
-
-   <div  class="border border-solid border-black"> </div>
-
-   <div><p className='text-[#131313] text-xs  font-semibold font-Manrope ps-2'>Order No : ELT054686</p></div>
-
-   <div  class="border border-solid border-black"> </div>
-
-   <div className='flex flex-col'>
-
-    <div className='flex flex-row mt-2'>
-               <input type="checkbox" className="form-checkbox h-3 w-3 mt-1 ms-2 text-blue-600 border-neutral-500 cursor-pointer" />
-
-    <p className='text-[#131313] text-sm  font-semibold font-Manrope ps-2'>Add Loyalty Points</p>
-    </div>
-
-    <div className='flex flex-row justify-between' >
-    <p className='text-[#131313] text-sm  font-semibold font-Manrope ps-2'>Date: </p>
-    <p className='text-[#131313] text-sm  font-semibold font-Manrope pe-2'>{currentDate}</p>
-    </div>
-   
-    <div className='flex flex-row justify-between' >
-    <p className='text-[#131313] text-sm  font-semibold font-Manrope ps-2'>Total Items : </p>
-    <p className='text-[#131313] text-sm  font-semibold font-Manrope pe-2'>{posdata&& posdata.length}</p>
-    </div>
-
-    <div className='flex flex-row justify-between' >
-    <p className='text-[#131313] text-sm  font-semibold font-Manrope ps-2'>Amount :</p>
-    <p className='text-[#131313] text-sm  font-semibold font-Manrope pe-2'>{total_amount}</p>
-    </div>
-
-    <div className='flex flex-row justify-between' >
-    <p className='text-[#131313] text-sm  font-semibold font-Manrope ps-2'>Discounts :</p>
-    <p className='text-[#131313] text-sm  font-semibold font-Manrope pe-2'>₹ 50.00</p>
-    </div>
-
-    <div className='flex flex-row justify-between' >
-    <p className='text-[#131313] text-sm  font-semibold font-Manrope ps-2'>Before Tax : </p>
-    <p className='text-[#131313] text-sm  font-semibold font-Manrope pe-2'>₹ 230.00</p>
-    </div>
-
-    <div className='flex flex-row justify-between' >
-    <p className='text-[#131313] text-sm  font-semibold font-Manrope ps-2'> Tax : </p>
-    </div>
-
-    <div className='flex flex-row justify-between' >
-    <p className='text-[#131313] text-sm  font-semibold font-Manrope ps-2'>CGST : </p>
-    <p className='text-[#131313] text-sm  font-semibold font-Manrope pe-2'>₹ 230.00</p>
-    </div>
-
-    <div className='flex flex-row justify-between' >
-    <p className='text-[#131313] text-sm  font-semibold font-Manrope ps-2'>SGST : </p>
-    <p className='text-[#131313] text-sm  font-semibold font-Manrope pe-2'>₹ 230.00</p>
-    </div>
-
-    <div className='flex flex-row justify-between  mb-2 mt-2' >
-    <p className='text-[#131313] text-sm  font-semibold font-Manrope ps-2'>Total :</p>
-    <p className='text-[#131313] text-sm  font-semibold font-Manrope pe-2'>₹ {total_amount ? total_amount : 0}</p>
-    </div>
-
-    <div class="border border-dotted border-black ">
-</div>
-
-    <div className='flex flex-col items-center mt-1' >
-    <p className='font-semibold font-Manrope text-[#131313] font-bold text-xl '>Amount to Pay</p>
-    <p className='font-semibold font-Manrope text-[#131313] font-bold text-xl '>₹ {total_amount ? total_amount : 0}</p>
-    </div>
-
-   </div>
-
-
+            <button
+              type="submit"
+              onClick={handleOpen}
+              className="flex items-center me-2 justify-center w-64 rounded bg-[#EA580C] text-white px-24 py-1.5 text-sm font-semibold border border-[#EA580C] shadow-sm hover:bg-[#EA580C] hover:text-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#EA580C]">
+              ₹ Pay
+            </button>
           </div>
 
-            </div>
-            </div>
 
-  
 
-   <div className='h-22 w-full shadow-custom overflow-x-auto bg-[#D9D9D9]'>
-   <div className='flex flex-row justify-center  justify-between items-center p-2 space-x-2'>
-    <div className='flex flex-row space-x-2 pt-3 ps-3 justify-evenly'>
-        <button 
-            type="submit" 
-            className="flex  items-center me-4 rounded justify-center bg-[#EA580C] text-white px-5 py-1.5 text-sm font-semibold  border border-[#EA580C] shadow-sm hover:bg-[#EA580C] hover:text-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#EA580C]">
-           Quotation
-        </button> 
-  
-  <div >
-        <button 
-            type="submit" 
-            style={{ marginRight: '2rem' }}
-            className="flex items-center   rounded justify-center bg-[#797979] px-5 py-1.5 text-sm font-semibold text-white border border-[#648D68] shadow-sm hover:bg-[#648D68] hover:text-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#648D68]">
-            Guest Check
-        </button> 
+
         </div>
 
-        <button 
-            type="submit" 
-            style={{ marginRight: '2rem' }}
-            className="flex items-center me-4  justify-center rounded bg-[#797979] px-5 py-1.5 text-sm font-semibold text-white border border-[#648D68] shadow-sm hover:bg-[#648D68] hover:text-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#648D68]">
-            Cancel Order
-        </button> 
-
-        <button 
-            type="submit" 
-            style={{ marginRight: '2rem' }}
-            className="flex items-center me-4  justify-center rounded bg-[#EA580C] text-white px-5 py-1.5 text-sm font-semibold  border border-[#EA580C] shadow-sm hover:bg-[#EA580C] hover:text-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#EA580C]">
-           Hold Order
-        </button> 
-
-        <button 
-            type="submit" 
-            className="flex items-center justify-center rounded bg-[#797979] px-5 py-1.5 text-sm font-semibold text-white border border-[#648D68] shadow-sm hover:bg-[#648D68] hover:text-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#648D68]">
-            Show Draft
-        </button> 
-    </div>
-
-    <div> 
-    <button 
-        type="submit" 
-        onClick={handleOpen}
-        className="flex items-center me-2 justify-center w-64 rounded bg-[#EA580C] text-white px-24 py-1.5 text-sm font-semibold border border-[#EA580C] shadow-sm hover:bg-[#EA580C] hover:text-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#EA580C]">
-       ₹ Pay 
-    </button>
-</div>
 
 
+      </div>
 
 
-</div>
-
-
-               
-    </div>
-      
-
-    {/* <Modal
+      {/* <Modal
   open={open}
   onClose={handleClose}
   aria-labelledby="modal-modal-title"
@@ -965,18 +943,18 @@ console.log("Search Filter Data:", searchfilterdata);
   </Box>
 </Modal> */}
 
- {
-  open && <Pos_Payment handleclose = {handleClose}/>
- }
+      {
+        open && <Pos_Payment handleclose={handleClose} />
+      }
 
-{/* //add customer  */}
+      {/* //add customer  */}
 
-{
-  customerform && <AddCustomer  handleClose={handleCloseAddCustomer}/>
-}
+      {
+        customerform && <AddCustomer handleClose={handleCloseAddCustomer} />
+      }
 
-</div>
-</>    
-    )
+    </div>
+  </>
+  )
 }
 export default Pos;
