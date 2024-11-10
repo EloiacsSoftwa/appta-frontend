@@ -34,6 +34,15 @@ import Pos_Payment from './Pos_Payment';
         return () => window.removeEventListener('keydown', handleKeyDown);
     }, [handleClosed]);
 
+    useEffect(() => {
+      dispatch({ type: 'GETPRODUCT' });
+      dispatch({ type: 'GETCUSTOMER' });
+    }, []);
+
+    useEffect(()=> {
+      dispatch({ type: 'CREATE-ORDER'});
+    },[])
+
     //  const [loading, setLoading] = useState(false);
 
     const[barcode, setBarcode] = useState('56676');
@@ -42,80 +51,74 @@ import Pos_Payment from './Pos_Payment';
     const [currentDate, setCurrentDate] = useState('');
 
     const [total_amount ,setTotalAmount] = useState('')
-
-   const [order_id,setOrderID] = useState('')
+    const [order_id,setOrderID] = useState('')
 
     const [posdata, setPosData] = useState([]);
 
-  
-const [editingIndex, setEditingIndex] = useState(null);
-const [quantity, setQuantity] = useState(0);
+    const [editingIndex, setEditingIndex] = useState(null);
+    const [quantity, setQuantity] = useState(0);
+
+    const [editingDiscountIndex, setEditingDiscountIndex] = useState(null);
+    const [discountAmount, setDiscountAmount] = useState(0);
 
 
-const handleQuantityClick = (index, minPurchaseQuantity) => {
-  setEditingIndex(index);
-  setQuantity(minPurchaseQuantity);
-};
+       const handleQuantityClick = (index, minPurchaseQuantity) => {
+         setEditingIndex(index);
+         setQuantity(minPurchaseQuantity);
+          };
 
 
-const handleQuantityChange = (index, newQuantity) => {
-  const updatedData = posdata.map((item, i) =>      
-    i === index ? { ...item, minPurchaseQuantity: newQuantity } : item       
-  );
-  setPosData(updatedData);
-  setEditingIndex(null); 
-};
+      const handleQuantityChange = (index, newQuantity) => {
+         const updatedData = posdata.map((item, i) =>      
+         i === index ? { ...item, minPurchaseQuantity: newQuantity } : item       
+         );
+          setPosData(updatedData);
+          setEditingIndex(null); 
+        }; 
 
 
-const handleInputChange = (e) => {
-  const value = e.target.value;
-  const parsedValue = parseInt(value, 10); 
-  setQuantity(isNaN(parsedValue) ? '' : parsedValue);
-};
+      const handleInputChange = (e) => {
+         const value = e.target.value;
+         const parsedValue = parseInt(value, 10); 
+         setQuantity(isNaN(parsedValue) ? '' : parsedValue);
+       };
 
 
-const handleKeyDown = (index, event) => {
-  if (event.key === 'Enter') {
-    handleQuantityChange(index, quantity);
-  }
-};
-
-
-
-
-const [editingDiscountIndex, setEditingDiscountIndex] = useState(null);
-const [discountAmount, setDiscountAmount] = useState(0);
-
-
-const handleEditDiscountAmount = (index, currentDiscount) => {
-  setEditingDiscountIndex(index);
-  setDiscountAmount(currentDiscount || 0); 
-};
-
-
-const handleDiscountAmountChange = (e) => {
-  const value = e.target.value;
-  setDiscountAmount(value);  
-};
-
-
-const handleDiscountAmountSave = (index) => {
-  const updatedData = posdata.map((item, i) =>
-    i === index ? { ...item, discountAmount: discountAmount } : item
-  );
-  setPosData(updatedData);
-  setEditingDiscountIndex(null); 
-};
-
-
-const handleDiscountAmountKeyDown = (index, event) => {
-  if (event.key === 'Enter') {
-    handleDiscountAmountSave(index);
-  }
-};
+        const handleKeyDown = (index, event) => {
+        if (event.key === 'Enter') {
+           handleQuantityChange(index, quantity);
+       }
+     };
 
 
 
+
+       const handleEditDiscountAmount = (index, currentDiscount) => {
+         setEditingDiscountIndex(index);
+         setDiscountAmount(currentDiscount || 0); 
+        };
+
+
+       const handleDiscountAmountChange = (e) => {
+         const value = e.target.value;
+         setDiscountAmount(value);  
+        };
+
+
+      const handleDiscountAmountSave = (index) => {
+         const updatedData = posdata.map((item, i) =>
+         i === index ? { ...item, discountAmount: discountAmount } : item
+          );
+           setPosData(updatedData);
+           setEditingDiscountIndex(null); 
+          };
+
+
+       const handleDiscountAmountKeyDown = (index, event) => {
+         if (event.key === 'Enter') {
+          handleDiscountAmountSave(index);
+            }
+          };
    
 
 
@@ -129,13 +132,9 @@ const handleDiscountAmountKeyDown = (index, event) => {
       setCurrentDate(formattedDate);
     }, []);
 
-    //   const [posdata, setPosData] = useState([]);
+    
 
-
-
-        useEffect(()=> {
-          dispatch({ type: 'CREATE-ORDER'});
-        },[])
+       
   
 
         useEffect(() => {
@@ -155,11 +154,11 @@ const handleDiscountAmountKeyDown = (index, event) => {
       
       // Barcode scan function
       const BarcodeGetData = () => {
+
         dispatch({ type: 'BARCODE_GET_PRODUCT', payload: barcode });
-        
         setTimeout(() => {
           if (State.PosReducer.BarcodeproductData && State.PosReducer.BarcodeproductData !== '') {
-            handleProductUpdate(State.PosReducer.BarcodeproductData); // Correctly update posdata
+            handleProductUpdate(State.PosReducer.BarcodeproductData); //  update posdata
           }
         }, 1000);
       };
@@ -171,15 +170,13 @@ const handleDiscountAmountKeyDown = (index, event) => {
       
      const handleproductName = (item) => {
         console.log("item",item);
-        setSearchQuery('');
-        
+        setSearchQuery(''); 
         setSelectedProductId(item)
      }
 
       
       const handleSearchChange = (e) => {
-        setSearchQuery(e.target.value.toLowerCase());
-        
+        setSearchQuery(e.target.value.toLowerCase());   
       };
       
       const filteredData =State.AddProduct?.ProductList && State.AddProduct?.ProductList?.filter((item) =>
@@ -212,15 +209,11 @@ const handleDiscountAmountKeyDown = (index, event) => {
     
     
       console.log("state", State)
-
-console.log("filterData",searchfilterdata)
+      console.log("filterData",searchfilterdata)
 
    
-      
-  
-
-    const handleProductUpdate = (productData) => {
-      console.log("productData", productData);
+     const handleProductUpdate = (productData) => {
+          console.log("productData", productData);
     
       if (productData && productData.productId) {
         setPosData((prevData) => {
@@ -250,34 +243,12 @@ console.log("filterData",searchfilterdata)
     
     
       
-    console.log("posdata",posdata);
-    
-
-      useEffect(() => {
-        dispatch({ type: 'GETPRODUCT' });
-        dispatch({ type: 'GETCUSTOMER' });
-      }, []);
-      
-       
-       
-  
-  
-       
-       
-      
-console.log("Search Filter Data:", searchfilterdata);
-
-
-
- 
-      
-      
-
+    console.log("posdata",posdata);    
+    console.log("Search Filter Data:", searchfilterdata);
 
      const [customerSearchQuery, setCustomerSearchQuery] = useState('');
      const [selectedCustomerId, setSelectedCustomerId] = useState(null);
      const [customerFilter, setCustomerFilter] = useState('');
-     
      
      
      const handleCustomerSearchChange = (e) => {
@@ -405,23 +376,19 @@ console.log("Search Filter Data:", searchfilterdata);
     role="search"
   />
 
-  {/* Search result dropdown */}
+ 
   {searchQuery && filteredData.length > 0 && (
     <div className="absolute w-full bg-white border border-gray-300 rounded mt-1 max-h-60 overflow-y-auto z-10">
       {filteredData.map((item) => (
         <div
-          key={item.productId}  // Use productId for key instead of index
+          key={item.productId}  
           className="p-2 hover:bg-gray-100 cursor-pointer"
           onClick={() => {
             handleproductName(item.productName)
-            // setSearchQuery(''); 
-            // Clear the search query
-            // setSelectedProductId(item.productName);
-             // Store the selected product name or ID
-            // You can also send additional actions here if needed, e.g. dispatching data
+        
           }}
 
-        //   onChange={(e)=>handleproductName(e)}
+   
         >
           <div className="text-sm font-medium text-gray-900">{item.productName}</div>
         </div>
@@ -734,7 +701,7 @@ console.log("Search Filter Data:", searchfilterdata);
 
     <div className='flex flex-row justify-between' >
     <p className='text-[#131313] text-sm  font-semibold font-Manrope ps-2'>Before Tax : </p>
-    <p className='text-[#131313] text-sm  font-semibold font-Manrope pe-2'>₹ 230.00</p>
+    <p className='text-[#131313] text-sm  font-semibold font-Manrope pe-2'>₹ 00.00</p>
     </div>
 
     <div className='flex flex-row justify-between' >
@@ -743,12 +710,12 @@ console.log("Search Filter Data:", searchfilterdata);
 
     <div className='flex flex-row justify-between' >
     <p className='text-[#131313] text-sm  font-semibold font-Manrope ps-2'>CGST : </p>
-    <p className='text-[#131313] text-sm  font-semibold font-Manrope pe-2'>₹ 230.00</p>
+    <p className='text-[#131313] text-sm  font-semibold font-Manrope pe-2'>₹ 00.00</p>
     </div>
 
     <div className='flex flex-row justify-between' >
     <p className='text-[#131313] text-sm  font-semibold font-Manrope ps-2'>SGST : </p>
-    <p className='text-[#131313] text-sm  font-semibold font-Manrope pe-2'>₹ 230.00</p>
+    <p className='text-[#131313] text-sm  font-semibold font-Manrope pe-2'>₹ 00.00</p>
     </div>
 
     <div className='flex flex-row justify-between  mb-2 mt-2' >
