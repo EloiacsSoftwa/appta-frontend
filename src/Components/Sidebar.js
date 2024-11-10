@@ -28,6 +28,7 @@ import SubCategory_List from "../Product Pages/SubCategory_List";
 import Customer_List from "../Contact/Customer_List";
 import SupplierTable from '../Contact/SupplierTable';
 import CryptoJS from "crypto-js";
+import Stock_Adjustment_List from '../Inventry/Stock_Adjustment_List';
 import Stock_Available from '../Inventry/Stock_Availability';
 import StockTransform from "../Inventry/Stock_Transform";
 
@@ -315,6 +316,12 @@ useEffect(() => {
            {selectedMenu === 'Supplier' && (
             <div className="bg-white mt-2">
               <SupplierTable />
+            </div>
+          )}
+
+        {selectedMenu === 'Stock Adjustment' && (
+            <div className="">
+              <Stock_Adjustment_List />
             </div>
           )}
 

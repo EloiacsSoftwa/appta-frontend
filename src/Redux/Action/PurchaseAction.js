@@ -2,7 +2,7 @@ import AxiosConfig from "../../WebService/AxiosConfig"
 
 
 export async function GetPurchaseList() {
-  return await AxiosConfig.post('/Purchase-List',{
+  return await AxiosConfig.post('/purchase/getPurchase',{
       })
 }
 
