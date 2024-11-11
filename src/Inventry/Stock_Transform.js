@@ -127,16 +127,20 @@ function StockTransform() {
             </div>
 
             <div>
-              <button 
-             onClick={handleAdd}
-                 type="submit" 
-                 className='cursor-pointer flex items-center gap-2 w-auto h-auto text-orange-600 border border-orange-600 rounded px-2 py-1 font-Manrope font-semibold text-sm '
-                >
-                <img src={Add} alt="Add" class="mr-2" /> 
-                New Stock Transfer
-               </button>
+  <button 
+    onClick={handleAdd}
+    type="submit" 
+    className="cursor-pointer flex items-center gap-2 w-auto h-auto text-orange-600 border border-orange-600 rounded px-3 py-1 font-Manrope font-semibold text-sm "
+  >
+    <img
+      src={Add}
+      alt="Add"
+      className=""
+    />
+    New Stock Transfer
+  </button>
+</div>
 
-                </div>
                 </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4  md:grid-cols-3 gap-x-7 gap-y-4 mb-6">

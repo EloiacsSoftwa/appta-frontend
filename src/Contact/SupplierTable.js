@@ -112,7 +112,7 @@ console.log("currentItems",currentItems)
                     <label className='font-semibold text-22 text-neutral-900 font-Manrope'>Contacts - </label> 
                     <label className='font-bold text-22 text-orange-600 font-Manrope'> Supplier</label>
                 </div>
-                <div onClick={() => setShowModal(true)} className='cursor-pointer flex justify-between items-center gap-2 w-auto h-auto text-orange-600 border border-orange-600 rounded px-2 py-1'>
+                <div onClick={() => setShowModal(true)} className='cursor-pointer flex justify-between items-center gap-2 w-auto h-auto text-orange-600 border border-orange-600 rounded px-3 py-1'>
                     <img src={Add} className='w-4 h-4' />
                     <label className="cursor-pointer text-sm text-orange-600 font-semibold font-Manrope">Add Supplier</label>
                    

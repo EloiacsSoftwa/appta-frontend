@@ -47,7 +47,7 @@ function AddQuotation({handleClose}) {
           Sales - Invoice - <span className="text-orange-600">Create Quotation</span>
         </p>
         <div className="flex gap-2">
-          <button onClick={handleClose} className="flex items-center gap-2 w-16 h-7 px-2 rounded border border-orange-600 text-orange-600 font-semibold text-sm">
+          <button onClick={handleClose} className="flex items-center gap-2 w-16 h-7 px-2 rounded border border-orange-600 text-orange-600 font-semibold text-sm hover:bg-orange-600 hover:text-black hover:border-black">
             Cancel
           </button>
           <button className="flex items-center gap-2 w-28 h-7 px-3 rounded border border-black bg-orange-600 text-black font-semibold text-sm">

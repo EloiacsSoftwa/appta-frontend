@@ -158,7 +158,7 @@ const handleCloseAddCustomer = () =>{
                             <label className='font-semibold text-22 text-neutral-900 font-Manrope'>Contacts - </label> <label className='font-bold text-22 text-orange-600 font-Manrope'> Customer List</label>
 
                         </div>
-                        <div onClick={handleAdd} className='cursor-pointer flex items-center gap-2 w-auto h-auto text-orange-600 border border-orange-600 rounded px-2 py-1'>
+                        <div onClick={handleAdd} className='cursor-pointer flex items-center gap-2 w-auto h-auto text-orange-600 border border-orange-600 rounded px-3 py-1'>
                             <div>
                                 <img src={Add} className='w-4 h-4' />
                             </div>
