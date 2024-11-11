@@ -337,6 +337,11 @@ useEffect(() => {
           )}
 
 
+{selectedMenu === 'Ware house' && (
+            <div className="">
+             
+            </div>
+          )}
 
         </div>
 
