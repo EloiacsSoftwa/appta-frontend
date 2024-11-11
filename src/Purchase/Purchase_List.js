@@ -11,12 +11,13 @@ import SmallDot from '../Images/Sales/Smalldots.svg';
 import { ArrowRight2, ArrowLeft2, ArrowUp2, ArrowDown2 } from 'iconsax-react';
 import AddPurchase from './AddPurchase';
 import { useDispatch, useSelector, connect } from 'react-redux';
-
+import Plus from '../Images/Icons/Vector.svg'
 
 function Purchase_List(props) {
     const [currentPage, setCurrentPage] = useState(1);
     const [showAddPurchase, setShowAddPurchase] = useState(false);
 const [Purchase, setPurchase] = useState([])
+const [isHovered, setIsHovered] = useState(false); 
 
 console.log("purchase",Purchase)
 
@@ -112,10 +113,27 @@ dispatch({ type: 'REMOVE_GET_PURCHASE_STATUS_CODE'})
                             <label className="font-semibold text-22 text-neutral-900 font-Manrope">Purchase - </label>
                             <label className="font-bold text-22 text-orange-600 font-Manrope">Purchase List</label>
                         </div>
-                        <div onClick={handleAdd} className="cursor-pointer flex items-center gap-2 w-auto h-auto text-orange-600 border border-orange-600 rounded px-2 py-1">
-                            <img src={Add} className="w-4 h-4" alt="Add" />
-                            <label className="cursor-pointer text-sm text-orange-600 font-semibold font-Manrope">Add Purchase List</label>
-                        </div>
+                        <div
+    onClick={handleAdd}
+    onMouseEnter={() => setIsHovered(true)}
+    onMouseLeave={() => setIsHovered(false)}
+    className={`cursor-pointer flex items-center gap-2 text-orange-600 border border-orange-600 rounded px-2 py-1 hover:bg-orange-600 hover:border-black ${
+      showAddPurchase ? 'mb-2' : 'mb-4'
+    }`}
+  >
+    <img
+      src={isHovered ? Plus : Add}
+      className="w-4 h-4"
+      alt="Add"
+    />
+    <label
+      className={`text-sm font-semibold font-Manrope ${
+        isHovered ? 'text-black' : 'text-orange-600'
+      }`}
+    >
+     Add Purchase List
+    </label>
+  </div>
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 md:grid-cols-3 gap-x-7 gap-y-4 mb-6">

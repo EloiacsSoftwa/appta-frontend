@@ -59,7 +59,7 @@ function AddInvoice({handleClose}) {
         </div>
       </div>
 
-      <div className="w-full rounded-xl shadow-custom mt-4 p-4 mb-4">
+      <div className="w-full rounded-xl shadow-custom mt-8 p-4 mb-4">
         <div className="grid gap-2">
           <div className="flex flex-col md:flex-row justify-start p-2">
             

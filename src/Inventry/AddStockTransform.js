@@ -40,14 +40,14 @@ function AddStockTransform({ handleClose }) {
         </div>
       </div>
 
-      <div className="w-full rounded-xl shadow-custom mt-4 p-4 mb-4">
+      <div className="w-full rounded-xl shadow-custom mt-8 p-4 mb-4">
         <p className="font-bold text-lg text-orange-600 mb-4 font-Manrope">Adjustment Details</p>
         <div className="flex flex-wrap lg:flex-nowrap gap-4">
           <div className="w-full max-w-sm min-w-[200px]">
             <label className="block font-semibold mb-1 text-sm text-start font-SourceSansPro">Stock Transfer ID</label>
             <input
               type="text"
-              className="w-full border border-[#BDBDBD] rounded px-3 py-2 text-sm"
+              className="w-full border border-[#BDBDBD] rounded px-3 py-2 text-sm placeholder-black"
               placeholder="Auto Generate"
             />
           </div>
@@ -78,7 +78,7 @@ function AddStockTransform({ handleClose }) {
             <label className="block font-semibold mb-1 text-sm text-start font-SourceSansPro">Transfer Cost</label>
             <input
               type="text"
-              className="w-full border border-[#BDBDBD] rounded px-3 py-2 text-sm"
+              className="w-full border border-[#BDBDBD] rounded px-3 py-2 text-sm placeholder-black"
               placeholder="₹"
             />
           </div>
@@ -86,7 +86,7 @@ function AddStockTransform({ handleClose }) {
           <div className="w-full max-w-sm min-w-[200px]">
             <label className="block font-semibold mb-1 text-sm text-start font-SourceSansPro">Reason</label>
             <select className="w-full border border-[#BDBDBD] rounded px-3 py-2 text-sm">
-              <option value="">Select Reason</option>
+              <option value="">Return</option>
              
             </select>
           </div>
@@ -96,7 +96,7 @@ function AddStockTransform({ handleClose }) {
           <div className="w-full max-w-sm min-w-[200px]">
             <label className="block font-semibold mb-1 text-sm text-start font-SourceSansPro">From Warehouse</label>
             <select className="w-full border border-[#BDBDBD] rounded px-3 py-2 text-sm">
-              <option value="">Select Warehouse</option>
+              <option value="">Salem</option>
             
             </select>
           </div>
@@ -104,7 +104,7 @@ function AddStockTransform({ handleClose }) {
           <div className="w-full max-w-sm min-w-[200px]">
             <label className="block font-semibold mb-1 text-sm text-start font-SourceSansPro">To Warehouse</label>
             <select className="w-full border border-[#BDBDBD] rounded px-3 py-2 text-sm">
-              <option value="">Select Warehouse</option>
+              <option value="">Salem</option>
               
             </select>
           </div>

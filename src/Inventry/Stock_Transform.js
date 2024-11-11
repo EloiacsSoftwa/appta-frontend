@@ -8,6 +8,7 @@ import Search from '../Images/Sales/Search.svg'
 import Dot from '../Images/Sales/Dots.svg';
 import SmallDot from '../Images/Sales/Smalldots.svg'
 import Add from '../Images/Sales/Add Green.svg';
+import Plus from '../Images/Icons/Vector.svg'
 import AddStockTransform from './AddStockTransform';
 import Checkbox from '../Images/Vector (8).svg'
 import { ArrowRight2, ArrowLeft2 ,ArrowUp2, ArrowDown2} from 'iconsax-react';
@@ -19,6 +20,7 @@ function StockTransform() {
     const [currentPage, setCurrentPage] = useState(1);
     const [showAddStockTransform, setShowAddStockTransform] = useState(false)
 
+    const [isHovered, setIsHovered] = useState(false); 
 
     const reports = [
         {
@@ -126,20 +128,27 @@ function StockTransform() {
                 <label className='font-semibold text-22 text-neutral-900 font-Manrope'>Inventory - </label> <label className='font-bold text-22 text-orange-600 font-Manrope'>Stock transfer </label>
             </div>
 
-            <div>
-  <button 
+            <div
     onClick={handleAdd}
-    type="submit" 
-    className="cursor-pointer flex items-center gap-2 w-auto h-auto text-orange-600 border border-orange-600 rounded px-3 py-1 font-Manrope font-semibold text-sm "
+    onMouseEnter={() => setIsHovered(true)}
+    onMouseLeave={() => setIsHovered(false)}
+    className={`cursor-pointer flex items-center gap-2 text-orange-600 border border-orange-600 rounded px-2 py-1 hover:bg-orange-600 hover:border-black ${
+      showAddStockTransform ? 'mb-2' : 'mb-4'
+    }`}
   >
     <img
-      src={Add}
+      src={isHovered ? Plus : Add}
+      className="w-4 h-4"
       alt="Add"
-      className=""
     />
-    New Stock Transfer
-  </button>
-</div>
+    <label
+      className={`text-sm font-semibold font-Manrope ${
+        isHovered ? 'text-black' : 'text-orange-600'
+      }`}
+    >
+     New Stock Transfer
+    </label>
+  </div>
 
                 </div>
 
@@ -158,7 +167,7 @@ function StockTransform() {
                             {report.extra && (
                                 <div className='flex items-center'>
                                     <div className='text-emerald-500 text-sm font-semibold font-Manrope'> {report.extra}</div>
-                                    <div> <img src={Vector} className='w-5 h-5' /> </div>
+                               
                                 </div>
 
                             )}
