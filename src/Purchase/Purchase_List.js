@@ -463,21 +463,22 @@ function Purchase_List(props) {
 
                                 <tbody>
                                     {currentItems && currentItems.length > 0 && currentItems.map((item, index) => (
-                                        <tr key={index} className="hover:bg-gray-50">
-                                            <div className='flex mt-2.5 p-3'>
-                                                <img src={SmallDot} className="ml-1" />
-                                                <input type="checkbox" className="form-checkbox h-4 w-4 text-blue-600 border-neutral-500 cursor-pointer ml-2.5" />
-                                            </div>
-                                            <td className="pl-5 font-semibold text-sm font-Manrope text-neutral-900 text-start">{item.date}</td>
-                                            <td className="pl-5 font-semibold text-sm font-Manrope text-neutral-900 text-start">{item.deliveryDate}</td>
-                                            <td className="pl-5 font-semibold text-sm font-Manrope text-neutral-900 text-start">{item.supplier}</td>
-                                            <td className="pl-5 font-semibold text-sm font-Manrope text-neutral-900 text-start">{item.totalAmount}</td>
-                                            <td className="pl-5 font-semibold text-sm font-Manrope text-neutral-900 text-start">{item.purchaseStatus}</td>
-                                            <td className="pl-5 font-semibold text-sm font-Manrope text-neutral-900 text-start">{item.paymentStatus}</td>
-                                            <td className="pl-5 text-start cursor-pointer">
-                                                <img src={Dot} className="w-4 h-4" alt="More Options" />
-                                            </td>
-                                        </tr>
+                                         <tr key={index} className="hover:bg-gray-50">
+                                         <div className='flex mt-2.5 p-3'>
+                                             <img src={SmallDot} className="ml-1" />
+                                             <input type="checkbox" className="form-checkbox h-4 w-4 text-blue-600 border-neutral-500 cursor-pointer ml-2.5" />
+                                         </div>
+ 
+                                         <td className="pl-5 font-semibold text-sm font-Manrope text-neutral-900 text-start">{item.purchaseDate}</td>
+                                         <td className="pl-5 font-semibold text-sm font-Manrope text-neutral-900 text-start">{item.deliveryDate}</td>
+                                         <td className="pl-8  font-semibold text-sm font-Manrope text-neutral-900 text-start">{item.supplierName}</td>
+                                         <td className="pl-10 font-semibold text-sm font-Manrope text-neutral-900 text-start">₹{item.totalAmount}</td>
+                                         <td className="p-3 font-semibold text-sm font-Manrope text-neutral-900 text-start">{item.purchaseStatus}</td>
+                                         <td className="p-3 font-semibold text-sm font-Manrope text-neutral-900 text-start">{item.paymentStatus}</td>
+                                         <td className="p-3">
+                                             <img src={Dot} alt="Options" />
+                                         </td>
+                                     </tr>
                                     ))}
                                 </tbody>
                             </table>
