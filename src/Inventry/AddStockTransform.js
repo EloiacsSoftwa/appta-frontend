@@ -1,7 +1,26 @@
-import React from "react";
+import React,{useState,useRef} from "react";
 import Dot from '../Images/Sales/Dots.svg';
 import Add from '../Images/Vector (3).svg';
+import DateIcon from '../Images/Sales/Vector (5).svg'
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+
 function AddStockTransform({ handleClose }) {
+
+  const [orderDate, setOrderDate] = useState(null);
+  const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
+  const datePickerRef = useRef(null);
+
+  const handleOrderDateChange = (date) => {
+    setOrderDate(date);
+    setIsDatePickerOpen(false);
+    
+  };
+
+  const handleIconClickForOrder = () => {
+    setIsDatePickerOpen((prev) => !prev);
+  };
+
   return (
     <div className="h-screen bg-white p-4 w-full">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mt-4">
@@ -11,7 +30,7 @@ function AddStockTransform({ handleClose }) {
         <div className="flex gap-2">
           <button
             onClick={handleClose}
-            className="flex items-center gap-2 w-16 h-7 px-2 rounded border border-orange-600 text-orange-600 font-semibold text-sm"
+            className="flex items-center gap-2 w-16 h-7 px-2 rounded border border-orange-600 text-orange-600 font-semibold text-sm hover:bg-orange-600 hover:text-black hover:border-black"
           >
             Cancel
           </button>
@@ -33,13 +52,26 @@ function AddStockTransform({ handleClose }) {
             />
           </div>
 
-          <div className="w-full max-w-sm min-w-[200px]">
+          <div className="w-full max-w-sm min-w-[200px] relative">
             <label className="block font-semibold mb-1 text-sm text-start font-SourceSansPro">Date</label>
-            <input
-              type="text"
-              className="w-full border border-[#BDBDBD] rounded px-3 py-2 text-sm"
-              placeholder="Auto Generate"
-            />
+            <DatePicker
+                selected={orderDate}
+                onChange={handleOrderDateChange}
+                dateFormat="MM/dd/yyyy"
+                placeholderText="DD / MM / YYYY"
+                className="w-full border rounded px-3 py-2 pr-12 text-sm md:text-base focus:border-orange-600"
+                open={isDatePickerOpen}
+                onClickOutside={() => setIsDatePickerOpen(false)}
+                ref={datePickerRef}
+              />
+              
+              <img
+                src={DateIcon}
+                alt="Date Icon"
+                className="absolute top-12 transform -translate-y-1/2 right-3 md:right-40 sm:right-44 lg:right-5 cursor-pointer"
+                onClick={handleIconClickForOrder}
+              />
+
           </div>
 
           <div className="w-full max-w-sm min-w-[200px]">
