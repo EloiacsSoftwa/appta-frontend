@@ -12,6 +12,7 @@ function* Sub_Category(args) {
   const response = yield call(SubCategory, args.payload);
   console.log("response for subCategory", response)
  
+ 
   if (response.status === 200 || response.code === 200) {
     yield put({ type: 'GET_SUBCATEGORY', payload: { response: response.data.data, statusCode: response.status || response.code } });
     
@@ -108,8 +109,40 @@ function* AddProduct_Details(args) {
     padding: "10px",
    
   };
+  const toastStyle = {
+    backgroundColor: "#fff",
+    color:'#38B000',
+    width: "100%",
+    borderRadius: "60px",
+    height: "20px",
+    fontFamily: "Manrope",
+    fontWeight: 700,
+    fontSize: 14,
+    textAlign: "start",
+    display: "flex",
+    alignItems: "center", 
+    padding: "10px",
+   
+  };
   if (response.status === 200 || response.code === 200) {
     yield put({ type: 'ADD_PRODUCT_DETAILS', payload: { response: response.data, statusCode: response.status || response.code } });
+    toast.success('Product Successfully Created', {
+      position: "top-center",
+      autoClose: 2000,
+      hideProgressBar: true,
+      closeButton: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      style: toastStyle,
+    });
+  
+  }
+  // if (response.status === 204 || response.code === 204) {
+  //   yield put({ type: 'ADD_PRODUCT_VALIDATION', payload: { response: response.data, statusCode: response.status || response.code } });
+  
+  // }
     toast.success('Product Successfully Created', {
       position: "top-center",
       autoClose: 2000,

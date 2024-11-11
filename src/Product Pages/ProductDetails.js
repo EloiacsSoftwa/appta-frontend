@@ -25,7 +25,7 @@ const [formValues, setFormValues] = useState({
 
     return (
         
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 ml-60 mt-5 h-full">
           
             <div className="flex flex-col md:flex-row mx-auto px-4 my-8">
                 <section className="bg-white shadow-xl rounded-md w-full h-full mb-10">
