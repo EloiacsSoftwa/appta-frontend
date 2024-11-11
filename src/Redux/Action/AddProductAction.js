@@ -104,3 +104,7 @@ export async function getProductDetailsbyid(productName) {
 export const getProductSizes = async () => {
    return await AxiosConfig.post('/productSize/getProductSize')
 }
+
+export const getActiveProductsCall = async () => {
+   return await AxiosConfig.post('/products/getProductsWithProductPrice')
+}
