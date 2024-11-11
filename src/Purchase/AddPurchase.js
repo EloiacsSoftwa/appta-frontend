@@ -118,72 +118,70 @@ function AddPurchase({ handleClose }) {
     setShowProductDropdown([...showProductDropdown, false]);
   };
 
-  //   const handleInputChange = (e, field, index) => {
+ 
+  
 
-  // console.log("e",e.target.value, "field",field, "index", index)
-
-  //     const newData = [...products];
-  //     newData[index][field] = e.target.value;
-  //     setProducts(newData);
-  //   };
-
-
-
-  // const handleInputChange = (e, field, index) => {
-  //   const value = e.target.value;
-  //   const updatedProducts = [...products];
-  //   updatedProducts[index][field] = value;
-
-  //   const { Quantity, PurchasePrice } = updatedProducts[index];
-  //   updatedProducts[index].Total = Quantity * PurchasePrice;
-
-  //   if (value) {
-  //     const filteredProduct = state.AddProduct?.ProductList?.filter((product) => {
-  //       return product.productName.toLowerCase().includes(value.toLowerCase());
-  //     });
-  //     setProductID(filteredProduct)
-  //   }
-
-  //   if (value) {
-  //     setErrors((prevErrors) => ({
-  //       ...prevErrors,
-  //       [`${field}-${index}`]: '',
-  //     }));
-  //   }
-  //   // setProductIDWithName(updatedProducts[0]?.Product)
-  //   // if(updatedProducts[0]?.Product){
-  //   //   const filteredProduct = state.AddProduct.ProductList.filter((product) => {
-  //   //     return product.productName.toLowerCase().includes(updatedProducts[0]?.Product.toLowerCase());
-  //   //   });
-
-
-
-  //   // }
-  //   setProducts(updatedProducts);
-  // };
-
-
-
-  const handleInputChange = (e, field, index) => { 
+  const handleInputChange = (e, field, index) => {
     const value = e.target.value;
     const updatedProducts = [...products];
     updatedProducts[index][field] = value;
   
+    const {
+      Quantity,
+      PurchasePrice,
+      SalesPercentage,
+      WholeSalePercentage,
+      MRP,
+      SalesPrice,
+      WholeSalePrice
+    } = updatedProducts[index];
   
-    const { Quantity, PurchasePrice, SalesPercentage, WholeSalePercentage } = updatedProducts[index];
     updatedProducts[index].Total = Quantity * PurchasePrice;
   
-    
+    const numericMRP = parseFloat(MRP);
+  
+   
     if (SalesPercentage && PurchasePrice) {
-      updatedProducts[index].SalesPrice = Math.round(PurchasePrice * (1 + SalesPercentage / 100));
-    }
-   
-   
-    if (WholeSalePercentage && PurchasePrice) {
-      updatedProducts[index].WholeSalePrice = Math.round(PurchasePrice * (1 + WholeSalePercentage / 100));
+      const calculatedSalesPrice = Math.round(PurchasePrice * (1 + SalesPercentage / 100));
+      updatedProducts[index].SalesPrice = calculatedSalesPrice;
+  
+      if (calculatedSalesPrice > numericMRP) {
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          [`SalesPercentage-${index}`]: 'Sales price exceeds MRP',
+        }));
+      } else {
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          [`SalesPercentage-${index}`]: '',
+        }));
+      }
+    } else if (!SalesPercentage && SalesPrice) {
+     
+      updatedProducts[index].SalesPrice = SalesPrice;
     }
   
-    
+   
+    if (WholeSalePercentage && PurchasePrice) {
+      const calculatedWholeSalePrice = Math.round(PurchasePrice * (1 + WholeSalePercentage / 100));
+      updatedProducts[index].WholeSalePrice = calculatedWholeSalePrice;
+  
+      if (calculatedWholeSalePrice > numericMRP) {
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          [`WholeSalePercentage-${index}`]: 'Wholesale price exceeds MRP',
+        }));
+      } else {
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          [`WholeSalePercentage-${index}`]: '',
+        }));
+      }
+    } else if (!WholeSalePercentage && WholeSalePrice) {
+     
+      updatedProducts[index].WholeSalePrice = WholeSalePrice;
+    }
+  
     if (value) {
       setErrors((prevErrors) => ({
         ...prevErrors,
@@ -192,7 +190,6 @@ function AddPurchase({ handleClose }) {
     }
   
     setProducts(updatedProducts);
-    
   };
   
 
@@ -318,35 +315,37 @@ function AddPurchase({ handleClose }) {
   };
 
 
-  const handleAddPurchase = () => {
+  
 
-    setOrderDateError('');
-    setInvoiceIdError('');
-    setProductsError('');
-    setSupplierIdError('');
-    setErrors({});
+  const handleAddPurchase = () => {
+    // setOrderDateError('');
+    // setInvoiceIdError('');
+    // setProductsError('');
+    // setSupplierIdError('');
+    // setErrors({});
     let valid = true;
     const newErrors = {};
-
+  
     if (!orderDate) {
       setOrderDateError('Purchase date is required');
       valid = false;
     }
-
+  
     if (!invoiceId) {
       setInvoiceIdError('Invoice ID is required');
       valid = false;
     }
-
+  
     if (!products || products.length === 0) {
       setProductsError('At least one product is required');
       valid = false;
     }
-
+  
     if (!supplierId) {
       setSupplierIdError('Supplier ID is required');
       valid = false;
     }
+  
     products.forEach((product, index) => {
       if (!product.Product) {
         newErrors[`Product-${index}`] = 'Product name is required';
@@ -364,36 +363,31 @@ function AddPurchase({ handleClose }) {
         newErrors[`MRP-${index}`] = 'MRP must be greater than 0';
         valid = false;
       }
-      if (!product.SalesPercentage) {
-        newErrors[`SalesPercentage-${index}`] = 'Sales Percentage cannot be negative';
-        valid = false;
-      }
-      if (!product.SalesPrice) {
-        newErrors[`SalesPrice-${index}`] = 'Sales Price must be greater than 0';
-        valid = false;
-      }
-      if (!product.WholeSalePercentage) {
-        newErrors[`WholeSalePercentage-${index}`] = 'Wholesale Percentage cannot be negative';
-        valid = false;
-      }
-      if (!product.WholeSalePrice) {
-        newErrors[`WholeSalePrice-${index}`] = 'Wholesale Price must be greater than 0';
-        valid = false;
-      }
+      // if (!product.SalesPercentage) {
+      //   newErrors[`SalesPercentage-${index}`] = 'Enter Sales Percentage';
+      //   valid = false;
+      // }
+      // if (!product.SalesPrice) {
+      //   newErrors[`SalesPrice-${index}`] = 'Sales Price must be greater than 0';
+      //   valid = false;
+      // }
+      // if (!product.WholeSalePercentage) {
+      //   newErrors[`WholeSalePercentage-${index}`] = 'Enter Whole Sale Percentage';
+      //   valid = false;
+      // }
+      // if (!product.WholeSalePrice) {
+      //   newErrors[`WholeSalePrice-${index}`] = 'Wholesale Price must be greater than 0';
+      //   valid = false;
+      // }
     });
-
-
+  
     setErrors(newErrors);
-
-
-    if (!valid) {
+  
+    if (!valid || Object.keys(errors).some(key => errors[key])) {
       return;
     }
-
-
-
-    if (orderDate && invoiceId && products && supplierId) {
-
+  
+    if (valid) {
       const formattedDate = new Date(orderDate).toLocaleDateString('en-GB');
       const purchaseItems = products.map(product => ({
         productId: product.productID,
@@ -405,8 +399,7 @@ function AddPurchase({ handleClose }) {
         wholesalePercentage: product.WholeSalePercentage,
         wholesalePrice: product.WholeSalePrice
       }));
-
-
+  
       dispatch({
         type: 'ADDPURCHASE',
         payload: {
@@ -419,7 +412,7 @@ function AddPurchase({ handleClose }) {
       });
     }
   };
-
+  
 
   useEffect(() => {
     dispatch({ type: 'GETSUPPLIER' });
@@ -626,7 +619,8 @@ function AddPurchase({ handleClose }) {
                 <td className="p-2 border relative">
                   <input
                     type="text"
-                    value={`${product.Product} ${product.subCategory} - ${product.size} ${product.unit}`}
+                    value={product.Product}
+                    // value={`${product.Product} ${product.subCategory} - ${product.size} ${product.unit}`}
                     onChange={(e) => handleInputChange(e, 'Product', index)}
                     onClick={() => handleproductNameDropDown(index)}
                     className={`border p-1 rounded w-full ${errors[`Product-${index}`] ? 'border-red-500' : ''}`}
@@ -701,6 +695,7 @@ function AddPurchase({ handleClose }) {
                     min="0"
                   />
                 </td>
+               
                 <td className="p-2 border">
                   <input
                     type="number"
@@ -756,10 +751,29 @@ function AddPurchase({ handleClose }) {
 
 
                 </td>
+
+               
               </tr>
             ))}
           </tbody>
         </table>
+
+
+        <div className="errors-container">
+  {Object.keys(errors).map((key) => {
+    if (errors[key]) {
+    
+      if (key.includes('SalesPercentage') || key.includes('SalesPrice') || key.includes('WholeSalePercentage')) {
+        return (
+          <p key={key} className="text-red-500 text-xs mt-1">
+            {errors[key]}
+          </p>
+        );
+      }
+    }
+    return null;
+  })}
+</div>
 
 
         <div className="flex items-center mt-4 cursor-pointer" >
