@@ -121,6 +121,82 @@ function AddPurchase({ handleClose }) {
  
   
 
+  // const handleInputChange = (e, field, index) => {
+  //   const value = e.target.value;
+  //   const updatedProducts = [...products];
+  //   updatedProducts[index][field] = value;
+  
+  //   const {
+  //     Quantity,
+  //     PurchasePrice,
+  //     SalesPercentage,
+  //     WholeSalePercentage,
+  //     MRP,
+  //     SalesPrice,
+  //     WholeSalePrice
+  //   } = updatedProducts[index];
+  
+  //   updatedProducts[index].Total = Quantity * PurchasePrice;
+  
+  //   const numericMRP = parseFloat(MRP);
+  
+   
+  //   if (SalesPercentage && PurchasePrice) {
+  //     const calculatedSalesPrice = Math.round(PurchasePrice * (1 + SalesPercentage / 100));
+  //     updatedProducts[index].SalesPrice = calculatedSalesPrice;
+  
+  //     if (calculatedSalesPrice > numericMRP) {
+
+  //       console.log(`SalesPrice exceeds MRP: ${calculatedSalesPrice} > ${numericMRP}`);
+  //       setErrors((prevErrors) => ({
+  //         ...prevErrors,
+  //         [`SalesPercentage-${index}`]: 'Sales price exceeds MRP',
+  //       }));
+  //     } else {
+  //       setErrors((prevErrors) => ({
+  //         ...prevErrors,
+  //         [`SalesPercentage-${index}`]: '',
+  //       }));
+  //     }
+  //   } else if (!SalesPercentage && SalesPrice) {
+     
+  //     updatedProducts[index].SalesPrice = SalesPrice;
+  //   }
+  
+   
+  //   if (WholeSalePercentage && PurchasePrice) {
+  //     const calculatedWholeSalePrice = Math.round(PurchasePrice * (1 + WholeSalePercentage / 100));
+  //     updatedProducts[index].WholeSalePrice = calculatedWholeSalePrice;
+  
+  //     if (calculatedWholeSalePrice > numericMRP) {
+  //       console.log(`wholeSalesPrice exceeds MRP: ${calculatedWholeSalePrice } > ${numericMRP}`);
+  //       setErrors((prevErrors) => ({
+  //         ...prevErrors,
+  //         [`WholeSalePercentage-${index}`]: 'Wholesale price exceeds MRP',
+  //       }));
+  //     } else {
+  //       setErrors((prevErrors) => ({
+  //         ...prevErrors,
+  //         [`WholeSalePercentage-${index}`]: '',
+  //       }));
+  //     }
+  //   } else if (!WholeSalePercentage && WholeSalePrice) {
+     
+  //     updatedProducts[index].WholeSalePrice = WholeSalePrice;
+  //   }
+  
+  //   if (value) {
+  //     setErrors((prevErrors) => ({
+  //       ...prevErrors,
+  //       [`${field}-${index}`]: '',
+  //     }));
+  //   }
+  
+  //   setProducts(updatedProducts);
+  // };
+  
+
+
   const handleInputChange = (e, field, index) => {
     const value = e.target.value;
     const updatedProducts = [...products];
@@ -138,14 +214,16 @@ function AddPurchase({ handleClose }) {
   
     updatedProducts[index].Total = Quantity * PurchasePrice;
   
-    const numericMRP = parseFloat(MRP);
+    const numericMRP = parseFloat(MRP); 
   
    
     if (SalesPercentage && PurchasePrice) {
       const calculatedSalesPrice = Math.round(PurchasePrice * (1 + SalesPercentage / 100));
       updatedProducts[index].SalesPrice = calculatedSalesPrice;
   
+    
       if (calculatedSalesPrice > numericMRP) {
+        console.log(`SalesPrice exceeds MRP: ${calculatedSalesPrice} > ${numericMRP}`); 
         setErrors((prevErrors) => ({
           ...prevErrors,
           [`SalesPercentage-${index}`]: 'Sales price exceeds MRP',
@@ -153,11 +231,11 @@ function AddPurchase({ handleClose }) {
       } else {
         setErrors((prevErrors) => ({
           ...prevErrors,
-          [`SalesPercentage-${index}`]: '',
+          [`SalesPercentage-${index}`]: '', 
         }));
       }
     } else if (!SalesPercentage && SalesPrice) {
-     
+      
       updatedProducts[index].SalesPrice = SalesPrice;
     }
   
@@ -166,7 +244,9 @@ function AddPurchase({ handleClose }) {
       const calculatedWholeSalePrice = Math.round(PurchasePrice * (1 + WholeSalePercentage / 100));
       updatedProducts[index].WholeSalePrice = calculatedWholeSalePrice;
   
+   
       if (calculatedWholeSalePrice > numericMRP) {
+        console.log(`WholeSalePrice exceeds MRP: ${calculatedWholeSalePrice} > ${numericMRP}`); // Debug log
         setErrors((prevErrors) => ({
           ...prevErrors,
           [`WholeSalePercentage-${index}`]: 'Wholesale price exceeds MRP',
@@ -178,14 +258,15 @@ function AddPurchase({ handleClose }) {
         }));
       }
     } else if (!WholeSalePercentage && WholeSalePrice) {
-     
+   
       updatedProducts[index].WholeSalePrice = WholeSalePrice;
     }
   
+    
     if (value) {
       setErrors((prevErrors) => ({
         ...prevErrors,
-        [`${field}-${index}`]: '',
+        [`${field}-${index}`]: '', 
       }));
     }
   
