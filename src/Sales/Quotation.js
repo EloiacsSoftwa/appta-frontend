@@ -9,7 +9,7 @@ import Dot from '../Images/Sales/Dots.svg';
 import SmallDot from '../Images/Sales/Smalldots.svg'
 import Add from '../Images/Sales/Add Green.svg';
 import AddQuotation from './AddQuotation';
-
+import Plus from '../Images/Icons/Vector.svg'
 import { ArrowRight2, ArrowLeft2 ,ArrowUp2, ArrowDown2} from 'iconsax-react';
 
 
@@ -18,7 +18,7 @@ function Quotation() {
    
     const [currentPage, setCurrentPage] = useState(1);
     const [showAddQuotation, setShowAddQuotation] = useState(false);
-
+    const [isHovered, setIsHovered] = useState(false); 
 
     const reports = [
         {
@@ -151,17 +151,27 @@ function Quotation() {
                 <label className='font-semibold text-22 text-neutral-900 font-Manrope'>Sales - </label> <label className='font-bold text-22 text-orange-600 font-Manrope'>  Quotation</label>
             </div>
 
-            <div>
-              <button 
-               onClick={handleCreateQuotation}
-                 type="submit" 
-                 className='cursor-pointer flex items-center gap-2 w-auto h-auto text-orange-600 border border-orange-600 rounded px-3 py-1 font-Manrope font-semibold text-sm '
-                >
-                <img src={Add} alt="Add" class="" /> 
-                 Create Quotation
-               </button>
-
-                </div>
+            <div
+    onClick={handleCreateQuotation}
+    onMouseEnter={() => setIsHovered(true)}
+    onMouseLeave={() => setIsHovered(false)}
+    className={`cursor-pointer flex items-center gap-2 text-orange-600 border border-orange-600 rounded px-2 py-1 hover:bg-orange-600 hover:border-black ${
+      showAddQuotation ? 'mb-2' : 'mb-4'
+    }`}
+  >
+    <img
+      src={isHovered ? Plus : Add}
+      className="w-4 h-4"
+      alt="Add"
+    />
+    <label
+      className={`text-sm font-semibold font-Manrope ${
+        isHovered ? 'text-black' : 'text-orange-600'
+      }`}
+    >
+     Create Quotation
+    </label>
+  </div>
                 </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4  md:grid-cols-3 gap-x-7 gap-y-4 mb-6">

@@ -9,7 +9,7 @@ import Dot from '../Images/Sales/Dots.svg';
 import SmallDot from '../Images/Sales/Smalldots.svg'
 import Add from '../Images/Sales/Add Green.svg';
 import AddInvoice from './AddInvoice';
-
+import Plus from '../Images/Icons/Vector.svg'
 import { ArrowRight2, ArrowLeft2 ,ArrowUp2, ArrowDown2} from 'iconsax-react';
 
 
@@ -18,7 +18,7 @@ function Invoice() {
    
     const [currentPage, setCurrentPage] = useState(1);
     const [showAddInvoice, setShowAddInvoice] = useState(false);
-
+    const [isHovered, setIsHovered] = useState(false); 
 
     const reports = [
         {
@@ -148,17 +148,27 @@ const handleCloseAddInvoice = () => {
                 <label className='font-semibold text-22 text-neutral-900 font-Manrope'>Sales - </label> <label className='font-bold text-22 text-orange-600 font-Manrope'> Invoice</label>
             </div>
 
-            <div>
-              <button 
-              onClick={handleCreateInvoice}
-                 type="submit" 
-                 className='cursor-pointer flex items-center gap-2 w-auto h-auto text-orange-600 border border-orange-600 rounded px-3 py-1 font-Manrope font-semibold text-sm '
-                >
-                <img src={Add} alt="Add" class="" /> 
-                 Create Invoice
-               </button>
-
-                </div>
+            <div
+    onClick={handleCreateInvoice}
+    onMouseEnter={() => setIsHovered(true)}
+    onMouseLeave={() => setIsHovered(false)}
+    className={`cursor-pointer flex items-center gap-2 text-orange-600 border border-orange-600 rounded px-2 py-1 hover:bg-orange-600 hover:border-black ${
+      showAddInvoice ? 'mb-2' : 'mb-4'
+    }`}
+  >
+    <img
+      src={isHovered ? Plus : Add}
+      className="w-4 h-4"
+      alt="Add"
+    />
+    <label
+      className={`text-sm font-semibold font-Manrope ${
+        isHovered ? 'text-black' : 'text-orange-600'
+      }`}
+    >
+     Create Invoice
+    </label>
+  </div>
                 </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4  md:grid-cols-3 gap-x-7 gap-y-4 mb-6">
