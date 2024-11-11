@@ -351,12 +351,14 @@ function AddPurchase({ handleClose }) {
     const updatedDropdown = [...showProductDropdown];
     updatedDropdown[index] = false;
     setShowProductDropdown(updatedDropdown);
-    
+
+    document.getElementById(`product-${index}`).focus();
+  
    
   };
   
   // useEffect(() => {
-  //   if (products.length > 0) {
+  //   if (products.length > 0  && products[0]?.productName) {
    
   //     quantityRefs.current[0]?.focus();
   //   }
@@ -752,7 +754,7 @@ function AddPurchase({ handleClose }) {
                   <input
                     type="text"
                     value={product.Product}
-                    
+                    id={`product-${index}`}
                     // value={`${product.Product} ${product.subCategory} - ${product.size} ${product.unit}`}
                     onChange={(e) => handleInputChange(e, 'Product', index)}
                     onClick={() => handleproductNameDropDown(index)}
@@ -800,7 +802,7 @@ function AddPurchase({ handleClose }) {
                   <input
                     type="number"
                     value={product.Quantity}
-                    ref={(el) => quantityRefs.current[index] = el}
+                    
                     onChange={(e) => handleInputChange(e, 'Quantity', index)}
                     className={`border p-1 rounded w-full ${errors[`Quantity-${index}`] ? 'border-red-500' : ''}`}
                     min="0"
