@@ -730,23 +730,6 @@ function AddPurchase({ handleClose }) {
 
 
 
-       
-
-
-
-
-
-        {/* Table */}
-
-
-
-
-
-        {/* {productsError && <p className="text-red-500 font-Manrope mt-1 text-sm">{productsError}</p>} */}
-
-
-
-
         <table className="table-auto border border-gray-300 rounded-lg w-full overflow-x-auto mt-6">
           <thead>
             <tr className="bg-gray-200">
