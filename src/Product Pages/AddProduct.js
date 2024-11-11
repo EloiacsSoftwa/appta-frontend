@@ -259,6 +259,7 @@ const ProductDetailsForm = ({ handleNext, formData, setFormData }) => {
         console.log(temp);
         dispatch({ type: "ADDPRODUCTDETAILS", payload: temp })
         
+        
     }
 
 
