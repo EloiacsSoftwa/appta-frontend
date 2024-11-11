@@ -6,41 +6,68 @@ import Frame3 from '../Images/Sales/Frame 3.svg'
 import Frame4 from '../Images/Sales/Frame4.svg'
 import Search from '../Images/Sales/Search.svg'
 import Dot from '../Images/Sales/Dots.svg';
-import Add from '../Images/Sales/Add Green.svg';
 import SmallDot from '../Images/Sales/Smalldots.svg'
-import WhitePlus from '../Images/Sales/Whiteplus.svg';
-import { ArrowRight2, ArrowLeft2, ArrowUp2, ArrowDown2 } from 'iconsax-react';
-import Checkbox from '../Images/Vector (8).svg'
+import Add from '../Images/Sales/Add Green.svg';
 import AddStockTransform from './AddStockTransform';
+import Checkbox from '../Images/Vector (8).svg'
+import { ArrowRight2, ArrowLeft2 ,ArrowUp2, ArrowDown2} from 'iconsax-react';
+
+
 function StockTransform() {
 
-
+   
     const [currentPage, setCurrentPage] = useState(1);
     const [showAddStockTransform, setShowAddStockTransform] = useState(false)
 
-     const Stock = [
+
+    const reports = [
         {
-            TransferId: "DAE456YUT",
-            Date: "03-09-2024",
-            EwayBillStaus: "Received",
-            EwayBillNumber: "EWB456",
+            title: "Total Contacts",
+            value: "2,420",
+        },
+        {
+            title: "Vendors",
+            value: "2,420",
+        },
+        {
+            title: "Active Suppliers",
+            value: "1,280",
+           
+
+        },
+        {
+            title: "Customer",
+            value: "3,420",
+            extra: "20%",
+        },
+    ];
+
+
+
+
+    const Stock = [
+        {
+            TransferId: "SU85695",
+            Date: "09--Aug-2024",
+            EwayBillStaus: "Salem",
+            AdjustmentType: "Stock In",
             Documents: 'Uploaded',
             Approval: "Approved"
         },
         
         {
-            TransferId: "DAE456YUT",
-            Date: "03-09-2024",
-            EwayBillStaus: "Received",
-            EwayBillNumber: "EWB456",
+            TransferId: "SU85695",
+            Date: "09--Aug-2024",
+            EwayBillStaus: "Chennai",
+            AdjustmentType: "Stock Out",
             Documents: 'Uploaded',
             Approval: "Approved"
         },
         {
-            TransferId: "DAE456YUT",
-            Date: "03-09-2024",
-            EwayBillStaus: "Not-Received",
-            EwayBillNumber: "-",
+            TransferId: "SU85695",
+            Date: "09--Aug-2024",
+            EwayBillStaus: "Madurai",
+            AdjustmentType: "Stock In",
             Documents: 'Uploaded',
             Approval: "Pending"
         },
@@ -55,7 +82,7 @@ function StockTransform() {
 
 
     //  pagination
-    const itemsPerPage = 11;
+    const itemsPerPage = 10;
     const totalPages = Math.ceil(Stock.length / itemsPerPage);
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -73,43 +100,72 @@ function StockTransform() {
         }
     };
 
+
     const handleAdd = () => {
         setShowAddStockTransform(true);
       }
+   
+    const handleCloseStockTransfer = () => {
+        setShowAddStockTransform(false)
+    }
+
+
+
+
 
 
 
     return (
         <>
-        {showAddStockTransform ? (
-             <AddStockTransform/> 
+           {showAddStockTransform ? (
+             <AddStockTransform handleClose={handleCloseStockTransfer}  /> 
             ) : (
-        <div className='h-screen bg-second-gray p-4 w-full'>
-
+        <div className='h-screen bg-white p-4 w-full'>
             <div className='flex justify-between items-center gap-2 mb-2.5'>
-                <div>
-                    <label className='font-medium text-xl text-neutral-900 font-Manrope'>Stock Transfer </label>
-
-<div>
-    <label className='font-medium text-base  text-neutral-500 font-Manrope' >Manage your Stock</label>
-</div>
-                </div>
-                <div onClick={handleAdd} className='cursor-pointer flex items-center gap-2 w-auto h-auto text-gray-200 border bg-orange-600 border-orange-600 rounded-lg px-2 py-1'>
-                    <div>
-                        <img src={WhitePlus} className='w-4 h-4' />
-                    </div>
-                    <div>
-                        <label className="cursor-pointer text-sm text-gray-200 font-semibold  font-Manrope">Add Stock Transfer </label>
-                    </div>
-
-                </div>
+            <div className='flex justify-start items-center gap-2 mb-2.5'>
+                <label className='font-semibold text-22 text-neutral-900 font-Manrope'>Inventory - </label> <label className='font-bold text-22 text-orange-600 font-Manrope'>Stock transfer </label>
             </div>
 
-           
+            <div>
+              <button 
+             onClick={handleAdd}
+                 type="submit" 
+                 className='cursor-pointer flex items-center gap-2 w-auto h-auto text-orange-600 border border-orange-600 rounded px-2 py-1 font-Manrope font-semibold text-sm '
+                >
+                <img src={Add} alt="Add" class="mr-2" /> 
+                New Stock Transfer
+               </button>
+
+                </div>
+                </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4  md:grid-cols-3 gap-x-7 gap-y-4 mb-6">
+                {reports.map((report, index) => (
+                    <div key={index} className="bg-white p-4 rounded-xl shadow-custom">
+                        <p className="text-sm text-orange-600 font-semibold mb-4 font-Manrope">{report.title}</p>
 
 
-            <div className="">
-                <div className="flex items-center justify-between p-4 border rounded-t-2xl bg-zinc-300">
+                        <div className='flex justify-between items-center'>
+
+                            <p className="text-2xl font-medium text-black font-Manrope">
+                                {report.value}
+
+                            </p>
+                            {report.extra && (
+                                <div className='flex items-center'>
+                                    <div className='text-emerald-500 text-sm font-semibold font-Manrope'> {report.extra}</div>
+                                    <div> <img src={Vector} className='w-5 h-5' /> </div>
+                                </div>
+
+                            )}
+                        </div>
+                    </div>
+                ))}
+            </div>
+
+
+            <div className="bg-white rounded-lg shadow-custom overflow-x-auto">
+                <div className="flex items-center justify-between p-4 border-b">
                     <div className="flex items-center gap-2">
                         <div><img src={Frame1} className='w-6 h-6 cursor-pointer' /></div>
                         <div className="relative">
@@ -135,108 +191,99 @@ function StockTransform() {
                         </div>
                     </div>
                 </div>
+              
                 <div className="overflow-x-auto">
-                <table className="w-full  text-left table-auto">
+                <table className="w-full  text-left mb-5 table-auto">
                     <thead>
-
-                        <tr className="bg-white border-0">
+                        <tr className="bg-gray-200 border-0">
                         <th className="p-1 flex items-center justify-start  h-full">
-                                {/* <input
+                                <input
                                     type="checkbox"
-                                    className="ml-4 mt-1 form-checkbox h-4 w-4 text-blue-600 border-grey font-Manrope cursor-pointer"
-                                /> */}
-                                <img src={Checkbox} className='ml-4 mt-1'/>
+                                    className="ml-4 mt-1 form-checkbox h-4 w-4 text-blue-600 border-neutral-500 font-Manrope cursor-pointer"
+                                />
                             </th>
                             <th className="p-1 font-semibold text-base text-neutral-900">
                                 <div className="flex items-center justify-start gap-2">
                                     <div className="flex flex-col items-center">
-                                        <ArrowUp2 className="font-extrabold w-3 h-3 text-neutral-800 cursor-pointer" />    
-                             <ArrowDown2 className="font-extrabold w-3 h-3 text-neutral-800 cursor-pointer" />
+                                        <ArrowUp2 className="font-extrabold w-3 h-3 text-orange-600 cursor-pointer" />
+                                        <ArrowDown2 className="font-extrabold w-3 h-3 text-orange-600 cursor-pointer"  />
                                     </div>
-                                    <div className='font-bold text-base font-Manrope'>Transfer ID</div>
+                                    <div className='font-semibold text-sm text-neutral-900 font-Manrope leading-0'>Transfer ID</div>
                                 </div>
                             </th>
 
                             <th className="p-1 font-semibold text-base text-neutral-900">
                                 <div className="flex items-center justify-start gap-2">
                                     <div className="flex flex-col items-center">
-                                        <ArrowUp2 className="font-extrabold w-3 h-3 text-neutral-800 cursor-pointer" />
-                                        <ArrowDown2 className="font-extrabold w-3 h-3 text-neutral-800 cursor-pointer" />
+                                    <ArrowUp2 className="font-extrabold w-3 h-3 text-orange-600 cursor-pointer"  />
+                                    <ArrowDown2 className="font-extrabold w-3 h-3 text-orange-600 cursor-pointer"  />
                                     </div>
-                                    <div className='font-bold text-base text-neutral-900 font-Manrope'>Date</div>
+                                    <div className='font-semibold text-sm text-neutral-900 font-Manrope'>Date</div>
                                 </div>
                             </th>
                             <th className="p-1 font-semibold text-base text-neutral-900">
                                 <div className="flex items-center justify-start gap-2">
                                     <div className="flex flex-col items-center">
-                                        <ArrowUp2 className="font-extrabold w-3 h-3 text-neutral-800 cursor-pointer" />
-                                        <ArrowDown2 className="font-extrabold w-3 h-3 text-neutral-800 cursor-pointer" />
+                                    <ArrowUp2 className="font-extrabold w-3 h-3 text-orange-600 cursor-pointer"  />
+                                    <ArrowDown2 className="font-extrabold w-3 h-3 text-orange-600 cursor-pointer"  />
                                     </div>
-                                    <div className='font-bold text-base  text-neutral-900 font-Manrope'>E-way Bill Status</div>
+                                    <div className='font-semibold text-sm text-neutral-900 font-Manrope'>E-way Bill Status</div>
                                 </div>
                             </th>
                             <th className="p-1 font-semibold text-base text-neutral-900">
                                 <div className="flex items-center justify-start gap-2">
                                     <div className="flex flex-col items-center">
-                                        <ArrowUp2 className="font-extrabold w-3 h-3 text-neutral-800 cursor-pointer" />
-                                        <ArrowDown2 className="font-extrabold w-3 h-3 text-neutral-800 cursor-pointer" />
+                                    <ArrowUp2 className="font-extrabold w-3 h-3 text-orange-600 cursor-pointer"  />
+                                    <ArrowDown2 className="font-extrabold w-3 h-3 text-orange-600 cursor-pointer"  />
                                     </div>
-                                    <div className='font-bold text-base text-neutral-900 font-Manrope'>E-way Bill Number</div>
+                                    <div className='font-semibold text-sm text-neutral-900 font-Manrope'> Adjustment Type</div>
                                 </div>
                             </th>
                             <th className="p-1 font-semibold text-base text-neutral-900">
                                 <div className="flex items-center justify-start gap-2">
                                     <div className="flex flex-col items-center">
-                                        <ArrowUp2 className="font-extrabold w-3 h-3 text-neutral-800 cursor-pointer" />
-                                        <ArrowDown2 className="font-extrabold w-3 h-3 text-neutral-800 cursor-pointer" />
+                                    <ArrowUp2 className="font-extrabold w-3 h-3 text-orange-600 cursor-pointer"  />
+                                    <ArrowDown2 className="font-extrabold w-3 h-3 text-orange-600 cursor-pointer"  />
                                     </div>
-                                    <div className='font-bold text-base text-neutral-900 font-Manrope'>Documents</div>
+                                    <div className='font-semibold text-sm text-neutral-900 font-Manrope'>Documents</div>
                                 </div>
                             </th>
                             <th className="p-1 font-semibold text-base text-neutral-900">
                                 <div className="flex items-center justify-start gap-2">
                                     <div className="flex flex-col items-center">
-                                        <ArrowUp2 className="font-extrabold w-3 h-3 text-neutral-800 cursor-pointer"  />
-                                        <ArrowDown2 className="font-extrabold w-3 h-3 text-neutral-800 cursor-pointer" />
+                                    <ArrowUp2 className="font-extrabold w-3 h-3 text-orange-600 cursor-pointer"  />
+                                    <ArrowDown2 className="font-extrabold w-3 h-3 text-orange-600 cursor-pointer"  />
                                     </div>
-                                    <div className='font-bold text-base text-neutral-900 font-Manrope'>Approval</div>
+                                    <div className='font-semibold text-sm text-neutral-900 font-Manrope'>Approval</div>
                                 </div>
                             </th>
-
-                            <th className="p-1 font-semibold text-base text-neutral-900 min-w-[40px]"></th>
+                            
+                          
+                       <th className="p-1 font-semibold text-base text-neutral-900"></th>
                         </tr>
                     </thead>
                     <tbody>
                         {currentItems.map((item, index) => (
-                            <tr key={index} className={`hover:bg-gray-50 border-0 ${index % 2 === 0 ?  'bg-gray-200' : 'bg-zinc-300' }`}>
-                               <td className="p-1 mt-1 flex items-center justify-start">
-                                 
-                                    {/* <input
+                            <tr key={index} className="hover:bg-gray-50 border-0">
+                                <td className="p-2 mt-1 flex items-center justify-start">
+                                    <img src={SmallDot} className="mr-1.5" />
+                                    <input
                                         type="checkbox"
-                                        className="form-checkbox h-4 w-4 text-blue-600 border-grey bg-gray-300 cursor-pointer ml-4"
-                                    /> */}
-                                       <img src={Checkbox} className='ml-4 mt-1'/>
-                                    </td>
+                                        className="form-checkbox h-4 w-4 text-blue-600 border-neutral-500 cursor-pointer"
+                                    /></td>
                                 <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{item.TransferId}</td>
                                 <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{item.Date}</td>
                                 <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{item.EwayBillStaus}</td>
-                                <td className='p-2 font-semibold text-sm font-Manrope text-start text-neutral-900 '>
-                                    {item.EwayBillNumber}
+                                <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{item. AdjustmentType}</td>
+                                <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900">{item.Documents}</td>
+                                <td className={`p-2 font-semibold text-sm font-Manrope text-start  ${item.Approval === 'Pending' ? 'text-blue-600' : 'text-lime-600'}`}>
+                                    {item.Approval}
                                 </td>
-                                <td className='p-2 font-semibold text-sm font-Manrope text-start text-neutral-900 ' >
-                                    {item.Documents}
-                                </td>
-                                <td className={`p-2 font-semibold text-sm font-Manrope text-start ${item.Approval === 'Pending' ? 'text-blue-600' : 'text-lime-600'}`}>
-                                        {item.Approval}
-                                    </td>                               
-                                 
-                                 <td className="p-2 text-gray-500 cursor-pointer w-8"><img src={Dot} /></td>
+                              
+                              
+                                <td className="p-2 text-gray-500 cursor-pointer"><img src={Dot} /></td>
                             </tr>
                         ))}
-                       <tr className="bg-zinc-300"><td colSpan="8" className="p-4"></td></tr>
-                          
-                            
-                           
                     </tbody>
                 </table>
 </div>
@@ -245,35 +292,42 @@ function StockTransform() {
 
 
 
-                <div className="flex items-center justify-center mt-40  h-14 bg-zinc-300">
-
-
-<div className='bg-zinc-500 p-2 flex rounded-2xl'>
-
-
-                    <ArrowLeft2 className='cursor-pointer text-zinc-300'
-                        size="16"
-                   
-                        onClick={handlePrevClick}
-                        disabled={currentPage === 1}
-                    />
-
-                    <span className=" font-bold  text-xs  text-zinc-300">
-                        <span className="font-bold text-xs text-zinc-300">{String(currentPage).padStart(2, '0')}</span> of <span className="font-bold text-xs  text-zinc-300">{totalPages}</span>
+                <div className="flex items-center justify-center space-x-3 mt-40 mb-5">
+                  
+                        <ArrowLeft2 className='cursor-pointer'
+                            size="16"
+                            color="#797979"
+                            onClick={handlePrevClick}
+                            disabled={currentPage === 1}
+                        />
+                    
+                    <span className=" font-bold text-neutral-900 text-xs">
+                        <span className="font-bold text-xs text-neutral-900">{String(currentPage).padStart(2, '0')}</span> of <span className="font-bold text-xs text-neutral-900">{totalPages}</span>
                     </span>
-                    <ArrowRight2 className='cursor-pointer text-zinc-300'
-                        size="16"
-                       
-                        onClick={handleNextClick}
-                        disabled={currentPage === totalPages}
-                    />
-</div>
+                             <ArrowRight2 className='cursor-pointer'
+                            size="16"
+                            color="#797979"
+                            onClick={handleNextClick}
+                            disabled={currentPage === totalPages}
+                        />
+                    
                 </div>
             </div>
-        </div>
+              </div>
             )}
-            </>
+              </>
     )
 }
 
 export default StockTransform;
+
+
+
+
+
+
+
+
+	
+	
+	
