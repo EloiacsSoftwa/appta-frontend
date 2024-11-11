@@ -4,7 +4,7 @@ import AddBlack from '../Images/Icons/Vector.svg';
 
 
 
-function Stock_Adjustment_List({ item }) {
+function Stock_Adjustment_List() {
 
 
     const [products, setProducts] = useState([
@@ -31,30 +31,30 @@ function Stock_Adjustment_List({ item }) {
 
                         <div>
                             <label className="block font-sans text-sm font-semibold mb-1 ml-1 ">Stock Transfer ID</label>
-                            <input type="text" placeholder="Auto Generate" className="w-full border border-gray-300 rounded-md p-1 bg-white placeholder-black" disabled />
+                            <input type="text" placeholder="Auto Generate" className="w-full border border-gray-300 text-sm rounded-md p-2 bg-white placeholder-black" disabled />
                         </div>
                         <div>
                             <label className="block font-sans text-sm font-semibold mb-1 ml-1">Date</label>
-                            <input type="date" className="w-full border border-gray-300 rounded-md p-1" />
+                            <input type='date' className="w-full border border-gray-300 rounded-md p-1.5 pl-3 text-sm" />
                         </div>
                         <div>
                             <label className="block font-sans text-sm font-semibold mb-1 ml-1">Type</label>
-                            <select className="w-full border border-gray-300 rounded-md p-1">
+                            <select className="w-full border border-gray-300 rounded-md p-1.5 text-sm">
                                 <option>Stock in</option>
                                 <option>Stock out</option>
                             </select>
                         </div>
                         <div>
                             <label className="block font-sans text-sm font-semibold mb-1 ml-1">Reason</label>
-                            <select className="w-full border border-gray-300 rounded-md p-1">
+                            <select className="w-full border border-gray-300 rounded-md p-1.5 text-sm">
                                 <option>Return</option>
                                 <option>Damage</option>
                             </select>
                         </div>
 
                         <div className="col-span-1 md:col-span-4 -mt-3">
-                            <label className="block font-sans text-sm font-semibold mb-1 ml-1 ">Ware House</label>
-                            <select className="w-full md:w-64 border border-gray-300 rounded-md p-1">
+                            <label className="block font-sans text-sm font-semibold mb-1 ml-1  text-sm">Ware House</label>
+                            <select className="w-215 border border-gray-300 rounded-md p-1.5" >
                                 <option>Salem</option>
                                 <option>Other</option>
                             </select>
