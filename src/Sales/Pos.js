@@ -179,7 +179,7 @@ const Pos = ({ handleClosed }) => {
     const payload = {
       orderId: order_id,
       productId: item,
-      discount: 1,
+      discount: 0,
       quantity: 1,
       manuallyEntered: false
     }
@@ -347,6 +347,39 @@ const Pos = ({ handleClosed }) => {
   }, [State.Customer.CustomerList]);
 
 
+  const [selectedProducts, setSelectedProducts] = useState([]);
+
+
+  const handleCheckboxClick = (productId) => {
+    setSelectedProducts((prevSelected) =>
+      prevSelected.includes(productId)
+        ? prevSelected.filter((id) => id !== productId)
+        : [...prevSelected, productId]
+    );
+  };
+
+
+  const handleProductDelete = () => {
+    const productsToDelete = selectedProducts.map((productId) => ({
+      orderId: order_id,
+      productId,
+    }));
+  
+    dispatch({type: 'DELETE-POS-PRODUCT', payload: productsToDelete,});
+    setSelectedProducts([]);
+  };
+  
+  const handleHoldOrder = () => {
+    if (order_id) {  
+      dispatch({
+        type: 'ORDER-HOLD',
+        payload: { orderId: String(order_id) }, // Pass orderId as a simple string
+      });
+    } else {
+      console.error("Order ID is missing.");
+    }
+  }; 
+  
 
 
   
@@ -439,7 +472,7 @@ const Pos = ({ handleClosed }) => {
               <div className='flex items-center gap-2 '>
 
                 <div>
-                  <img src={Delete} className='w-6 h-6 cursor-pointer' />
+                  <img src={Delete} className='w-6 h-6 cursor-pointer' onClick={handleProductDelete} />
                 </div>
               </div>
             </div>
@@ -524,7 +557,7 @@ const Pos = ({ handleClosed }) => {
                     State.PosReducer.orderItems.map((item, index) => (
                       <tr key={index} className="hover:bg-gray-50 border-0">
                         <td className="p-2 mt-1 flex items-center justify-start">
-                          <input type="checkbox" className="form-checkbox h-3 w-3 text-blue-600 border-neutral-500 cursor-pointer" />
+                          <input type="checkbox" className="form-checkbox h-3 w-3 text-blue-600 border-neutral-500 cursor-pointer"   onClick={() => handleCheckboxClick(item.productId)}/>
                         </td>
                         <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{item.unitId || '-'}</td>
                         <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{item.barcodeNo || '-'}</td>
@@ -800,6 +833,7 @@ const Pos = ({ handleClosed }) => {
 
             <button
               type="submit"
+              onClick={handleHoldOrder}
               style={{ marginRight: '2rem' }}
               className="flex items-center me-4  justify-center rounded bg-[#EA580C] text-white px-5 py-1.5 text-sm font-semibold  border border-[#EA580C] shadow-sm hover:bg-[#EA580C] hover:text-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#EA580C]">
               Hold Order
