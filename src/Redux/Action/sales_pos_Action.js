@@ -41,5 +41,20 @@ export async function getPaymentType() {
   })
 }
 
+export async function DeletePosProduct(products) {
+  return await AxiosConfig.post('/order/deleteOrderItems', products);
+}
+
+export async function Holdorder({ orderId }) { 
+  try {
+    return await AxiosConfig.post('/order/holdOrder', null, {
+      params: { orderId }, // This should append orderId correctly
+    });
+  } catch (error) {
+    console.error("Network error:", error.response || error.message);
+    throw error;
+  }
+}
+
 
 

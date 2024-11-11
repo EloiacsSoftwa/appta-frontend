@@ -1,7 +1,10 @@
 import { call, takeEvery, put, take } from 'redux-saga/effects';
-import { PosGetbyBarcode ,CreateOrder, addOrderItemsApiCall,CompleteOrder ,getPaymentType} from '../Action/sales_pos_Action';
+import { PosGetbyBarcode ,CreateOrder, addOrderItemsApiCall,CompleteOrder ,getPaymentType, DeletePosProduct, Holdorder} from '../Action/sales_pos_Action';
 import Cookies from 'universal-cookie';
 import { ADD_ORDER_ITEMS_API_CALL, ADD_ORDER_ITEMS_API_RESPONSE } from '../../utils/Constant';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 function* handleBarcodeGetProduct(args) {
 
@@ -31,7 +34,7 @@ function* handleCreateOrder() {
   
   const response = yield call(CreateOrder);
        console.log("resposne",response)
-  if (response.status === 200 || response.code === 200) {
+  if (response.status === 200 || response.code === 200 || response.data.code === 200) {
     yield put({ type: 'CREATE_ORDER', payload: { response: response.data.data, statusCode: response.status || response.code } });
   }
   else {
@@ -64,7 +67,7 @@ function* handleCompleteOrder() {
   
   const response = yield call(CompleteOrder);
        console.log("resposne",response)
-  if (response.status === 200 || response.code === 200) {
+  if (response.status === 200 || response.code === 200 || response.data.code === 200) {
     yield put({ type: 'COMPLETE_ORDER', payload: { response: response.data.data, statusCode: response.status || response.code } });
   }
   else {
@@ -75,6 +78,110 @@ function* handleCompleteOrder() {
   }
 }
 
+
+function* handleDeletePosProduct(args) {
+
+  const response = yield call(DeletePosProduct, args.payload);
+  console.log("Response ",response)
+
+ const toastStyle = {
+  backgroundColor: "#fff",
+  color:'#38B000',
+  width: "100%",
+  borderRadius: "60px",
+  height: "20px",
+  fontFamily: "Manrope",
+  fontWeight: 700,
+  fontSize: 14,
+  textAlign: "start",
+  display: "flex",
+  alignItems: "center", 
+  padding: "10px",
+ 
+};
+  if (response.status === 200 || response.code === 200 || response.data.code === 200) {
+         yield put({ type: 'DELETE_POS_PRODUCT', payload: { statusCode: response.status  || response.code ||response.data.code }});
+         toast.success("OrderItems removed successfully", {
+          position: "top-center",
+          autoClose: 2000,
+          hideProgressBar: true,
+          closeButton: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          style: toastStyle,
+        });
+  }
+  else{
+      yield put({ type: 'ERROR', payload: {response:response.data.message , statusCode: response.status  || response.code}});
+
+  }
+  
+
+  if (response) {
+      ExpireToken(response)
+ }
+
+
+}
+
+
+function* handleHoldOrder({ payload }) {
+  try {
+    
+    const response = yield call(Holdorder, payload);
+    console.log("API Response:", response);
+
+    const toastStyle = {
+      backgroundColor: "#fff",
+      color: '#38B000',
+      width: "100%",
+      borderRadius: "60px",
+      height: "20px",
+      fontFamily: "Manrope",
+      fontWeight: 700,
+      fontSize: 14,
+      textAlign: "start",
+      display: "flex",
+      alignItems: "center", 
+      padding: "10px",
+    };
+
+    
+    const successCode = response?.status === 200 || response.code === 200 || response?.data?.code === 200;
+    if (successCode) {
+      yield put({ type: 'ORDER_HOLD', payload: { statusCode: response?.status || response?.data?.code || response.code  } });
+      toast.success("Order hold success", {
+        position: "top-center",
+        autoClose: 2000,
+        hideProgressBar: true,
+        closeButton: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        style: toastStyle,
+      });
+    } else {
+      yield put({ type: 'ERROR', payload: { response: response?.data?.message, statusCode: response?.status || response?.data?.code } });
+    }
+
+   
+    if (response) {
+      ExpireToken(response);
+    }
+  } catch (error) {
+    console.error("Failed to hold order:", error.message);
+    yield put({ type: 'ERROR', payload: { response: error.message } });
+    // toast.error("Order hold failed", {
+    //   position: "top-center",
+    //   autoClose: 2000,
+    //   hideProgressBar: true,
+    //   style: { ...toastStyle, color: 'red' },
+    // });
+  }
+}
 
 
 function ExpireToken(response) {
@@ -99,6 +206,8 @@ function* PosSaga() {
     yield takeEvery('CREATE-ORDER', handleCreateOrder);
     yield takeEvery('GET-PAYMENT-TYPE', handleGetPaymentType);
     yield takeEvery('COMPLETE-ORDER', handleCompleteOrder);
+    yield takeEvery('DELETE-POS-PRODUCT', handleDeletePosProduct);
+    yield takeEvery('ORDER-HOLD', handleHoldOrder);
     yield takeEvery(ADD_ORDER_ITEMS_API_CALL, addOrderItems)
 }
 

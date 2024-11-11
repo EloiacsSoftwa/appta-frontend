@@ -6,6 +6,8 @@ const initialState = {
   CreateOrderStatuscode :0,
   CompleteOrderStatuscode :0,
   paymenttypestatuscode : 0,
+  deleteposproductStatuscode : 0,
+  OrderHoldproductStatuscode : 0,
   Errormsg: '',
   orderItems: [],
   PaymentType:[],
@@ -52,6 +54,16 @@ const PosReducer = (state = initialState, action) => {
     case ADD_ORDER_ITEMS_API_RESPONSE: {
       return {...state, orderItems: action.orderItems}
     }
+
+    case 'DELETE_POS_PRODUCT':
+      return { ...state,  deleteposproductStatuscode: action.payload.statusCode }
+    case 'REMOVE_DELETE_POS_PRODUCT_STATUS_CODE':
+      return { ...state, deleteposproductStatuscode: 0 }
+
+      case 'ORDER_HOLD':
+        return { ...state,  OrderHoldproductStatuscode: action.payload.statusCode }
+      case 'REMOVE_ORDER_HOLD_STATUS_CODE':
+        return { ...state, OrderHoldproductStatuscode: 0 }
 
 
     default:
