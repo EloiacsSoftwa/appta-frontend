@@ -23,7 +23,7 @@ function AddPurchase({ handleClose }) {
   const [orderDate, setOrderDate] = useState(null);
   const [deliveredDate, setDeliveredDate] = useState(null);
   const [invoiceId, setInvoiceId] = useState("")
-
+  const quantityRefs = useRef([]);
   const [subTotal, setSubTotal] = useState(0);
   const [beforeTax, setBeforeTax] = useState(0);
   const [taxTotal, setTaxTotal] = useState(0);
@@ -130,6 +130,15 @@ function AddPurchase({ handleClose }) {
     const value = e.target.value;
     const updatedProducts = [...products];
     updatedProducts[index][field] = value;
+
+    if (field === 'Product' && !value) {
+      updatedProducts[index].Product = '';
+      updatedProducts[index].subCategory = '';
+      updatedProducts[index].size = '';
+      updatedProducts[index].unit = '';
+    } else {
+      updatedProducts[index][field] = value;
+    }
   
     const {
       Quantity,
@@ -327,6 +336,9 @@ function AddPurchase({ handleClose }) {
 
 
   const handleProductName = (item, index) => {
+
+
+   
     const updatedProducts = [...products];
     updatedProducts[index].Product = item.productName;
     updatedProducts[index].productID = item.productId;
@@ -339,8 +351,17 @@ function AddPurchase({ handleClose }) {
     const updatedDropdown = [...showProductDropdown];
     updatedDropdown[index] = false;
     setShowProductDropdown(updatedDropdown);
+    
+   
   };
-
+  
+  // useEffect(() => {
+  //   if (products.length > 0) {
+   
+  //     quantityRefs.current[0]?.focus();
+  //   }
+  // }, [products]);
+  
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -465,7 +486,7 @@ function AddPurchase({ handleClose }) {
     let valid = true;
     const newErrors = {};
   
-    // Initial validation for general fields
+
     if (!orderDate) {
       newErrors.orderDate = 'Purchase date is required';
       valid = false;
@@ -709,21 +730,7 @@ function AddPurchase({ handleClose }) {
 
 
 
-        {/* <div className="flex flex-col md:flex-row justify-between items-center">
-          <div className="flex items-center mt-12 sm:mr-44">
-            <p className="font-bold text-lg text-orange-600 mr-4 font-Manrope">Products</p>
-           <input type="checkbox" className="bg-zinc-300 border border-black"/>
-            <p className="font-semibold text-base ml-4">On Credit</p>
-          </div>
-          <div className="w-full md:w-auto mt-4">
-            <label className="block font-normal mb-1 text-sm text-start font-SourceSansPro">Purchase ID</label>
-            <input
-              type="text"
-              className="w-full border rounded px-3 py-2 text-sm bg-Dim-red"
-              placeholder="Auto Generate"
-            />
-          </div>
-        </div> */}
+       
 
 
 
@@ -761,50 +768,56 @@ function AddPurchase({ handleClose }) {
                 <td className="p-2 border relative">
                   <input
                     type="text"
-                    // value={product.Product}
+                    value={product.Product}
                     
-                    value={`${product.Product} ${product.subCategory} - ${product.size} ${product.unit}`}
+                    // value={`${product.Product} ${product.subCategory} - ${product.size} ${product.unit}`}
                     onChange={(e) => handleInputChange(e, 'Product', index)}
                     onClick={() => handleproductNameDropDown(index)}
+                    // onKeyDown={(e) => {
+                     
+                    //   if (e.key === 'Backspace') {
+                    //     handleInputChange(e, 'Product', index); 
+                    //   }
+                    // }}
                     className={`border p-1 rounded w-full ${errors[`Product-${index}`] ? 'border-red-500' : ''}`}
                   />
 
 
+                 
                   {showProductDropdown[index] && (
-                    <div ref={dropdownRef} className="absolute z-50 bg-light_gray divide-y divide-gray-100 shadow md:w-56 w-56 sm:w-56">
-                      <ul className="py-2 text-sm text-black font-Manrope font-medium text-start">
-                        {productId.length > 0 ? Array.from(productId).map((item) => (
-                          <li
-                            key={item.productId}
-                            onClick={() => handleProductName(item, index)}
-                            className="px-2 py-2 cursor-pointer hover:bg-gray-200"
-                          >
-                            <div className="flex flex-col">
-                             <label>{item.productName} {item.subCategory }</label> 
-                             <label>{item.size } - {item.unit} </label> 
-                            </div>
-                            
-                          </li>
-                        ))
-                          :
-
-                          <li
-
-                            className="px-2 py-2 cursor-pointer hover:bg-gray-200"
-                          >
-                            No products
-                          </li>
-
-
-                        }
-                      </ul>
-                    </div>
-                  )}
+    <div ref={dropdownRef} className="absolute z-50 bg-light_gray divide-y divide-gray-100 shadow md:w-56 w-56 sm:w-56">
+      <ul className="py-2 text-sm text-black font-Manrope font-medium text-start">
+        {productId.length > 0 ? (
+          productId
+            .filter(item => item.productName.toLowerCase().includes(product.Product.toLowerCase())) // Filter products based on input
+            .map(item => (
+              <li
+                key={item.productId}
+                onClick={() => handleProductName(item, index)}
+                className="px-2 py-2 cursor-pointer hover:bg-gray-200"
+              >
+                <div className="flex flex-col">
+                  <label>{item.productName}
+                    
+                     {item.subCategory}</label>
+                  <label>{item.size} - {item.unit}</label>
+                </div>
+              </li>
+            ))
+        ) : (
+          <li className="px-2 py-2 cursor-pointer hover:bg-gray-200">
+            No products
+          </li>
+        )}
+      </ul>
+    </div>
+  )}
                 </td>
                 <td className="p-2 border">
                   <input
                     type="number"
                     value={product.Quantity}
+                    ref={(el) => quantityRefs.current[index] = el}
                     onChange={(e) => handleInputChange(e, 'Quantity', index)}
                     className={`border p-1 rounded w-full ${errors[`Quantity-${index}`] ? 'border-red-500' : ''}`}
                     min="0"
