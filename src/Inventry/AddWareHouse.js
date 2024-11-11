@@ -24,10 +24,10 @@ function AddWareHouse({ handleClose }) {
     return (
         <div className="h-screen bg-white p-4 w-full">
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center mt-4">
-                <p className="text-start font-semibold text-xl mb-2 md:mb-0">
+                {/* <p className="text-start font-semibold text-xl mb-2 md:mb-0">
                     Inventory - Warehouse - <span className="text-orange-600">Add Ware house</span>
-                </p>
-                <div className="flex gap-2">
+                </p> */}
+                {/* <div className="flex gap-2">
                     <button
                         onClick={handleClose}
                         className="flex items-center gap-2 w-16 h-7 px-2 rounded border border-orange-600 text-orange-600 font-semibold text-sm hover:bg-orange-600 hover:text-black hover:border-black"
@@ -37,10 +37,10 @@ function AddWareHouse({ handleClose }) {
                     <button className="flex items-center gap-2 w-28 h-7 px-3 rounded border border-black bg-orange-600 text-black font-semibold text-sm">
                         Save & Close
                     </button>
-                </div>
+                </div> */}
             </div>
 
-            <div className="w-full rounded-xl shadow-custom mt-4 p-4 mb-4">
+            <div className="w-full rounded-xl shadow-custom p-4 mb-4">
                 <p className="font-bold text-lg text-orange-600 mb-4 font-Manrope">Adjustment Details</p>
                 <div className="flex flex-wrap lg:flex-nowrap gap-4">
                     <div className="w-full max-w-sm min-w-[200px]">

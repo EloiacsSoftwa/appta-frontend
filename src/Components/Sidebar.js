@@ -31,7 +31,9 @@ import CryptoJS from "crypto-js";
 import Stock_Adjustment_List from '../Inventry/Stock_Adjustment_List';
 import Stock_Available from '../Inventry/Stock_Availability';
 import StockTransform from "../Inventry/Stock_Transform";
+import Ware_House from "../Inventry/Ware_House";
 import Userlist from "../Contact/User_List";
+
 
 function App() {
 
@@ -339,7 +341,7 @@ useEffect(() => {
 
 {selectedMenu === 'Ware house' && (
             <div className="">
-             
+             <Ware_House/>
             </div>
           )}
 
@@ -351,7 +353,7 @@ useEffect(() => {
   <>
       {selectedMenu === 'Stock Availability' && (
             <div className="bg-white mt-2">
-              <Stock_Available  handleClose={handleCloseForStock}/>
+              <Stock_Available/>
             </div>
           )}
 

@@ -20,7 +20,7 @@ function Stock_Adjustment_List() {
     return (
         <div className='h-screen bg-white p-2 w-full'>
 
-            <div className='bg-white p-3 w-full rounded shadow-2xl container mx-auto h-max'>
+            <div className='bg-white p-3 w-full rounded shadow-custom container mx-auto h-max mt-1'>
                 <div className='font-Manrope text-base font-bold text-left text-orange-600 mb-2'>
                     Adjustment Details
                 </div>
