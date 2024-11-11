@@ -158,7 +158,7 @@ const handleCloseAddCustomer = () =>{
                             <label className='font-semibold text-22 text-neutral-900 font-Manrope'>Contacts - </label> <label className='font-bold text-22 text-orange-600 font-Manrope'> Customer List</label>
 
                         </div>
-                        <div
+<div
     onClick={handleAdd}
     onMouseEnter={() => setIsHovered(true)}
     onMouseLeave={() => setIsHovered(false)}
