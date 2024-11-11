@@ -31,7 +31,7 @@ import CryptoJS from "crypto-js";
 import Stock_Adjustment_List from '../Inventry/Stock_Adjustment_List';
 import Stock_Available from '../Inventry/Stock_Availability';
 import StockTransform from "../Inventry/Stock_Transform";
-
+import Userlist from "../Contact/User_List";
 
 function App() {
 
@@ -325,13 +325,23 @@ useEffect(() => {
             </div>
           )}
 
-{selectedMenu === 'Stock Transfer' && (
+        {selectedMenu === 'Stock Transfer' && (
             <div className="">
               <StockTransform />
             </div>
           )}
+           {selectedMenu === 'User' && (
+            <div className="">
+              <Userlist />
+            </div>
+          )}
 
 
+{selectedMenu === 'Ware house' && (
+            <div className="">
+             
+            </div>
+          )}
 
         </div>
 

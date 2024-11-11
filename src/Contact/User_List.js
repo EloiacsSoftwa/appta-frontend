@@ -7,18 +7,17 @@ import Frame4 from '../Images/Sales/Frame4.svg'
 import Search from '../Images/Sales/Search.svg'
 import Dot from '../Images/Sales/Dots.svg';
 import SmallDot from '../Images/Sales/Smalldots.svg'
-import Add from '../Images/Sales/Add Green.svg';
-import Plus from '../Images/Icons/Vector.svg'
-import AddStockTransform from './AddStockTransform';
+import Add from '../Images/Vector (9).svg';
+import AddUser from './AddUser';
 import Checkbox from '../Images/Vector (8).svg'
 import { ArrowRight2, ArrowLeft2 ,ArrowUp2, ArrowDown2} from 'iconsax-react';
+import Plus from '../Images/Icons/Vector.svg'
 
-
-function StockTransform() {
+function Userlist() {
 
    
     const [currentPage, setCurrentPage] = useState(1);
-    const [showAddStockTransform, setShowAddStockTransform] = useState(false)
+    const [showAddUser, setShowAddUser] = useState(false)
 
     const [isHovered, setIsHovered] = useState(false); 
 
@@ -47,31 +46,31 @@ function StockTransform() {
 
 
 
-    const Stock = [
+    const Userlist = [
         {
-            TransferId: "SU85695",
-            Date: "09--Aug-2024",
-            EwayBillStaus: "Salem",
-            AdjustmentType: "Stock In",
-            Documents: 'Uploaded',
-            Approval: "Approved"
+            firstName: "Shane",
+            lastName: "Waren",
+            userName: "Waren01",
+            role: "Manager",
+            mobile: '+91 9586 478 275',
+            mailid: "ags@example.com"
         },
         
         {
-            TransferId: "SU85695",
-            Date: "09--Aug-2024",
-            EwayBillStaus: "Chennai",
-            AdjustmentType: "Stock Out",
-            Documents: 'Uploaded',
-            Approval: "Approved"
+            firstName: "Gladys",
+            lastName: "Richard",
+            userName: "Chards",
+            role: "Sales Manager",
+            mobile: '+91 9586 478 275',
+            mailid: "ags@example.com"
         },
         {
-            TransferId: "SU85695",
-            Date: "09--Aug-2024",
-            EwayBillStaus: "Madurai",
-            AdjustmentType: "Stock In",
-            Documents: 'Uploaded',
-            Approval: "Pending"
+            firstName: "Arlene",
+            lastName: "Fox",
+            userName: "Foxene",
+            role: "Admin",
+            mobile: '+91 9586 478 275',
+            mailid: "ags@example.com"
         },
         
 
@@ -85,10 +84,10 @@ function StockTransform() {
 
     //  pagination
     const itemsPerPage = 10;
-    const totalPages = Math.ceil(Stock.length / itemsPerPage);
+    const totalPages = Math.ceil(Userlist.length / itemsPerPage);
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const currentItems = Stock.slice(indexOfFirstItem, indexOfLastItem);
+    const currentItems = Userlist.slice(indexOfFirstItem, indexOfLastItem);
 
     const handlePrevClick = () => {
         if (currentPage > 1) {
@@ -103,15 +102,21 @@ function StockTransform() {
     };
 
 
-    const handleAdd = () => {
-        setShowAddStockTransform(true);
-      }
    
-    const handleCloseStockTransfer = () => {
-        setShowAddStockTransform(false)
+   
+    const handleCloseUserlist = () => {
+        setShowAddUser(false)
     }
 
+  
+  
 
+    const handleAdd = () =>{ 
+        setShowAddUser(true); 
+    }
+    
+    
+    
 
 
 
@@ -119,21 +124,36 @@ function StockTransform() {
 
     return (
         <>
-           {showAddStockTransform ? (
-             <AddStockTransform handleClose={handleCloseStockTransfer}  /> 
+           {showAddUser ? (
+             <AddUser handleClose={handleCloseUserlist}  /> 
             ) : (
         <div className='h-screen bg-white p-4 w-full'>
             <div className='flex justify-between items-center gap-2 mb-2.5'>
             <div className='flex justify-start items-center gap-2 mb-2.5'>
-                <label className='font-semibold text-22 text-neutral-900 font-Manrope'>Inventory - </label> <label className='font-bold text-22 text-orange-600 font-Manrope'>Stock transfer </label>
+                <label className='font-semibold text-22 text-neutral-900 font-Manrope'>Contacts - </label> <label className='font-bold text-22 text-orange-600 font-Manrope'>Userlist </label>
             </div>
 
-            <div
+            {/* <div>
+  <button 
+    onClick={handleAdd}
+    type="submit" 
+    className="cursor-pointer flex items-center gap-2 w-auto h-auto text-orange-600 border border-orange-600 rounded px-3 py-1 font-Manrope font-semibold text-sm "
+  >
+    <img
+      src={Add}
+      alt="Add"
+      className=""
+    />
+    Add User
+  </button>
+</div> */}
+
+<div
     onClick={handleAdd}
     onMouseEnter={() => setIsHovered(true)}
     onMouseLeave={() => setIsHovered(false)}
     className={`cursor-pointer flex items-center gap-2 text-orange-600 border border-orange-600 rounded px-2 py-1 hover:bg-orange-600 hover:border-black ${
-      showAddStockTransform ? 'mb-2' : 'mb-4'
+      showAddUser ? 'mb-2' : 'mb-4'
     }`}
   >
     <img
@@ -146,9 +166,10 @@ function StockTransform() {
         isHovered ? 'text-black' : 'text-orange-600'
       }`}
     >
-     New Stock Transfer
+     Add User
     </label>
   </div>
+
 
                 </div>
 
@@ -221,7 +242,7 @@ function StockTransform() {
                                         <ArrowUp2 className="font-extrabold w-3 h-3 text-orange-600 cursor-pointer" />
                                         <ArrowDown2 className="font-extrabold w-3 h-3 text-orange-600 cursor-pointer"  />
                                     </div>
-                                    <div className='font-semibold text-sm text-neutral-900 font-Manrope leading-0'>Transfer ID</div>
+                                    <div className='font-semibold text-sm text-neutral-900 font-Manrope leading-0'>First Name</div>
                                 </div>
                             </th>
 
@@ -231,7 +252,7 @@ function StockTransform() {
                                     <ArrowUp2 className="font-extrabold w-3 h-3 text-orange-600 cursor-pointer"  />
                                     <ArrowDown2 className="font-extrabold w-3 h-3 text-orange-600 cursor-pointer"  />
                                     </div>
-                                    <div className='font-semibold text-sm text-neutral-900 font-Manrope'>Date</div>
+                                    <div className='font-semibold text-sm text-neutral-900 font-Manrope'>Last Name</div>
                                 </div>
                             </th>
                             <th className="p-1 font-semibold text-base text-neutral-900">
@@ -240,7 +261,7 @@ function StockTransform() {
                                     <ArrowUp2 className="font-extrabold w-3 h-3 text-orange-600 cursor-pointer"  />
                                     <ArrowDown2 className="font-extrabold w-3 h-3 text-orange-600 cursor-pointer"  />
                                     </div>
-                                    <div className='font-semibold text-sm text-neutral-900 font-Manrope'>E-way Bill Status</div>
+                                    <div className='font-semibold text-sm text-neutral-900 font-Manrope'>User Name</div>
                                 </div>
                             </th>
                             <th className="p-1 font-semibold text-base text-neutral-900">
@@ -249,7 +270,7 @@ function StockTransform() {
                                     <ArrowUp2 className="font-extrabold w-3 h-3 text-orange-600 cursor-pointer"  />
                                     <ArrowDown2 className="font-extrabold w-3 h-3 text-orange-600 cursor-pointer"  />
                                     </div>
-                                    <div className='font-semibold text-sm text-neutral-900 font-Manrope'> Adjustment Type</div>
+                                    <div className='font-semibold text-sm text-neutral-900 font-Manrope'> Role</div>
                                 </div>
                             </th>
                             <th className="p-1 font-semibold text-base text-neutral-900">
@@ -258,7 +279,7 @@ function StockTransform() {
                                     <ArrowUp2 className="font-extrabold w-3 h-3 text-orange-600 cursor-pointer"  />
                                     <ArrowDown2 className="font-extrabold w-3 h-3 text-orange-600 cursor-pointer"  />
                                     </div>
-                                    <div className='font-semibold text-sm text-neutral-900 font-Manrope'>Documents</div>
+                                    <div className='font-semibold text-sm text-neutral-900 font-Manrope'>Mobile</div>
                                 </div>
                             </th>
                             <th className="p-1 font-semibold text-base text-neutral-900">
@@ -267,7 +288,7 @@ function StockTransform() {
                                     <ArrowUp2 className="font-extrabold w-3 h-3 text-orange-600 cursor-pointer"  />
                                     <ArrowDown2 className="font-extrabold w-3 h-3 text-orange-600 cursor-pointer"  />
                                     </div>
-                                    <div className='font-semibold text-sm text-neutral-900 font-Manrope'>Approval</div>
+                                    <div className='font-semibold text-sm text-neutral-900 font-Manrope'>Mail ID</div>
                                 </div>
                             </th>
                             
@@ -284,16 +305,12 @@ function StockTransform() {
                                         type="checkbox"
                                         className="form-checkbox h-4 w-4 text-blue-600 border-neutral-500 cursor-pointer"
                                     /></td>
-                                <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{item.TransferId}</td>
-                                <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{item.Date}</td>
-                                <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{item.EwayBillStaus}</td>
-                                <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{item. AdjustmentType}</td>
-                                <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900">{item.Documents}</td>
-                                <td className={`p-2 font-semibold text-sm font-Manrope text-start  ${item.Approval === 'Pending' ? 'text-blue-600' : 'text-lime-600'}`}>
-                                    {item.Approval}
-                                </td>
-                              
-                              
+                                <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{item.firstName}</td>
+                                <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{item.lastName}</td>
+                                <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{item.userName}</td>
+                                <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{item. role}</td>
+                                <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{item.mobile}</td>
+                                <td className="p-2 font-semibold text-sm font-Manrope text-start text-neutral-900"> {item.mailid} </td>
                                 <td className="p-2 text-gray-500 cursor-pointer"><img src={Dot} /></td>
                             </tr>
                         ))}
@@ -332,7 +349,7 @@ function StockTransform() {
     )
 }
 
-export default StockTransform;
+export default Userlist;
 
 
 
