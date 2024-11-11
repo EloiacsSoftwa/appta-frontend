@@ -17,7 +17,7 @@ import AddCustomer from '../Contact/AddCustomer';
 import { Setting } from 'iconsax-react';
 import Pos_Payment from './Pos_Payment';
 
-import { ADD_ORDER_ITEMS_API_CALL } from '../utils/Constant';
+import { ADD_ORDER_ITEMS_API_CALL, GET_ALL_ACTIVE_PRODUCTS_API_CALL } from '../utils/Constant';
 
 
 const Pos = ({ handleClosed }) => {
@@ -218,7 +218,7 @@ const Pos = ({ handleClosed }) => {
     setSearchQuery(e.target.value.toLowerCase());
 
     if (e.target.value) {
-      setFilteredData(State.AddProduct?.ProductList && State.AddProduct?.ProductList?.filter((item) =>
+      setFilteredData(State.AddProduct?.activeProducts && State.AddProduct?.activeProducts?.filter((item) =>
         item?.productName?.toLowerCase().includes(searchQuery) ||
         item?.barcodeNo?.toLowerCase().includes(searchQuery)
       ) || [])
@@ -275,7 +275,7 @@ const Pos = ({ handleClosed }) => {
   };
 
   useEffect(() => {
-    dispatch({ type: 'GETPRODUCT' });
+    dispatch({ type: GET_ALL_ACTIVE_PRODUCTS_API_CALL });
     dispatch({ type: 'GETCUSTOMER' });
   }, []);
 

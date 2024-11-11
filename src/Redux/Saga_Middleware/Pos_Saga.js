@@ -1,7 +1,7 @@
 import { call, takeEvery, put, take } from 'redux-saga/effects';
 import { PosGetbyBarcode ,CreateOrder, addOrderItemsApiCall,CompleteOrder ,getPaymentType} from '../Action/sales_pos_Action';
 import Cookies from 'universal-cookie';
-import { ADD_ORDER_ITEMS_API_CALL, ADD_ORDER_ITEMS_API_RESPONSE } from '../../utils/Constant';
+import { ADD_ORDER_ITEMS_API_CALL, ADD_ORDER_ITEMS_API_RESPONSE} from '../../utils/Constant';
 
 function* handleBarcodeGetProduct(args) {
 

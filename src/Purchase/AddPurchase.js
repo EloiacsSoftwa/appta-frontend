@@ -566,6 +566,8 @@ function AddPurchase({ handleClose }) {
       wholesalePercentage: product.WholeSalePercentage,
       wholesalePrice: product.WholeSalePrice
     }));
+
+    console.log(purchaseItems)
   
     dispatch({
       type: 'ADDPURCHASE',

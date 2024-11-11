@@ -1,7 +1,7 @@
 import { call, takeEvery, put, take } from 'redux-saga/effects';
 import { Category, SubCategory, AddProductDetails, AddBrand, GetProduct, getAllUnitsCall, getFreebie, getProductDetailsbyid, SubCategoryBasedOnParent } from '../Action/AddProductAction';
-import { GET_BRANDS_API_CALL, GET_BRANDS_API_RESPONSE, GET_ALL_UNITS_API_CALL, GET_ALL_UNITS_API_RESPONSE, GET_PRODUCT_SIZE_API_CALL, GET_PRODUCT_SIZE_API_RESPONSE, GET_SUB_CATEGORY_BASED_ON_CATEGORY_API_CALL, GET_SUB_CATEGORY_BASED_ON_CATEGORY_API_RESPONSE } from '../../utils/Constant';
-import { getAllBrands, getProductSizes } from '../Action/AddProductAction';
+import { GET_BRANDS_API_CALL, GET_BRANDS_API_RESPONSE, GET_ALL_UNITS_API_CALL, GET_ALL_UNITS_API_RESPONSE, GET_PRODUCT_SIZE_API_CALL, GET_PRODUCT_SIZE_API_RESPONSE, GET_SUB_CATEGORY_BASED_ON_CATEGORY_API_CALL, GET_SUB_CATEGORY_BASED_ON_CATEGORY_API_RESPONSE, GET_ALL_ACTIVE_PRODUCTS_API_CALL, GET_ALL_ACTIVE_PRODUCTS_API_RESPONSE } from '../../utils/Constant';
+import { getAllBrands, getProductSizes, getActiveProductsCall } from '../Action/AddProductAction';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Cookies from 'universal-cookie';
@@ -261,6 +261,19 @@ function* getAllProductSizes() {
   }
 }
 
+function* GetAllActiveProducts() {
+  const response = yield call(getActiveProductsCall);
+
+  if (response.status === 200 || response.code === 200) {
+    yield put({ type: GET_ALL_ACTIVE_PRODUCTS_API_RESPONSE, payload: response.data.data });
+
+  }
+  // if (response.status === 403 || response.statusCode === 403)
+  else {
+    yield put({ type: 'ERROR', payload: { statusCode: response.status || response.code } });
+  }
+}
+
 
 function* AddProductSaga() {
   yield takeEvery('GETSUBCATEGORY', Sub_Category);
@@ -276,6 +289,7 @@ function* AddProductSaga() {
   yield takeEvery('GET_PRODUCT_BY_NAME',getProductDetails);
   yield takeEvery(GET_PRODUCT_SIZE_API_CALL, getAllProductSizes)
   yield takeEvery(GET_SUB_CATEGORY_BASED_ON_CATEGORY_API_CALL, SubCategoryFromParent)
+  yield takeEvery(GET_ALL_ACTIVE_PRODUCTS_API_CALL, GetAllActiveProducts)
 
 }
 

@@ -1,5 +1,5 @@
 import { Size } from "iconsax-react";
-import { GET_BRANDS_API_RESPONSE, GET_ALL_UNITS_API_RESPONSE, GET_PRODUCT_SIZE_API_RESPONSE, GET_SUB_CATEGORY_BASED_ON_CATEGORY_API_RESPONSE } from "../../utils/Constant";
+import { GET_BRANDS_API_RESPONSE, GET_ALL_UNITS_API_RESPONSE, GET_PRODUCT_SIZE_API_RESPONSE, GET_SUB_CATEGORY_BASED_ON_CATEGORY_API_RESPONSE, GET_ALL_ACTIVE_PRODUCTS_API_RESPONSE } from "../../utils/Constant";
 // AddProductReducer
 const initialState = {
   category: [],
@@ -19,7 +19,8 @@ const initialState = {
   // Get product by name
   ProductByName: [],
   getProductByNameStatusCode: 0,
-  productSize: []
+  productSize: [],
+  activeProducts: []
 };
 
 const AddProductReducer = (state = initialState, action) => {
@@ -84,6 +85,9 @@ const AddProductReducer = (state = initialState, action) => {
 
     case GET_PRODUCT_SIZE_API_RESPONSE:
       return { ...state, productSize: action.payload }
+
+    case GET_ALL_ACTIVE_PRODUCTS_API_RESPONSE: 
+      return {...state, activeProducts: action.payload}
 
     default:
       return state;
