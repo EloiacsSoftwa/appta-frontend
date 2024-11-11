@@ -214,11 +214,16 @@ const ProductDetailsForm = ({ handleNext, formData, setFormData }) => {
         if (file) {
             const reader = new FileReader();
             reader.onload = (e) => {
-                const base64String = e.target.result.split(',')[1];
+                const base64String = reader.result.split(',')[1];
+console.log("base64String",base64String);
 
+                // setFormData({
+                //     ...formData,
+                //     images: [base64String],
+                // });
                 setFormData({
                     ...formData,
-                    images: [base64String],
+                    images: reader.result,
                 });
                 // [base64String]
                 // fileInputRef.current.value = '';
@@ -540,7 +545,7 @@ function BillOfMaterials({ handleBack, formData, setFormData }) {
     const dispatch = useDispatch();
     // , costName: 'Assemble', billOfMaterialsProductCost: 0 
     const [billOfMaterialsList, setbillOfMaterialsList] = useState([
-        { productName: 'Computer', billOfMaterialsProductId: 1, billOfMaterialsProductQuantity: 0 }
+        { productName: 'Computer', billOfMaterialsProductId: 1, billOfMaterialsProductQuantity: 0, costName: 'Assemble', billOfMaterialsProductCost: 0 }
 
     ]);
 
@@ -569,14 +574,14 @@ function BillOfMaterials({ handleBack, formData, setFormData }) {
 
     var handleSubmit = () => {
         setFormData({ ...formData, billOfMaterialsList })
-        let temp = { ...formData, billOfMaterialsList: [...billOfMaterialsList, ...additionalCosts] }
-        console.log(temp);
-        const combinedObject = billOfMaterialsList.reduce((obj, keyObj, index) => {
-            obj[keyObj.key] = additionalCosts[index].value;
-            return obj;
-        }, {});
+        let temp = { ...formData, billOfMaterialsList }
+        // console.log(temp);
+        // const combinedObject = billOfMaterialsList.reduce((obj, keyObj, index) => {
+        //     obj[keyObj.key] = additionalCosts[index].value;
+        //     return obj;
+        // }, {});
 
-        console.log(combinedObject);
+        // console.log(combinedObject);
         dispatch({ type: "ADDPRODUCTDETAILS", payload: temp })
     }
 
@@ -658,10 +663,18 @@ function BillOfMaterials({ handleBack, formData, setFormData }) {
                                                 value={cost.costName}
                                                 placeholder="Enter cost name"
                                                 className=" border-none w-full bg-zinc-100 p-2 px-4 focus:outline-none focus:ring-2 focus:ring-orange-500"
+                                                // onChange={(e) => {
+                                                //     const newCosts = [...additionalCosts];
+                                                //     newCosts[index].costName = e.target.value;
+                                                //     setAdditionalCosts(newCosts);
+                                                // }}
                                                 onChange={(e) => {
                                                     const newCosts = [...additionalCosts];
                                                     newCosts[index].costName = e.target.value;
                                                     setAdditionalCosts(newCosts);
+                                                    const newComponents = [...billOfMaterialsList];
+                                                    newComponents[index].costName = e.target.value;
+                                                    setbillOfMaterialsList(newComponents);
                                                 }}
                                             />
                                         </td>
@@ -671,10 +684,18 @@ function BillOfMaterials({ handleBack, formData, setFormData }) {
                                                 value={cost.billOfMaterialsProductCost}
                                                 placeholder="Enter subtotal"
                                                 className="border-none w-full bg-zinc-100 p-2 px-4 focus:outline-none focus:ring-2 focus:ring-orange-500"
+                                                // onChange={(e) => {
+                                                //     const newCosts = [...additionalCosts];
+                                                //     newCosts[index].billOfMaterialsProductCost = e.target.value;
+                                                //     setAdditionalCosts(newCosts);
+                                                // }}
                                                 onChange={(e) => {
-                                                    const newCosts = [...additionalCosts];
+                                                         const newCosts = [...additionalCosts];
                                                     newCosts[index].billOfMaterialsProductCost = e.target.value;
                                                     setAdditionalCosts(newCosts);
+                                                    const newComponents = [...billOfMaterialsList];
+                                                    newComponents[index].billOfMaterialsProductCost = e.target.value;
+                                                    setbillOfMaterialsList(newComponents);
                                                 }}
                                             />
                                         </td>
