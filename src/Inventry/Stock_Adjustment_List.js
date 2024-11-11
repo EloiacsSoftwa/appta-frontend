@@ -7,16 +7,18 @@ import Frame4 from '../Images/Sales/Frame4.svg';
 import Search from '../Images/Sales/Search.svg';
 import Dot from '../Images/Sales/Dots.svg';
 import Add from '../Images/Sales/Add Green.svg';
+import Vector from '../Images/Icons/Vector.svg';
 import SmallDot from '../Images/Sales/Smalldots.svg';
 import { ArrowRight2, ArrowLeft2, ArrowUp2, ArrowDown2 } from 'iconsax-react';
-// import Supplier_Tabs from './Supplier_Tabs';
+import New_Stock_Adjustment from './New_Stock_Adjustment'
 
-function Stock_Adjustment_List({ item }) {
+function Stock_Adjustment_List() {
     const [currentPage, setCurrentPage] = useState(1);
     const [showModal, setShowModal] = useState(false);
     const [isAddStock, setIsAddStock] = useState(false);
     const [loading, setLoading] = useState(true);
     const [stock, setStock] = useState([]);
+    const [isHovered, setIsHovered] = useState(false);
 
    
     const handleAddStock = () => {
@@ -66,16 +68,16 @@ console.log("stockItems",stockItems)
     };
 
     return (
-        <div className='h-screen bg-white p-4 w-full'>
+        <div className='h-screen bg-white p-3 w-full'>
           
-            <div className="flex justify-between items-center gap-2 mb-3">
+            <div className="flex justify-between items-center gap-2">
                
-                <div>
+                <div className={`${isAddStock ? 'mb-0' : 'mb-4'}`}> 
     <label className={`font-semibold text-[22px] ${isAddStock ? 'text-black' : 'text-orange-600'} font-Manrope`}>
         {isAddStock ? 'Inventory' : 'Stock Adjustment'}
     </label>
     {isAddStock && (
-        <label className="font-bold text-[22px] text-orange-600 font-Manrope">
+        <label className="font-bold text-[22px] text-orange-600 hover:text-black font-Manrope">
             - New Stock Adjustment
         </label>
     )}
@@ -84,16 +86,34 @@ console.log("stockItems",stockItems)
                 
                 {isAddStock ? (
                     <div className="flex space-x-2">
-                        <button className="bg-orange-600 text-black font-semibold py-1 px-3 rounded">Save</button>
-                        <button className="bg-orange-600 text-black font-semibold py-1 px-3 rounded" onClick={handleCloseModal}>
-                            Discard
+                        <button className="bg-white text-orange-600 border border-orange-600 font-semibold py-0 px-3 rounded">Cancel</button>
+                        <button className="bg-orange-600 text-black font-semibold  px-3 rounded" onClick={handleCloseModal}>
+                           Save & Cancel
                         </button>
                     </div>
                 ) : (
-                    <div onClick={handleAddStock} className="cursor-pointer flex items-center gap-2 text-orange-600 border border-orange-600 rounded px-2 py-1">
-                        <img src={Add} className="w-4 h-4" alt="Add" />
-                        <label className="text-sm font-semibold font-Manrope">New Stock Adjustment</label>
-                    </div>
+ 
+    <div
+    onClick={handleAddStock}
+    onMouseEnter={() => setIsHovered(true)}
+    onMouseLeave={() => setIsHovered(false)}
+    className={`cursor-pointer flex items-center gap-2 text-orange-600 border border-orange-600 rounded px-2 py-1 hover:bg-orange-600 ${
+      isAddStock ? 'mb-2' : 'mb-4'
+    }`}
+  >
+    <img
+      src={isHovered ? Vector : Add}
+      className="w-4 h-4"
+      alt="Add"
+    />
+    <label
+      className={`text-sm font-semibold font-Manrope ${
+        isHovered ? 'text-black' : 'text-orange-600'
+      }`}
+    >
+      New Stock Adjustment
+    </label>
+  </div>
                 )}
             </div>
 
@@ -237,7 +257,7 @@ console.log("stockItems",stockItems)
                 </>
             )}
 
-            {/* {isAddStock && <Supplier_Tabs />} */}
+            {isAddStock && <New_Stock_Adjustment />}
         </div>
     );
 }
