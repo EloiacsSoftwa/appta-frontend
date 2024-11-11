@@ -883,9 +883,9 @@ function AddPurchase({ handleClose }) {
                 <td className="p-2 border relative">
                   <input
                     type="text"
-                    value={product.Product}
+                    // value={product.Product}
                     
-                    // value={`${product.Product} ${product.subCategory} - ${product.size} ${product.unit}`}
+                    value={`${product.Product} ${product.subCategory} - ${product.size} ${product.unit}`}
                     onChange={(e) => handleInputChange(e, 'Product', index)}
                     onClick={() => handleproductNameDropDown(index)}
                     className={`border p-1 rounded w-full ${errors[`Product-${index}`] ? 'border-red-500' : ''}`}
