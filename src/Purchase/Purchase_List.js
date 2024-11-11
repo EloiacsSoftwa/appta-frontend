@@ -499,11 +499,9 @@ function Purchase_List(props) {
             )}
         </>
     );
-    );
+    
 }
 
-const mapStateToProps = (state) => ({
-    PurchaseList: state.Purchase.PurchaseList,
-});
+
 
 export default Purchase_List;

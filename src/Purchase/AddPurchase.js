@@ -776,6 +776,7 @@ function AddPurchase({ handleClose }) {
           productId
             .filter(item => item.productName.toLowerCase().includes(product.Product.toLowerCase())) // Filter products based on input
             .map(item => (
+              
               <li
                 key={item.productId}
                 onClick={() => handleProductName(item, index)}
