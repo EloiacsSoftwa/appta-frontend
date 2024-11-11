@@ -46,7 +46,7 @@ function AddPurchase({ handleClose }) {
   const [supplierIdError, setSupplierIdError] = useState('');
 
   const dropdownRef = useRef(null);
-
+  const productRefs = useRef([]);
   const toggleDropdown = () => {
     setDropdownOpen(true);
   };
@@ -129,39 +129,72 @@ function AddPurchase({ handleClose }) {
 
 
 
-  const handleInputChange = (e, field, index) => {
+  // const handleInputChange = (e, field, index) => {
+  //   const value = e.target.value;
+  //   const updatedProducts = [...products];
+  //   updatedProducts[index][field] = value;
+
+  //   const { Quantity, PurchasePrice } = updatedProducts[index];
+  //   updatedProducts[index].Total = Quantity * PurchasePrice;
+
+  //   if (value) {
+  //     const filteredProduct = state.AddProduct?.ProductList?.filter((product) => {
+  //       return product.productName.toLowerCase().includes(value.toLowerCase());
+  //     });
+  //     setProductID(filteredProduct)
+  //   }
+
+  //   if (value) {
+  //     setErrors((prevErrors) => ({
+  //       ...prevErrors,
+  //       [`${field}-${index}`]: '',
+  //     }));
+  //   }
+  //   // setProductIDWithName(updatedProducts[0]?.Product)
+  //   // if(updatedProducts[0]?.Product){
+  //   //   const filteredProduct = state.AddProduct.ProductList.filter((product) => {
+  //   //     return product.productName.toLowerCase().includes(updatedProducts[0]?.Product.toLowerCase());
+  //   //   });
+
+
+
+  //   // }
+  //   setProducts(updatedProducts);
+  // };
+
+
+
+  const handleInputChange = (e, field, index) => { 
     const value = e.target.value;
     const updatedProducts = [...products];
     updatedProducts[index][field] = value;
-
-    const { Quantity, PurchasePrice } = updatedProducts[index];
+  
+  
+    const { Quantity, PurchasePrice, SalesPercentage, WholeSalePercentage } = updatedProducts[index];
     updatedProducts[index].Total = Quantity * PurchasePrice;
-
-    if (value) {
-      const filteredProduct = state.AddProduct?.ProductList?.filter((product) => {
-        return product.productName.toLowerCase().includes(value.toLowerCase());
-      });
-      setProductID(filteredProduct)
+  
+    
+    if (SalesPercentage && PurchasePrice) {
+      updatedProducts[index].SalesPrice = Math.round(PurchasePrice * (1 + SalesPercentage / 100));
     }
-
+   
+   
+    if (WholeSalePercentage && PurchasePrice) {
+      updatedProducts[index].WholeSalePrice = Math.round(PurchasePrice * (1 + WholeSalePercentage / 100));
+    }
+  
+    
     if (value) {
       setErrors((prevErrors) => ({
         ...prevErrors,
         [`${field}-${index}`]: '',
       }));
     }
-    // setProductIDWithName(updatedProducts[0]?.Product)
-    // if(updatedProducts[0]?.Product){
-    //   const filteredProduct = state.AddProduct.ProductList.filter((product) => {
-    //     return product.productName.toLowerCase().includes(updatedProducts[0]?.Product.toLowerCase());
-    //   });
-
-
-
-    // }
+  
     setProducts(updatedProducts);
+    
   };
-
+  
 
   console.log("products", products)
   useEffect(() => {

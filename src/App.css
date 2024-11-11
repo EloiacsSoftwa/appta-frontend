@@ -20,3 +20,11 @@
 
 
 
+table, td, th {
+  cursor: none;
+}
+
+
+table input {
+  cursor: text;
+}
