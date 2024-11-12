@@ -70,7 +70,7 @@ const PosReducer = (state = initialState, action) => {
       return { ...state, deleteposproductStatuscode: 0 }
 
       case 'ORDER_HOLD':
-        return { ...state,  OrderHoldproductStatuscode: action.payload.statusCode }
+        return { ...state,  OrderHoldproductStatuscode: action.payload.statusCode, orderItems: [] }
       case 'REMOVE_ORDER_HOLD_STATUS_CODE':
         return { ...state, OrderHoldproductStatuscode: 0 }
 
