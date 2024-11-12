@@ -24,6 +24,9 @@ function AddWareHouse({ handleClose }) {
     return (
         <div className="h-screen bg-white p-4 w-full">
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center mt-4">
+
+
+                
                 {/* <p className="text-start font-semibold text-xl mb-2 md:mb-0">
                     Inventory - Warehouse - <span className="text-orange-600">Add Ware house</span>
                 </p> */}
