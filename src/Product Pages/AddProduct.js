@@ -92,13 +92,6 @@ const AddProductModal = ({ onClose }) => {
   }, [state.AddProduct.add_Product_status_code]);
 
 
-
-
-
-
-
-
-
   useEffect(() => {
     // dispatch({ type: 'GETSUBCATEGORY' });
     dispatch({ type: 'GETCATEGORY' });
@@ -237,7 +230,7 @@ const ProductDetailsForm = ({ handleNext, formData, setFormData }) => {
         const base64String = reader.result.split(',')[1];
         console.log("base64String", base64String);
 
-        // setFormData({
+        // setFormData({s
         //     ...formData,
         //     images: [base64String],
         // });

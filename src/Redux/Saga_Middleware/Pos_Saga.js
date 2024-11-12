@@ -132,7 +132,6 @@ function* handleHoldOrder({ payload }) {
   try {
     
     const response = yield call(Holdorder, payload);
-    console.log("API Response:", response);
 
     const toastStyle = {
       backgroundColor: "#fff",
