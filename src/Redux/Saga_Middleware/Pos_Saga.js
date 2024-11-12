@@ -79,6 +79,7 @@ function* handleCompleteOrder() {
 }
 
 
+
 function* handleDeletePosProduct(args) {
 
   const response = yield call(DeletePosProduct, args.payload);
@@ -196,8 +197,8 @@ function ExpireToken(response) {
   function* addOrderItems(data) {
       const response = yield call(addOrderItemsApiCall, data.payload)
 
-      if (response.status === 200 && response.data.code === 200) {
-        yield put({type: ADD_ORDER_ITEMS_API_RESPONSE, orderItems: response.data.data.orderItems})
+      if (response.status === 200 && response.data.code === 200  || response.code === 200) {
+        yield put({type: ADD_ORDER_ITEMS_API_RESPONSE, payload: { orderItems: response.data.data.orderItems, statusCode: response?.status || response?.data?.code || response.code  }})
       }
   }
 

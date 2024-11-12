@@ -14,6 +14,7 @@ const initialState = {
   totalPrice: 0,
   totalAmount: 0,
   totalDiscount: 0,
+  addorderItemsStatusCode :0,
 };
 
 const PosReducer = (state = initialState, action) => {
@@ -52,8 +53,11 @@ const PosReducer = (state = initialState, action) => {
       return { ...state, Errormsg: '' };
 
     case ADD_ORDER_ITEMS_API_RESPONSE: {
-      return {...state, orderItems: action.orderItems}
+      return {...state, orderItems: action.payload.orderItems , addorderItemsStatusCode:action.payload.statusCode}
     }
+    case 'REMOVE_ADD_ORDER_ITEMS_STATUS_CODE':
+      return { ...state, addorderItemsStatusCode: 0 }
+
 
     case 'DELETE_POS_PRODUCT':
       return { ...state,  deleteposproductStatuscode: action.payload.statusCode }
