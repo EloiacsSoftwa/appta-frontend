@@ -62,17 +62,13 @@ export async function InitializePayment({ orderId }) {
 }
 
 export async function CompleteOrder({ orderId, paymentType }) { 
-  try {
+  
     return await AxiosConfig.post('/order/completeOrder', null, {
       params: { 
         orderId, 
         paymentType 
       }, 
     });
-  } catch (error) {
-    console.error("Network error:", error.response || error.message);
-    throw error;
-  }
 }
 
 

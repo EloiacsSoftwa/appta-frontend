@@ -16,8 +16,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import AddCustomer from '../Contact/AddCustomer';
 import { Setting } from 'iconsax-react';
 import Pos_Payment from './Pos_Payment';
+import useBarcodeScanner from '../utils/useBarcodeScanner';
 
-import { ADD_ORDER_ITEMS_API_CALL, GET_ALL_ACTIVE_PRODUCTS_API_CALL } from '../utils/Constant';
+import { ADD_ORDER_ITEMS_API_CALL, GET_ALL_ACTIVE_PRODUCTS_API_CALL, RESET_PAYMENT_STATUS_CODE } from '../utils/Constant';
 
 
 const Pos = ({ handleClosed }) => {
@@ -60,6 +61,7 @@ const Pos = ({ handleClosed }) => {
   useEffect(() => {
     const handleKeyDown = (event) => {
       if (event.key === 'Escape') {
+        handleHoldOrder()
         handleClosed()
       }
     };
@@ -183,7 +185,12 @@ const Pos = ({ handleClosed }) => {
   }, [State.PosReducer.CreateOrderStatuscode])
 
 
-  console.log("order_id", order_id);
+  useEffect(() => {
+      if (State.PosReducer.paymentordercompletedStatusCode == 200) {
+        window.open(State.PosReducer.invoiceUrl, "_blank");
+        dispatch({ type: RESET_PAYMENT_STATUS_CODE})
+      }
+  }, [State.PosReducer.paymentordercompletedStatusCode])
 
 
   // Barcode scan function
@@ -205,7 +212,6 @@ const Pos = ({ handleClosed }) => {
 
 
   const handleproductName = (item) => {
-    console.log("item", item);
     setSearchQuery('');
 
     const payload = {
@@ -260,7 +266,6 @@ const Pos = ({ handleClosed }) => {
 
   useEffect(() => {
     if (selectedProductId) {
-      console.log("selectedProductId", selectedProductId);
       dispatch({ type: 'GETFREEBIENAME', payload: selectedProductId });
     }
     setSelectedProductId('')
@@ -269,8 +274,7 @@ const Pos = ({ handleClosed }) => {
 
   useEffect(() => {
     if (State.AddProduct.getFreebieName && Array.isArray(State.AddProduct.getFreebieName) && State.AddProduct.getFreebieName.length > 0) {
-      console.log("getFreebieName updated", State.AddProduct.getFreebieName);
-
+      
       State.AddProduct.getFreebieName.forEach((productData) => {
         handleProductUpdate(productData);
       });
@@ -295,7 +299,6 @@ const Pos = ({ handleClosed }) => {
           // Calculate total amount
           const totalAmount = updatedData.reduce((acc, item) => acc + (item.quantity * item.wholesalePrice), 0);
           setTotalAmount(totalAmount);
-          console.log("Updated totalAmount:", totalAmount);
 
           return updatedData;
 
@@ -380,10 +383,6 @@ const Pos = ({ handleClosed }) => {
   }, [State.PosReducer.orderinitialiseStatusCode]);
 
 
-
-
-
-
   const [isPayLaterEnabled, setIsPayLaterEnabled] = useState(false);
   const [customerform, SetCustomerform] = useState(false)
 
@@ -457,6 +456,7 @@ const Pos = ({ handleClosed }) => {
     } else {
       console.error("Order ID is missing.");
     }
+
   };
 
 
@@ -469,6 +469,7 @@ const Pos = ({ handleClosed }) => {
     }
 
   }, [State.PosReducer.OrderHoldproductStatuscode])
+
 
 
 
@@ -490,12 +491,7 @@ const Pos = ({ handleClosed }) => {
     borderRadius: '30px',
   };
 
-
-
-  //   console.log("State.PosReducer.BarcodeproductData",State.PosReducer.BarcodeproductData);
-
-  //   console.log("posdata",posdata);
-
+  useBarcodeScanner(barcodeScanned)
 
   return (<>
     <div className='w-screen h-screen ' >

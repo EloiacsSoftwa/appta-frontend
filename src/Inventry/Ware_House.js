@@ -137,7 +137,7 @@ function Ware_House() {
                             className={`text-xs font-semibold font-Manrope ${isHovered ? 'text-black' : 'text-orange-600'
                                 }`}
                         >
-                            New Stock Adjustment
+                        Add Ware House
                         </label>
                     </div>
                 )}

@@ -51,7 +51,7 @@ function AddSubCategory({ handleClose }) {
 
         }
         if (!selectedParentCategory) {
-            setSelectedParentCategoryError('Please Select subcategory')
+            setSelectedParentCategoryError('Please select subcategory')
         }
 
 

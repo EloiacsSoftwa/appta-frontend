@@ -1,4 +1,4 @@
-import { ADD_ORDER_ITEMS_API_RESPONSE } from "../../utils/Constant";
+import { ADD_ORDER_ITEMS_API_RESPONSE, RESET_PAYMENT_STATUS_CODE } from "../../utils/Constant";
 const initialState = {
   BarcodeproductData: [],
   barcodeStatuscode: 0,
@@ -18,7 +18,7 @@ const initialState = {
   orderinitialiseStatusCode : 0,
   paymentordercompletedStatusCode : 0,
   Invoice_url:'',
-};
+
 
 const PosReducer = (state = initialState, action) => {
   console.log("action",action);
@@ -70,7 +70,7 @@ const PosReducer = (state = initialState, action) => {
       return { ...state, deleteposproductStatuscode: 0 }
 
       case 'ORDER_HOLD':
-        return { ...state,  OrderHoldproductStatuscode: action.payload.statusCode }
+        return { ...state,  OrderHoldproductStatuscode: action.payload.statusCode, orderItems: [] }
       case 'REMOVE_ORDER_HOLD_STATUS_CODE':
         return { ...state, OrderHoldproductStatuscode: 0 }
 
@@ -80,10 +80,14 @@ const PosReducer = (state = initialState, action) => {
           return { ...state, orderinitialiseStatusCode: 0 }
 
           case 'COMPLETE_ORDER_PAYMENT':
+
             return { ...state, Invoice_url:action.payload.Invoice_url,  paymentordercompletedStatusCode: action.payload.statusCode }
           case 'REMOVE_COMPLETE_ORDER_PAYMENT_STATUS_CODE':
             return { ...state, paymentordercompletedStatusCode: 0 }
 
+
+          case RESET_PAYMENT_STATUS_CODE:
+            return { ...state, paymentordercompletedStatusCode: 0 }
 
     default:
       return state;

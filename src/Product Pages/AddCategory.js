@@ -1,58 +1,3 @@
-// import React from 'react';
-// import Minus from '../Images/Sales/Minus.svg'
-
-// function AddCategory({ handleClose }) {
-//   return (
-
-//     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-//     <div className="bg-zinc-300 rounded-lg w-full max-w-xl p-6 mx-4">
-        
-         
-
-//       <div className='flex-1'>
-// <div className='mb-2'>
-
-
-
-//   <label className='mb-2'>Category Name</label>
-//   <input
-//             type="text"
-//             id="categoryName"
-//             required
-//             className="mt-1 block w-full border rounded-md shadow-sm  p-2 focus:border-none"
-//             placeholder="Enter category name"
-//           />
-
-
-// </div>
-// <div className="flex justify-end gap-5">
-//             <button
-//               type="button"
-//               className="px-4 py-2 bg-gray-300 text-orange-600 rounded-md  border-orange-600 border"
-//               onClick={handleClose}
-//             >
-//               Discard
-//             </button>
-//             <div className='px-1 py-1 border-black border-2 w-auto rounded bg-orange-600 border-solid'>
-//         <label className="text-base font-semibold mb-4 text-black font-Manrope">Save & Close</label>
-//        </div>
-//           </div>
-
-
-//         </div>
-
-
-
-       
-//     </div>
-//   </div>
-
-//   );
-// }
-
-// export default AddCategory;
-
-
 import React,{useState,useEffect} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Minus from '../Images/Sales/Minus.svg';
@@ -65,14 +10,21 @@ function AddCategory({ handleClose }) {
   
 
   const[categoryname, setCategoryName] = useState('');
-
+const [categoryError, setcategoryError] = useState('')
  
 
   const handleCategoryName = (e) => {
     setCategoryName(e.target.value)
+    setcategoryError('')
   }
 
   const handleSaveCategory = () => {
+    
+if(!categoryname){
+  setcategoryError('Please enter category name')
+  return;
+}
+
      if(categoryname ){
       dispatch({ type: 'ADD_CATEGORY', payload: { categoryName:categoryname, imageUrl :'', active :''}})
       setCategoryName('')
@@ -105,7 +57,9 @@ function AddCategory({ handleClose }) {
             />
           </div>
 
-
+{
+  categoryError && <span className="text-red-500 font-Manrope mt-1 text-sm">categoryError</span>
+}
                      {/* <div className="mb-4">
              <label htmlFor="description" className="block text-sm font-medium text-gray-700">
                Description
