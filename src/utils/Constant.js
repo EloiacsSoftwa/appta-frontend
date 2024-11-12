@@ -10,3 +10,8 @@ export const GET_SUB_CATEGORY_BASED_ON_CATEGORY_API_CALL = 'Get-SubCategory-Base
 export const GET_SUB_CATEGORY_BASED_ON_CATEGORY_API_RESPONSE = 'Get-SubCategory-Based-On-Parent-Api-Response'
 export const GET_ALL_ACTIVE_PRODUCTS_API_CALL = 'Get-All-Active-Products-Api-Call'
 export const GET_ALL_ACTIVE_PRODUCTS_API_RESPONSE = 'Get-All-Active-Products-Api-Response'
+
+
+
+
+export const RESET_PAYMENT_STATUS_CODE = 'Reset-Payment-Status-Code'

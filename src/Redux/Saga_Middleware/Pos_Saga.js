@@ -132,7 +132,6 @@ function* handleHoldOrder({ payload }) {
   try {
     
     const response = yield call(Holdorder, payload);
-    console.log("API Response:", response);
 
     const toastStyle = {
       backgroundColor: "#fff",
@@ -221,7 +220,9 @@ function* handlecompleteOrderPayment(action) {
 
     if (successCode) {
       yield put({ type: 'COMPLETE_ORDER_PAYMENT', 
+
         payload: {Invoice_url: response.data.data.invoiceUrl ,statusCode: response?.status || response?.data?.code || response.code  } });
+
     } 
     else {
       yield put({ type: 'ERROR', payload: { message: response?.data?.message || "Unexpected error occurred", 
