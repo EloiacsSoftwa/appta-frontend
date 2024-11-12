@@ -583,6 +583,8 @@ function BillOfMaterials({ handleBack, formData, setFormData }) {
 
         // console.log(combinedObject);
         dispatch({ type: "ADDPRODUCTDETAILS", payload: temp })
+
+        
     }
 
     return (
