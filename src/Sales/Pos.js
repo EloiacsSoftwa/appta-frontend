@@ -25,6 +25,38 @@ const Pos = ({ handleClosed }) => {
   const dispatch = useDispatch();
   const State = useSelector(state => state);
 
+
+  console.log("State pos first", State.PosReducer.Invoice_url)
+  const [invoiceurl, setInvoiceurl] = useState('')
+
+  const [loading, setLoading] = useState(false)
+
+  // useEffect(()=>{
+  //   if(State.PosReducer?.Invoice_url){
+
+  //       }
+
+  // },[State.PosReducer?.Invoice_url])
+
+
+
+  useEffect(() => {
+    if (State.PosReducer?.paymentordercompletedStatusCode == 200) {
+      const InvoiceUrl = State.PosReducer?.Invoice_url;
+      if (InvoiceUrl) {
+        window.open(InvoiceUrl, '_blank');
+      }
+      setTimeout(() => {
+        dispatch({ type: 'REMOVE_COMPLETE_ORDER_PAYMENT_STATUS_CODE' })
+      }, 2000)
+
+
+    }
+
+  }, [State.PosReducer?.paymentordercompletedStatusCode])
+
+
+
   useEffect(() => {
     const handleKeyDown = (event) => {
       if (event.key === 'Escape') {
@@ -169,7 +201,7 @@ const Pos = ({ handleClosed }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedProductId, setSelectedProductId] = useState('');
 
-  const [products,setProducts] = useState([])
+  const [products, setProducts] = useState([])
 
 
   const handleproductName = (item) => {
@@ -184,31 +216,31 @@ const Pos = ({ handleClosed }) => {
       manuallyEntered: false
     }
 
-    dispatch({type: ADD_ORDER_ITEMS_API_CALL, payload: payload})
-    
+    dispatch({ type: ADD_ORDER_ITEMS_API_CALL, payload: payload })
+
   }
 
-  useEffect(()=> {
-    if(State.PosReducer.orderItems && State.PosReducer.orderItems.length > 0){
+  useEffect(() => {
+    if (State.PosReducer.orderItems && State.PosReducer.orderItems.length > 0) {
       setProducts(State.PosReducer.orderItems)
     }
-   
-  },[State.PosReducer.orderItems])
+
+  }, [State.PosReducer.orderItems])
 
   const orderItems = useSelector((state) => state.PosReducer.orderItems);
 
   useEffect(() => {
     if (orderItems && orderItems.length > 0) {
-     
+
       const updatedProducts = orderItems.map((item) => ({
         ...item,
         netAmount: item.quantity * item.totalAmount,
       }));
       setProducts(updatedProducts);
 
-    
+
       const totalNetAmount = updatedProducts.reduce((sum, item) => sum + item.netAmount, 0);
-      setTotalAmount(totalNetAmount); 
+      setTotalAmount(totalNetAmount);
     }
   }, [orderItems]);
 
@@ -280,14 +312,14 @@ const Pos = ({ handleClosed }) => {
   }, []);
 
 
-  useEffect(()=> {
+  useEffect(() => {
     if (State.PosReducer.addorderItemsStatusCode === 200) {
-    
+
       setTimeout(() => {
         dispatch({ type: 'REMOVE_ADD_ORDER_ITEMS_STATUS_CODE' });
       }, 1000);
     }
-  },[State.PosReducer.addorderItemsStatusCode])
+  }, [State.PosReducer.addorderItemsStatusCode])
 
 
   const [customerSearchQuery, setCustomerSearchQuery] = useState('');
@@ -327,10 +359,10 @@ const Pos = ({ handleClosed }) => {
       setOpen(true);
       dispatch({
         type: 'ORDER-INITIALIZE-PAYMENT',
-        payload: { orderId: String(order_id) }, 
+        payload: { orderId: String(order_id) },
       });
     }
-   
+
   }
 
   const handleClose = () => {
@@ -349,7 +381,7 @@ const Pos = ({ handleClosed }) => {
 
 
 
-  
+
 
 
   const [isPayLaterEnabled, setIsPayLaterEnabled] = useState(false);
@@ -400,24 +432,24 @@ const Pos = ({ handleClosed }) => {
       orderId: order_id,
       productId,
     }));
-  
-    dispatch({type: 'DELETE-POS-PRODUCT', payload: productsToDelete,});
+
+    dispatch({ type: 'DELETE-POS-PRODUCT', payload: productsToDelete, });
     setSelectedProducts([]);
   };
 
-  useEffect(()=> {
+  useEffect(() => {
     if (State.PosReducer.deleteposproductStatuscode === 200) {
-      
+
       setTimeout(() => {
         dispatch({ type: 'REMOVE_DELETE_POS_PRODUCT_STATUS_CODE' });
       }, 1000);
     }
-  },[State.PosReducer.deleteposproductStatuscode])
+  }, [State.PosReducer.deleteposproductStatuscode])
 
 
-  
+
   const handleHoldOrder = () => {
-    if (order_id) {  
+    if (order_id) {
       dispatch({
         type: 'ORDER-HOLD',
         payload: { orderId: String(order_id) }, // Pass orderId as a simple string
@@ -425,19 +457,19 @@ const Pos = ({ handleClosed }) => {
     } else {
       console.error("Order ID is missing.");
     }
-  }; 
-  
+  };
+
 
   useEffect(() => {
     if (State.PosReducer.OrderHoldproductStatuscode == 200) {
-      
+
       setTimeout(() => {
         dispatch({ type: 'REMOVE_ORDER_HOLD_STATUS_CODE' })
       }, 2000)
     }
 
   }, [State.PosReducer.OrderHoldproductStatuscode])
-  
+
 
 
   const handleCreate = () => {
@@ -498,7 +530,7 @@ const Pos = ({ handleClosed }) => {
                           className="p-2 hover:bg-gray-100 cursor-pointer"
                           onClick={() => {
                             handleproductName(item.productId)
-                        
+
                           }}
 
                         //   onChange={(e)=>handleproductName(e)}
@@ -506,14 +538,14 @@ const Pos = ({ handleClosed }) => {
                           <div className="text-sm font-medium text-gray-900 flex flex-col">
                             <label>{item.productName} {item.subCategory}</label>
                             <label>{item.size} {item.unit}</label>
-                            </div>
+                          </div>
                         </div>
                       ))}
                     </div>
                   )}
 
                   {/* No results message */}
-                  {searchQuery && filteredData &&  filteredData.length === 0 && (
+                  {searchQuery && filteredData && filteredData.length === 0 && (
                     <div className="absolute w-full bg-white border border-gray-300 rounded mt-1 p-2 text-sm text-gray-500">
                       No products match your search
                     </div>
@@ -612,7 +644,7 @@ const Pos = ({ handleClosed }) => {
                     State.PosReducer.orderItems.map((item, index) => (
                       <tr key={index} className="hover:bg-gray-50 border-0">
                         <td className="p-2 mt-1 flex items-center justify-start">
-                          <input type="checkbox" className="form-checkbox h-3 w-3 text-blue-600 border-neutral-500 cursor-pointer"   onClick={() => handleCheckboxClick(item.productId)}/>
+                          <input type="checkbox" className="form-checkbox h-3 w-3 text-blue-600 border-neutral-500 cursor-pointer" onClick={() => handleCheckboxClick(item.productId)} />
                         </td>
                         <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{item.unitId || '-'}</td>
                         <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{item.barcodeNo || '-'}</td>
@@ -640,8 +672,8 @@ const Pos = ({ handleClosed }) => {
 
 
                         <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">₹{item.unitPrice || '0'}</td>
-                        <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">₹{item.totalAmount  || '-'}</td>
-                        <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{ '-'}</td>
+                        <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">₹{item.totalAmount || '-'}</td>
+                        <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{'-'}</td>
                         {/* <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">
              ₹{(item.minPurchaseQuantity * item.wholesalePrice * (item.wholesalePricePercentage / 100)) || '-'}</td> */}
 
@@ -668,7 +700,7 @@ const Pos = ({ handleClosed }) => {
                           {'0'}
                         </td>
                         <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">
-                          ₹{(item.quantity * item.totalAmount)  || '0'}
+                          ₹{(item.quantity * item.totalAmount) || '0'}
                         </td>
                       </tr>
                     ))
@@ -1054,7 +1086,7 @@ const Pos = ({ handleClosed }) => {
 </Modal> */}
 
       {
-        open && customerFilter  && (<Pos_Payment handleclose={handleClose}  order_id = {order_id} total_amount = {totalamount}/>
+        open && customerFilter && (<Pos_Payment handleclose={handleClose} order_id={order_id} total_amount={totalamount} />
         )
       }
 

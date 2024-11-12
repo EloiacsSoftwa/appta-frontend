@@ -128,8 +128,9 @@ const handleOrderDateChange = (date) => {
 // }, [invoiceurl]);
 
 
-console.log("invoiceurl",invoiceurl);
-console.log("State.PosReducer.Invoice_url",State.PosReducer.Invoice_url);
+// console.log("invoiceurl",invoiceurl);
+console.log("Url",State.PosReducer);
+console.log("state for POs",State)
 
 
 
