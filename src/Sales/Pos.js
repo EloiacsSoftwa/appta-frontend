@@ -312,7 +312,9 @@ const Pos = ({ handleClosed }) => {
 
   const [open, setOpen] = useState(false);
 
-  const handleOpen = () => setOpen(true);
+  const handleOpen = () =>{
+    setOpen(true);
+  } 
   const handleClose = () => setOpen(false);
 
 
@@ -999,7 +1001,7 @@ const Pos = ({ handleClosed }) => {
 </Modal> */}
 
       {
-        open && <Pos_Payment handleclose={handleClose}  total_amount = {total_amount}/>
+        open && customerFilter && <Pos_Payment handleclose={handleClose}  total_amount = {total_amount}/>
       }
 
       {/* //add customer  */}
