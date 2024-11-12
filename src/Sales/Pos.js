@@ -78,7 +78,7 @@ const Pos = ({ handleClosed }) => {
 
   //  const [loading, setLoading] = useState(false);
 
-  const [barcode, setBarcode] = useState('56676');
+  const [barcode, setBarcode] = useState('');
 
   const [productid, setProductId] = useState('')
   const [currentDate, setCurrentDate] = useState('');
@@ -495,7 +495,7 @@ const Pos = ({ handleClosed }) => {
     borderRadius: '30px',
   };
 
-  useBarcodeScanner(barcodeScanned)
+  useBarcodeScanner(BarcodeGetData)
 
   return (<>
     <div className='w-screen h-screen ' >
