@@ -42,8 +42,8 @@ function SupplierTable() {
 
 
     useEffect(() => {
-               if ( state.Supplier.getSupplierStatusCode == 200) {
-            // setLoading(false)
+        if (state.Supplier.getSupplierStatusCode == 200) {
+            setLoading(false)
             setSupplier(state.Supplier.SupplierList)
             setTimeout(() => {
                 dispatch({ type: 'REMOVE_GET_SUPPLIER_STATUS_CODE' })
@@ -89,7 +89,7 @@ function SupplierTable() {
     const currentItems = supplier && supplier.slice(indexOfFirstItem, indexOfLastItem);
 
 
-console.log("currentItems",currentItems)
+    console.log("currentItems", currentItems)
 
 
     const handlePrevClick = () => {
@@ -106,16 +106,16 @@ console.log("currentItems",currentItems)
 
     return (
         <div className='h-screen bg-white p-4 w-full'>
-          
+
             <div className='flex justify-between items-center gap-2 mb-3'>
                 <div>
-                    <label className='font-semibold text-22 text-neutral-900 font-Manrope'>Contacts - </label> 
+                    <label className='font-semibold text-22 text-neutral-900 font-Manrope'>Contacts - </label>
                     <label className='font-bold text-22 text-orange-600 font-Manrope'> Supplier</label>
                 </div>
                 <div onClick={() => setShowModal(true)} className='cursor-pointer flex justify-between items-center gap-2 w-auto h-auto text-orange-600 border border-orange-600 rounded px-3 py-1'>
                     <img src={Add} className='w-4 h-4' />
                     <label className="cursor-pointer text-sm text-orange-600 font-semibold font-Manrope">Add Supplier</label>
-                   
+
                 </div>
             </div>
 
@@ -154,88 +154,94 @@ console.log("currentItems",currentItems)
                         <img src={Frame4} className='w-6 h-6 cursor-pointer' />
                     </div>
                 </div>
+                <div className="relative w-full mb-5">
 
-                <table className="w-full text-left mb-5">
-                <thead>
+                    {loading && (
+                        <div className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-75 z-10">
+                            <div className="loader border-t-4 border-orange-500 border-solid rounded-full w-10 h-10 animate-spin"></div>
+                        </div>
+                    )}
+                    <table className="w-full text-left mb-5">
+                        <thead>
 
-<tr className="bg-gray-200 border-0">
-    <th className="p-1 flex items-center justify-start  h-full">
-        <input
-            type="checkbox"
-            className="ml-4 mt-1 form-checkbox h-4 w-4 text-blue-600 border-neutral-500 font-Manrope cursor-pointer"
-        />
-    </th>
-    <th className="p-1 font-semibold text-base text-neutral-900">
-        <div className="flex items-center justify-start gap-2">
-            <div className="flex flex-col items-center">
-                <ArrowUp2 className="font-extrabold w-3 h-3 text-orange-600 cursor-pointer" />
-                <ArrowDown2 className="font-extrabold w-3 h-3 text-orange-600 cursor-pointer" />
-            </div>
-            <div className='font-semibold text-sm text-neutral-900 font-Manrope'>Supplier Code</div>
-        </div>
-    </th>
+                            <tr className="bg-gray-200 border-0">
+                                <th className="p-1 flex items-center justify-start  h-full">
+                                    <input
+                                        type="checkbox"
+                                        className="ml-4 mt-1 form-checkbox h-4 w-4 text-blue-600 border-neutral-500 font-Manrope cursor-pointer"
+                                    />
+                                </th>
+                                <th className="p-1 font-semibold text-base text-neutral-900">
+                                    <div className="flex items-center justify-start gap-2">
+                                        <div className="flex flex-col items-center">
+                                            <ArrowUp2 className="font-extrabold w-3 h-3 text-orange-600 cursor-pointer" />
+                                            <ArrowDown2 className="font-extrabold w-3 h-3 text-orange-600 cursor-pointer" />
+                                        </div>
+                                        <div className='font-semibold text-sm text-neutral-900 font-Manrope'>Supplier Code</div>
+                                    </div>
+                                </th>
 
-    <th className="p-1 font-semibold text-base text-neutral-900">
-        <div className="flex items-center justify-start gap-2">
-            <div className="flex flex-col items-center">
-                <ArrowUp2 className="font-extrabold w-3 h-3 text-orange-600 cursor-pointer" />
-                <ArrowDown2 className="font-extrabold w-3 h-3 text-orange-600 cursor-pointer" />
-            </div>
-            <div className='font-semibold text-sm text-neutral-900 font-Manrope'>Supplier Name</div>
-        </div>
-    </th>
-    <th className="p-1 font-semibold text-base text-neutral-900">
-        <div className="flex items-center justify-start gap-2">
-            <div className="flex flex-col items-center">
-                <ArrowUp2 className="font-extrabold w-3 h-3 text-orange-600 cursor-pointer" />
-                <ArrowDown2 className="font-extrabold w-3 h-3 text-orange-600 cursor-pointer" />
-            </div>
-            <div className='font-semibold text-sm  text-neutral-900 font-Manrope'>Status</div>
-        </div>
-    </th>
-    <th className="p-1 font-semibold text-base text-neutral-900">
-        <div className="flex items-center justify-start gap-2">
-            <div className="flex flex-col items-center">
-                <ArrowUp2 className="font-extrabold w-3 h-3 text-orange-600 cursor-pointer" />
-                <ArrowDown2 className="font-extrabold w-3 h-3 text-orange-600 cursor-pointer" />
-            </div>
-            <div className='font-semibold text-sm text-neutral-900 font-Manrope'>Contact Number</div>
-        </div>
-    </th>
-    <th className="p-1 font-semibold text-base text-neutral-900">
-        <div className="flex items-center justify-start gap-2">
-            <div className="flex flex-col items-center">
-                <ArrowUp2 className="font-extrabold w-3 h-3 text-orange-600 cursor-pointer" />
-                <ArrowDown2 className="font-extrabold w-3 h-3 text-orange-600 cursor-pointer" />
-            </div>
-            <div className='font-semibold text-sm text-neutral-900 font-Manrope'>Email</div>
-        </div>
-    </th>
+                                <th className="p-1 font-semibold text-base text-neutral-900">
+                                    <div className="flex items-center justify-start gap-2">
+                                        <div className="flex flex-col items-center">
+                                            <ArrowUp2 className="font-extrabold w-3 h-3 text-orange-600 cursor-pointer" />
+                                            <ArrowDown2 className="font-extrabold w-3 h-3 text-orange-600 cursor-pointer" />
+                                        </div>
+                                        <div className='font-semibold text-sm text-neutral-900 font-Manrope'>Supplier Name</div>
+                                    </div>
+                                </th>
+                                <th className="p-1 font-semibold text-base text-neutral-900">
+                                    <div className="flex items-center justify-start gap-2">
+                                        <div className="flex flex-col items-center">
+                                            <ArrowUp2 className="font-extrabold w-3 h-3 text-orange-600 cursor-pointer" />
+                                            <ArrowDown2 className="font-extrabold w-3 h-3 text-orange-600 cursor-pointer" />
+                                        </div>
+                                        <div className='font-semibold text-sm  text-neutral-900 font-Manrope'>Status</div>
+                                    </div>
+                                </th>
+                                <th className="p-1 font-semibold text-base text-neutral-900">
+                                    <div className="flex items-center justify-start gap-2">
+                                        <div className="flex flex-col items-center">
+                                            <ArrowUp2 className="font-extrabold w-3 h-3 text-orange-600 cursor-pointer" />
+                                            <ArrowDown2 className="font-extrabold w-3 h-3 text-orange-600 cursor-pointer" />
+                                        </div>
+                                        <div className='font-semibold text-sm text-neutral-900 font-Manrope'>Contact Number</div>
+                                    </div>
+                                </th>
+                                <th className="p-1 font-semibold text-base text-neutral-900">
+                                    <div className="flex items-center justify-start gap-2">
+                                        <div className="flex flex-col items-center">
+                                            <ArrowUp2 className="font-extrabold w-3 h-3 text-orange-600 cursor-pointer" />
+                                            <ArrowDown2 className="font-extrabold w-3 h-3 text-orange-600 cursor-pointer" />
+                                        </div>
+                                        <div className='font-semibold text-sm text-neutral-900 font-Manrope'>Email</div>
+                                    </div>
+                                </th>
 
 
-    <th className="p-1 font-semibold text-base text-neutral-900  min-w-[40px]"></th>
-    <th className="p-1 font-semibold text-base text-neutral-900  min-w-[40px]"></th>
-</tr>
-</thead>
-                    <tbody>
-                        { currentItems &&currentItems.length > 0 && currentItems.map((item, index) => (
-                            <tr key={index} className="hover:bg-gray-50" onClick={() => handleClick(item)}>
-                                <td className="p-3 flex items-center">
-                                    <img src={SmallDot} className="mr-1.5" />
-                                    <input type="checkbox" className="form-checkbox h-4 w-4 text-blue-600 border-neutral-500 cursor-pointer" />
-                                </td>
-                                <td className="cursor-pointer p-2 font-semibold text-sm font-Manrope text-neutral-900">{item.supplierCode}</td>
-                                <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900">{item.name || '-'}</td>
-                                <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900">{item.status ? 'Active' : 'DeActive'}
-                                </td>
-                                <td className='p-2 font-semibold text-sm font-Manrope text-neutral-900'>{item.phone}</td>
-                                <td className='p-2 font-semibold text-sm font-Manrope text-neutral-900'>{item.email}</td>
-                                <td className="p-2 text-gray-500 cursor-pointer w-8"><img src={Dot} /></td>
+                                <th className="p-1 font-semibold text-base text-neutral-900  min-w-[40px]"></th>
+                                <th className="p-1 font-semibold text-base text-neutral-900  min-w-[40px]"></th>
                             </tr>
-                        ))}
-                    </tbody>
-                </table>
-
+                        </thead>
+                        <tbody>
+                            {currentItems && currentItems.length > 0 && currentItems.map((item, index) => (
+                                <tr key={index} className="hover:bg-gray-50" onClick={() => handleClick(item)}>
+                                    <td className="p-3 flex items-center">
+                                        <img src={SmallDot} className="mr-1.5" />
+                                        <input type="checkbox" className="form-checkbox h-4 w-4 text-blue-600 border-neutral-500 cursor-pointer" />
+                                    </td>
+                                    <td className="cursor-pointer p-2 font-semibold text-sm font-Manrope text-neutral-900">{item.supplierCode}</td>
+                                    <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900">{item.name || '-'}</td>
+                                    <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900">{item.status ? 'Active' : 'DeActive'}
+                                    </td>
+                                    <td className='p-2 font-semibold text-sm font-Manrope text-neutral-900'>{item.phone}</td>
+                                    <td className='p-2 font-semibold text-sm font-Manrope text-neutral-900'>{item.email}</td>
+                                    <td className="p-2 text-gray-500 cursor-pointer w-8"><img src={Dot} /></td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
                 <div className="flex items-center justify-center space-x-3 mt-10 mb-5">
                     <ArrowLeft2 className='cursor-pointer' size="16" color="#797979" onClick={handlePrevClick} />
                     <span className="font-bold text-neutral-900 text-xs">
@@ -245,10 +251,10 @@ console.log("currentItems",currentItems)
                 </div>
             </div>
 
-           
+
             {showModal && (
                 <Supplier_Tabs supplierforms={supplierforms} handleClose={handleCloseShowDetails} />
-               
+
             )}
         </div>
     );
