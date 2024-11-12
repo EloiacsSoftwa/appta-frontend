@@ -38,10 +38,17 @@ const Pos = ({ handleClosed }) => {
 
   // },[State.PosReducer?.Invoice_url])
 
+  const [customerFilter, setCustomerFilter] = useState('');
+  const [totalamount, setTotalAmount] = useState('')
+
+  const [order_id, setOrderID] = useState('')
 
 
   useEffect(() => {
     if (State.PosReducer?.paymentordercompletedStatusCode == 200) {
+      setTotalAmount('')
+      setOrderID('')
+      setCustomerFilter('')
       const InvoiceUrl = State.PosReducer?.Invoice_url;
       if (InvoiceUrl) {
         window.open(InvoiceUrl, '_blank');
@@ -74,9 +81,7 @@ const Pos = ({ handleClosed }) => {
   const [productid, setProductId] = useState('')
   const [currentDate, setCurrentDate] = useState('');
 
-  const [totalamount, setTotalAmount] = useState('')
-
-  const [order_id, setOrderID] = useState('')
+ 
 
   const [posdata, setPosData] = useState([]);
   const [filteredData, setFilteredData] = useState([])
@@ -324,7 +329,6 @@ const Pos = ({ handleClosed }) => {
 
   const [customerSearchQuery, setCustomerSearchQuery] = useState('');
   const [selectedCustomerId, setSelectedCustomerId] = useState(null);
-  const [customerFilter, setCustomerFilter] = useState('');
 
 
 
