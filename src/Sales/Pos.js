@@ -199,15 +199,15 @@ const Pos = ({ handleClosed }) => {
 
 
   // Barcode scan function
-  const BarcodeGetData = () => {
-    dispatch({ type: 'BARCODE_GET_PRODUCT', payload: barcode });
+  // const BarcodeGetData = () => {
+  //   dispatch({ type: 'BARCODE_GET_PRODUCT', payload: barcode });
 
-    setTimeout(() => {
-      if (State.PosReducer.BarcodeproductData && State.PosReducer.BarcodeproductData !== '') {
-        handleProductUpdate(State.PosReducer.BarcodeproductData); // Correctly update posdata
-      }
-    }, 1000);
-  };
+  //   setTimeout(() => {
+  //     if (State.PosReducer.BarcodeproductData && State.PosReducer.BarcodeproductData !== '') {
+  //       handleProductUpdate(State.PosReducer.BarcodeproductData); 
+  //     }
+  //   }, 1000);
+  // };
 
   // Search filter logic
   const [searchQuery, setSearchQuery] = useState('');
@@ -495,7 +495,23 @@ const Pos = ({ handleClosed }) => {
     borderRadius: '30px',
   };
 
-  useBarcodeScanner(BarcodeGetData)
+  const barcodeScanned = (barcode) => {
+    console.log("barcode",barcode);  
+    dispatch({ type: 'BARCODE_GET_PRODUCT', payload: barcode });
+
+    if(State?.PosReducer?.BarcodeproductData){
+      const payload = {
+        orderId: order_id,
+        productId: State.PosReducer.BarcodeproductData.productId,
+        discount: 0,
+        quantity: 1,
+        manuallyEntered: false
+      }
+      dispatch({ type: ADD_ORDER_ITEMS_API_CALL, payload: payload })
+    }  
+  }
+
+  useBarcodeScanner(barcodeScanned)
 
   return (<>
     <div className='w-screen h-screen ' >
