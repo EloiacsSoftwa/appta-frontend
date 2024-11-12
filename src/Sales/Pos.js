@@ -569,7 +569,7 @@ const Pos = ({ handleClosed }) => {
                 </div>
 
                 <div className='bg-zinc-300 ms-2 items-center rounded'>
-                  <img src={Barcode} className='p-1' alt='barcode' onClick={BarcodeGetData} />
+                  <img src={Barcode} className='p-1' alt='barcode'  />
                 </div>
               </div>
               <div className='flex items-center gap-2 '>
