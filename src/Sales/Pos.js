@@ -17,7 +17,7 @@ import AddCustomer from '../Contact/AddCustomer';
 import { Setting } from 'iconsax-react';
 import Pos_Payment from './Pos_Payment';
 
-import { ADD_ORDER_ITEMS_API_CALL, GET_ALL_ACTIVE_PRODUCTS_API_CALL } from '../utils/Constant';
+import { ADD_ORDER_ITEMS_API_CALL, GET_ALL_ACTIVE_PRODUCTS_API_CALL, RESET_PAYMENT_STATUS_CODE } from '../utils/Constant';
 
 
 const Pos = ({ handleClosed }) => {
@@ -151,7 +151,12 @@ const Pos = ({ handleClosed }) => {
   }, [State.PosReducer.CreateOrderStatuscode])
 
 
-  console.log("order_id", order_id);
+  useEffect(() => {
+      if (State.PosReducer.paymentordercompletedStatusCode == 200) {
+        window.open(State.PosReducer.invoiceUrl, "_blank");
+        dispatch({ type: RESET_PAYMENT_STATUS_CODE})
+      }
+  }, [State.PosReducer.paymentordercompletedStatusCode])
 
 
   // Barcode scan function

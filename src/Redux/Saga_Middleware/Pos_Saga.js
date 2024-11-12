@@ -219,7 +219,7 @@ function* handlecompleteOrderPayment(action) {
 
     if (successCode) {
       yield put({ type: 'COMPLETE_ORDER_PAYMENT', 
-        payload: { statusCode: response?.status || response?.data?.code || response.code  } });
+        payload: { statusCode: response?.status || response?.data?.code || response.code, invoiceUrl: response.data.data.invoiceUrl  } });
     } 
     else {
       yield put({ type: 'ERROR', payload: { message: response?.data?.message || "Unexpected error occurred", 
