@@ -82,7 +82,7 @@ const handleOrderDateChange = (date) => {
 
 
  
-
+  const [invoiceurl,setInvoiceurl] = useState('')
 
 
   const handlepaymentcomplete = () => {
@@ -95,7 +95,8 @@ const handleOrderDateChange = (date) => {
                 type: 'COMPLETE-ORDER-PAYMENT',
                 payload: { orderId, paymentType }
             });
-            handleclose();
+
+            handleclose();          
         } else {
             console.log("Incomplete payment data", payment_type[0]);
         }
@@ -105,8 +106,30 @@ const handleOrderDateChange = (date) => {
 };
 
 
-// let pdfWindow;
-// pdfWindow = window.open(InvoicePDf[0]?.invoicePDF, '_blank');
+
+
+// const InvoiceUrl = useSelector(state => state.PosReducer.Invoice_url);
+
+
+
+// useEffect(() => {
+  
+//   if (InvoiceUrl) {
+//     setInvoiceurl(InvoiceUrl);
+//   }
+// }, [InvoiceUrl]);
+
+
+
+// useEffect(() => {
+//   if (invoiceurl) {
+//     window.open(invoiceurl, '_blank');
+//   }
+// }, [invoiceurl]);
+
+
+console.log("invoiceurl",invoiceurl);
+console.log("State.PosReducer.Invoice_url",State.PosReducer.Invoice_url);
 
 
 

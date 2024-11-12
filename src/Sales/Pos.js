@@ -428,7 +428,15 @@ const Pos = ({ handleClosed }) => {
   }; 
   
 
+  useEffect(() => {
+    if (State.PosReducer.OrderHoldproductStatuscode == 200) {
+      
+      setTimeout(() => {
+        dispatch({ type: 'REMOVE_ORDER_HOLD_STATUS_CODE' })
+      }, 2000)
+    }
 
+  }, [State.PosReducer.OrderHoldproductStatuscode])
   
 
 

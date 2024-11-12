@@ -17,6 +17,7 @@ const initialState = {
   addorderItemsStatusCode :0,
   orderinitialiseStatusCode : 0,
   paymentordercompletedStatusCode : 0,
+  Invoice_url:'',
 };
 
 const PosReducer = (state = initialState, action) => {
@@ -79,7 +80,7 @@ const PosReducer = (state = initialState, action) => {
           return { ...state, orderinitialiseStatusCode: 0 }
 
           case 'COMPLETE_ORDER_PAYMENT':
-            return { ...state,  paymentordercompletedStatusCode: action.payload.statusCode }
+            return { ...state, Invoice_url:action.payload.Invoice_url,  paymentordercompletedStatusCode: action.payload.statusCode }
           case 'REMOVE_COMPLETE_ORDER_PAYMENT_STATUS_CODE':
             return { ...state, paymentordercompletedStatusCode: 0 }
 

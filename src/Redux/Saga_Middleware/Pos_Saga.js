@@ -215,11 +215,13 @@ function* handlecompleteOrderPayment(action) {
   try {
     const { orderId, paymentType } = action.payload;
     const response = yield call(CompleteOrder, { orderId, paymentType });
+    console.log("response",response);
+    
     const successCode = response?.status === 200 || response.code === 200 || response?.data?.code === 200;
 
     if (successCode) {
       yield put({ type: 'COMPLETE_ORDER_PAYMENT', 
-        payload: { statusCode: response?.status || response?.data?.code || response.code  } });
+        payload: {Invoice_url: response.data.data.invoiceUrl ,statusCode: response?.status || response?.data?.code || response.code  } });
     } 
     else {
       yield put({ type: 'ERROR', payload: { message: response?.data?.message || "Unexpected error occurred", 
