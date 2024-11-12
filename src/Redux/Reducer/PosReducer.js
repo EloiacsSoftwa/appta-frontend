@@ -60,7 +60,7 @@ const PosReducer = (state = initialState, action) => {
 
 
     case 'DELETE_POS_PRODUCT':
-      return { ...state,  deleteposproductStatuscode: action.payload.statusCode }
+      return { ...state, orderItems: action.payload.orderItems,  deleteposproductStatuscode: action.payload.statusCode }
     case 'REMOVE_DELETE_POS_PRODUCT_STATUS_CODE':
       return { ...state, deleteposproductStatuscode: 0 }
 

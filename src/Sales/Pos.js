@@ -280,6 +280,16 @@ const Pos = ({ handleClosed }) => {
   }, []);
 
 
+  useEffect(()=> {
+    if (State.PosReducer.addorderItemsStatusCode === 200) {
+    
+      setTimeout(() => {
+        dispatch({ type: 'REMOVE_ADD_ORDER_ITEMS_STATUS_CODE' });
+      }, 1000);
+    }
+  },[State.PosReducer.addorderItemsStatusCode])
+
+
   const [customerSearchQuery, setCustomerSearchQuery] = useState('');
   const [selectedCustomerId, setSelectedCustomerId] = useState(null);
   const [customerFilter, setCustomerFilter] = useState('');
@@ -312,10 +322,15 @@ const Pos = ({ handleClosed }) => {
 
   const [open, setOpen] = useState(false);
 
-  const handleOpen = () =>{
-    setOpen(true);
-  } 
-  const handleClose = () => setOpen(false);
+  const handleOpen = () => {
+    if (customerFilter) {
+      setOpen(true);
+    }
+  }
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
 
   const [isPayLaterEnabled, setIsPayLaterEnabled] = useState(false);
@@ -370,6 +385,17 @@ const Pos = ({ handleClosed }) => {
     dispatch({type: 'DELETE-POS-PRODUCT', payload: productsToDelete,});
     setSelectedProducts([]);
   };
+
+  useEffect(()=> {
+    if (State.PosReducer.deleteposproductStatuscode === 200) {
+    
+      setTimeout(() => {
+        dispatch({ type: 'REMOVE_DELETE_POS_PRODUCT_STATUS_CODE' });
+      }, 1000);
+    }
+  },[State.PosReducer.deleteposproductStatuscode])
+
+
   
   const handleHoldOrder = () => {
     if (order_id) {  
@@ -1001,7 +1027,8 @@ const Pos = ({ handleClosed }) => {
 </Modal> */}
 
       {
-        open && customerFilter  && <Pos_Payment handleclose={handleClose}  total_amount = {total_amount}/>
+        open && customerFilter  && (<Pos_Payment handleclose={handleClose}  total_amount = {total_amount}/>
+        )
       }
 
       {/* //add customer  */}

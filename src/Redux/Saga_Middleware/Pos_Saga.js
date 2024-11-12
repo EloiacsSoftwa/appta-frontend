@@ -101,7 +101,7 @@ function* handleDeletePosProduct(args) {
  
 };
   if (response.status === 200 || response.code === 200 || response.data.code === 200) {
-         yield put({ type: 'DELETE_POS_PRODUCT', payload: { statusCode: response.status  || response.code ||response.data.code }});
+         yield put({ type: 'DELETE_POS_PRODUCT', payload: {orderItems: response.data.data.orderItems, statusCode: response.status  || response.code ||response.data.code }});
          toast.success("OrderItems removed successfully", {
           position: "top-center",
           autoClose: 2000,
