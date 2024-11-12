@@ -1,30 +1,24 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState , useRef} from "react";
 import cancelbtn from '../Images/Icons/cancelbtn.svg';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
-import Modal from '@mui/material/Modal';
 import Select from "@mui/material/Select";
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
-import FormHelperText from '@mui/material/FormHelperText';
-// import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import DemoContainer  from '../Sales/DemoContainer'
+import DateIcon from '../Images/Sales/Vector (5).svg'
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 import { useDispatch, useSelector } from 'react-redux';
-// import { set } from "react-datepicker/dist/date_utils";
 
 
 
-const Pos_Payment = ({ handleclose,total_amount }) => {
+const Pos_Payment = ({ handleclose,total_amount,order_id }) => {
 
     const State = useSelector(state => state);
 
   const [activeTab, setActiveTab] = useState("Cash"); 
-  const [payment_type, setPaymentType] = useState('');
+  const [payment_type, setPaymentType] = useState();
   console.log("payment_type",payment_type);
 
   const [receipt_number, setReceiptNumber] = useState('')
@@ -63,25 +57,42 @@ useEffect(() => {
     const cashReceivedValue = e.target.value;
     setCashReceived(cashReceivedValue);
 
-    const Return_amount = total_amount ? (cashReceivedValue - total_amount).toFixed(2) : 0;
+    const Return_amount = total_amount ? ((cashReceivedValue) - total_amount).toFixed(2) : 0;
     setChangeToReturn(parseFloat(Return_amount));
 }
 
+const datePickerRef = useRef(null);
+
+const [orderDate, setOrderDate] = useState(null);
+const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
+
+const handleIconClickForOrder = () => {
+  setIsDatePickerOpen((prev) => !prev);
+};
+
+const handleOrderDateChange = (date) => {
+  setOrderDate(date);
+  setIsDatePickerOpen(false);
+  // setOrderDateError('')
+};
     
   useEffect(()=> {
     dispatch({ type: 'GET-PAYMENT-TYPE' });
   },[])
 
 
+ 
+
+
 
   const handlepaymentcomplete = () => {
     if (payment_type && payment_type.length > 0) {
-        const orderId = payment_type[0].orderId;
+        const orderId = order_id
         const paymentType = payment_type[0].paymentTypeId;
 
         if (orderId && paymentType) {
             dispatch({
-                type: 'COMPLETE-ORDER',
+                type: 'COMPLETE-ORDER-PAYMENT',
                 payload: { orderId, paymentType }
             });
             handleclose();
@@ -92,6 +103,12 @@ useEffect(() => {
         console.log("Payment type is missing or invalid");
     }
 };
+
+
+// let pdfWindow;
+// pdfWindow = window.open(InvoicePDf[0]?.invoicePDF, '_blank');
+
+
 
 
 
@@ -154,11 +171,11 @@ useEffect(() => {
   <li className="flex-auto text-center">
     <a
       className={`pt-1 ps-6 pe-6 pb-1 rounded-md cursor-pointer text-[#EAEAEA] ${
-        activeTab === "swipe" ? "bg-[#EA580C]" : "bg-[#797979]"
+        activeTab === "Swipe" ? "bg-[#EA580C]" : "bg-[#797979]"
       } font-Roboto`}
-      onClick={() => handleTabClick("swipe")}
+      onClick={() => handleTabClick("Swipe")}
       role="tab"
-      aria-selected={activeTab === "swipe"}
+      aria-selected={activeTab === "Swipe"}
       style={{
         fontWeight: 700,
         fontSize: '24px',
@@ -172,11 +189,11 @@ useEffect(() => {
   <li className="flex-auto text-center">
     <a
       className={`pt-1 ps-6 pe-6 pb-1 rounded-md cursor-pointer text-[#EAEAEA] ${
-        activeTab === "paylater" ? "bg-[#EA580C]" : "bg-[#797979]"
+        activeTab === "Pay Later" ? "bg-[#EA580C]" : "bg-[#797979]"
       } font-Roboto`}
-      onClick={() => handleTabClick("paylater")}
+      onClick={() => handleTabClick("Pay Later")}
       role="tab"
-      aria-selected={activeTab === "paylater"}
+      aria-selected={activeTab === "Pay Later"}
       style={{
         fontWeight: 700,
         fontSize: '24px',
@@ -192,7 +209,7 @@ useEffect(() => {
 
 
 
-            <div data-tab-content=""   className={`p-5 overflow-auto bg-gray-300 w-full ${activeTab === "paylater" ? "h-[30rem]" : "h-64"}`}>
+            <div data-tab-content=""   className={`p-5 overflow-auto bg-gray-300 w-full ${activeTab === "Pay Later" ? "h-[30rem]" : "h-64"}`}>
   {activeTab === "Cash" && (
     <div id="Cash" role="tabpanel">
      
@@ -483,8 +500,8 @@ useEffect(() => {
   )}
 
 
-  {activeTab === "swipe" && (
-    <div id="swipe" role="tabpanel">
+  {activeTab === "Swipe" && (
+    <div id="Swipe" role="tabpanel">
       
       <Box
       component="form"
@@ -502,7 +519,7 @@ useEffect(() => {
   
  <TextField
                 label="Amount to be paid"
-                // value={total_amount ? total_amount : 0}
+                value={total_amount ? total_amount : 0}
                 fullWidth
                 className="font-Roboto font-semibold text-xs"
                 InputLabelProps={{ shrink: true }}
@@ -636,8 +653,8 @@ useEffect(() => {
 
 
   
-{activeTab === "paylater" && (
-    <div id="paylater" role="paylater">
+{activeTab === "Pay Later" && (
+    <div id="Pay Later" role="Pay Later">
       
       <Box
       component="form"
@@ -773,32 +790,29 @@ useEffect(() => {
     </LocalizationProvider> */}
 
 
-<LocalizationProvider dateAdapter={AdapterDayjs}>
-      <div className="w-full font-Roboto font-semibold text-xs">
-        <DemoContainer components={['DatePicker']}>
-          <DatePicker
-            label="Payment Due Date"
-            // value={selectedDate}
-            // onChange={(newDate) => setSelectedDate(newDate)}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                sx={{
-                  '& .MuiInputLabel-root': { color: 'black' },
-                  '& .MuiOutlinedInput-root': {
-                    '& fieldset': { borderColor: '#797979' },
-                    '&:hover fieldset': { borderColor: '#797979' },
-                    '&.Mui-focused fieldset': { borderColor: '#797979' },
-                  },
-                  '& .MuiInputLabel-root.Mui-focused': { color: 'black' },
-                  '& .MuiFormHelperText-root': { color: 'red' },
-                }}
+<div className="relative">
+              <label className="block font-semibold mb-1  text-xs text-gray text-start font-SourceSansPro">
+              Payment Due Date <span className="text-red-500">*</span>
+              </label>
+
+              <DatePicker
+                selected={orderDate}
+                onChange={handleOrderDateChange}
+                dateFormat="MM/dd/yyyy"
+                placeholderText="DD / MM / YYYY"
+                className="w-full border rounded px-3 bg-[#D9D9D9] py-2 pr-12 text-sm md:text-base focus:border-orange-600"
+                open={isDatePickerOpen}
+                onClickOutside={() => setIsDatePickerOpen(false)}
+                ref={datePickerRef}
               />
-            )}
-          />
-        </DemoContainer>
-      </div>
-    </LocalizationProvider>
+
+              <img
+                src={DateIcon}
+                alt="Date Icon"
+                className="absolute top-12 transform -translate-y-1/2 right-3 md:right-4 lg:right-5 cursor-pointer"
+                onClick={handleIconClickForOrder}
+              />
+            </div>
 
 <TextField
 

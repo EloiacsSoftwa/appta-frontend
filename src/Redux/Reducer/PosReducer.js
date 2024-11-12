@@ -12,12 +12,16 @@ const initialState = {
   orderItems: [],
   PaymentType:[],
   totalPrice: 0,
-  totalAmount: 0,
+  totalAmount: '',
   totalDiscount: 0,
   addorderItemsStatusCode :0,
+  orderinitialiseStatusCode : 0,
+  paymentordercompletedStatusCode : 0,
 };
 
 const PosReducer = (state = initialState, action) => {
+  console.log("action",action);
+  
   
   switch (action.type) {
  
@@ -32,10 +36,10 @@ const PosReducer = (state = initialState, action) => {
       case 'REMOVE_GET_PAYMENT_TYPE_STATUS_CODE':
         return { ...state, paymenttypestatuscode: 0 }
 
-      case 'COMPLETE_ORDER':
-        return { ...state,  CompleteOrderStatuscode: action.payload.statusCode }
-      case 'REMOVE_COMPLETE_ORDER_STATUS_CODE':
-        return { ...state, CompleteOrderStatuscode: 0 }
+      // case 'COMPLETE_ORDER':
+      //   return { ...state,  CompleteOrderStatuscode: action.payload.statusCode }
+      // case 'REMOVE_COMPLETE_ORDER_STATUS_CODE':
+      //   return { ...state, CompleteOrderStatuscode: 0 }
 
     case 'BARCODE_GET_PRODUCT_SUCCESS':
       return {...state, BarcodeproductData:  action.payload.data, barcodeStatuscode: action.payload.statusCode,
@@ -60,7 +64,7 @@ const PosReducer = (state = initialState, action) => {
 
 
     case 'DELETE_POS_PRODUCT':
-      return { ...state,  deleteposproductStatuscode: action.payload.statusCode }
+      return { ...state, orderItems: action.payload.orderItems,  deleteposproductStatuscode: action.payload.statusCode }
     case 'REMOVE_DELETE_POS_PRODUCT_STATUS_CODE':
       return { ...state, deleteposproductStatuscode: 0 }
 
@@ -68,6 +72,16 @@ const PosReducer = (state = initialState, action) => {
         return { ...state,  OrderHoldproductStatuscode: action.payload.statusCode }
       case 'REMOVE_ORDER_HOLD_STATUS_CODE':
         return { ...state, OrderHoldproductStatuscode: 0 }
+
+        case 'ORDER_INITIALIZE_PAYMENT':
+          return { ...state, totalAmount: action.payload.total_amount , orderinitialiseStatusCode: action.payload.statusCode }
+        case 'REMOVE_ORDER_INITIALIZE_PAYMENT_STATUS_CODE':
+          return { ...state, orderinitialiseStatusCode: 0 }
+
+          case 'COMPLETE_ORDER_PAYMENT':
+            return { ...state,  paymentordercompletedStatusCode: action.payload.statusCode }
+          case 'REMOVE_COMPLETE_ORDER_PAYMENT_STATUS_CODE':
+            return { ...state, paymentordercompletedStatusCode: 0 }
 
 
     default:
