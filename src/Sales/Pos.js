@@ -42,7 +42,7 @@ const Pos = ({ handleClosed }) => {
   const [productid, setProductId] = useState('')
   const [currentDate, setCurrentDate] = useState('');
 
-  const [total_amount, setTotalAmount] = useState('')
+  const [totalamount, setTotalAmount] = useState('')
 
   const [order_id, setOrderID] = useState('')
 
@@ -323,14 +323,33 @@ const Pos = ({ handleClosed }) => {
   const [open, setOpen] = useState(false);
 
   const handleOpen = () => {
-    if (customerFilter) {
+    if (customerFilter && order_id) {
       setOpen(true);
+      dispatch({
+        type: 'ORDER-INITIALIZE-PAYMENT',
+        payload: { orderId: String(order_id) }, 
+      });
     }
+   
   }
 
   const handleClose = () => {
     setOpen(false);
+    // setTotalAmount('')
   };
+
+  useEffect(() => {
+    if (State.PosReducer.orderinitialiseStatusCode === 200) {
+      setTotalAmount(State.PosReducer.totalAmount)
+      setTimeout(() => {
+        dispatch({ type: 'REMOVE_ORDER_INITIALIZE_PAYMENT_STATUS_CODE' });
+      }, 1000);
+    }
+  }, [State.PosReducer.orderinitialiseStatusCode]);
+
+
+
+  
 
 
   const [isPayLaterEnabled, setIsPayLaterEnabled] = useState(false);
@@ -388,7 +407,7 @@ const Pos = ({ handleClosed }) => {
 
   useEffect(()=> {
     if (State.PosReducer.deleteposproductStatuscode === 200) {
-    
+      
       setTimeout(() => {
         dispatch({ type: 'REMOVE_DELETE_POS_PRODUCT_STATUS_CODE' });
       }, 1000);
@@ -784,7 +803,7 @@ const Pos = ({ handleClosed }) => {
 
               <div className='flex flex-row justify-between' >
                 <p className='text-[#131313] text-sm  font-semibold font-Manrope ps-2'>Amount :</p>
-                <p className='text-[#131313] text-sm  font-semibold font-Manrope pe-2'>{total_amount}</p>
+                <p className='text-[#131313] text-sm  font-semibold font-Manrope pe-2'>{totalamount}</p>
               </div>
 
               <div className='flex flex-row justify-between' >
@@ -813,7 +832,7 @@ const Pos = ({ handleClosed }) => {
 
               <div className='flex flex-row justify-between  mb-2 mt-2' >
                 <p className='text-[#131313] text-sm  font-semibold font-Manrope ps-2'>Total :</p>
-                <p className='text-[#131313] text-sm  font-semibold font-Manrope pe-2'>₹ {total_amount ? total_amount : 0}</p>
+                <p className='text-[#131313] text-sm  font-semibold font-Manrope pe-2'>₹ {totalamount ? totalamount : 0}</p>
               </div>
 
               <div class="border border-dotted border-black ">
@@ -821,7 +840,7 @@ const Pos = ({ handleClosed }) => {
 
               <div className='flex flex-col items-center mt-1' >
                 <p className='font-semibold font-Manrope text-[#131313] font-bold text-xl '>Amount to Pay</p>
-                <p className='font-semibold font-Manrope text-[#131313] font-bold text-xl '>₹ {total_amount ? total_amount : 0}</p>
+                <p className='font-semibold font-Manrope text-[#131313] font-bold text-xl '>₹ {totalamount ? totalamount : 0}</p>
               </div>
 
             </div>
@@ -1027,7 +1046,7 @@ const Pos = ({ handleClosed }) => {
 </Modal> */}
 
       {
-        open && customerFilter  && (<Pos_Payment handleclose={handleClose}  total_amount = {total_amount}/>
+        open && customerFilter  && (<Pos_Payment handleclose={handleClose}  order_id = {order_id} total_amount = {totalamount}/>
         )
       }
 
