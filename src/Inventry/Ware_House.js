@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+// import { useDispatch, useSelector } from 'react-redux';
 import Frame1 from '../Images/Sales/Frame.svg';
 import Frame2 from '../Images/Sales/Frame2.svg';
 import Frame3 from '../Images/Sales/Frame 3.svg';
