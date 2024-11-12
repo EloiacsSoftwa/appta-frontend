@@ -188,6 +188,7 @@ const [payLaterError, setPayLaterError] = useState("");
                 value={mobileNumber}
                 onChange={handleMobileNumberChange}
                 fullWidth
+                inputProps={{ maxLength: 10 }}
                 className="font-Roboto font-semibold text-xs"
                 InputLabelProps={{ shrink: true }}
                

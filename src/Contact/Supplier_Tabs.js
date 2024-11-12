@@ -125,7 +125,7 @@ const SupplierForm = ({handleClose}) => {
     if (!altEmail) {
       setAltEmailError('Please enter alternate email');
       isValid = false;
-    } else if (!emailPattern.test(email)) {
+    } else if (!emailPattern.test(altEmail)) {
       setAltEmailError('Please enter valid email');
       isValid = false;
     }else {
@@ -176,10 +176,9 @@ const SupplierForm = ({handleClose}) => {
 
   return (
 
-    <div className="fixed inset-0 left-44 flex items-center justify-center bg-black bg-opacity-50">
+    <div className="fixed inset-0  flex items-center justify-center bg-black bg-opacity-50">
     <div className="">
-        
-   
+         
 
     <div className="bg-white rounded-lg p-6 shadow-md w-full min-h-screen mx-auto mt-10">
       <div className="flex justify-between items-center mb-4">
@@ -191,13 +190,13 @@ const SupplierForm = ({handleClose}) => {
         <div className="flex space-x-2">
           <button
             onClick={handleSaveClick}
-            className="bg-orange-600 text-black font-semibold py-1 px-3 rounded"
+            className="bg-orange-600 text-black font-semibold py-1 px-3 rounded font-Manrope"
           >
             Save
           </button>
           <button
             onClick={handleClose}
-            className="bg-orange-600 text-black font-semibold py-1 px-3 rounded"
+            className="bg-orange-600 text-black font-semibold py-1 px-3 rounded font-Manrope"
           >
             Discard
           </button>
@@ -205,20 +204,27 @@ const SupplierForm = ({handleClose}) => {
       </div>
 
       {/* Tabs */}
-      <div className="flex justify-between border-b-2 border-gray-900 mb-4 px-6">
+    
+      <div className="flex justify-between flex-row border-b-2 border-gray-900 mb-4 px-6">
+        
         {['General Information', 'Address', 'Accounting'].map((tab) => (
+          <div className='flex flex-col'>
           <button
             key={tab}
             onClick={() => handleTabClick(tab)}
-            className={`px-4 py-2 font-medium ${
+            className={`px-4 py-2 font-medium font-Manrope ${
               activeTab === tab
-                ? 'text-orange-600 border-b-8 border-orange-600 rounded-l-lg rounded-r-lg'
+                ? 'text-orange-600 '
                 : 'text-neutral-900'
             }`}
           >
-            {tab}
+            {tab} 
           </button>
+          {activeTab === tab && <span className='border border-orange-600 h-2 rounded-ss-lg rounded-se-lg w-48 bg-orange-600'></span>}
+          
+          </div>
         ))}
+       
       </div>
 
       {activeTab === 'General Information' && (
@@ -233,36 +239,36 @@ const SupplierForm = ({handleClose}) => {
                 onChange={handleSupplierCode}
                 placeholder="Auto Generate" className="w-full w-60 p-2 border border-gray-300 rounded placeholder-black" />
               </div> */}
-              <div className="grid grid-cols-4 gap-4">
+              <div className="grid grid-cols-3 gap-4">
                 <div>
-                  <label className="block text-gray-700 font-medium mb-1">Name</label>
+                  <label className="block text-gray-700 font-semibold mb-1 font-SourceSansPro">Name</label>
                   <input type="text" 
                                 value={name}
                                 onChange={handleName}
                   
-                  placeholder="Name" className="w-full p-2 border border-gray-300 rounded placeholder-black mb-1" />
-                  {nameError && <span className="text-red-500 font-Manrope mt-1 text-sm">{nameError}</span>}
+                  placeholder="Name" className="w-full p-2 border border-gray-300 rounded placeholder-black mb-1 font-SourceSansPro font-normal"  />
+                  {nameError && <span className="text-red-500 font-SourceSansPro mt-1 text-sm">{nameError}</span>}
                 </div>
-                <div>
-                  <label className="block text-gray-700 font-medium mb-1">Email</label>
+                <div> 
+                  <label className="block text-gray-700 font-semibold mb-1 font-SourceSansPro ">Email</label>
                   <input type="email" placeholder="example@example.com"
                   
                   value={email}
               onChange={handleEmail}
-                  className="w-full p-2 border border-gray-300 rounded placeholder-black mb-1" />
-                  {emailError && <span className="text-red-500 font-Manrope mt-1 text-sm">{emailError}</span>}
+                  className="w-full p-2 border border-gray-300 rounded placeholder-black mb-1 font-SourceSansPro font-normal" />
+                  {emailError && <span className="text-red-500 font-SourceSansPro mt-1 text-sm">{emailError}</span>}
                 </div>
                 <div>
-                  <label className="block text-gray-700 font-medium mb-1">Alternative Email</label>
+                  <label className="block text-gray-700 font-semibold mb-1 font-SourceSansPro">Alternative Email</label>
                   <input type="email" 
                    value={altEmail}
                    onChange={handleAltEmail}
-                  placeholder="example@example.com" className="w-full p-2 border border-gray-300 mb-1 rounded placeholder-black" />
+                  placeholder="example@example.com" className=" font-SourceSansPro font-normal w-full p-2 border border-gray-300 mb-1 rounded placeholder-black" />
                
-               {altEmailError && <span className="text-red-500 font-Manrope text-sm">{altEmailError}</span>}
+               {altEmailError && <span className="text-red-500 font-SourceSansPro text-sm">{altEmailError}</span>}
                 </div>
                 <div>
-                  <label className="block text-gray-700 font-medium mb-1">Phone</label>
+                  <label className="block text-gray-700 font-semibold mb-1 font-SourceSansPro">Phone</label>
                   <div className="flex items-center border border-gray-300 rounded">
                     <span className="px-1 text-gray-700">+91</span>
                     <span className="px-1">
@@ -273,15 +279,14 @@ const SupplierForm = ({handleClose}) => {
                     maxLength={10}
                     onChange={handlePhone}
                     
-                    placeholder="XXX XXX XXXX" className="w-full p-2 placeholder-black border-l-0 mb-1" />
+                    placeholder="XXX XXX XXXX" className="w-full p-2 placeholder-black border-l-0 mb-1 font-SourceSansPro font-normal" />
                        
                   </div>
-                  {phoneError && <span className="text-red-500 font-Manrope text-sm">{phoneError}</span>}
+                  {phoneError && <span className="text-red-500 font-SourceSansPro text-sm">{phoneError}</span>}
                 </div>
-              </div>
-              <div>
-                  <label className="block text-gray-700 font-medium mb-1">Alternate Phone</label>
-                  <div className="flex items-center border border-gray-300 rounded w-60">
+                <div>
+                  <label className="block text-gray-700 font-semibold mb-1 font-SourceSansPro">Alternate Phone</label>
+                  <div className="flex items-center border border-gray-300 rounded">
                     <span className="px-1 text-gray-700">+91</span>
                     <span className="px-1">
                       <img src={NFlag} alt="Indian Flag" className="w-6 h-6" />
@@ -290,11 +295,13 @@ const SupplierForm = ({handleClose}) => {
                     value={altPhone}
                     onChange={handleAltPhone}
                     maxLength={10}
-                    placeholder="XXX XXX XXXX" className="w-full p-2 placeholder-black border-l-0 mb-1" />
+                    placeholder="XXX XXX XXXX" className="w-full p-2 placeholder-black border-l-0 mb-1 font-SourceSansPro font-normal" />
                     
                   </div>
-                  {altPhoneError && <span className="text-red-500 font-Manrope text-sm">{altPhoneError}</span>}
+                  {altPhoneError && <span className="text-red-500 font-SourceSansPro text-sm">{altPhoneError}</span>}
                 </div>
+              </div>
+            
              
             </div>
           </div>
@@ -307,56 +314,49 @@ const SupplierForm = ({handleClose}) => {
             <div className="grid gap-8">
               <div className="grid grid-cols-4">
                 <div className='w-full'>
-                  <label className="block text-sm font-medium text-gray-700">
+                  <label className="block text-sm font-semibold  text-black font-SourceSansPro">
                     Contact Name<span className="text-red-600">*</span>
                   </label>
-                  <input type="text" placeholder="Arul" className="mt-1 block w-full border border-gray-300 rounded-md p-2 placeholder-black" />
+                  <input type="text" placeholder="Arul" className=" font-normal  font-SourceSansPro mt-1 block w-full border border-gray-300 rounded-md p-2 placeholder-black" />
                 </div>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">
+                  <label className="block text-sm font-semibold   text-black font-SourceSansPro">
                     Address 1<span className="text-red-600">*</span>
                   </label>
-                  <input type="text" placeholder="Building no 15/82" className="mt-1 block w-full border border-gray-300 rounded-md p-2 placeholder-black" />
+                  <input type="text" placeholder="Building no 15/82" className=" font-normal  font-SourceSansPro mt-1 block w-full border border-gray-300 rounded-md p-2 placeholder-black" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">
+                  <label className="block text-sm font-semibold   text-black font-SourceSansPro">
                     Address 2<span className="text-red-600">*</span>
                   </label>
-                  <input type="text" placeholder="Simon Nagar" className="mt-1 block w-full border border-gray-300 rounded-md p-2 placeholder-black" />
+                  <input type="text" placeholder="Simon Nagar" className=" font-normal  font-SourceSansPro mt-1 block w-full border border-gray-300 rounded-md p-2 placeholder-black" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">
+                  <label className="block text-sm font-semibold   text-black font-SourceSansPro">
                     City<span className="text-red-600">*</span>
                   </label>
-                  <input type="text" placeholder="Nagercoil" className="mt-1 block w-full border border-gray-300 rounded-md p-2 placeholder-black" />
+                  <input type="text" placeholder="Nagercoil" className=" font-normal  font-SourceSansPro mt-1 block w-full border border-gray-300 rounded-md p-2 placeholder-black" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">
+                  <label className="block text-sm font-semibold   text-black font-SourceSansPro">
                     State<span className="text-red-600">*</span>
                   </label>
-                  <input type="text" placeholder="Tamil Nadu" className="mt-1 block w-full border border-gray-300 rounded-md p-2 placeholder-black" />
+                  <input type="text" placeholder="Tamil Nadu" className=" font-normal  font-SourceSansPro mt-1 block w-full border border-gray-300 rounded-md p-2 placeholder-black" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">
+                  <label className="block text-sm font-semibold   text-black font-SourceSansPro">
                     Country<span className="text-red-600">*</span>
                   </label>
-                  <input type="text" placeholder="India" className="mt-1 block w-full border border-gray-300 rounded-md p-2 placeholder-black" />
+                  <input type="text" placeholder="India" className=" font-normal  font-SourceSansPro mt-1 block w-full border border-gray-300 rounded-md p-2 placeholder-black" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">
+                  <label className="block text-sm font-semibold  text-black font-SourceSansPro">
                     Postal Code<span className="text-red-600">*</span>
                   </label>
-                  <div className="mt-1 relative">
-                    <input type="text" placeholder="629106" className="block w-full border border-gray-300 rounded-md p-2 pr-10 placeholder-black" />
-                    <select className="absolute inset-y-0 right-2 bg-transparent border-none text-gray-700 cursor-pointer focus:ring-0 focus:outline-none" defaultValue="">
-                      <option value="" disabled></option>
-                      <option value="Option1">Option1</option>
-                      <option value="Option2">Option2</option>
-                      <option value="Option3">Option3</option>
-                    </select>
-                  </div>
+                  <input type="text" placeholder="635848" className=" text-base font-normal  font-SourceSansPro mt-1 block w-full border border-gray-300 rounded-md p-2 placeholder-black" />
+
                 </div>
               </div>
             </div>
@@ -370,28 +370,28 @@ const SupplierForm = ({handleClose}) => {
             <div className="grid gap-4">
               <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">
+                  <label className="block text-sm font-semibold text-black font-SourceSansPro">
                     Bank Name<span className="text-red-600">*</span>
                   </label>
-                  <input type="text" placeholder="Arul" className="mt-1 block w-full border border-gray-300 rounded-md p-2 placeholder-black" />
+                  <input type="text" placeholder="Arul" className=" font-normal font-SourceSansPro mt-1 block w-full border border-gray-300 rounded-md p-2 placeholder-black" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">
+                  <label className="block text-sm font-semibold text-black font-SourceSansPro">
                     Account Name<span className="text-red-600">*</span>
                   </label>
-                  <input type="text" placeholder="Simon Nagar" className="mt-1 block w-full border border-gray-300 rounded-md p-2 placeholder-black" />
+                  <input type="text" placeholder="Simon Nagar" className="font-normal font-SourceSansPro mt-1 block w-full border border-gray-300 rounded-md p-2 placeholder-black" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">
+                  <label className="block text-sm font-semibold text-black font-SourceSansPro">
                     Account Number<span className="text-red-600">*</span>
                   </label>
-                  <input type="text" placeholder="15/82/******" className="mt-1 block w-full border border-gray-300 rounded-md p-2 placeholder-black" />
+                  <input type="text" placeholder="15/82/******" className="font-normal font-SourceSansPro mt-1 block w-full border border-gray-300 rounded-md p-2 placeholder-black" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">
+                  <label className="block text-sm font-semibold text-black font-SourceSansPro">
                     IFSC Code<span className="text-red-600">*</span>
                   </label>
-                  <input type="text" placeholder="ABC012****" className="mt-1 block w-full border border-gray-300 rounded-md p-2 placeholder-black" />
+                  <input type="text" placeholder="ABC012****" className="font-normal font-SourceSansPro  mt-1 block w-full border border-gray-300 rounded-md p-2 placeholder-black" />
                 </div>
               </div>
             </div>
