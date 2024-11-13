@@ -167,8 +167,8 @@ useEffect(() => {
 
   const handleLogout = () => {
     dispatch({ type: 'LOG-OUT' })
-    const encryptData = CryptoJS.AES.encrypt(JSON.stringify(false), 'abcd');
-    localStorage.setItem("appTaLogin", encryptData.toString());
+    // const encryptData = CryptoJS.AES.encrypt(JSON.stringify(false), 'abcd');
+    // localStorage.setItem("appTaLogin", encryptData.toString());
     Swal.fire({
       title: 'Are you sure?',
       text: "Do you want to log out?",
@@ -179,8 +179,10 @@ useEffect(() => {
       reverseButtons: true
     }).then((result) => {
       if (result.isConfirmed) {
-      
-        console.log("Logged out successfully");
+        localStorage.clear();  
+        sessionStorage.clear();  
+        window.location.href = "/login"; 
+       console.log("Logged out successfully");
       }
     });
   };
@@ -252,9 +254,7 @@ useEffect(() => {
 
       {/* Main Content */}
       <div className={`flex-1 overflow-y-auto ${isExpanded ? "ml-64" : "ml-20"}`}>
-
-       
-     <div className="flex justify-end items-center bg-zinc-300 h-14 sticky">
+      <div className="flex justify-end items-center bg-zinc-300 h-14 sticky">
       <div className="flex items-center mr-5">
         <img src={Notifications} alt="Notification Icon" className="mr-2 md:mr-5" />
         <p className="mr-4 font-semibold text-sm font-manrope">Jony Larrence</p>
@@ -267,12 +267,13 @@ useEffect(() => {
           <FontAwesomeIcon 
             icon={faSignOutAlt} 
             className="text-lg cursor-pointer"
-            onClick={handleLogout}
+            onClick={handleLogout} 
           />
-          
         </div>
       </div>
     </div>
+       
+   
 
 
         {/* Title content when a sidebar item is clicked */}
