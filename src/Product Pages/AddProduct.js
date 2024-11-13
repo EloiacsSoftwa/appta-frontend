@@ -172,6 +172,9 @@ const AddProductModal = ({ onClose }) => {
           ))}
         </div>
 
+
+        {state.AddProduct.IsAlreadyExist && <p className="text-red-500 text-sm font-Manrope mt-2">{state.AddProduct.IsAlreadyExist}</p>}
+
         {/* Form */}
         {activeTab === "Product Details" && <ProductDetailsForm handleNext={handleNext} formData={formData} setFormData={setFormData} errors={errors} />}
         {/* {activeTab === "Accounting" && <AccountingDetailsForm handleNext={handleNext} handleBack={handleBack} formData={formData} setFormData={setFormData} />} */}
@@ -396,7 +399,7 @@ const handleCheckValidation = () =>{
             <div className="flex-1">
 
 
-            {state.AddProduct.IsAlreadyExist && <p className="text-red-500 text-sm font-Manrope mt-2">{state.AddProduct.IsAlreadyExist}</p>}
+            
 
 
               <label className="text-left block text-sm font-semibold text-black font-SourceSansPro">Product Name</label>
@@ -781,10 +784,27 @@ function BillOfMaterials({ handleBack, formData, setFormData }) {
   console.log("billOfMaterialsList",billOfMaterialsList)
 
 
+  // const addComponent = () => {
+  //   setbillOfMaterialsList([...billOfMaterialsList, { productName: '', billOfMaterialsProductQuantity: '' }]);
+  //   setShowProductDropdown([...showProductDropdown, false]);
+  // };
+
   const addComponent = () => {
-    setbillOfMaterialsList([...billOfMaterialsList, { productName: '', billOfMaterialsProductQuantity: '' }]);
+    setbillOfMaterialsList([
+      ...billOfMaterialsList,
+      {
+        productName: '',
+        billOfMaterialsProductId: '',
+        billOfMaterialsProductQuantity: '',
+        costName: '',
+        billOfMaterialsProductCost: 0 
+      }
+    ]);
+  
+  
     setShowProductDropdown([...showProductDropdown, false]);
   };
+
 
 
   const deleteComponent = (index) => {
