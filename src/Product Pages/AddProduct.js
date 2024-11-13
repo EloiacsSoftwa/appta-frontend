@@ -75,6 +75,7 @@ const AddProductModal = ({ onClose }) => {
     if (state.AddProduct.add_Product_status_code === 200) {
       dispatch({ type: 'GETPRODUCT' })
       setActiveTab("Product Details");
+      dispatch({ type: 'REMOVE_ADD_PRODUCT_VALIDATION'})
       setFormData(prevState => ({
         ...prevState,
         images: [],
@@ -146,6 +147,16 @@ const AddProductModal = ({ onClose }) => {
     }
   }
  
+
+
+  useEffect(()=>{
+if(state.AddProduct.IsAlreadyExist){
+  setTimeout(()=>{
+    dispatch({ type: 'REMOVE_ADD_PRODUCT_VALIDATION'})
+  },5000)
+}
+  },[state.AddProduct.IsAlreadyExist])
+
 
 
   return (
@@ -848,6 +859,7 @@ function BillOfMaterials({ handleBack, formData, setFormData }) {
 
   var handleSubmit = () => {
     if (validateFields()) {
+
     setFormData({ ...formData, billOfMaterialsList })
     let temp = { ...formData, billOfMaterialsList }
     // console.log(temp);
@@ -888,20 +900,28 @@ function BillOfMaterials({ handleBack, formData, setFormData }) {
   }, []);
 
 
-// Update the dropdown visibility when clicking on the input
+
 const handleproductNameDropDown = (index) => {
   const updatedDropdown = [...showProductDropdown];
-  updatedDropdown[index] = !updatedDropdown[index];  // Toggle the visibility
+  updatedDropdown[index] = !updatedDropdown[index]; 
   setShowProductDropdown(updatedDropdown);
 };
 
-// Filter products based on the input value
+
 const handleProductName = (item, index) => {
+  dispatch({ type: 'REMOVE_ADD_PRODUCT_VALIDATION'})
   const newComponents = [...billOfMaterialsList];
-  newComponents[index].productName = item.productName;  // Set the selected product
+  
+
+  newComponents[index].productName = item.productName; 
+  newComponents[index].billOfMaterialsProductId = item.productId;  
+  
   setbillOfMaterialsList(newComponents);
-  setShowProductDropdown([...showProductDropdown.map(() => false)]);  // Close dropdown after selection
+
+  // Hide dropdown after selection
+  setShowProductDropdown([...showProductDropdown.map(() => false)]);  
 };
+
 
 
   return (
@@ -940,10 +960,12 @@ const handleProductName = (item, index) => {
                         onChange={(e) => {
                           const newComponents = [...billOfMaterialsList];
                           newComponents[index].productName = e.target.value;
+                          newComponents[index].billOfMaterialsProductId = null; 
                           setbillOfMaterialsList(newComponents);
                           const newErrors = { ...errors };
-                delete newErrors[`billOfMaterialsList[${index}].productName`];
-                setErrors(newErrors);
+                          delete newErrors[`billOfMaterialsList[${index}].productName`];
+                          setErrors(newErrors);
+                          
                         }}
                       />
 
@@ -995,6 +1017,7 @@ const handleProductName = (item, index) => {
                           const newErrors = { ...errors };
                           delete newErrors[`billOfMaterialsList[${index}].billOfMaterialsProductQuantity`];
                           setErrors(newErrors);
+                         
                         }}
                       />
 
