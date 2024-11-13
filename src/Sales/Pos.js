@@ -47,21 +47,27 @@ const Pos = ({ handleClosed }) => {
 
   useEffect(() => {
     if (State.PosReducer?.paymentordercompletedStatusCode == 200) {
-      setTotalAmount('')
-      setOrderID('')
-      setCustomerFilter('')
+      setTotalAmount('');
+      setOrderID('');
+      setCustomerFilter('');
+      
       const InvoiceUrl = State.PosReducer?.Invoice_url;
       if (InvoiceUrl) {
+        setLoading(true);  
         window.open(InvoiceUrl, '_blank');
+        setTimeout(() => {
+          setLoading(false);
+        }, 1000); // 
+  
+   
+        setTimeout(() => {
+          dispatch({ type: 'REMOVE_COMPLETE_ORDER_PAYMENT_STATUS_CODE' });
+        }, 2000);
       }
-      setTimeout(() => {
-        dispatch({ type: 'REMOVE_COMPLETE_ORDER_PAYMENT_STATUS_CODE' })
-      }, 2000)
-
-
     }
+  }, [State.PosReducer?.paymentordercompletedStatusCode]);
 
-  }, [State.PosReducer?.paymentordercompletedStatusCode])
+  
 
 
 
@@ -90,36 +96,37 @@ const Pos = ({ handleClosed }) => {
 
   const [editingIndex, setEditingIndex] = useState(null);
   const [quantity, setQuantity] = useState(0);
-
-
-  const handleQuantityClick = (index, minPurchaseQuantity) => {
-    setEditingIndex(index);
-    setQuantity(minPurchaseQuantity);
+  
+  const handleQuantityClick = (index, currentQuantity) => {
+    setEditingIndex(index); // Set the index of the item being edited
+    setQuantity(currentQuantity); // Initialize the quantity with item.quantity
   };
-
-
-  const handleQuantityChange = (index, newQuantity) => {
-    const updatedData = posdata.map((item, i) =>
-      i === index ? { ...item, minPurchaseQuantity: newQuantity } : item
-    );
-    setPosData(updatedData);
-    setEditingIndex(null);
+  
+  const handleQuantityChange = (productId, newQuantity) => {
+    const payload = {
+      orderId: order_id,
+      productId: productId,
+      discount: 0,
+      quantity: newQuantity,
+      manuallyEntered: true
+    };
+    
+    dispatch({ type: ADD_ORDER_ITEMS_API_CALL, payload });
+    setEditingIndex(null); // Exit edit mode after updating
   };
-
-
+  
   const handleInputChange = (e) => {
     const value = e.target.value;
     const parsedValue = parseInt(value, 10);
-    setQuantity(isNaN(parsedValue) ? '' : parsedValue);
+    setQuantity(isNaN(parsedValue) ? '' : parsedValue); // Update quantity with input
   };
-
-
-  const handleKeyDown = (index, event) => {
+  
+  const handleKeyDown = (productId, event) => {
     if (event.key === 'Enter') {
-      handleQuantityChange(index, quantity);
+      handleQuantityChange(productId, quantity); // Update quantity on Enter key
     }
   };
-
+  
 
 
 
@@ -253,6 +260,9 @@ const Pos = ({ handleClosed }) => {
       const totalNetAmount = updatedProducts.reduce((sum, item) => sum + item.netAmount, 0);
       setTotalAmount(totalNetAmount);
     }
+    else{
+      setTotalAmount('')
+    }
   }, [orderItems]);
 
 
@@ -360,6 +370,7 @@ const Pos = ({ handleClosed }) => {
 
 
   const [open, setOpen] = useState(false);
+  const [customerErrorMsg, setCustomerErrMsg] = useState('');
 
   const handleOpen = () => {
     if (customerFilter && order_id) {
@@ -369,12 +380,17 @@ const Pos = ({ handleClosed }) => {
         payload: { orderId: String(order_id) },
       });
     }
-
+    else{
+      setCustomerErrMsg("Please Add Customer")
+      setTimeout(() => {
+        setCustomerErrMsg('')
+      }, 500);
+    
+    }
   }
 
   const handleClose = () => {
     setOpen(false);
-    // setTotalAmount('')
   };
 
   useEffect(() => {
@@ -418,52 +434,42 @@ const Pos = ({ handleClosed }) => {
   }, [State.Customer.CustomerList]);
 
 
-  const [selectedProducts, setSelectedProducts] = useState([]);
-
-
-  const handleCheckboxClick = (productId) => {
-    setSelectedProducts((prevSelected) =>
-      prevSelected.includes(productId)
-        ? prevSelected.filter((id) => id !== productId)
-        : [...prevSelected, productId]
-    );
-  };
-
-
-  // const handleProductDelete = () => {
-  //   const productsToDelete = selectedProducts.map((productId) => ({
-  //     orderId: order_id,
-  //     productId,
-  //   }));
-
-  //   dispatch({ type: 'DELETE-POS-PRODUCT', payload: productsToDelete, });
-  //   setSelectedProducts([]);
-  // };
+ 
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-
-
-  const handleProductDelete = () => {
-    const productsToDelete = selectedProducts.map((productId) => ({
-      orderId: order_id, 
-      productId,
-    }));
-
-    dispatch({ type: 'DELETE-POS-PRODUCT', payload: productsToDelete });
-    setSelectedProducts([]);
-    setIsModalOpen(false); 
-  };
-
+  const [selectedProducts, setSelectedProducts] = useState([]);
+  
+  
   const openDeleteConfirmation = () => {
     if (selectedProducts.length > 0) {
       setIsModalOpen(true);
     }
   };
-
+  
   
   const closeModal = () => {
     setIsModalOpen(false);
   };
+  
+ 
+  const handleProductDelete = () => {
+    const productsToDelete = selectedProducts.map((productId) => ({
+      orderId: order_id,
+      productId,
+    }));
+  
+    dispatch({ type: 'DELETE-POS-PRODUCT', payload: productsToDelete });
+    setSelectedProducts([]); 
+    setIsModalOpen(false); 
+  };
+  
+ 
+  const handleProductSelect = (productId, isSelected) => {
+    setSelectedProducts((prevSelected) =>
+      isSelected ? [...prevSelected, productId] : prevSelected.filter((id) => id !== productId)
+    );
+  };
+  
 
 
 
@@ -540,6 +546,19 @@ const Pos = ({ handleClosed }) => {
 
   useBarcodeScanner(barcodeScanned)
 
+
+
+  useEffect(() => {
+    if (State.PosReducer.barcodeStatuscode == 200) {
+
+      setTimeout(() => {
+        dispatch({ type: 'REMOVE_GET_BARCODE_PRODUCT_STATUS_CODE' })
+      }, 1000)
+    }
+
+  }, [State.PosReducer.barcodeStatuscode])
+
+
   return (<>
     <div className='w-screen h-screen ' >
       <div className='h-4/5 bg-white p-4 w-full'>
@@ -605,27 +624,29 @@ const Pos = ({ handleClosed }) => {
                   <img src={Delete} className='w-6 h-6 cursor-pointer'  onClick={openDeleteConfirmation} />
 
                   {isModalOpen && (
-        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
-          <div className="bg-white p-6 rounded shadow-lg">
-            <p className='mb-3'>Do you want to Remove this Product?</p>
-            <div className="mt-4 flex justify-center space-x-4">
-              <button onClick={closeModal} className="px-4 py-2 bg-gray-300 rounded">Cancel</button>
-              <button onClick={handleProductDelete} className="px-4 py-2 bg-red-500 text-white rounded">OK</button>
-            </div>
-          </div>
-        </div>
-      )}
+  <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center z-50">
+    <div className="bg-white p-6 rounded shadow-lg z-50">
+      <p className="mb-3">Do you want to remove the selected products?</p>
+      <div className="mt-4 flex justify-center space-x-4">
+        <button onClick={closeModal} className="px-4 py-2 bg-gray-300 rounded">Cancel</button>
+        <button onClick={handleProductDelete} className="px-4 py-2 bg-red-500 text-white rounded">OK</button>
+      </div>
+    </div>
+  </div>
+)}
+
+
                 </div>
               </div>
             </div>
 
             <div className="relative w-full mb-5">
 
-              {/* {loading && (
+              {loading && (
 <div className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-75 z-10">
 <div className="loader border-t-4 border-orange-500 border-solid rounded-full w-10 h-10 animate-spin"></div>
 </div>
-)} */}
+)}
 
               <table className="w-full text-left mb-5 table-auto">
                 <thead>
@@ -699,7 +720,9 @@ const Pos = ({ handleClosed }) => {
                     State.PosReducer.orderItems.map((item, index) => (
                       <tr key={index} className="hover:bg-gray-50 border-0">
                         <td className="p-2 mt-1 flex items-center justify-start">
-                          <input type="checkbox" className="form-checkbox h-3 w-3 text-blue-600 border-neutral-500 cursor-pointer" onClick={() => handleCheckboxClick(item.productId)} />
+                          <input type="checkbox" className="form-checkbox h-3 w-3 text-blue-600 border-neutral-500 cursor-pointer"
+                          checked={selectedProducts.includes(item.productId)}
+                          onChange={(e) => handleProductSelect(item.productId, e.target.checked)} />
                         </td>
                         <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{item.unitId || '-'}</td>
                         <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{item.barcodeNo || '-'}</td>
@@ -842,6 +865,19 @@ const Pos = ({ handleClosed }) => {
             </div>
 
             <div class="bg-white p-2 rounded-lg shadow-lg m-2 ">
+            {customerErrorMsg && (
+
+<div className="fixed inset-0 bg-gray-600 bg-opacity-80 flex justify-end items-center z-50 me-6">
+<div className="bg-white p-3 rounded shadow-lg z-50">
+<p className="text-red-500 text-md mt-2">{customerErrorMsg}</p>
+  <div className="mt-4 flex justify-center space-x-4">
+   
+  </div>
+</div>
+</div>
+
+      
+         )}
               <div class="flex flex-row justify-between">
                 <div class="flex flex-col ">
                   <p className={customerFilter?.customerName ? 'text-sm font-semibold font-Manrope' : 'text-xs text-[#797979]'}>
@@ -938,6 +974,8 @@ const Pos = ({ handleClosed }) => {
                 <p className='font-semibold font-Manrope text-[#131313] font-bold text-xl '>₹ {totalamount ? totalamount : 0}</p>
               </div>
 
+      
+
             </div>
 
 
@@ -992,7 +1030,7 @@ const Pos = ({ handleClosed }) => {
             <button
               type="submit"
               onClick={handleOpen}
-              className="flex items-center me-2 justify-center w-64 rounded bg-[#EA580C] text-white px-24 py-1.5 text-sm font-semibold border border-[#EA580C] shadow-sm hover:bg-[#EA580C] hover:text-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#EA580C]">
+              className="flex items-center me-2 justify-center w-80 rounded bg-[#EA580C] text-white px-24 py-1.5 text-sm font-semibold border border-[#EA580C] shadow-sm hover:bg-[#EA580C] hover:text-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#EA580C]">
               ₹ Pay
             </button>
           </div>
@@ -1139,6 +1177,8 @@ const Pos = ({ handleClosed }) => {
     </Box>
   </Box>
 </Modal> */}
+
+        
 
       {
         open && customerFilter && (<Pos_Payment handleclose={handleClose} order_id={order_id} total_amount={totalamount} />
