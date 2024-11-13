@@ -449,6 +449,7 @@ const Pos = ({ handleClosed }) => {
   
   const closeModal = () => {
     setIsModalOpen(false);
+    setSelectedProducts([]);
   };
   
  
