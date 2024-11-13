@@ -430,15 +430,42 @@ const Pos = ({ handleClosed }) => {
   };
 
 
+  // const handleProductDelete = () => {
+  //   const productsToDelete = selectedProducts.map((productId) => ({
+  //     orderId: order_id,
+  //     productId,
+  //   }));
+
+  //   dispatch({ type: 'DELETE-POS-PRODUCT', payload: productsToDelete, });
+  //   setSelectedProducts([]);
+  // };
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+
   const handleProductDelete = () => {
     const productsToDelete = selectedProducts.map((productId) => ({
-      orderId: order_id,
+      orderId: order_id, 
       productId,
     }));
 
-    dispatch({ type: 'DELETE-POS-PRODUCT', payload: productsToDelete, });
+    dispatch({ type: 'DELETE-POS-PRODUCT', payload: productsToDelete });
     setSelectedProducts([]);
+    setIsModalOpen(false); 
   };
+
+  const openDeleteConfirmation = () => {
+    if (selectedProducts.length > 0) {
+      setIsModalOpen(true);
+    }
+  };
+
+  
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
+
 
   useEffect(() => {
     if (State.PosReducer.deleteposproductStatuscode === 200) {
@@ -575,7 +602,19 @@ const Pos = ({ handleClosed }) => {
               <div className='flex items-center gap-2 '>
 
                 <div>
-                  <img src={Delete} className='w-6 h-6 cursor-pointer' onClick={handleProductDelete} />
+                  <img src={Delete} className='w-6 h-6 cursor-pointer'  onClick={openDeleteConfirmation} />
+
+                  {isModalOpen && (
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
+          <div className="bg-white p-6 rounded shadow-lg">
+            <p className='mb-3'>Do you want to Remove this Product?</p>
+            <div className="mt-4 flex justify-center space-x-4">
+              <button onClick={closeModal} className="px-4 py-2 bg-gray-300 rounded">Cancel</button>
+              <button onClick={handleProductDelete} className="px-4 py-2 bg-red-500 text-white rounded">OK</button>
+            </div>
+          </div>
+        </div>
+      )}
                 </div>
               </div>
             </div>
