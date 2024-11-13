@@ -95,6 +95,9 @@ function* AddProduct_Details(args) {
 
   const response = yield call(AddProductDetails, args.payload);
  
+
+console.log("response add Product",response)
+
   const toastStyle = {
     backgroundColor: "#fff",
     color:'#38B000',
@@ -110,8 +113,8 @@ function* AddProduct_Details(args) {
     padding: "10px",
    
   };
-  if (response.status === 200 || response.code === 200) {
-    yield put({ type: 'ADD_PRODUCT_DETAILS', payload: { response: response.data, statusCode: response.status || response.code } });
+  if (response.data.code  === 200  || response.code === 200) {
+    yield put({ type: 'ADD_PRODUCT_DETAILS', payload: { response: response.data, statusCode: response.data.code || response.code } });
     toast.success('Product Successfully Created', {
       position: "top-center",
       autoClose: 2000,
@@ -130,10 +133,10 @@ function* AddProduct_Details(args) {
   
   // }
    
-  // if (response.status === 204 || response.code === 204) {
-  //   yield put({ type: 'ADD_PRODUCT_VALIDATION', payload: { response: response.data, statusCode: response.status || response.code } });
+  if (response.data.code === 204 || response.code === 204) {
+    yield put({ type: 'ADD_PRODUCT_VALIDATION', payload: { response: response.data.message,  } });
   
-  // }
+  }
   else {
     yield put({ type: 'ERROR', payload: { statusCode: response.status || response.code } });
   }
