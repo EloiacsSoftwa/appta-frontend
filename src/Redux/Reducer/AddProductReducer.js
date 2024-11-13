@@ -53,7 +53,7 @@ const AddProductReducer = (state = initialState, action) => {
       return { ...state, IsAlreadyExist: action.payload.response };
 
 
-      case 'REMOVE_ADD+PRODUCT_VALIDATION':
+      case 'REMOVE_ADD_PRODUCT_VALIDATION':
         return { ...state, IsAlreadyExist: ''};
 
     case 'REMOVE_ADD_PRODUCT_STATUS_CODE':
