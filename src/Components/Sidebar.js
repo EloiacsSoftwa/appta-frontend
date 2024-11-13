@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import { HiOutlineArrowLeft, HiOutlineArrowRight } from "react-icons/hi";
 import Eloiacs from "../Images/Icons/Eloiacs.svg";
-// import DashboardIcon from "../Images/Icons/DashboardIcon.svg";
+import DashboardIcon from "../Images/Icons/Dashboard.svg"
 import ProductIcon from "../Images/Icons/Product icon.svg";
 import Brand from "../Images/Icons/Brand.svg";
 import Sales from "../Images/Icons/Sales.svg";
@@ -124,11 +124,11 @@ useEffect(() => {
   );
 
   const sidebarItems = [
-    // {
-    //   icon: DashboardIcon,
-    //   title: "Dashboard",
-    //   submenu: [],
-    // },
+    {
+      icon: DashboardIcon,
+      title: "Dashboard",
+      submenu: [],
+    },
     {
       icon: ProductIcon,
       title: "Product",
