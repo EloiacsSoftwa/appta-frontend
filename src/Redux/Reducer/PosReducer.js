@@ -18,6 +18,8 @@ const initialState = {
   orderinitialiseStatusCode : 0,
   paymentordercompletedStatusCode : 0,
   Invoice_url:'',
+  SalesList:[],
+  getsalesproductStatuscode:0,
 }
 
 
@@ -88,6 +90,12 @@ const PosReducer = (state = initialState, action) => {
 
           case RESET_PAYMENT_STATUS_CODE:
             return { ...state, paymentordercompletedStatusCode: 0 }
+
+
+            case 'GET_SALES_PRODUCT':
+              return { ...state, SalesList: action.payload.response, getsalesproductStatuscode: action.payload.statusCode }
+            case 'REMOVE_GET_SALES_PRODUCT_STATUS_CODE':
+              return { ...state, getsalesproductStatuscode: 0 }
 
     default:
       return state;
