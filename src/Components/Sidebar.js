@@ -73,9 +73,9 @@ localStorage.setItem('currentPage', title);
 }
 
 
-// useEffect(() => {
-//   setSelectedMenu(localStorage.getItem('currentPage'));
-// }, [selectedMenu]);
+useEffect(() => {
+  setSelectedMenu(localStorage.getItem('currentPage'));
+}, [selectedMenu]);
 
 
 
@@ -381,7 +381,7 @@ useEffect(() => {
   <>
       {selectedMenu === 'Stock Availability' && (
             <div className="bg-white mt-2">
-              <Stock_Available/>
+              <Stock_Available handleClose={handleCloseForStock}/>
             </div>
           )}
 
