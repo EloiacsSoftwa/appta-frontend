@@ -12,9 +12,10 @@
   padding: 8px 0;
  
 } */
+
 .react-datepicker {
   font-family: 'Manrope' !important;
-  font-size: 0.8rem;
+  font-size: 0.8rem !important;
   border: 1px solid rgb(217, 217, 217) !important;
 }
 
