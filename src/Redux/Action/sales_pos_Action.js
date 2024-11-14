@@ -71,4 +71,7 @@ export async function CompleteOrder({ orderId, paymentType }) {
     });
 }
 
-
+export async function getsalesProduct() {
+  return await AxiosConfig.post('/order/getOrders', {
+  })
+}
