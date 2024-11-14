@@ -50,6 +50,10 @@ const Pos = ({ handleClosed }) => {
       setTotalAmount('');
       setOrderID('');
       setCustomerFilter('');
+      setTimeout(() => {
+        dispatch({ type: 'CREATE-ORDER' });
+      }, 2000);
+    
       
       const InvoiceUrl = State.PosReducer?.Invoice_url;
       if (InvoiceUrl) {
@@ -59,7 +63,8 @@ const Pos = ({ handleClosed }) => {
           setLoading(false);
         }, 1000); // 
   
-   
+       
+
         setTimeout(() => {
           dispatch({ type: 'REMOVE_COMPLETE_ORDER_PAYMENT_STATUS_CODE' });
         }, 2000);
