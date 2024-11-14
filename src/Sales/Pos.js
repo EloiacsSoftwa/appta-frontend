@@ -50,6 +50,10 @@ const Pos = ({ handleClosed }) => {
       setTotalAmount('');
       setOrderID('');
       setCustomerFilter('');
+
+      setTimeout(() => {
+        dispatch({ type: 'CREATE-ORDER' });
+      }, 2000);
       
       const InvoiceUrl = State.PosReducer?.Invoice_url;
       if (InvoiceUrl) {
@@ -96,72 +100,76 @@ const Pos = ({ handleClosed }) => {
 
   const [editingIndex, setEditingIndex] = useState(null);
   const [quantity, setQuantity] = useState(0);
-  
-  const handleQuantityClick = (index, currentQuantity) => {
-    setEditingIndex(index); // Set the index of the item being edited
-    setQuantity(currentQuantity); // Initialize the quantity with item.quantity
+  const [discount, setDiscount] = useState(0);
+  const [discountAmount, setDiscountAmount] = useState(0); 
+
+  const handleFieldClick = (index, fieldValues) => {
+    setEditingIndex(index);
+    setQuantity(fieldValues.quantity);
+    setDiscount(fieldValues.discount);
+    setDiscountAmount(fieldValues.discountAmount ?? 0); 
   };
   
-  const handleQuantityChange = (productId, newQuantity) => {
+  const handleFieldChange = (productId) => {
     const payload = {
       orderId: order_id,
       productId: productId,
-      discount: 0,
-      quantity: newQuantity,
-      manuallyEntered: true
+      discount: discount,
+      quantity: quantity,
+      manuallyEntered: true,
     };
-    
+  
     dispatch({ type: ADD_ORDER_ITEMS_API_CALL, payload });
-    setEditingIndex(null); // Exit edit mode after updating
+    setEditingIndex(null); 
   };
   
-  const handleInputChange = (e) => {
-    const value = e.target.value;
-    const parsedValue = parseInt(value, 10);
-    setQuantity(isNaN(parsedValue) ? '' : parsedValue); // Update quantity with input
-  };
+  const [error, setError] = useState(null); 
+
+  const handleInputChange = (field, e, item) => {
+    let value = e.target.value;
+    value = value.replace(/^0+/, '');
+    const parsedValue = parseFloat(value);
   
-  const handleKeyDown = (productId, event) => {
-    if (event.key === 'Enter') {
-      handleQuantityChange(productId, quantity); // Update quantity on Enter key
+    if (field === 'discount') {
+      const discountPercent = isNaN(parsedValue) ? 0 : parsedValue;
+      const calculatedDiscountAmount = (discountPercent / 100) * item.totalAmount;
+  
+      if (calculatedDiscountAmount > item.totalAmount) {
+        setError('Discount amount exceeds the total amount.');
+      } else {
+        setError(null);
+        setDiscount(discountPercent);
+        setDiscountAmount(calculatedDiscountAmount.toFixed(2));
+      }
+    } else if (field === 'discountAmount') {
+      const discountAmt = isNaN(parsedValue) ? 0 : parsedValue;
+  
+      if (discountAmt > item.totalAmount) {
+        setError('Discount amount exceeds the total amount.');
+      } else {
+        setError(null);
+        setDiscountAmount(discountAmt);
+        setDiscount(((discountAmt / item.totalAmount) * 100).toFixed(2));
+      }
+    } else if (field === 'quantity') {
+      setQuantity(isNaN(parsedValue) ? '' : parsedValue);
     }
   };
   
-
-
-
-  const [editingDiscountIndex, setEditingDiscountIndex] = useState(null);
-  const [discountAmount, setDiscountAmount] = useState(0);
-
-
-  const handleEditDiscountAmount = (index, currentDiscount) => {
-    setEditingDiscountIndex(index);
-    setDiscountAmount(currentDiscount || 0);
-  };
-
-
-  const handleDiscountAmountChange = (e) => {
-    const value = e.target.value;
-    setDiscountAmount(value);
-  };
-
-
-  const handleDiscountAmountSave = (index) => {
-    const updatedData = posdata.map((item, i) =>
-      i === index ? { ...item, discountAmount: discountAmount } : item
-    );
-    setPosData(updatedData);
-    setEditingDiscountIndex(null);
-  };
-
-
-  const handleDiscountAmountKeyDown = (index, event) => {
-    if (event.key === 'Enter') {
-      handleDiscountAmountSave(index);
+  
+  
+  const handleKeyDown = (productId, e) => {
+    if (e.key === 'Enter') {
+      if (error) {
+        e.preventDefault(); 
+        alert(error); 
+      } else {
+        handleFieldChange(productId); 
+      }
     }
   };
-
-
+  
+  
 
 
 
@@ -205,16 +213,7 @@ const Pos = ({ handleClosed }) => {
   }, [State.PosReducer.paymentordercompletedStatusCode])
 
 
-  // Barcode scan function
-  // const BarcodeGetData = () => {
-  //   dispatch({ type: 'BARCODE_GET_PRODUCT', payload: barcode });
 
-  //   setTimeout(() => {
-  //     if (State.PosReducer.BarcodeproductData && State.PosReducer.BarcodeproductData !== '') {
-  //       handleProductUpdate(State.PosReducer.BarcodeproductData); 
-  //     }
-  //   }, 1000);
-  // };
 
   // Search filter logic
   const [searchQuery, setSearchQuery] = useState('');
@@ -258,7 +257,8 @@ const Pos = ({ handleClosed }) => {
 
 
       const totalNetAmount = updatedProducts.reduce((sum, item) => sum + item.netAmount, 0);
-      setTotalAmount(totalNetAmount);
+      setTotalAmount(Math.round(totalNetAmount));
+
     }
     else{
       setTotalAmount('')
@@ -395,7 +395,7 @@ const Pos = ({ handleClosed }) => {
 
   useEffect(() => {
     if (State.PosReducer.orderinitialiseStatusCode === 200) {
-      setTotalAmount(State.PosReducer.totalAmount)
+      setTotalAmount(Math.round(State.PosReducer.totalAmount));
       setTimeout(() => {
         dispatch({ type: 'REMOVE_ORDER_INITIALIZE_PAYMENT_STATUS_CODE' });
       }, 1000);
@@ -730,57 +730,76 @@ const Pos = ({ handleClosed }) => {
                         <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{`${item.productName} - ${item.size}${item.unit}` || '-'}</td>
 
 
-
                         <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">
-                          {editingIndex === index ? (
-                            <input
-                              type="number"
-                              value={quantity}
-                              onChange={handleInputChange}
-                              onBlur={() => handleQuantityChange(index, quantity)}
-                              onKeyDown={(e) => handleKeyDown(index, e)}
-                              className="border border-neutral-300 rounded px-1 py-0.5 w-16"
-                            />
-                          ) : (
-                            <span onClick={() => handleQuantityClick(index, item.quantity)} className="cursor-pointer">
-                              {item.quantity || '-'}
-                            </span>
-                          )}
-                        </td>
+  {editingIndex === index ? (
+    <input
+      type="number"
+      value={quantity}
+      onChange={(e) => handleInputChange('quantity', e)}
+      onBlur={() => handleFieldChange(item.productId, 'quantity', quantity)}
+      onKeyDown={(e) => handleKeyDown(item.productId, e)}
+      className="border border-neutral-300 rounded px-1 py-0.5 w-16"
+    />
+  ) : (
+    <span onClick={() => handleFieldClick(index, item)} className="cursor-pointer">
+      {item.quantity || '-'}
+    </span>
+  )}
+</td>
 
 
 
                         <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">₹{item.unitPrice || '0'}</td>
-                        <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">₹{item.totalAmount || '-'}</td>
-                        <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{'-'}</td>
-                        {/* <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">
-             ₹{(item.minPurchaseQuantity * item.wholesalePrice * (item.wholesalePricePercentage / 100)) || '-'}</td> */}
+                        <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">
+                           ₹{item.totalAmount ? Math.round(item.totalAmount) : '-'}</td>
+                           <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">
+  {editingIndex === index ? (
+    <input
+      type="number"
+      value={discount}
+      onChange={(e) => handleInputChange('discount', e, item)}
+      onBlur={() => handleFieldChange(item.productId)}
+      onKeyDown={(e) => handleKeyDown(item.productId, e)}
+      className="border border-neutral-300 rounded px-1 py-0.5 w-16"
+      placeholder="%"
+    />
+  ) : (
+    <span onClick={() => handleFieldClick(index, item)} className="cursor-pointer">
+      {item.discount || '0'}
+    </span>
+  )}
+  {error && <div className="text-red-500 text-xs">{error}</div>} 
+</td>
 
-                        {/* <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">
-                          {editingDiscountIndex === index ? (
-                            <input
-                              type="number"
-                              value={discountAmount}
-                              onChange={handleDiscountAmountChange}
-                              onBlur={() => handleDiscountAmountSave(index)}
-                              onKeyDown={(e) => handleDiscountAmountKeyDown(index, e)}
-                              className="border border-neutral-300 rounded px-1 py-0.5 w-16"
-                            />
-                          ) : (
-                            <span
-                              onClick={() => handleEditDiscountAmount(index, item.discountAmount || 0)}
-                              className="cursor-pointer"
-                            >
-                              { '0'}
-                            </span>
-                          )}
-                        </td> */}
-                        <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">
-                          {'0'}
-                        </td>
-                        <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">
-                          ₹{(item.quantity * item.totalAmount) || '0'}
-                        </td>
+
+<td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">
+  {editingIndex === index ? (
+    <input
+      type="number"
+      value={discountAmount}
+      onChange={(e) => handleInputChange('discountAmount', e, item)}
+      onBlur={() => handleFieldChange(item.productId)}
+      onKeyDown={(e) => handleKeyDown(item.productId, e)}
+      className="border border-neutral-300 rounded px-1 py-0.5 w-16"
+    />
+  ) : (
+    <span onClick={() => handleFieldClick(index, item)} className="cursor-pointer">
+      ₹ {item.totalAmount ? (item.totalAmount * (item.discount / 100)).toFixed(2) : '0'}
+    </span>
+  )}
+</td>
+
+
+
+                      
+<td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">
+  ₹ {item.quantity && item.totalAmount 
+    ? (item.quantity * item.totalAmount - (item.discount ? (item.totalAmount * (item.discount / 100)) : 0)).toFixed(2) 
+    : '0'}
+</td>
+
+
+
                       </tr>
                     ))
                   ) : (
