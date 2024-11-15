@@ -141,10 +141,10 @@ function AddPurchase({ handleClose }) {
 
 
 
-  // const handleInputChange = (e, field, index) => {
-  //   const value = e.target.value;
-  //   const updatedProducts = [...products];
-  //   updatedProducts[index][field] = value;
+// const handleInputChange = (e, field, index) => {
+//   const value = e.target.value;
+//   const updatedProducts = [...products];
+//   updatedProducts[index][field] = value;
 
   //   const {
   //     Quantity,
