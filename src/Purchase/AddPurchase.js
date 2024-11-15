@@ -948,11 +948,6 @@ function AddPurchase({ handleClose }) {
 
         </div>
 
-
-
-
-
-
         <div className="mt-4 border border-y-black w-full"></div>
 
 
@@ -991,3 +986,5 @@ function AddPurchase({ handleClose }) {
 }
 
 export default AddPurchase;
+
+
