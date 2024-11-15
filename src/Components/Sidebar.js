@@ -263,16 +263,16 @@ useEffect(() => {
       {/* Main Content */}
       <div className={`flex-1 overflow-y-auto ${isExpanded ? "ml-64" : "ml-20"}`}>
       <div className="flex justify-end items-center bg-zinc-300 h-14 sticky">
-      <div className="flex items-center mr-5">
+      <div className="flex items-center mr-5  h-14">
         <img src={Notifications} alt="Notification Icon" className="mr-2 md:mr-5" />
         <p className="mr-4 font-semibold text-sm font-manrope">Jony Larrence</p>
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center space-x-2 h-14">
         <img 
             src={Elipsepic} 
             alt="Profile Picture" 
             className="w-9 h-9 md:w-10 md:h-10"
           />
-          <div className="flex justify-center items-center min-h-screen">
+          <div className="flex justify-center items-center h-14">
       <img 
             src={Logout} 
             alt="Profile Picture" 
@@ -280,7 +280,15 @@ useEffect(() => {
             onClick={() => setIsModalOpen(true)}
           />
 
-      {isModalOpen && (
+     
+    </div>
+        
+        </div>
+      </div>
+    </div>
+       
+   
+    {isModalOpen && (
         <div className="fixed inset-0 flex justify-center items-start pt-36 ml-48  bg-opacity-50 flex">
           <div className="bg-white rounded-lg shadow-lg p-5 w-68 max-w-xs border border-orange-500">
             <h2 className="text-lg font-semibold text-gray-800 mb-4">
@@ -303,14 +311,6 @@ useEffect(() => {
           </div>
         </div>
       )}
-    </div>
-        
-        </div>
-      </div>
-    </div>
-       
-   
-
 
         {/* Title content when a sidebar item is clicked */}
         <div className="overflow-y-auto h-full ">
