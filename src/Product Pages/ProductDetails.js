@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 function ProductDetails({productDetails, handleClose}) {
     
 // console.log("productDetails",productDetails)
-console.log("productDetails",productDetails.quantity)
+console.log("productDetails",productDetails)
 
 
 const [formValues, setFormValues] = useState({
@@ -17,8 +17,8 @@ const [formValues, setFormValues] = useState({
     subCategory: productDetails?.subCategory || '',
     brand: productDetails?.brand || '',
     unit: productDetails?.unit || '',
-    quantity: productDetails?.quantity || '',
-    minQty: productDetails?.minPurchaseQuantity || '',
+    quantity: productDetails?.size || '',
+    minQty: productDetails?.minPurchaseQuantity ?? '',
     barcode: productDetails?.barcodeNo || '',
     description: productDetails?.description || '',
     images : productDetails?.images[0] || ''
@@ -82,16 +82,16 @@ const [formValues, setFormValues] = useState({
                                 <div className="flex flex-col md:flex-row gap-4 w-full">
                                     <div className="flex-1">
                                         <label className="font-source-sans-pro text-sm font-semibold leading-5">Unit</label>
-                                        <input type="number" name="qty" className="mt-1 pl-3 block border border-gray-300 py-2 font-source-sans-pro text-base placeholder-black rounded lg:w-44 xl:w-44 md:w-32" value={formValues.unit} />
+                                        <input type="text" name="qty" className="mt-1 pl-3 block border border-gray-300 py-2 font-source-sans-pro text-base placeholder-black rounded lg:w-44 xl:w-44 md:w-32" value={formValues.unit} />
                                     </div>
                                     <div className='flex gap-2'>
                                         <div>
                                             <label className="font-source-sans-pro text-sm font-semibold leading-5 ml-1">Qty</label>
-                                            <input type="number" name="qty" className="mt-1 pl-3 block border border-gray-300 py-2 font-source-sans-pro text-base placeholder-black rounded lg:w-44 xl:w-44 md:w-32" value={formValues.quantity} />
+                                            <input type="text" name="qty" className="mt-1 pl-3 block border border-gray-300 py-2 font-source-sans-pro text-base placeholder-black rounded lg:w-44 xl:w-44 md:w-32" value={formValues.quantity} />
                                         </div>
                                         <div>
                                             <label className="font-source-sans-pro text-sm font-semibold leading-5  ml-1">Min Qty</label>
-                                            <input type="number" name="minQty" className="mt-1 pl-3 block border border-gray-300 py-2 font-source-sans-pro text-base placeholder-black rounded lg:w-44 md:w-32" value={formValues.minQty} />
+                                            <input type="text" name="minQty" className="mt-1 pl-3 block border border-gray-300 py-2 font-source-sans-pro text-base placeholder-black rounded lg:w-44 md:w-32" value={formValues.minQty} />
                                         </div>
                                     </div>
 
