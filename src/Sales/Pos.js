@@ -75,16 +75,45 @@ const Pos = ({ handleClosed }) => {
 
 
 
+  // useEffect(() => {
+  //   const handleKeyDown = (event) => {
+  //     if (event.key === 'Escape') {
+  //       handleHoldOrder()
+  //       handleClosed()
+  //     }
+  //   };
+  //   window.addEventListener('keydown', handleKeyDown);
+  //   return () => window.removeEventListener('keydown', handleKeyDown);
+  // }, [handleClosed]);
+
+
+
   useEffect(() => {
     const handleKeyDown = (event) => {
-      if (event.key === 'Escape') {
-        handleHoldOrder()
-        handleClosed()
+      if (event.key === "Escape") {
+        handleHoldOrder();
+        handleClosed();
       }
     };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "visible") {
+        console.log("User returned to the application");
+        handleHoldOrder();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
   }, [handleClosed]);
+
+
+
 
   //  const [loading, setLoading] = useState(false);
 
