@@ -27,17 +27,10 @@ export const addOrderItemsApiCall = async (product) => {
 }
 
 
-export async function CompleteOrder(orderId, paymentType) {
-  return await AxiosConfig.post('/order/completeOrder', {}, {
-    params: {
-      orderId: orderId,
-      paymentType: paymentType,
-    },
-  });
-}
+
 
 export async function getPaymentType() {
-  return await AxiosConfig.post('/payments/getPayments', {
+  return await AxiosConfig.post('/payments/getPaymentTypes', {
   })
 }
 
@@ -48,7 +41,7 @@ export async function DeletePosProduct(products) {
 export async function Holdorder({ orderId }) { 
   try {
     return await AxiosConfig.post('/order/holdOrder', null, {
-      params: { orderId }, // This should append orderId correctly
+      params: { orderId }, 
     });
   } catch (error) {
     console.error("Network error:", error.response || error.message);
@@ -57,4 +50,28 @@ export async function Holdorder({ orderId }) {
 }
 
 
+export async function InitializePayment({ orderId }) { 
+  try {
+    return await AxiosConfig.post('/order/initializePayments', null, {
+      params: { orderId }, 
+    });
+  } catch (error) {
+    console.error("Network error:", error.response || error.message);
+    throw error;
+  }
+}
 
+export async function CompleteOrder({ orderId, paymentType }) { 
+  
+    return await AxiosConfig.post('/order/completeOrder', null, {
+      params: { 
+        orderId, 
+        paymentType 
+      }, 
+    });
+}
+
+export async function getsalesProduct() {
+  return await AxiosConfig.post('/order/getOrders', {
+  })
+}

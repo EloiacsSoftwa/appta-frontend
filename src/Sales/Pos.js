@@ -16,8 +16,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import AddCustomer from '../Contact/AddCustomer';
 import { Setting } from 'iconsax-react';
 import Pos_Payment from './Pos_Payment';
+import useBarcodeScanner from '../utils/useBarcodeScanner';
 
-import { ADD_ORDER_ITEMS_API_CALL, GET_ALL_ACTIVE_PRODUCTS_API_CALL } from '../utils/Constant';
+import { ADD_ORDER_ITEMS_API_CALL, GET_ALL_ACTIVE_PRODUCTS_API_CALL, RESET_PAYMENT_STATUS_CODE } from '../utils/Constant';
 
 
 const Pos = ({ handleClosed }) => {
@@ -25,9 +26,59 @@ const Pos = ({ handleClosed }) => {
   const dispatch = useDispatch();
   const State = useSelector(state => state);
 
+
+  console.log("State pos first", State.PosReducer.Invoice_url)
+  const [invoiceurl, setInvoiceurl] = useState('')
+
+  const [loading, setLoading] = useState(false)
+
+  // useEffect(()=>{
+  //   if(State.PosReducer?.Invoice_url){
+
+  //       }
+
+  // },[State.PosReducer?.Invoice_url])
+
+  const [customerFilter, setCustomerFilter] = useState('');
+  const [totalamount, setTotalAmount] = useState('')
+
+  const [order_id, setOrderID] = useState('')
+
+
+  useEffect(() => {
+    if (State.PosReducer?.paymentordercompletedStatusCode == 200) {
+      setTotalAmount('');
+      setOrderID('');
+      setCustomerFilter('');
+
+      setTimeout(() => {
+        dispatch({ type: 'CREATE-ORDER' });
+      }, 2000);
+      
+      const InvoiceUrl = State.PosReducer?.Invoice_url;
+      if (InvoiceUrl) {
+        setLoading(true);  
+        window.open(InvoiceUrl, '_blank');
+        setTimeout(() => {
+          setLoading(false);
+        }, 1000); // 
+  
+   
+        setTimeout(() => {
+          dispatch({ type: 'REMOVE_COMPLETE_ORDER_PAYMENT_STATUS_CODE' });
+        }, 2000);
+      }
+    }
+  }, [State.PosReducer?.paymentordercompletedStatusCode]);
+
+  
+
+
+
   useEffect(() => {
     const handleKeyDown = (event) => {
       if (event.key === 'Escape') {
+        handleHoldOrder()
         handleClosed()
       }
     };
@@ -37,85 +88,88 @@ const Pos = ({ handleClosed }) => {
 
   //  const [loading, setLoading] = useState(false);
 
-  const [barcode, setBarcode] = useState('56676');
+  const [barcode, setBarcode] = useState('');
 
   const [productid, setProductId] = useState('')
   const [currentDate, setCurrentDate] = useState('');
 
-  const [total_amount, setTotalAmount] = useState('')
-
-  const [order_id, setOrderID] = useState('')
+ 
 
   const [posdata, setPosData] = useState([]);
   const [filteredData, setFilteredData] = useState([])
 
   const [editingIndex, setEditingIndex] = useState(null);
   const [quantity, setQuantity] = useState(0);
+  const [discount, setDiscount] = useState(0);
+  const [discountAmount, setDiscountAmount] = useState(0); 
 
-
-  const handleQuantityClick = (index, minPurchaseQuantity) => {
+  const handleFieldClick = (index, fieldValues) => {
     setEditingIndex(index);
-    setQuantity(minPurchaseQuantity);
+    setQuantity(fieldValues.quantity);
+    setDiscount(fieldValues.discount);
+    setDiscountAmount(fieldValues.discountAmount ?? 0); 
   };
-
-
-  const handleQuantityChange = (index, newQuantity) => {
-    const updatedData = posdata.map((item, i) =>
-      i === index ? { ...item, minPurchaseQuantity: newQuantity } : item
-    );
-    setPosData(updatedData);
-    setEditingIndex(null);
+  
+  const handleFieldChange = (productId) => {
+    const payload = {
+      orderId: order_id,
+      productId: productId,
+      discount: discount,
+      quantity: quantity,
+      manuallyEntered: true,
+    };
+  
+    dispatch({ type: ADD_ORDER_ITEMS_API_CALL, payload });
+    setEditingIndex(null); 
   };
+  
+  const [error, setError] = useState(null); 
 
-
-  const handleInputChange = (e) => {
-    const value = e.target.value;
-    const parsedValue = parseInt(value, 10);
-    setQuantity(isNaN(parsedValue) ? '' : parsedValue);
-  };
-
-
-  const handleKeyDown = (index, event) => {
-    if (event.key === 'Enter') {
-      handleQuantityChange(index, quantity);
+  const handleInputChange = (field, e, item) => {
+    let value = e.target.value;
+    value = value.replace(/^0+/, '');
+    const parsedValue = parseFloat(value);
+  
+    if (field === 'discount') {
+      const discountPercent = isNaN(parsedValue) ? 0 : parsedValue;
+      const calculatedDiscountAmount = (discountPercent / 100) * item.totalAmount;
+  
+      if (calculatedDiscountAmount > item.totalAmount) {
+        setError('Discount amount exceeds the total amount.');
+      } else {
+        setError(null);
+        setDiscount(discountPercent);
+        setDiscountAmount(calculatedDiscountAmount.toFixed(2));
+      }
+    } else if (field === 'discountAmount') {
+      const discountAmt = isNaN(parsedValue) ? 0 : parsedValue;
+  
+      if (discountAmt > item.totalAmount) {
+        setError('Discount amount exceeds the total amount.');
+      } else {
+        setError(null);
+        setDiscountAmount(discountAmt);
+        setDiscount(((discountAmt / item.totalAmount) * 100).toFixed(2));
+      }
+    } else if (field === 'quantity') {
+      setQuantity(isNaN(parsedValue) ? '' : parsedValue);
     }
   };
-
-
-
-
-  const [editingDiscountIndex, setEditingDiscountIndex] = useState(null);
-  const [discountAmount, setDiscountAmount] = useState(0);
-
-
-  const handleEditDiscountAmount = (index, currentDiscount) => {
-    setEditingDiscountIndex(index);
-    setDiscountAmount(currentDiscount || 0);
-  };
-
-
-  const handleDiscountAmountChange = (e) => {
-    const value = e.target.value;
-    setDiscountAmount(value);
-  };
-
-
-  const handleDiscountAmountSave = (index) => {
-    const updatedData = posdata.map((item, i) =>
-      i === index ? { ...item, discountAmount: discountAmount } : item
-    );
-    setPosData(updatedData);
-    setEditingDiscountIndex(null);
-  };
-
-
-  const handleDiscountAmountKeyDown = (index, event) => {
-    if (event.key === 'Enter') {
-      handleDiscountAmountSave(index);
+  
+  
+  
+  const handleKeyDown = (productId, e) => {
+    if (e.key === 'Enter') {
+      if (error) {
+        e.preventDefault(); 
+        alert(error); 
+      } else {
+        handleFieldChange(productId); 
+      }
     }
   };
-
-
+  
+  
 
 
 
@@ -151,29 +205,24 @@ const Pos = ({ handleClosed }) => {
   }, [State.PosReducer.CreateOrderStatuscode])
 
 
-  console.log("order_id", order_id);
-
-
-  // Barcode scan function
-  const BarcodeGetData = () => {
-    dispatch({ type: 'BARCODE_GET_PRODUCT', payload: barcode });
-
-    setTimeout(() => {
-      if (State.PosReducer.BarcodeproductData && State.PosReducer.BarcodeproductData !== '') {
-        handleProductUpdate(State.PosReducer.BarcodeproductData); // Correctly update posdata
+  useEffect(() => {
+      if (State.PosReducer.paymentordercompletedStatusCode == 200) {
+        window.open(State.PosReducer.invoiceUrl, "_blank");
+        dispatch({ type: RESET_PAYMENT_STATUS_CODE})
       }
-    }, 1000);
-  };
+  }, [State.PosReducer.paymentordercompletedStatusCode])
+
+
+
 
   // Search filter logic
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedProductId, setSelectedProductId] = useState('');
 
-  const [products,setProducts] = useState([])
+  const [products, setProducts] = useState([])
 
 
   const handleproductName = (item) => {
-    console.log("item", item);
     setSearchQuery('');
 
     const payload = {
@@ -184,31 +233,35 @@ const Pos = ({ handleClosed }) => {
       manuallyEntered: false
     }
 
-    dispatch({type: ADD_ORDER_ITEMS_API_CALL, payload: payload})
-    
+    dispatch({ type: ADD_ORDER_ITEMS_API_CALL, payload: payload })
+
   }
 
-  useEffect(()=> {
-    if(State.PosReducer.orderItems && State.PosReducer.orderItems.length > 0){
+  useEffect(() => {
+    if (State.PosReducer.orderItems && State.PosReducer.orderItems.length > 0) {
       setProducts(State.PosReducer.orderItems)
     }
-   
-  },[State.PosReducer.orderItems])
+
+  }, [State.PosReducer.orderItems])
 
   const orderItems = useSelector((state) => state.PosReducer.orderItems);
 
   useEffect(() => {
     if (orderItems && orderItems.length > 0) {
-     
+
       const updatedProducts = orderItems.map((item) => ({
         ...item,
         netAmount: item.quantity * item.totalAmount,
       }));
       setProducts(updatedProducts);
 
-    
+
       const totalNetAmount = updatedProducts.reduce((sum, item) => sum + item.netAmount, 0);
-      setTotalAmount(totalNetAmount); 
+      setTotalAmount(Math.round(totalNetAmount));
+
+    }
+    else{
+      setTotalAmount('')
     }
   }, [orderItems]);
 
@@ -228,7 +281,6 @@ const Pos = ({ handleClosed }) => {
 
   useEffect(() => {
     if (selectedProductId) {
-      console.log("selectedProductId", selectedProductId);
       dispatch({ type: 'GETFREEBIENAME', payload: selectedProductId });
     }
     setSelectedProductId('')
@@ -237,8 +289,7 @@ const Pos = ({ handleClosed }) => {
 
   useEffect(() => {
     if (State.AddProduct.getFreebieName && Array.isArray(State.AddProduct.getFreebieName) && State.AddProduct.getFreebieName.length > 0) {
-      console.log("getFreebieName updated", State.AddProduct.getFreebieName);
-
+      
       State.AddProduct.getFreebieName.forEach((productData) => {
         handleProductUpdate(productData);
       });
@@ -263,7 +314,6 @@ const Pos = ({ handleClosed }) => {
           // Calculate total amount
           const totalAmount = updatedData.reduce((acc, item) => acc + (item.quantity * item.wholesalePrice), 0);
           setTotalAmount(totalAmount);
-          console.log("Updated totalAmount:", totalAmount);
 
           return updatedData;
 
@@ -280,9 +330,18 @@ const Pos = ({ handleClosed }) => {
   }, []);
 
 
+  useEffect(() => {
+    if (State.PosReducer.addorderItemsStatusCode === 200) {
+
+      setTimeout(() => {
+        dispatch({ type: 'REMOVE_ADD_ORDER_ITEMS_STATUS_CODE' });
+      }, 1000);
+    }
+  }, [State.PosReducer.addorderItemsStatusCode])
+
+
   const [customerSearchQuery, setCustomerSearchQuery] = useState('');
   const [selectedCustomerId, setSelectedCustomerId] = useState(null);
-  const [customerFilter, setCustomerFilter] = useState('');
 
 
 
@@ -311,9 +370,37 @@ const Pos = ({ handleClosed }) => {
 
 
   const [open, setOpen] = useState(false);
+  const [customerErrorMsg, setCustomerErrMsg] = useState('');
 
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const handleOpen = () => {
+    if (customerFilter && order_id) {
+      setOpen(true);
+      dispatch({
+        type: 'ORDER-INITIALIZE-PAYMENT',
+        payload: { orderId: String(order_id) },
+      });
+    }
+    else{
+      setCustomerErrMsg("Please Add Customer")
+      setTimeout(() => {
+        setCustomerErrMsg('')
+      }, 500);
+    
+    }
+  }
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  useEffect(() => {
+    if (State.PosReducer.orderinitialiseStatusCode === 200) {
+      setTotalAmount(Math.round(State.PosReducer.totalAmount));
+      setTimeout(() => {
+        dispatch({ type: 'REMOVE_ORDER_INITIALIZE_PAYMENT_STATUS_CODE' });
+      }, 1000);
+    }
+  }, [State.PosReducer.orderinitialiseStatusCode]);
 
 
   const [isPayLaterEnabled, setIsPayLaterEnabled] = useState(false);
@@ -347,30 +434,59 @@ const Pos = ({ handleClosed }) => {
   }, [State.Customer.CustomerList]);
 
 
+ 
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedProducts, setSelectedProducts] = useState([]);
-
-
-  const handleCheckboxClick = (productId) => {
-    setSelectedProducts((prevSelected) =>
-      prevSelected.includes(productId)
-        ? prevSelected.filter((id) => id !== productId)
-        : [...prevSelected, productId]
-    );
+  
+  
+  const openDeleteConfirmation = () => {
+    if (selectedProducts.length > 0) {
+      setIsModalOpen(true);
+    }
   };
-
-
+  
+  
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedProducts([]);
+  };
+  
+ 
   const handleProductDelete = () => {
     const productsToDelete = selectedProducts.map((productId) => ({
       orderId: order_id,
       productId,
     }));
   
-    dispatch({type: 'DELETE-POS-PRODUCT', payload: productsToDelete,});
-    setSelectedProducts([]);
+    dispatch({ type: 'DELETE-POS-PRODUCT', payload: productsToDelete });
+    setSelectedProducts([]); 
+    setIsModalOpen(false); 
   };
   
+ 
+  const handleProductSelect = (productId, isSelected) => {
+    setSelectedProducts((prevSelected) =>
+      isSelected ? [...prevSelected, productId] : prevSelected.filter((id) => id !== productId)
+    );
+  };
+  
+
+
+
+  useEffect(() => {
+    if (State.PosReducer.deleteposproductStatuscode === 200) {
+
+      setTimeout(() => {
+        dispatch({ type: 'REMOVE_DELETE_POS_PRODUCT_STATUS_CODE' });
+      }, 1000);
+    }
+  }, [State.PosReducer.deleteposproductStatuscode])
+
+
+
   const handleHoldOrder = () => {
-    if (order_id) {  
+    if (order_id) {
       dispatch({
         type: 'ORDER-HOLD',
         payload: { orderId: String(order_id) }, // Pass orderId as a simple string
@@ -378,11 +494,21 @@ const Pos = ({ handleClosed }) => {
     } else {
       console.error("Order ID is missing.");
     }
-  }; 
-  
+
+  };
 
 
-  
+  useEffect(() => {
+    if (State.PosReducer.OrderHoldproductStatuscode == 200) {
+
+      setTimeout(() => {
+        dispatch({ type: 'REMOVE_ORDER_HOLD_STATUS_CODE' })
+      }, 2000)
+    }
+
+  }, [State.PosReducer.OrderHoldproductStatuscode])
+
+
 
 
   const handleCreate = () => {
@@ -403,11 +529,35 @@ const Pos = ({ handleClosed }) => {
     borderRadius: '30px',
   };
 
+  const barcodeScanned = (barcode) => {
+    console.log("barcode",barcode);  
+    dispatch({ type: 'BARCODE_GET_PRODUCT', payload: barcode });
+
+    if(State?.PosReducer?.BarcodeproductData){
+      const payload = {
+        orderId: order_id,
+        productId: State.PosReducer.BarcodeproductData.productId,
+        discount: 0,
+        quantity: 1,
+        manuallyEntered: false
+      }
+      dispatch({ type: ADD_ORDER_ITEMS_API_CALL, payload: payload })
+    }  
+  }
+
+  useBarcodeScanner(barcodeScanned)
 
 
-  //   console.log("State.PosReducer.BarcodeproductData",State.PosReducer.BarcodeproductData);
 
-  //   console.log("posdata",posdata);
+  useEffect(() => {
+    if (State.PosReducer.barcodeStatuscode == 200) {
+
+      setTimeout(() => {
+        dispatch({ type: 'REMOVE_GET_BARCODE_PRODUCT_STATUS_CODE' })
+      }, 1000)
+    }
+
+  }, [State.PosReducer.barcodeStatuscode])
 
 
   return (<>
@@ -443,7 +593,7 @@ const Pos = ({ handleClosed }) => {
                           className="p-2 hover:bg-gray-100 cursor-pointer"
                           onClick={() => {
                             handleproductName(item.productId)
-                        
+
                           }}
 
                         //   onChange={(e)=>handleproductName(e)}
@@ -451,14 +601,14 @@ const Pos = ({ handleClosed }) => {
                           <div className="text-sm font-medium text-gray-900 flex flex-col">
                             <label>{item.productName} {item.subCategory}</label>
                             <label>{item.size} {item.unit}</label>
-                            </div>
+                          </div>
                         </div>
                       ))}
                     </div>
                   )}
 
                   {/* No results message */}
-                  {searchQuery && filteredData &&  filteredData.length === 0 && (
+                  {searchQuery && filteredData && filteredData.length === 0 && (
                     <div className="absolute w-full bg-white border border-gray-300 rounded mt-1 p-2 text-sm text-gray-500">
                       No products match your search
                     </div>
@@ -466,24 +616,38 @@ const Pos = ({ handleClosed }) => {
                 </div>
 
                 <div className='bg-zinc-300 ms-2 items-center rounded'>
-                  <img src={Barcode} className='p-1' alt='barcode' onClick={BarcodeGetData} />
+                  <img src={Barcode} className='p-1' alt='barcode'  />
                 </div>
               </div>
               <div className='flex items-center gap-2 '>
 
                 <div>
-                  <img src={Delete} className='w-6 h-6 cursor-pointer' onClick={handleProductDelete} />
+                  <img src={Delete} className='w-6 h-6 cursor-pointer'  onClick={openDeleteConfirmation} />
+
+                  {isModalOpen && (
+  <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center z-50">
+    <div className="bg-white p-6 rounded shadow-lg z-50">
+      <p className="mb-3">Do you want to remove the selected products?</p>
+      <div className="mt-4 flex justify-center space-x-4">
+        <button onClick={closeModal} className="px-4 py-2 bg-gray-300 rounded">Cancel</button>
+        <button onClick={handleProductDelete} className="px-4 py-2 bg-red-500 text-white rounded">OK</button>
+      </div>
+    </div>
+  </div>
+)}
+
+
                 </div>
               </div>
             </div>
 
             <div className="relative w-full mb-5">
 
-              {/* {loading && (
+              {loading && (
 <div className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-75 z-10">
 <div className="loader border-t-4 border-orange-500 border-solid rounded-full w-10 h-10 animate-spin"></div>
 </div>
-)} */}
+)}
 
               <table className="w-full text-left mb-5 table-auto">
                 <thead>
@@ -557,64 +721,85 @@ const Pos = ({ handleClosed }) => {
                     State.PosReducer.orderItems.map((item, index) => (
                       <tr key={index} className="hover:bg-gray-50 border-0">
                         <td className="p-2 mt-1 flex items-center justify-start">
-                          <input type="checkbox" className="form-checkbox h-3 w-3 text-blue-600 border-neutral-500 cursor-pointer"   onClick={() => handleCheckboxClick(item.productId)}/>
+                          <input type="checkbox" className="form-checkbox h-3 w-3 text-blue-600 border-neutral-500 cursor-pointer"
+                          checked={selectedProducts.includes(item.productId)}
+                          onChange={(e) => handleProductSelect(item.productId, e.target.checked)} />
                         </td>
                         <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{item.unitId || '-'}</td>
                         <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{item.barcodeNo || '-'}</td>
                         <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{`${item.productName} - ${item.size}${item.unit}` || '-'}</td>
 
 
-
                         <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">
-                          {editingIndex === index ? (
-                            <input
-                              type="number"
-                              value={quantity}
-                              onChange={handleInputChange}
-                              onBlur={() => handleQuantityChange(index, quantity)}
-                              onKeyDown={(e) => handleKeyDown(index, e)}
-                              className="border border-neutral-300 rounded px-1 py-0.5 w-16"
-                            />
-                          ) : (
-                            <span onClick={() => handleQuantityClick(index, item.quantity)} className="cursor-pointer">
-                              {item.quantity || '-'}
-                            </span>
-                          )}
-                        </td>
+  {editingIndex === index ? (
+    <input
+      type="number"
+      value={quantity}
+      onChange={(e) => handleInputChange('quantity', e)}
+      onBlur={() => handleFieldChange(item.productId, 'quantity', quantity)}
+      onKeyDown={(e) => handleKeyDown(item.productId, e)}
+      className="border border-neutral-300 rounded px-1 py-0.5 w-16"
+    />
+  ) : (
+    <span onClick={() => handleFieldClick(index, item)} className="cursor-pointer">
+      {item.quantity || '-'}
+    </span>
+  )}
+</td>
 
 
 
                         <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">₹{item.unitPrice || '0'}</td>
-                        <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">₹{item.totalAmount  || '-'}</td>
-                        <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{ '-'}</td>
-                        {/* <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">
-             ₹{(item.minPurchaseQuantity * item.wholesalePrice * (item.wholesalePricePercentage / 100)) || '-'}</td> */}
+                        <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">
+                           ₹{item.totalAmount ? Math.round(item.totalAmount) : '-'}</td>
+                           <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">
+  {editingIndex === index ? (
+    <input
+      type="number"
+      value={discount}
+      onChange={(e) => handleInputChange('discount', e, item)}
+      onBlur={() => handleFieldChange(item.productId)}
+      onKeyDown={(e) => handleKeyDown(item.productId, e)}
+      className="border border-neutral-300 rounded px-1 py-0.5 w-16"
+      placeholder="%"
+    />
+  ) : (
+    <span onClick={() => handleFieldClick(index, item)} className="cursor-pointer">
+      {item.discount || '0'}
+    </span>
+  )}
+  {error && <div className="text-red-500 text-xs">{error}</div>} 
+</td>
 
-                        {/* <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">
-                          {editingDiscountIndex === index ? (
-                            <input
-                              type="number"
-                              value={discountAmount}
-                              onChange={handleDiscountAmountChange}
-                              onBlur={() => handleDiscountAmountSave(index)}
-                              onKeyDown={(e) => handleDiscountAmountKeyDown(index, e)}
-                              className="border border-neutral-300 rounded px-1 py-0.5 w-16"
-                            />
-                          ) : (
-                            <span
-                              onClick={() => handleEditDiscountAmount(index, item.discountAmount || 0)}
-                              className="cursor-pointer"
-                            >
-                              { '0'}
-                            </span>
-                          )}
-                        </td> */}
-                        <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">
-                          {'0'}
-                        </td>
-                        <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">
-                          ₹{(item.quantity * item.totalAmount)  || '0'}
-                        </td>
+
+<td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">
+  {editingIndex === index ? (
+    <input
+      type="number"
+      value={discountAmount}
+      onChange={(e) => handleInputChange('discountAmount', e, item)}
+      onBlur={() => handleFieldChange(item.productId)}
+      onKeyDown={(e) => handleKeyDown(item.productId, e)}
+      className="border border-neutral-300 rounded px-1 py-0.5 w-16"
+    />
+  ) : (
+    <span onClick={() => handleFieldClick(index, item)} className="cursor-pointer">
+      ₹ {item.totalAmount ? (item.totalAmount * (item.discount / 100)).toFixed(2) : '0'}
+    </span>
+  )}
+</td>
+
+
+
+                      
+<td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">
+  ₹ {item.quantity && item.totalAmount 
+    ? (item.quantity * item.totalAmount - (item.discount ? (item.totalAmount * (item.discount / 100)) : 0)).toFixed(2) 
+    : '0'}
+</td>
+
+
+
                       </tr>
                     ))
                   ) : (
@@ -700,6 +885,19 @@ const Pos = ({ handleClosed }) => {
             </div>
 
             <div class="bg-white p-2 rounded-lg shadow-lg m-2 ">
+            {customerErrorMsg && (
+
+<div className="fixed inset-0 bg-gray-600 bg-opacity-80 flex justify-end items-center z-50 me-6">
+<div className="bg-white p-3 rounded shadow-lg z-50">
+<p className="text-red-500 text-md mt-2">{customerErrorMsg}</p>
+  <div className="mt-4 flex justify-center space-x-4">
+   
+  </div>
+</div>
+</div>
+
+      
+         )}
               <div class="flex flex-row justify-between">
                 <div class="flex flex-col ">
                   <p className={customerFilter?.customerName ? 'text-sm font-semibold font-Manrope' : 'text-xs text-[#797979]'}>
@@ -756,7 +954,7 @@ const Pos = ({ handleClosed }) => {
 
               <div className='flex flex-row justify-between' >
                 <p className='text-[#131313] text-sm  font-semibold font-Manrope ps-2'>Amount :</p>
-                <p className='text-[#131313] text-sm  font-semibold font-Manrope pe-2'>{total_amount}</p>
+                <p className='text-[#131313] text-sm  font-semibold font-Manrope pe-2'>{totalamount}</p>
               </div>
 
               <div className='flex flex-row justify-between' >
@@ -785,7 +983,7 @@ const Pos = ({ handleClosed }) => {
 
               <div className='flex flex-row justify-between  mb-2 mt-2' >
                 <p className='text-[#131313] text-sm  font-semibold font-Manrope ps-2'>Total :</p>
-                <p className='text-[#131313] text-sm  font-semibold font-Manrope pe-2'>₹ {total_amount ? total_amount : 0}</p>
+                <p className='text-[#131313] text-sm  font-semibold font-Manrope pe-2'>₹ {totalamount ? totalamount : 0}</p>
               </div>
 
               <div class="border border-dotted border-black ">
@@ -793,8 +991,10 @@ const Pos = ({ handleClosed }) => {
 
               <div className='flex flex-col items-center mt-1' >
                 <p className='font-semibold font-Manrope text-[#131313] font-bold text-xl '>Amount to Pay</p>
-                <p className='font-semibold font-Manrope text-[#131313] font-bold text-xl '>₹ {total_amount ? total_amount : 0}</p>
+                <p className='font-semibold font-Manrope text-[#131313] font-bold text-xl '>₹ {totalamount ? totalamount : 0}</p>
               </div>
+
+      
 
             </div>
 
@@ -850,7 +1050,7 @@ const Pos = ({ handleClosed }) => {
             <button
               type="submit"
               onClick={handleOpen}
-              className="flex items-center me-2 justify-center w-64 rounded bg-[#EA580C] text-white px-24 py-1.5 text-sm font-semibold border border-[#EA580C] shadow-sm hover:bg-[#EA580C] hover:text-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#EA580C]">
+              className="flex items-center me-2 justify-center w-80 rounded bg-[#EA580C] text-white px-24 py-1.5 text-sm font-semibold border border-[#EA580C] shadow-sm hover:bg-[#EA580C] hover:text-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#EA580C]">
               ₹ Pay
             </button>
           </div>
@@ -998,8 +1198,11 @@ const Pos = ({ handleClosed }) => {
   </Box>
 </Modal> */}
 
+        
+
       {
-        open && <Pos_Payment handleclose={handleClose}  total_amount = {total_amount}/>
+        open && customerFilter && (<Pos_Payment handleclose={handleClose} order_id={order_id} total_amount={totalamount} />
+        )
       }
 
       {/* //add customer  */}

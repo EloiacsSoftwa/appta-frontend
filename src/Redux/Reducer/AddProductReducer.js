@@ -20,7 +20,8 @@ const initialState = {
   ProductByName: [],
   getProductByNameStatusCode: 0,
   productSize: [],
-  activeProducts: []
+  activeProducts: [],
+  IsAlreadyExist: ''
 };
 
 const AddProductReducer = (state = initialState, action) => {
@@ -48,8 +49,12 @@ const AddProductReducer = (state = initialState, action) => {
     case 'ADD_PRODUCT_DETAILS':             
       return { ...state, add_Product_status_code: action.payload.statusCode };      
 
-      // case 'ADD_PRODUCT_VALIDATION':             
-      // return { ...state, add_Product_status_code: action.payload.statusCode };
+      case 'ADD_PRODUCT_VALIDATION':             
+      return { ...state, IsAlreadyExist: action.payload.response };
+
+
+      case 'REMOVE_ADD_PRODUCT_VALIDATION':
+        return { ...state, IsAlreadyExist: ''};
 
     case 'REMOVE_ADD_PRODUCT_STATUS_CODE':
       return { ...state, add_Product_status_code: 0 };

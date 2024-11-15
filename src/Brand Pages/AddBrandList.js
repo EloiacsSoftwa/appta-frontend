@@ -41,16 +41,16 @@ setBrandNameError('')
             <div className="bg-zinc-300 rounded-lg w-2/6 p-6 mx-4 border border-orange-600">
                 <div>
                     <div className="mb-4">
-                        <label className="block font-sans text-sm font-semibold mb-1">Brand Name</label>
+                        <label className="block font-sans text-sm font-semibold mb-1 font-Manrope">Brand Name</label>
                         <input
                             type="text"
                             value={brandName}
-                            onChange={(e) => handleBrandName(e)}
-                            className="mt-1 block w-52 border text-black text-xs font-Manrope border-neutral-400 shadow-sm px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-orange-500"
+                            onChange={(e) => handleBrandName(e)} 
+                            className="mt-1 block w-full rounded border text-black text-xs font-Manrope border-neutral-400 shadow-sm px-3 py-3 focus:outline-none focus:ring-2 focus:ring-orange-500"
                             placeholder="Aasirvaad"
                         />
                         {brandNameError && (
-                            <div className="text-red-600 text-sm font-Manrope font-bold">{brandNameError}</div>
+                            <div className="text-red-600 text-sm font-Manrope font-bold mt-2 mb-2">{brandNameError}</div>
                         )}
                     </div>
 

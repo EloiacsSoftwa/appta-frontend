@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import Vector from '../Images/Sales/Vector.svg'
 import Frame1 from '../Images/Sales/Frame.svg'
 import Frame2 from '../Images/Sales/Frame2.svg'
@@ -7,15 +7,42 @@ import Frame4 from '../Images/Sales/Frame4.svg'
 import Search from '../Images/Sales/Search.svg'
 import Dot from '../Images/Sales/Dots.svg';
 import SmallDot from '../Images/Sales/Smalldots.svg'
-
+import { useDispatch, useSelector } from 'react-redux';
+import moment from 'moment';
 import { ArrowRight2, ArrowLeft2 ,ArrowUp2, ArrowDown2} from 'iconsax-react';
 
 
 function Sales_List() {
 
    
-    const [currentPage, setCurrentPage] = useState(1);
    
+   
+
+    const dispatch = useDispatch();
+    const state = useSelector(state => state);
+
+    const [currentPage, setCurrentPage] = useState(1);
+
+    const [product, setProduct] = useState([])
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        dispatch({ type: 'GET-SALES-PRODUCT' })
+    }, [])
+
+
+
+    useEffect(() => {
+        if (state.PosReducer.getsalesproductStatuscode == 200) {
+            setLoading(false)
+            setProduct(state.PosReducer.SalesList)
+
+            setTimeout(() => {
+                dispatch({ type: 'REMOVE_GET_SALES_PRODUCT_STATUS_CODE' })
+            }, 2000)
+        }
+
+    }, [state.PosReducer.getsalesproductStatuscode])
 
 
     const reports = [
@@ -92,10 +119,10 @@ function Sales_List() {
 
     //  pagination
     const itemsPerPage = 10;
-    const totalPages = Math.ceil(salesData.length / itemsPerPage);
+    const totalPages = Math.ceil(product && product.length / itemsPerPage);
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const currentItems = salesData.slice(indexOfFirstItem, indexOfLastItem);
+    const currentItems = product && product.slice(indexOfFirstItem, indexOfLastItem);
 
     const handlePrevClick = () => {
         if (currentPage > 1) {
@@ -182,6 +209,15 @@ function Sales_List() {
                         </div>
                     </div>
                 </div>
+
+                <div className="relative w-full mb-5">
+                     
+                    {loading && (
+                        <div className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-75 z-10">
+                            <div className="loader border-t-4 border-orange-500 border-solid rounded-full w-10 h-10 animate-spin"></div>
+                        </div>
+                    )}
+
                 <table className="w-full  text-left mb-5 table-auto">
                     <thead>
                         <tr className="bg-gray-200 border-0">
@@ -276,8 +312,9 @@ function Sales_List() {
                                         type="checkbox"
                                         className="form-checkbox h-4 w-4 text-blue-600 border-neutral-500 cursor-pointer"
                                     /></td>
-                                <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{item.date}</td>
-                                <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{item.customer}</td>
+                                <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">
+                                    { moment(item.createdAt).format('DD-MM-YYYY')}</td>
+                                <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{item.customerName}</td>
                                 <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{item.customerId}</td>
                                 <td className={`p-2 font-semibold text-sm font-Manrope text-start  ${item.status === 'completed' ? 'text-lime-600' : 'text-red-600'}`}>
                                     {item.status}
@@ -285,7 +322,7 @@ function Sales_List() {
                                 <td className={`p-2 font-semibold text-sm font-Manrope ${item.payment === 'completed' ? 'text-lime-600' : 'text-red-600'}`}>
                                     {item.payment}
                                 </td>
-                                <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900">{item.total}</td>
+                                <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900">{item.totalAmount}</td>
                                 <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900">{item.paid}</td>
                                 <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900">{item.counter}</td>
                                 <td className="p-2 text-gray-500 cursor-pointer w-8"><img src={Dot} /></td>
@@ -295,7 +332,7 @@ function Sales_List() {
                 </table>
 
 
-
+                </div>
 
 
 

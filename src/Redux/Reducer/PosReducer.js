@@ -1,4 +1,4 @@
-import { ADD_ORDER_ITEMS_API_RESPONSE } from "../../utils/Constant";
+import { ADD_ORDER_ITEMS_API_RESPONSE, RESET_PAYMENT_STATUS_CODE } from "../../utils/Constant";
 const initialState = {
   BarcodeproductData: [],
   barcodeStatuscode: 0,
@@ -12,11 +12,20 @@ const initialState = {
   orderItems: [],
   PaymentType:[],
   totalPrice: 0,
-  totalAmount: 0,
+  totalAmount: '',
   totalDiscount: 0,
-};
+  addorderItemsStatusCode :0,
+  orderinitialiseStatusCode : 0,
+  paymentordercompletedStatusCode : 0,
+  Invoice_url:'',
+  SalesList:[],
+  getsalesproductStatuscode:0,
+}
+
 
 const PosReducer = (state = initialState, action) => {
+  console.log("action",action);
+  
   
   switch (action.type) {
  
@@ -31,10 +40,10 @@ const PosReducer = (state = initialState, action) => {
       case 'REMOVE_GET_PAYMENT_TYPE_STATUS_CODE':
         return { ...state, paymenttypestatuscode: 0 }
 
-      case 'COMPLETE_ORDER':
-        return { ...state,  CompleteOrderStatuscode: action.payload.statusCode }
-      case 'REMOVE_COMPLETE_ORDER_STATUS_CODE':
-        return { ...state, CompleteOrderStatuscode: 0 }
+      // case 'COMPLETE_ORDER':
+      //   return { ...state,  CompleteOrderStatuscode: action.payload.statusCode }
+      // case 'REMOVE_COMPLETE_ORDER_STATUS_CODE':
+      //   return { ...state, CompleteOrderStatuscode: 0 }
 
     case 'BARCODE_GET_PRODUCT_SUCCESS':
       return {...state, BarcodeproductData:  action.payload.data, barcodeStatuscode: action.payload.statusCode,
@@ -52,19 +61,41 @@ const PosReducer = (state = initialState, action) => {
       return { ...state, Errormsg: '' };
 
     case ADD_ORDER_ITEMS_API_RESPONSE: {
-      return {...state, orderItems: action.orderItems}
+      return {...state, orderItems: action.payload.orderItems , addorderItemsStatusCode:action.payload.statusCode}
     }
+    case 'REMOVE_ADD_ORDER_ITEMS_STATUS_CODE':
+      return { ...state, addorderItemsStatusCode: 0 }
+
 
     case 'DELETE_POS_PRODUCT':
-      return { ...state,  deleteposproductStatuscode: action.payload.statusCode }
+      return { ...state, orderItems: action.payload.orderItems,  deleteposproductStatuscode: action.payload.statusCode }
     case 'REMOVE_DELETE_POS_PRODUCT_STATUS_CODE':
       return { ...state, deleteposproductStatuscode: 0 }
 
       case 'ORDER_HOLD':
-        return { ...state,  OrderHoldproductStatuscode: action.payload.statusCode }
+        return { ...state,  OrderHoldproductStatuscode: action.payload.statusCode, orderItems: [] }
       case 'REMOVE_ORDER_HOLD_STATUS_CODE':
         return { ...state, OrderHoldproductStatuscode: 0 }
 
+        case 'ORDER_INITIALIZE_PAYMENT':
+          return { ...state, totalAmount: action.payload.total_amount , orderinitialiseStatusCode: action.payload.statusCode }
+        case 'REMOVE_ORDER_INITIALIZE_PAYMENT_STATUS_CODE':
+          return { ...state, orderinitialiseStatusCode: 0 }
+
+          case 'COMPLETE_ORDER_PAYMENT':
+            return { ...state, Invoice_url:action.payload.Invoice_url, orderItems:[],  paymentordercompletedStatusCode: action.payload.statusCode }
+          case 'REMOVE_COMPLETE_ORDER_PAYMENT_STATUS_CODE':
+            return { ...state, paymentordercompletedStatusCode: 0 }
+
+
+          case RESET_PAYMENT_STATUS_CODE:
+            return { ...state, paymentordercompletedStatusCode: 0 }
+
+
+            case 'GET_SALES_PRODUCT':
+              return { ...state, SalesList: action.payload.response, getsalesproductStatuscode: action.payload.statusCode }
+            case 'REMOVE_GET_SALES_PRODUCT_STATUS_CODE':
+              return { ...state, getsalesproductStatuscode: 0 }
 
     default:
       return state;

@@ -1,5 +1,6 @@
 import { call, takeEvery, put, take } from 'redux-saga/effects';
-import { PosGetbyBarcode ,CreateOrder, addOrderItemsApiCall,CompleteOrder ,getPaymentType, DeletePosProduct, Holdorder} from '../Action/sales_pos_Action';
+import { PosGetbyBarcode ,CreateOrder, addOrderItemsApiCall ,getPaymentType,
+   DeletePosProduct, Holdorder,InitializePayment ,CompleteOrder ,getsalesProduct} from '../Action/sales_pos_Action';
 import Cookies from 'universal-cookie';
 import { ADD_ORDER_ITEMS_API_CALL, ADD_ORDER_ITEMS_API_RESPONSE} from '../../utils/Constant';
 import { toast } from 'react-toastify';
@@ -63,20 +64,21 @@ function* handleGetPaymentType() {
 
 
 
-function* handleCompleteOrder() {
+// function* handleCompleteOrder() {
   
-  const response = yield call(CompleteOrder);
-       console.log("resposne",response)
-  if (response.status === 200 || response.code === 200 || response.data.code === 200) {
-    yield put({ type: 'COMPLETE_ORDER', payload: { response: response.data.data, statusCode: response.status || response.code } });
-  }
-  else {
-    yield put({ type: 'ERROR', payload: { statusCode: response.status || response.code } });
-  }
-  if (response) {
-    ExpireToken(response)
-  }
-}
+//   const response = yield call(CompleteOrder);
+//        console.log("resposne",response)
+//   if (response.status === 200 || response.code === 200 || response.data.code === 200) {
+//     yield put({ type: 'COMPLETE_ORDER', payload: { response: response.data.data, statusCode: response.status || response.code } });
+//   }
+//   else {
+//     yield put({ type: 'ERROR', payload: { statusCode: response.status || response.code } });
+//   }
+//   if (response) {
+//     ExpireToken(response)
+//   }
+// }
+
 
 
 function* handleDeletePosProduct(args) {
@@ -100,7 +102,7 @@ function* handleDeletePosProduct(args) {
  
 };
   if (response.status === 200 || response.code === 200 || response.data.code === 200) {
-         yield put({ type: 'DELETE_POS_PRODUCT', payload: { statusCode: response.status  || response.code ||response.data.code }});
+         yield put({ type: 'DELETE_POS_PRODUCT', payload: {orderItems: response.data.data.orderItems, statusCode: response.status  || response.code ||response.data.code }});
          toast.success("OrderItems removed successfully", {
           position: "top-center",
           autoClose: 2000,
@@ -131,7 +133,6 @@ function* handleHoldOrder({ payload }) {
   try {
     
     const response = yield call(Holdorder, payload);
-    console.log("API Response:", response);
 
     const toastStyle = {
       backgroundColor: "#fff",
@@ -184,6 +185,78 @@ function* handleHoldOrder({ payload }) {
 }
 
 
+function* handleInitializePayments({ payload }) {
+  try {
+    
+    const response = yield call(InitializePayment, payload);
+    console.log("Response:", response);
+
+
+    
+    const successCode = response?.status === 200 || response.code === 200 || response?.data?.code === 200;
+    if (successCode) {
+      yield put({ type: 'ORDER_INITIALIZE_PAYMENT', payload: {total_amount :response.data.data , statusCode: response?.status || response?.data?.code || response.code  } });
+      
+    } else {
+      yield put({ type: 'ERROR', payload: { response: response?.data?.message, statusCode: response?.status || response?.data?.code } });
+    }
+
+   
+    if (response) {
+      ExpireToken(response);
+    }
+  } catch (error) {
+    console.error("Failed to hold order:", error.message);
+    yield put({ type: 'ERROR', payload: { response: error.message } });
+  }
+}
+
+function* handlecompleteOrderPayment(action) {
+  try {
+    const { orderId, paymentType } = action.payload;
+    const response = yield call(CompleteOrder, { orderId, paymentType });
+    console.log("response",response);
+    
+    const successCode = response?.status === 200 || response.code === 200 || response?.data?.code === 200;
+
+    if (successCode) {
+      yield put({ type: 'COMPLETE_ORDER_PAYMENT', 
+
+        payload: {Invoice_url: response.data.data.invoiceUrl ,statusCode: response?.status || response?.data?.code || response.code  } });
+
+    } 
+    else {
+      yield put({ type: 'ERROR', payload: { message: response?.data?.message || "Unexpected error occurred", 
+                                           statusCode: response?.status || response?.data?.code || response.code} 
+      });
+    }
+  } 
+  catch (error) {
+    yield put({ type: 'ERROR', payload: { message: error.response?.data?.message || error.message, 
+                                         statusCode: error.response?.status || error.response?.data?.code } 
+    });
+  }
+}
+
+function* handleGetSalesProduct() {
+
+  const response = yield call(getsalesProduct);
+  console.log('response for sales product',response);
+  
+  if (response.status === 200 || response.code === 200) {
+    yield put({ type: 'GET_SALES_PRODUCT', payload: { response: response.data.data, statusCode: response.status || response.code } });
+
+  }
+  // if (response.status === 403 || response.statusCode === 403)
+  else {
+    yield put({ type: 'ERROR', payload: { statusCode: response.status || response.code } });
+  }
+  if (response) {
+    ExpireToken(response)
+  }
+}
+
+
 function ExpireToken(response) {
 
     const code = response.data?.code ?? response.code;
@@ -196,8 +269,8 @@ function ExpireToken(response) {
   function* addOrderItems(data) {
       const response = yield call(addOrderItemsApiCall, data.payload)
 
-      if (response.status === 200 && response.data.code === 200) {
-        yield put({type: ADD_ORDER_ITEMS_API_RESPONSE, orderItems: response.data.data.orderItems})
+      if (response.status === 200 && response.data.code === 200  || response.code === 200) {
+        yield put({type: ADD_ORDER_ITEMS_API_RESPONSE, payload: { orderItems: response.data.data.orderItems, statusCode: response?.status || response?.data?.code || response.code  }})
       }
   }
 
@@ -205,9 +278,12 @@ function* PosSaga() {
     yield takeEvery('BARCODE_GET_PRODUCT', handleBarcodeGetProduct);
     yield takeEvery('CREATE-ORDER', handleCreateOrder);
     yield takeEvery('GET-PAYMENT-TYPE', handleGetPaymentType);
-    yield takeEvery('COMPLETE-ORDER', handleCompleteOrder);
+    // yield takeEvery('COMPLETE-ORDER', handleCompleteOrder);
     yield takeEvery('DELETE-POS-PRODUCT', handleDeletePosProduct);
     yield takeEvery('ORDER-HOLD', handleHoldOrder);
+    yield takeEvery('ORDER-INITIALIZE-PAYMENT', handleInitializePayments);
+    yield takeEvery('COMPLETE-ORDER-PAYMENT', handlecompleteOrderPayment);
+    yield takeEvery('GET-SALES-PRODUCT', handleGetSalesProduct);
     yield takeEvery(ADD_ORDER_ITEMS_API_CALL, addOrderItems)
 }
 

@@ -10,6 +10,8 @@ import View from '../Images/Sales/view.svg'
 import Edit from '../Images/Sales/edit.svg'
 import Delete from '../Images/Sales/Delete.svg'
 import { useDispatch, useSelector } from 'react-redux';
+import { MpSharp } from "@mui/icons-material";
+import { Trash } from "iconsax-react";
 
 
 function AddPurchase({ handleClose }) {
@@ -34,16 +36,15 @@ function AddPurchase({ handleClose }) {
   const [showProductDropdown, setShowProductDropdown] = useState([]);
   const [productIDWithName, setProductIDWithName] = useState('')
   const [supplierId, setSupplierId] = useState('')
-  // const [addCharges, setAddCharges] = useState(0);
-  // const [globalDiscount, setGlobalDiscount] = useState(0);
-  // const [roundingOff, setRoundingOff] = useState(0);
   const [errors, setErrors] = useState({});
   console.log("supplierId", supplierId)
-
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [orderDateError, setOrderDateError] = useState('');
   const [invoiceIdError, setInvoiceIdError] = useState('');
   const [productsError, setProductsError] = useState('');
   const [supplierIdError, setSupplierIdError] = useState('');
+  const [isStoredIndex, setIsStoredIndex] = useState('');
+  const [activeField, setActiveField] = useState({});
 
   const dropdownRef = useRef(null);
   const productRefs = useRef([]);
@@ -64,12 +65,22 @@ function AddPurchase({ handleClose }) {
   const handleInvoiceIdChange = (e) => {
     setInvoiceId(e.target.value);
     setInvoiceIdError('')
+    setErrors((prevErrors) => {
+      const newErrors = { ...prevErrors };
+      delete newErrors.invoiceId;
+      return newErrors;
+    });
   };
 
   const handleOrderDateChange = (date) => {
     setOrderDate(date);
     setIsDatePickerOpen(false);
     setOrderDateError('')
+    setErrors((prevErrors) => {
+      const newErrors = { ...prevErrors };
+      delete newErrors.orderDate;
+      return newErrors;
+    });
   };
 
   const handleDeliveredDateChange = (date) => {
@@ -80,6 +91,8 @@ function AddPurchase({ handleClose }) {
 
 
   console.log("state add Purchase", state)
+
+  console.log("error", errors)
 
   const [products, setProducts] = useState([
     {
@@ -118,397 +131,558 @@ function AddPurchase({ handleClose }) {
     setShowProductDropdown([...showProductDropdown, false]);
   };
 
- 
+
   const handleKeyDown = (event) => {
     if (event.key === "Enter") {
       handleAddRow();
     }
   };
 
-  
-  const handleInputChange = (e, field, index) => { 
+
+
+
+  // const handleInputChange = (e, field, index) => {
+  //   const value = e.target.value;
+  //   const updatedProducts = [...products];
+  //   updatedProducts[index][field] = value;
+
+  //   const {
+  //     Quantity,
+  //     PurchasePrice,
+  //     SalesPercentage,
+  //     WholeSalePercentage,
+  //     MRP,
+  //     SalesPrice,
+  //     WholeSalePrice
+  //   } = updatedProducts[index];
+
+  //   updatedProducts[index].Total = Quantity * PurchasePrice;
+
+  //   const numericMRP = parseFloat(MRP); 
+  //   const numericPurchasePrice = parseFloat(PurchasePrice);
+  //   const numericSalesPrice = parseFloat(SalesPrice);
+  //   const numericWholeSalePrice = parseFloat(WholeSalePrice);
+
+
+  //   // const salesPrice = Math.round(PurchasePrice * (1 + SalesPercentage / 100));
+
+  //   // console.log("salesPrice",salesPrice)
+
+  //   // 68 > 52  
+
+  // console.log("numericSalesPrice",numericSalesPrice,  'numericMRP',  numericMRP)
+
+
+
+  //   if (field === 'SalesPercentage' && SalesPercentage && PurchasePrice) {
+  //     const calculatedSalesPrice = Math.round(PurchasePrice * (1 + SalesPercentage / 100));
+  //     updatedProducts[index].SalesPrice = calculatedSalesPrice;
+
+
+  //     if (numericSalesPrice > numericMRP) {
+  //       setErrors(prevErrors => ({
+  //         ...prevErrors,
+  //         [`SalesPrice-${index}`]: 'Sales price exceeds MRP. Please check the value.',
+  //       }));
+  //     } else {
+  //       setErrors(prevErrors => ({
+  //         ...prevErrors,
+  //         [`SalesPrice-${index}`]: '',
+  //       }));
+  //     }
+  //   }
+
+
+
+
+  //   if (field === 'SalesPrice' && !SalesPercentage) {
+  //     if (PurchasePrice) {
+  //       let calculatedSalesPercentage;
+
+
+  //       if (numericSalesPrice >= numericPurchasePrice) {
+  //         calculatedSalesPercentage = ((numericSalesPrice / numericPurchasePrice) - 1) * 100;
+  //       } else {
+  //         calculatedSalesPercentage = 0; 
+  //       }
+
+  //       updatedProducts[index].SalesPercentage = Math.round(calculatedSalesPercentage);
+  //     }
+
+
+  //     console.log("numericSalesPrice", numericSalesPrice, "numericMRP", numericMRP);
+  //     if (numericSalesPrice > numericMRP) {
+  //       setErrors(prevErrors => ({
+  //         ...prevErrors,
+  //         [`SalesPrice-${index}`]: 'Sales price exceeds MRP. Please verify.',
+  //       }));
+  //     } else {
+  //       setErrors(prevErrors => ({
+  //         ...prevErrors,
+  //         [`SalesPrice-${index}`]: '',
+  //       }));
+  //     }
+  //   }
+
+
+  //   if (field === 'SalesPrice' && SalesPercentage) {
+  //     if (PurchasePrice) {
+  //       let calculatedSalesPercentage;
+
+
+  //       if (numericSalesPrice >= numericPurchasePrice) {
+  //         calculatedSalesPercentage = ((numericSalesPrice / numericPurchasePrice) - 1) * 100;
+  //       } else {
+  //         calculatedSalesPercentage = 0; 
+  //       }
+
+
+
+
+  //         const calculatedSalesPrice = Math.round(numericPurchasePrice * (1 + SalesPercentage / 100));
+  //       updatedProducts[index].SalesPrice = calculatedSalesPrice;
+  //       updatedProducts[index].SalesPercentage = Math.round(calculatedSalesPercentage);
+
+  //     }
+
+
+  //     console.log("numericSalesPrice", numericSalesPrice, "numericMRP", numericMRP);
+  //     if (numericSalesPrice > numericMRP) {
+  //       setErrors(prevErrors => ({
+  //         ...prevErrors,
+  //         [`SalesPrice-${index}`]: 'Sales price exceeds MRP. Please verify.',
+  //       }));
+  //     } else {
+  //       setErrors(prevErrors => ({
+  //         ...prevErrors,
+  //         [`SalesPrice-${index}`]: '',
+  //       }));
+  //     }
+  //   }
+
+
+
+
+
+
+  //   if (field === 'WholeSalePercentage' && WholeSalePercentage && PurchasePrice) {
+  //     const calculatedWholeSalePrice = Math.round(PurchasePrice * (1 + WholeSalePercentage / 100));
+  //     updatedProducts[index].WholeSalePrice = calculatedWholeSalePrice;
+
+  //     // Error handling for WholeSalePrice exceeding MRP
+  //     if (numericWholeSalePrice > numericMRP) {
+  //       setErrors(prevErrors => ({
+  //         ...prevErrors,
+  //         [`WholeSalePrice-${index}`]: 'Wholesale price exceeds MRP. Check value.',
+  //       }));
+  //     } else {
+  //       setErrors(prevErrors => ({
+  //         ...prevErrors,
+  //         [`WholeSalePrice-${index}`]: '',
+  //       }));
+  //     }
+  //   }
+
+
+  //   if (field === 'WholeSalePrice' && !WholeSalePercentage) {
+  //     if (PurchasePrice) {
+  //       let calculatedWholeSalePercentage;
+
+  //       // Calculate WholeSalePercentage based on WholeSalePrice
+  //       if (numericWholeSalePrice >= numericPurchasePrice) {
+  //         calculatedWholeSalePercentage = ((numericWholeSalePrice / numericPurchasePrice) - 1) * 100;
+  //       } else {
+  //         calculatedWholeSalePercentage = 0;
+  //       }
+
+  //       updatedProducts[index].WholeSalePercentage = Math.round(calculatedWholeSalePercentage);
+  //     }
+
+  //     // Error handling for WholeSalePrice exceeding MRP
+  //     if (numericWholeSalePrice > numericMRP) {
+  //       setErrors(prevErrors => ({
+  //         ...prevErrors,
+  //         [`WholeSalePrice-${index}`]: 'Wholesale price exceeds MRP. Please verify.',
+  //       }));
+  //     } else {
+  //       setErrors(prevErrors => ({
+  //         ...prevErrors,
+  //         [`WholeSalePrice-${index}`]: '',
+  //       }));
+  //     }
+  //   }
+
+  //   if (field === 'WholeSalePrice' && WholeSalePercentage) {
+  //     if (PurchasePrice) {
+  //       let calculatedWholeSalePercentage;
+
+  //       // Calculate WholeSalePercentage based on WholeSalePrice
+  //       if (numericWholeSalePrice >= numericPurchasePrice) {
+  //         calculatedWholeSalePercentage = ((numericWholeSalePrice / numericPurchasePrice) - 1) * 100;
+  //       } else {
+  //         calculatedWholeSalePercentage = 0;
+  //       }
+
+  //       updatedProducts[index].WholeSalePercentage = Math.round(calculatedWholeSalePercentage);
+  //     }
+
+  //     // Error handling for WholeSalePrice exceeding MRP
+  //     if (numericWholeSalePrice > numericMRP) {
+  //       setErrors(prevErrors => ({
+  //         ...prevErrors,
+  //         [`WholeSalePrice-${index}`]: 'Wholesale price exceeds MRP. Please verify.',
+  //       }));
+  //     } else {
+  //       setErrors(prevErrors => ({
+  //         ...prevErrors,
+  //         [`WholeSalePrice-${index}`]: '',
+  //       }));
+  //     }
+  //   }
+
+
+
+  //   if (value) {
+  //     setErrors(prevErrors => ({
+  //       ...prevErrors,
+  //       [`${field}-${index}`]: '',
+  //     }));
+  //   }
+
+
+  //   setProducts(updatedProducts);
+  // };
+
+
+
+  // const handleInputChange = (e, field, index) => {
+  //   const value = e.target.value;
+
+  //   const updatedProducts = [...products];
+
+  //   console.log("Updated Products (before modification):", updatedProducts);
+
+
+  //   updatedProducts[index][field] = value;
+
+  //   console.log("Updated Products (after setting new value):", updatedProducts);
+
+
+
+
+  //   const { Quantity, PurchasePrice, SalesPercentage, WholeSalePercentage, MRP, SalesPrice, WholeSalePrice } = updatedProducts[index];
+
+  //   console.log("Extracted values:", { Quantity, PurchasePrice, SalesPercentage, WholeSalePercentage, MRP, SalesPrice, WholeSalePrice });
+  //   updatedProducts[index].Total = Quantity * PurchasePrice;
+
+  //   console.log("updatedProducts[index]",updatedProducts[index].WholeSalePrice)
+
+  //   const numericMRP = parseFloat(MRP) || 0; 
+  //   const numericPurchasePrice = parseFloat(PurchasePrice) || 0;
+  //   const numericSalesPrice = parseFloat(SalesPrice) || 0;
+  //    const numericWholeSalePrice = parseFloat(WholeSalePrice) || 0;
+
+  //   console.log("MRP:", numericMRP, MRP);  
+  //   console.log("SalesPrice:", numericSalesPrice, SalesPrice);
+  //   console.log("WholeSalePrice:", numericWholeSalePrice, WholeSalePrice);
+  //   console.log("WholeSalePrice before :", WholeSalePrice);
+
+
+
+
+
+
+  //   const newErrors = { ...errors };
+  //   newErrors[SalesPrice-${index}] = '';  
+  //   newErrors[WholeSalePrice-${index}] = ''; 
+
+  //   if (numericSalesPrice > numericMRP) {
+  //     newErrors[SalesPrice-${index}] = 'Sales price exceeds MRP';
+  //   }
+  //   //  else {
+  //   //   newErrors[SalesPrice-${index}] = '';
+  //   // }
+
+
+  //   if (numericWholeSalePrice > numericMRP) {
+  //     newErrors[WholeSalePrice-${index}] = 'Wholesale price exceeds MRP';
+  //   }
+
+  //   // else {
+  //   //   newErrors[WholeSalePrice-${index}] = '';
+  //   // }
+
+
+
+
+  //   if (field === 'SalesPercentage' && SalesPercentage && PurchasePrice) {
+  //     updatedProducts[index].SalesPrice = Math.round(PurchasePrice * (1 + SalesPercentage / 100));
+  //     console.log(Updated SalesPrice for index ${index}:, updatedProducts[index].SalesPrice);
+  //   }
+
+
+  //   else if (field === 'SalesPrice' && !SalesPercentage && numericPurchasePrice > 0) {
+  //     updatedProducts[index].SalesPercentage = Math.round(((numericSalesPrice / numericPurchasePrice) - 1) * 100);
+  //   }
+
+  //   else if (field === 'SalesPrice' && SalesPercentage && numericPurchasePrice > 0) {
+
+  //     const calculatedSalesPercentage = Math.round(((numericSalesPrice / numericPurchasePrice) - 1) * 100);
+  //     updatedProducts[index].SalesPercentage = calculatedSalesPercentage;
+
+  //     if (calculatedSalesPercentage < 0) {
+  //       newErrors[SalesPrice-${index}] = 'Calculated Sales Percentage is unusually low. Please verify.';
+  //     } 
+  //     // else {
+  //     //   newErrors[SalesPrice-${index}] = '';
+  //     // }
+
+
+
+  //   }
+
+
+  //   if (field === 'WholeSalePercentage' && WholeSalePercentage && PurchasePrice) {
+  //     updatedProducts[index].WholeSalePrice = Math.round(PurchasePrice * (1 + WholeSalePercentage / 100));
+
+  //     console.log("Updated WholeSalePrice calculated:", updatedProducts[index].WholeSalePrice);
+
+  //   }
+
+  //   else  if (field === 'WholeSalePrice' && !WholeSalePercentage && numericPurchasePrice > 0) {
+  //     updatedProducts[index].WholeSalePercentage = Math.round(((numericWholeSalePrice / numericPurchasePrice) - 1) * 100);
+  //   }
+
+  //   else if (field === 'WholeSalePrice' && WholeSalePercentage && numericPurchasePrice > 0) {
+  //     const calculatedWholeSalesPercentage  = Math.round(((numericWholeSalePrice / numericPurchasePrice) - 1) * 100);
+
+  //      updatedProducts[index].WholeSalePercentage = calculatedWholeSalesPercentage
+
+
+  //     if (calculatedWholeSalesPercentage < 0) {
+  //       newErrors[WholeSalePrice-${index}] = 'Calculated Whole Sales Percentage is unusually low. Please verify.';
+  //     } 
+  //     // else {
+  //     //   newErrors[WholeSalePrice-${index}] = '';
+  //     // }
+
+  //   }
+
+
+
+
+  //   // if (value) {
+  //   //   newErrors[${field}-${index}] = '';
+  //   // }
+
+  //   setErrors(newErrors);
+  //   setProducts(updatedProducts);
+  // };
+
+
+  // /////////////////////////////////////////////////////////////////////////////////////////
+  // const handleInputChange = (e, field, index) => {
+  //   const value = e.target.value;
+  //   const updatedProducts = [...products];
+  //   updatedProducts[index][field] = value;
+
+  //   const { Quantity, PurchasePrice, SalesPercentage, WholeSalePercentage, MRP, SalesPrice, WholeSalePrice } = updatedProducts[index];
+  //   updatedProducts[index].Total = Quantity * PurchasePrice;
+
+  //   const numericMRP = parseFloat(MRP) || 0;
+  //   const numericPurchasePrice = parseFloat(PurchasePrice) || 0;
+  //   const numericSalesPrice = parseFloat(SalesPrice) || 0;
+  //   const numericWholeSalePrice = parseFloat(WholeSalePrice) || 0;
+
+  //   const newErrors = { ...errors };
+  //   newErrors[`SalesPrice-${index}`] = '';  
+  //   newErrors[`WholeSalePrice-${index}`] = ''; 
+
+  //   if (numericSalesPrice > numericMRP) {
+  //     newErrors[`SalesPrice-${index}`] = 'Sales price exceeds MRP';
+  //   }
+
+  //   if (numericWholeSalePrice > numericMRP) {
+  //     newErrors[`WholeSalePrice-${index}`] = 'Wholesale price exceeds MRP';
+  //   }
+
+  //   if (field === 'SalesPercentage' && SalesPercentage && PurchasePrice) {
+  //     updatedProducts[index].SalesPrice = Math.round(PurchasePrice * (1 + SalesPercentage / 100));
+  //     console.log(`Updated SalesPrice for index ${index}:`, updatedProducts[index].SalesPrice);
+
+
+  //   } else if (field === 'SalesPrice' && !SalesPercentage && numericPurchasePrice > 0) {
+  //     updatedProducts[index].SalesPercentage = Math.round(((numericSalesPrice / numericPurchasePrice) - 1) * 100);
+
+
+  //   } else if (field === 'SalesPrice' && SalesPercentage && numericPurchasePrice > 0) {
+  //     const calculatedSalesPercentage = Math.round(((numericSalesPrice / numericPurchasePrice) - 1) * 100);
+  //     updatedProducts[index].SalesPercentage = calculatedSalesPercentage;
+
+  //     if (calculatedSalesPercentage < 0) {
+  //       newErrors[`SalesPrice-${index}`] = 'Calculated Sales Percentage is unusually low. Please verify.';
+  //     }
+  //   }
+
+  //   if (field === 'WholeSalePercentage' && WholeSalePercentage && PurchasePrice) {
+  //     updatedProducts[index].WholeSalePrice = Math.round(PurchasePrice * (1 + WholeSalePercentage / 100));
+  //     console.log("Updated WholeSalePrice calculated:", updatedProducts[index].WholeSalePrice);
+
+  //   } else if (field === 'WholeSalePrice' && !WholeSalePercentage && numericPurchasePrice > 0) {
+  //     updatedProducts[index].WholeSalePercentage = Math.round(((numericWholeSalePrice / numericPurchasePrice) - 1) * 100);
+
+  //   } else if (field === 'WholeSalePrice' && WholeSalePercentage && numericPurchasePrice > 0) {
+  //     const calculatedWholeSalesPercentage = Math.round(((numericWholeSalePrice / numericPurchasePrice) - 1) * 100);
+  //     updatedProducts[index].WholeSalePercentage = calculatedWholeSalesPercentage;
+
+  //     if (calculatedWholeSalesPercentage < 0) {
+  //       newErrors[`WholeSalePrice-${index}`] = 'Calculated Whole Sales Percentage is unusually low. Please verify.';
+  //     }
+  //   }
+
+  //   setErrors(newErrors);
+  //   setProducts(updatedProducts);
+  // };
+
+  // /////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+  const handleInputChange = (e, field, index) => {
     const value = e.target.value;
     const updatedProducts = [...products];
     updatedProducts[index][field] = value;
 
-    if (field === 'Product' && !value) {
-      updatedProducts[index].Product = '';
-      updatedProducts[index].subCategory = '';
-      updatedProducts[index].size = '';
-      updatedProducts[index].unit = '';
-    } else {
-      updatedProducts[index][field] = value;
-    }
-  
-    const {
-      Quantity,
-      PurchasePrice,
-      SalesPercentage,
-      WholeSalePercentage,
-      MRP,
-      SalesPrice,
-      WholeSalePrice
-    } = updatedProducts[index];
-  
+    const { Quantity, PurchasePrice, SalesPercentage, WholeSalePercentage, MRP, SalesPrice, WholeSalePrice, Product } = updatedProducts[index];
     updatedProducts[index].Total = Quantity * PurchasePrice;
-  
-    const numericMRP = parseFloat(MRP);
-  
-   
-    if (SalesPercentage && PurchasePrice) {
-      const calculatedSalesPrice = Math.round(PurchasePrice * (1 + SalesPercentage / 100));
-      updatedProducts[index].SalesPrice = calculatedSalesPrice;
-  
-      console.log("calculatedSalesPrice", calculatedSalesPrice, "numericMRP", numericMRP);
-  
-      if (calculatedSalesPrice > numericMRP) {
-        console.log(`SalesPrice exceeds MRP: ${calculatedSalesPrice} > ${numericMRP}`);
-        setErrors((prevErrors) => ({
-          ...prevErrors,
-          [`SalesPrice-${index}`]: 'Sales price exceeds MRP',
-        }));
-      } else {
-        setErrors((prevErrors) => ({
-          ...prevErrors,
-          [`SalesPrice-${index}`]: '', 
-        }));
-      }
-    } else if (!SalesPercentage && SalesPrice) {
-     
-      if (SalesPrice > numericMRP) {
-        setErrors((prevErrors) => ({
-          ...prevErrors,
-          [`SalesPrice-${index}`]: 'Sales price exceeds MRP',
-        }));
-      } else {
-        setErrors((prevErrors) => ({
-          ...prevErrors,
-          [`SalesPrice-${index}`]: '',
-        }));
-      }
-  
-      updatedProducts[index].SalesPrice = SalesPrice;
+
+    const numericMRP = parseFloat(MRP) || 0;
+    const numericPurchasePrice = parseFloat(PurchasePrice) || 0;
+    const numericSalesPrice = parseFloat(SalesPrice) || 0;
+    const numericWholeSalePrice = parseFloat(WholeSalePrice) || 0;
+
+    const newErrors = { ...errors };
+
+    if (!Product) {
+      newErrors[`Product-${index}`] = 'Product name is required';
+    } else {
+      newErrors[`Product-${index}`] = '';
     }
-  
-   
-    if (WholeSalePercentage && PurchasePrice) {
-      const calculatedWholeSalePrice = Math.round(PurchasePrice * (1 + WholeSalePercentage / 100));
-      updatedProducts[index].WholeSalePrice = calculatedWholeSalePrice;
-  
-      if (calculatedWholeSalePrice > numericMRP) {
-        console.log(`WholeSalePrice exceeds MRP: ${calculatedWholeSalePrice} > ${numericMRP}`);
-        setErrors((prevErrors) => ({
-          ...prevErrors,
-          [`WholeSalePrice-${index}`]: 'Wholesale price exceeds MRP',
-        }));
-      } else {
-        setErrors((prevErrors) => ({
-          ...prevErrors,
-          [`WholeSalePrice-${index}`]: '', 
-        }));
-      }
-    } else if (!WholeSalePercentage && WholeSalePrice) {
-      
-      if (WholeSalePrice > numericMRP) {
-        setErrors((prevErrors) => ({
-          ...prevErrors,
-          [`WholeSalePrice-${index}`]: 'Wholesale price exceeds MRP',
-        }));
-      } else {
-        setErrors((prevErrors) => ({
-          ...prevErrors,
-          [`WholeSalePrice-${index}`]: '', 
-        }));
-      }
-  
-      updatedProducts[index].WholeSalePrice = WholeSalePrice;
+
+
+
+    if (!numericPurchasePrice) {
+      newErrors[`PurchasePrice-${index}`] = 'Purchase Price must be greater than 0';
+    } else {
+      newErrors[`PurchasePrice-${index}`] = '';
     }
-  
-    
-    if (value) {
-      setErrors((prevErrors) => ({
-        ...prevErrors,
-        [`${field}-${index}`]: '', 
-      }));
+    if (!numericMRP) {
+      newErrors[`MRP-${index}`] = 'MRP must be greater than 0';
+    } else {
+      newErrors[`MRP-${index}`] = '';
     }
-  
+
+    if (!Quantity) {
+      newErrors[`Quantity-${index}`] = 'Quantity must be greater than 0';
+    } else {
+      newErrors[`Quantity-${index}`] = '';
+    }
+
+
+
+    if (numericSalesPrice > numericMRP) {
+      newErrors[`SalesPrice-${index}`] = 'Sales price exceeds MRP';
+    } else {
+      newErrors[`SalesPrice-${index}`] = '';
+    }
+
+    if (numericWholeSalePrice > numericMRP) {
+      newErrors[`WholeSalePrice-${index}`] = 'Wholesale price exceeds MRP';
+    } else {
+      newErrors[`WholeSalePrice-${index}`] = '';
+    }
+
+    if (field === 'SalesPercentage' && SalesPercentage && PurchasePrice) {
+
+      const calculateSalesPrice = updatedProducts[index].SalesPrice = Math.round(PurchasePrice * (1 + SalesPercentage / 100));
+      updatedProducts[index].SalesPrice = calculateSalesPrice;
+
+      if (calculateSalesPrice > numericMRP) {
+        newErrors[`SalesPrice-${index}`] = 'Sales price exceeds MRP';
+      } else {
+        newErrors[`SalesPrice-${index}`] = '';
+      }
+
+    } else if (field === 'SalesPrice' && !SalesPercentage && numericPurchasePrice > 0) {
+      updatedProducts[index].SalesPercentage = Math.round(((numericSalesPrice / numericPurchasePrice) - 1) * 100);
+
+
+    } else if (field === 'SalesPrice' && SalesPercentage && numericPurchasePrice > 0) {
+      const calculatedSalesPercentage = Math.round(((numericSalesPrice / numericPurchasePrice) - 1) * 100);
+      updatedProducts[index].SalesPercentage = calculatedSalesPercentage;
+
+      if (calculatedSalesPercentage < 0) {
+        newErrors[`SalesPrice-${index}`] = 'Calculated Sales Percentage is unusually low. Please verify.';
+      }
+    }
+
+    if (field === 'WholeSalePercentage' && WholeSalePercentage && PurchasePrice) {
+      const CalculateWholeSalePrice = Math.round(PurchasePrice * (1 + WholeSalePercentage / 100));
+      updatedProducts[index].WholeSalePrice = CalculateWholeSalePrice
+
+      if (CalculateWholeSalePrice > numericMRP) {
+        newErrors[`WholeSalePrice-${index}`] = 'Wholesale price exceeds MRP';
+      } else {
+        newErrors[`WholeSalePrice-${index}`] = '';
+      }
+    } else if (field === 'WholeSalePrice' && !WholeSalePercentage && numericPurchasePrice > 0) {
+      updatedProducts[index].WholeSalePercentage = Math.round(((numericWholeSalePrice / numericPurchasePrice) - 1) * 100);
+
+    } else if (field === 'WholeSalePrice' && WholeSalePercentage && numericPurchasePrice > 0) {
+      const calculatedWholeSalesPercentage = Math.round(((numericWholeSalePrice / numericPurchasePrice) - 1) * 100);
+      updatedProducts[index].WholeSalePercentage = calculatedWholeSalesPercentage;
+
+      if (calculatedWholeSalesPercentage < 0) {
+        newErrors[`WholeSalePrice-${index}`] = 'Calculated Whole Sales Percentage is unusually low. Please verify.';
+      }
+    }
+
+    setErrors(newErrors);
     setProducts(updatedProducts);
-  
-   
-  };
-  
-
-
- 
-
-
-
-
-
-
-
-
-
-
- 
-  useEffect(() => {
-    const calculatedSubTotal = products.reduce((sum, product) => sum + product.Total, 0);
-    // const calculatedTaxTotal = products.reduce((sum, product) => sum + product.TaxAmount, 0);
-
-    // const calculatedBeforeTax = calculatedSubTotal - globalDiscount + addCharges;
-    // const calculatedTotal = calculatedBeforeTax + calculatedTaxTotal + roundingOff;
-
-    setSubTotal(Number(calculatedSubTotal) || 0);
-    // setTaxTotal(calculatedTaxTotal);
-    // setBeforeTax(calculatedBeforeTax);
-    // setTotal(calculatedTotal);
-  }, [products]);
-
-
-
-
-  const [showProductNameDropdown, setShowProductNameDropdown] = useState([]);
-
-  const handleproductNameDropDown = (index) => {
-    const updatedDropdown = [...showProductDropdown];
-    updatedDropdown[index] = !updatedDropdown[index];
-    setShowProductDropdown(updatedDropdown);
-  };
-
-
-  const handleDropDown = (index) => {
-    setDropdownIndex(dropdownIndex === index ? null : index);
   };
 
 
 
 
-  const handleDelete = (index) => {
-    setProducts((prevProducts) => prevProducts.filter((_, i) => i !== index));
-  };
 
+  console.log("products", products)
 
-
-
-  // useEffect(()=>{
-  //   if(state.AddProduct?.ProductList.length > 0){
-  //     setProductID(state.AddProduct?.ProductList)
-  //   }
-
-  // },[state.AddProduct?.ProductList])
-
-
-  // useEffect(() => {
-
-  //     // if (productIDWithName) {
-  //     //   dispatch({
-  //     //     type: 'GET_PRODUCT_BY_NAME',
-  //     //     payload: { productName: productIDWithName },
-  //     //   });
-  //     //       }
-  // // if(productIDWithName){
-  // //   const filteredProduct = state.AddProduct.ProductList.filter((product) => {
-  // //     return product.productName.toLowerCase().includes(productIDWithName.toLowerCase());
-  // //   });
-
-  // //   console.log('filteredProduct', filteredProduct);
-  // //   setProductID(filteredProduct)
-  // // }
-
-  //  }, [productIDWithName]);
-
-
-
-  // console.log("productIDWithName",productIDWithName)
-
-  // console.log("productId", productId)
-
-
-
-  // useEffect(()=>{
-  //   if(state.AddProduct?.getProductByNameStatusCode == 200){
-  //     // setProductID(state.AddProduct.ProductByName?.data[0]?.productId)
-  //     setProductID(state.AddProduct.ProductByName?.data)
-  //   }
-
-  // },[state.AddProduct?.getProductByNameStatusCode])
-
-
-
-  const handleProductName = (item, index) => {
-
-
-   
-    const updatedProducts = [...products];
-    updatedProducts[index].Product = item.productName;
-    updatedProducts[index].productID = item.productId;
-    updatedProducts[index].size = item.size;
-    updatedProducts[index].subCategory = item.subCategory;
-    updatedProducts[index].unit = item.unit
-
-    setProducts(updatedProducts);
-
-    const updatedDropdown = [...showProductDropdown];
-    updatedDropdown[index] = false;
-    setShowProductDropdown(updatedDropdown);
-
-    document.getElementById(`product-${index}`).focus();
-  
-   
-  };
-  
-  // useEffect(() => {
-  //   if (products.length > 0  && products[0]?.productName) {
-   
-  //     quantityRefs.current[0]?.focus();
-  //   }
-  // }, [products]);
-  
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setShowProductDropdown([]);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
-
-  const handleOptionSelect = (option, id) => {
-    setSelectedOption(option);
-    setDropdownOpen(false);
-    setSupplierIdError('');
-    setSupplierId(id)
-  };
-
-
-  
-
-  // const handleAddPurchase = () => {
-  //   // setOrderDateError('');
-  //   // setInvoiceIdError('');
-  //   // setProductsError('');
-  //   // setSupplierIdError('');
-  //   // setErrors({});
-  //   let valid = true;
-  //   const newErrors = {};
-  
-  //   if (!orderDate) {
-  //     setOrderDateError('Purchase date is required');
-  //     valid = false;
-  //   }
-  
-  //   if (!invoiceId) {
-  //     setInvoiceIdError('Invoice ID is required');
-  //     valid = false;
-  //   }
-  
-  //   if (!products || products.length === 0) {
-  //     setProductsError('At least one product is required');
-  //     valid = false;
-  //   }
-  
-  //   if (!supplierId) {
-  //     setSupplierIdError('Supplier ID is required');
-  //     valid = false;
-  //   }
-  
-  //   products.forEach((product, index) => {
-  //     if (!product.Product) {
-  //       newErrors[`Product-${index}`] = 'Product name is required';
-  //       valid = false;
-  //     }
-  //     if (!product.PurchasePrice || product.PurchasePrice <= 0) {
-  //       newErrors[`PurchasePrice-${index}`] = 'Purchase Price must be greater than 0';
-  //       valid = false;
-  //     }
-  //     if (!product.Quantity || product.Quantity <= 0) {
-  //       newErrors[`Quantity-${index}`] = 'Quantity must be greater than 0';
-  //       valid = false;
-  //     }
-  //     if (!product.MRP) {
-  //       newErrors[`MRP-${index}`] = 'MRP must be greater than 0';
-  //       valid = false;
-  //     }
-  //     // if (!product.SalesPercentage) {
-  //     //   newErrors[`SalesPercentage-${index}`] = 'Enter Sales Percentage';
-  //     //   valid = false;
-  //     // }
-  //     // if (!product.SalesPrice) {
-  //     //   newErrors[`SalesPrice-${index}`] = 'Sales Price must be greater than 0';
-  //     //   valid = false;
-  //     // }
-  //     // if (!product.WholeSalePercentage) {
-  //     //   newErrors[`WholeSalePercentage-${index}`] = 'Enter Whole Sale Percentage';
-  //     //   valid = false;
-  //     // }
-  //     // if (!product.WholeSalePrice) {
-  //     //   newErrors[`WholeSalePrice-${index}`] = 'Wholesale Price must be greater than 0';
-  //     //   valid = false;
-  //     // }
-  //   });
-  
-  //   setErrors(newErrors);
-  
-  //   if (!valid || Object.keys(newErrors).some(key => newErrors[key])) {
-  //     return;
-  //   }
-  
-  //   if (valid) {
-  //     const formattedDate = new Date(orderDate).toLocaleDateString('en-GB');
-  //     const purchaseItems = products.map(product => ({
-  //       productId: product.productID,
-  //       quantity: product.Quantity,
-  //       purchasePrice: product.PurchasePrice,
-  //       mrp: product.MRP,
-  //       salesPercentage: product.SalesPercentage,
-  //       salesPrice: product.SalesPrice,
-  //       wholesalePercentage: product.WholeSalePercentage,
-  //       wholesalePrice: product.WholeSalePrice
-  //     }));
-  
-  //     dispatch({
-  //       type: 'ADDPURCHASE',
-  //       payload: {
-  //         supplierId: supplierId,
-  //         purchaseDate: formattedDate,
-  //         invoiceId: invoiceId,
-  //         invoiceImage: "string",
-  //         purchaseItems: purchaseItems
-  //       }
-  //     });
-  //   }
-  // };
-  
   const handleAddPurchase = () => {
     let valid = true;
     const newErrors = {};
-  
+
 
     if (!orderDate) {
       newErrors.orderDate = 'Purchase date is required';
       valid = false;
     }
-  
+
     if (!invoiceId) {
       newErrors.invoiceId = 'Invoice ID is required';
       valid = false;
     }
-  
+
     if (!products || products.length === 0) {
       newErrors.products = 'At least one product is required';
       valid = false;
     }
-  
+
     if (!supplierId) {
       newErrors.supplierId = 'Supplier ID is required';
       valid = false;
     }
-  
+
     products.forEach((product, index) => {
       if (!product.Product) {
         newErrors[`Product-${index}`] = 'Product name is required';
@@ -526,6 +700,17 @@ function AddPurchase({ handleClose }) {
         newErrors[`MRP-${index}`] = 'MRP must be greater than 0';
         valid = false;
       }
+
+      if (!product.SalesPrice) {
+        newErrors[`SalesPrice-${index}`] = 'Sales price must be greater than 0';
+        valid = false;
+      }
+
+      if (!product.WholeSalePrice) {
+        newErrors[`WholeSalePrice-${index}`] = 'Wholesale price must be greater than 0';
+        valid = false;
+      }
+
       if (product.SalesPercentage && product.PurchasePrice) {
         const calculatedSalesPrice = Math.round(product.PurchasePrice * (1 + product.SalesPercentage / 100));
         if (calculatedSalesPrice > product.MRP) {
@@ -547,14 +732,15 @@ function AddPurchase({ handleClose }) {
         valid = false;
       }
     });
-  
-   
+
+
     if (!valid) {
       setErrors(newErrors);
       return;
     }
-  
-   
+
+    console.log("error for Validation", errors)
+
     const formattedDate = new Date(orderDate).toLocaleDateString('en-GB');
     const purchaseItems = products.map(product => ({
       productId: product.productID,
@@ -568,25 +754,144 @@ function AddPurchase({ handleClose }) {
     }));
 
     console.log(purchaseItems)
-  
+
     dispatch({
       type: 'ADDPURCHASE',
       payload: {
         supplierId: supplierId,
         purchaseDate: formattedDate,
         invoiceId: invoiceId,
-        invoiceImage: "string", 
+        invoiceImage: "string",
         purchaseItems: purchaseItems
       }
     });
   };
-  
+
+  useEffect(() => {
+    const calculatedSubTotal = products.reduce((sum, product) => sum + product.Total, 0);
+    setSubTotal(Number(calculatedSubTotal) || 0);
+  }, [products]);
+
+
+
+
+  const [showProductNameDropdown, setShowProductNameDropdown] = useState([]);
+
+  const handleproductNameDropDown = (index) => {
+    const updatedDropdown = [...showProductDropdown];
+    updatedDropdown[index] = !updatedDropdown[index];
+    setShowProductDropdown(updatedDropdown);
+  };
+
+
+  const handleDropDown = (index) => {
+    setDropdownIndex(dropdownIndex === index ? null : index);
+  };
+
+
+
+
+  const handleDelete = () => {
+    setProducts((prevProducts) => prevProducts.filter((_, i) => i !== isStoredIndex));
+    setIsModalOpen(false);
+  };
+
+
+
+
+
+
+
+
+  const handleProductName = (item, index) => {
+
+    setErrors((prevErrors) => {
+      const newErrors = { ...prevErrors };
+      delete newErrors[`Product-${index}`];
+      return newErrors;
+    });
+
+
+
+    const updatedProducts = [...products];
+    updatedProducts[index].Product = item.productName;
+    updatedProducts[index].productID = item.productId;
+    updatedProducts[index].size = item.size;
+    updatedProducts[index].subCategory = item.subCategory;
+    updatedProducts[index].unit = item.unit
+
+    setProducts(updatedProducts);
+
+    const updatedDropdown = [...showProductDropdown];
+    updatedDropdown[index] = false;
+    setShowProductDropdown(updatedDropdown);
+
+    document.getElementById(`product-${index}`).focus();
+
+
+  };
+
+
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setShowProductDropdown([]);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
+  const handleOptionSelect = (option, id) => {
+    setSelectedOption(option);
+    setDropdownOpen(false);
+    setSupplierIdError('');
+    setErrors((prevErrors) => {
+      const newErrors = { ...prevErrors };
+      delete newErrors.supplierId;
+      return newErrors;
+    });
+    setSupplierId(id)
+  };
+
+
+
+
+
+
+
   useEffect(() => {
     dispatch({ type: 'GETSUPPLIER' });
   }, []);
 
 
+  const handleOpenDeleteModal = (index) => {
+    console.log("store index", index)
+    setIsModalOpen(true);
+    setIsStoredIndex(index)
 
+
+  };
+
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+
+  };
+
+  console.log("Current errors state:", errors);
+
+
+  const handleFieldClick = (fieldName, index) => {
+    setActiveField((prevState) => ({
+      ...prevState,
+      [index]: fieldName,
+    }));
+  };
 
   return (
     <div className="container mx-auto px-4">
@@ -598,7 +903,7 @@ function AddPurchase({ handleClose }) {
           <button onClick={handleClose} className="flex items-center gap-2 w-16 h-7 px-2 rounded border border-orange-600 text-orange-600 font-semibold text-sm hover:bg-orange-600 hover:text-black hover:border-black">
             Cancel
           </button>
-          <button onClick={handleAddPurchase} className="flex items-center gap-2 w-28 h-7 px-3 rounded border border-black bg-orange-600 text-black font-semibold text-sm">
+          <button onClick={handleAddPurchase} className="flex items-center gap-2 w-fit h-7 px-3 rounded border border-black bg-orange-600 text-black font-semibold text-sm">
             Save & Close
           </button>
         </div>
@@ -617,7 +922,7 @@ function AddPurchase({ handleClose }) {
               >
                 {selectedOption || 'Supplier'}
 
-                {/* Icon will stay on the far right responsively */}
+
                 <img className="w-4 h-4" src={dropdown} alt="Dropdown Icon" />
               </button>
 
@@ -686,42 +991,57 @@ function AddPurchase({ handleClose }) {
 
         </div>
 
-        {supplierIdError && <p className="text-red-500 font-Manrope mt-1 text-sm">{supplierIdError}</p>}
+        {errors.supplierId && <p className="text-red-500 font-Manrope mt-1 text-sm">{errors.supplierId}</p>}
         <div className="w-full md:w-1/2  mt-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 
-            <div className="relative">
+            <div className="w-full relative">
               <label className="block font-semibold mb-1 text-sm text-start font-SourceSansPro">
                 Purchase Date <span className="text-red-500">*</span>
               </label>
+              <div class="react-datepicker__input-container relative">
+                <DatePicker
+                  selected={orderDate}
+                  onChange={handleOrderDateChange}
+                  dateFormat="MM/dd/yyyy"
+                  placeholderText="DD / MM / YYYY"
+                  className="w-full border rounded px-3 py-2 pr-12 text-sm md:text-base focus:border-gray-500 relative focus:outline-none"
+                  open={isDatePickerOpen}
+                  onClickOutside={() => setIsDatePickerOpen(false)}
+                  ref={datePickerRef}
+                />
 
-              <DatePicker
-                selected={orderDate}
-                onChange={handleOrderDateChange}
-                dateFormat="MM/dd/yyyy"
-                placeholderText="DD / MM / YYYY"
-                className="w-full border rounded px-3 py-2 pr-12 text-sm md:text-base focus:border-orange-600"
-                open={isDatePickerOpen}
-                onClickOutside={() => setIsDatePickerOpen(false)}
-                ref={datePickerRef}
-              />
+                <img
+                  src={DateIcon}
+                  alt="Date Icon"
+                  className="absolute top-1/2 transform -translate-y-1/2 right-3 md:right-5 lg:right-8 xl:right-10 cursor-pointer"
+                  onClick={handleIconClickForOrder}
+                />
+              </div>
 
-              <img
-                src={DateIcon}
-                alt="Date Icon"
-                className="absolute top-12 transform -translate-y-1/2 right-3 md:right-4 lg:right-5 cursor-pointer"
-                onClick={handleIconClickForOrder}
-              />
-              {orderDateError && <p className="text-red-500 font-Manrope mt-1 text-sm">{orderDateError}</p>}
+
+              {errors.orderDate && (
+                <p className="text-red-500 font-Manrope mt-1 text-sm">{errors.orderDate}</p>
+              )}
             </div>
+
+
+
+
+
+
+
+
+
+
 
             <div>
               <label className="block font-semibold mb-1 text-sm text-start font-SourceSansPro">Invoice ID <span className="text-red-500">*</span></label>
               <input type="text"
                 value={invoiceId}
                 onChange={handleInvoiceIdChange}
-                className="w-full border rounded px-3 py-2 text-sm focus:border-orange-600" placeholder="P7895233" />
-              {invoiceIdError && <p className="text-red-500 font-Manrope mt-1 text-sm">{invoiceIdError}</p>}
+                className="w-full border rounded px-3 py-2.5 text-sm focus:border-gray-500 focus:outline-none" placeholder="P7895233" />
+              {errors.invoiceId && <p className="text-red-500 font-Manrope mt-1 text-sm">{errors.invoiceId}</p>}
 
             </div>
 
@@ -737,206 +1057,208 @@ function AddPurchase({ handleClose }) {
         <table className="table-auto border border-gray-300 rounded-lg w-full overflow-x-auto mt-6">
           <thead>
             <tr className="bg-gray-200">
-              <th className="p-2 border font-semibold text-sm">Product</th>
-              <th className="p-2 border font-semibold text-sm">Quantity</th>
-              <th className="p-2 border font-semibold text-sm">Purchase Price</th>
-              <th className="p-2 border font-semibold text-sm">MRP</th>
-              <th className="p-2 border font-semibold text-sm">Sales %</th>
-              <th className="p-2 border font-semibold text-sm">Sales Price</th>
-              <th className="p-2 border font-semibold text-sm">Whole Sale %</th>
-              <th className="p-2 border font-semibold text-sm">Whole Sale Price</th>
-              <th className="p-2 border font-semibold text-sm">Total</th>
-              <th className="p-2 border font-semibold text-sm"></th>
+              <th className="p-2 border font-semibold text-sm w-96">Product</th>
+              <th className="p-2 border font-semibold text-sm w-1/12">Quantity</th>
+              <th className="p-2 border font-semibold text-sm w-1/12">Purchase Price</th>
+              <th className="p-2 border font-semibold text-sm w-1/12">MRP</th>
+              <th className="p-2 border font-semibold text-sm w-1/12">Sales %</th>
+              <th className="p-2 border font-semibold text-sm w-1/12">Sales Price</th>
+              <th className="p-2 border font-semibold text-sm w-1/12">Whole Sale %</th>
+              <th className="p-2 border font-semibold text-sm w-1/12">Whole Sale Price</th>
+              <th className="p-2 border font-semibold text-sm w-1/12">Total</th>
+              <th className="p-2 border font-semibold text-sm w-20"></th>
             </tr>
           </thead>
           <tbody>
             {products.map((product, index) => (
               <tr key={index} className="bg-gray-100">
-                <td className="p-2 border relative">
+                <td className="p-2 border relative w-96">
                   <input
                     type="text"
                     value={product.Product}
+                    placeholder={`${product.subCategory} - ${product.size} ${product.unit}`}
                     id={`product-${index}`}
                     // value={`${product.Product} ${product.subCategory} - ${product.size} ${product.unit}`}
                     onChange={(e) => handleInputChange(e, 'Product', index)}
                     onClick={() => handleproductNameDropDown(index)}
-                    // onKeyDown={(e) => {
-                     
-                    //   if (e.key === 'Backspace') {
-                    //     handleInputChange(e, 'Product', index); 
-                    //   }
-                    // }}
-                    className={`border p-1 rounded w-full ${errors[`Product-${index}`] ? 'border-red-500' : ''}`}
+                    className={`border p-1 focus:border-gray-500 focus:outline-none rounded w-full ${errors[`Product-${index}`] ? 'border-red-500' : ''}`}
                   />
 
 
-                 
+
                   {showProductDropdown[index] && (
-    <div ref={dropdownRef} className="absolute z-50 bg-light_gray divide-y divide-gray-100 shadow md:w-56 w-56 sm:w-56">
-      <ul className="py-2 text-sm text-black font-Manrope font-medium text-start">
-        {productId.length > 0 ? (
-          productId
-            .filter(item => item.productName.toLowerCase().includes(product.Product.toLowerCase())) // Filter products based on input
-            .map(item => (
-              
-              <li
-                key={item.productId}
-                onClick={() => handleProductName(item, index)}
-                className="px-2 py-2 cursor-pointer hover:bg-gray-200"
-              >
-                <div className="flex flex-col">
-                  <label>{item.productName}
-                    
-                     {item.subCategory}</label>
-                  <label>{item.size} - {item.unit}</label>
-                </div>
-              </li>
-            ))
-        ) : (
-          <li className="px-2 py-2 cursor-pointer hover:bg-gray-200">
-            No products
-          </li>
-        )}
-      </ul>
-    </div>
-  )}
+                    <div ref={dropdownRef} className="absolute z-50 bg-light_gray divide-y divide-gray-100 shadow md:w-56 w-56 sm:w-56">
+                      <ul className="py-2 text-sm text-black font-Manrope font-medium text-start">
+                        {productId.length > 0 ? (
+                          productId
+                            .filter(item => item.productName.toLowerCase().includes(product.Product.toLowerCase()))
+                            .map(item => (
+
+                              <li
+                                key={item.productId}
+                                onClick={() => handleProductName(item, index)}
+                                className="px-2 py-2 cursor-pointer hover:bg-gray-200"
+                              >
+                                <div className="flex flex-col">
+                                  <label>{item.productName}
+
+                                    {item.subCategory}</label>
+                                  <label>{item.size} - {item.unit}</label>
+                                </div>
+                              </li>
+                            ))
+                        ) : (
+                          <li className="px-2 py-2 cursor-pointer hover:bg-gray-200">
+                            No products
+                          </li>
+                        )}
+                      </ul>
+                    </div>
+                  )}
                 </td>
-                <td className="p-2 border">
+                <td className="p-2 border w-1/12">
                   <input
                     type="number"
                     value={product.Quantity}
-                    
+
                     onChange={(e) => handleInputChange(e, 'Quantity', index)}
-                    className={`border p-1 rounded w-full ${errors[`Quantity-${index}`] ? 'border-red-500' : ''}`}
+                    className={`border p-1  focus:border-gray-500 focus:outline-none rounded w-full ${errors[`Quantity-${index}`] ? 'border-red-500' : ''}`}
                     min="0"
                   />
                 </td>
-                <td className="p-2 border">
+                <td className="p-2 border w-1/12">
                   <input
                     type="number"
                     value={product.PurchasePrice}
                     onChange={(e) => handleInputChange(e, 'PurchasePrice', index)}
-                    className={`border p-1 rounded w-full ${errors[`PurchasePrice-${index}`] ? 'border-red-500' : ''}`}
+                    className={`border p-1 focus:border-gray-500 focus:outline-none rounded w-full ${errors[`PurchasePrice-${index}`] ? 'border-red-500' : ''}`}
                     min="0"
                   />
 
                 </td>
-                <td className="p-2 border">
+                <td className="p-2 border w-1/12">
                   <input
                     type="number"
                     value={product.MRP}
                     onChange={(e) => handleInputChange(e, 'MRP', index)}
-                    className={`border p-1 rounded w-full ${errors[`MRP-${index}`] ? 'border-red-500' : ''}`}
+                    className={`border p-1 focus:border-gray-500 focus:outline-none rounded w-full ${errors[`MRP-${index}`] ? 'border-red-500' : ''}`}
                     min="0"
                   />
                 </td>
-                <td className="p-2 border">
+                <td className="p-2 border w-1/12">
                   <input
                     type="number"
                     value={product.SalesPercentage}
+                    onClick={() => handleFieldClick('SalesPercentage', index)}
                     onChange={(e) => handleInputChange(e, 'SalesPercentage', index)}
-                    className={`border p-1 rounded w-full ${errors[`SalesPercentage-${index}`] ? 'border-red-500' : ''}`}
+                    className={`border p-1 focus:border-gray-500 focus:outline-none rounded w-full ${errors[`SalesPercentage-${index}`] ? 'border-red-500' : ''}`}
                     min="0"
+                  // disabled={activeField[index] === 'SalesPrice'}
                   />
                 </td>
-               
-                <td className="p-2 border">
+
+                <td className="p-2 border w-1/12">
                   <input
                     type="number"
                     value={product.SalesPrice}
+                    onClick={() => handleFieldClick('SalesPrice', index)}
                     onChange={(e) => handleInputChange(e, 'SalesPrice', index)}
-                    className={`border p-1 rounded w-full ${errors[`SalesPrice-${index}`] ? 'border-red-500' : ''}`}
+                    className={`border p-1 focus:border-gray-500 focus:outline-none rounded w-full ${errors[`SalesPrice-${index}`] ? 'border-red-500' : ''}`}
                     min="0"
+                  // disabled={activeField[index] === 'SalesPercentage'}
                   />
+
                 </td>
-                <td className="p-2 border">
+                <td className="p-2 border w-1/12">
                   <input
                     type="number"
                     value={product.WholeSalePercentage}
                     onChange={(e) => handleInputChange(e, 'WholeSalePercentage', index)}
-                    className={`border p-1 rounded w-full ${errors[`WholeSalePercentage-${index}`] ? 'border-red-500' : ''}`}
+                    className={`border p-1 focus:border-gray-500 focus:outline-none rounded w-full ${errors[`WholeSalePercentage-${index}`] ? 'border-red-500' : ''}`}
                     min="0"
                   />
                 </td>
-                <td className="p-2 border">
+                <td className="p-2 border w-1/12">
                   <input
                     type="number"
                     value={product.WholeSalePrice}
                     onKeyDown={handleKeyDown}
                     onChange={(e) => handleInputChange(e, 'WholeSalePrice', index)}
-                    className={`border p-1 rounded w-full ${errors[`WholeSalePrice-${index}`] ? 'border-red-500' : ''}`}
+                    className={`border p-1 focus:border-gray-500 focus:outline-none rounded w-full ${errors[`WholeSalePrice-${index}`] ? 'border-red-500' : ''}`}
                     min="0"
                   />
                 </td>
-                <td className="p-2 border">
+                <td className="p-2 border w-1/12">
                   <input
                     type="number"
-                    readOnly
+                    disabled
                     value={product.Total}
-                    className="border p-1 rounded w-full"
+                    className="border p-1  focus:border-gray-500 focus:outline-none rounded w-full"
                   />
                 </td>
 
-                <td className="p-2 border-white border border-l-0 text-gray-500 cursor-pointer w-8 relative" onClick={() => handleDropDown(index)}>
-                  <img src={Dot} alt="Options" />
+                <td className="p-2  text-gray-500 cursor-pointer w-20"      >
+
+                  <div className="flex justify-center">
 
 
-                  {dropdownIndex === index && (
-                    <div className="absolute right-10 top-2 mt-2  bg-zinc-300 border border-zinc-200 rounded-lg shadow-lg z-20  w-24 p-2">
-                      <div className='flex items-center justify-evenly w-auto'>
+                    <Trash
+                      size="32"
+                      color="#989c99"
+                      className="w-6 h-6 text-zinc-600 cursor-pointer" onClick={() => handleOpenDeleteModal(index)}
+                    />
 
-
-                        <div>
-                          <img src={Delete} className='size-6  cursor-pointer' onClick={() => handleDelete(index)} />
-                        </div>
-                      </div>
-
-                    </div>
-                  )}
-
+                  </div>
 
                 </td>
 
-               
+
               </tr>
+
+
+
+
             ))}
           </tbody>
         </table>
 
 
-        {/* <div className="errors-container">
-  {Object.keys(errors).map((key) => {
-    if (errors[key]) {
-    
-      if (key.includes('SalesPercentage') || key.includes('SalesPrice') || key.includes('WholeSalePercentage')) {
-        return (
-          <p key={key} className="text-red-500 text-xs mt-1">
-            {errors[key]}
-          </p>
-        );
-      }
-    }
-    return null;
-  })}
-</div> */}
 
-<div className="errors-container">
-  {Object.keys(errors).map((key) => {
-    if (
-      (key.includes('SalesPercentage') || 
-      key.includes('SalesPrice') || 
-      key.includes('WholeSalePercentage') || 
-      key.includes('WholeSalePrice')) && errors[key]
-    ) {
-      return (
-        <p key={key} className="text-red-500 text-xs mt-1">
-          {errors[key]}
-        </p>
-      );
-    }
-    return null;
-  })}
-</div>
+
+
+        {isModalOpen && (
+          <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center z-50">
+            <div className="bg-white p-6 rounded shadow-lg z-50">
+              <p className="mb-3 font-Manrope font-semibold">Do you want to remove the selected products?</p>
+              <div className="mt-4 flex justify-center space-x-4">
+                <button onClick={handleCloseModal} className="px-4 py-2 bg-gray-300 rounded font-Manrope">Cancel</button>
+                <button onClick={() => handleDelete()} className="px-4 py-2 bg-orange-600 text-white rounded w-20 font-Manrope">OK</button>
+              </div>
+            </div>
+          </div>
+        )}
+
+
+
+
+
+
+
+        <div className="errors-container">
+          {Object.keys(errors).map((key) => {
+            if (
+              ['Product', 'PurchasePrice', 'Quantity', 'MRP', 'SalesPercentage', 'SalesPrice', 'WholeSalePercentage', 'WholeSalePrice'].some((k) => key.includes(k))
+            ) {
+              return (
+                <p key={key} className="text-red-500 text-xs mt-1">
+                  {errors[key]}
+                </p>
+              );
+            }
+            return null;
+          })}
+        </div>
+
 
 
 
