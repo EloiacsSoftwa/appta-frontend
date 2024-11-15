@@ -39,14 +39,14 @@ import Logout from "../Images/Icons/Logout.svg";
 
 
 
-function App() {
+function Sidebar() {
 
 
   const dispatch = useDispatch();
 
 
   const [isExpanded, setIsExpanded] = useState(true);
-  const [selectedMenu, setSelectedMenu] = useState('Product List');
+  const [selectedMenu, setSelectedMenu] = useState('Dashboard');
   const [isSubmenuOpen, setIsSubmenuOpen] = useState({});
   const [isHide, setIsHide] = useState(true)
   const state = useSelector(state => state);
@@ -74,6 +74,10 @@ function App() {
 
   const toggleSubmenu = (menu) => {
     setIsSubmenuOpen((prev) => ({ ...prev, [menu]: !prev[menu] }));
+
+console.log("menu*************",menu)
+//     setSelectedMenu(title)
+// localStorage.setItem('currentPage', title);
   };
 
 
@@ -82,6 +86,7 @@ function App() {
 
 
 const handleSelectedMenu = (title) => {
+  console.log("title",title)
 setSelectedMenu(title)
 localStorage.setItem('currentPage', title);
 }
@@ -95,7 +100,8 @@ useEffect(() => {
 
 useEffect(() => {
   if (state.LoginReducer?.isLoggedIn) {
-    setSelectedMenu('Product List')
+    setSelectedMenu('Dashboard')
+    localStorage.setItem('currentPage', 'Dashboard');
   }
 }, [state.LoginReducer?.isLoggedIn])
 
@@ -105,7 +111,9 @@ useEffect(() => {
       <li
         key={item}
         className="flex items-center gap-8 text-xs font-normal font-manrope "
-        onClick={() => handleSelectedMenu(item)}
+        onClick={() => {
+          
+          handleSelectedMenu(item)}}
       >
         
         <div
@@ -140,7 +148,6 @@ useEffect(() => {
 
   const sidebarItems = [
     {
-      icon: DashboardIcon,
       icon: DashboardIcon,
       title: "Dashboard",
       submenu: [],
@@ -200,8 +207,8 @@ useEffect(() => {
 
   const handleCloseForStock = () =>{
     setIsHide(true)
-    setSelectedMenu('Product List')
-    localStorage.setItem('currentPage', 'Product List');
+    setSelectedMenu('Dashboard')
+    localStorage.setItem('currentPage', 'Dashboard');
 
   }
 
@@ -243,7 +250,7 @@ useEffect(() => {
               <li
                 key={title}
                 className="flex items-center pl-4 cursor-pointer"
-                onClick={() => setSelectedMenu(title)}
+                onClick={() => handleSelectedMenu(title)}
               >
                 <img src={icon} alt={`${title} Logo`} className="w-5 h-5 cursor-pointer" />
                 {isExpanded && <span className="ml-6 text-base font-normal font-manrope cursor-pointer">{title}</span>}
@@ -429,7 +436,7 @@ useEffect(() => {
   );
 }
 
-export default App;
+export default Sidebar;
 
 
 
