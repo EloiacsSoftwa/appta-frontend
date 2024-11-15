@@ -5,7 +5,8 @@ import { connect } from 'react-redux';
 
 function ProductDetails({productDetails, handleClose}) {
     
-console.log("productDetails",productDetails)
+// console.log("productDetails",productDetails)
+console.log("productDetails",productDetails.quantity)
 
 
 const [formValues, setFormValues] = useState({
@@ -32,13 +33,7 @@ const [formValues, setFormValues] = useState({
                     <div className="p-4 flex items-center justify-between mb-3 border-b-2 border-neutral-500">
                         <h3 className="pl-2 text-orange-500 text-xl font-manrope font-semibold">{formValues.productName}</h3>
                         <div className="pr-8 flex items-center gap-3">
-                            <button 
-                                onClick={handleClose} 
-                                className="bg-orange-600 text-black px-4 py-0.5 rounded border border-black font-semibold"
-                            >
-                                Save & Close
-                            </button>
-                            <img src={Circle_Minus} alt="Remove" />
+                            <img src={Circle_Minus} onClick={handleClose}  alt="Remove" />
                         </div>
                     </div>
 
@@ -63,57 +58,31 @@ const [formValues, setFormValues] = useState({
                                     </div>
                                     <div className="flex-1">
                                         <label className="font-source-sans-pro text-sm font-semibold leading-5">Product Type</label>
-                                        <select name="productType" className="mt-1 pl-3 block w-full border border-gray-300 py-2 font-source-sans-pro text-base placeholder-black rounded"
-                                        value={formValues.productType}>
-                                            <option>Tracked</option>
-                                            <option>Brand 1</option>
-                                            <option>Brand 2</option>
-                                        </select>
+                                        <input type="text" name="productName" className="mt-1 pl-3 block w-full border border-gray-300 py-2 font-source-sans-pro text-base placeholder-black rounded" value={formValues.productType}/>
+                                        
                                     </div>
                                 </div>
 
                                 <div className="flex flex-col md:flex-row gap-4">
                                     <div className="flex-1">
                                         <label className="font-source-sans-pro text-sm font-semibold leading-5">Category</label>
-                                        <select name="category" className="mt-1 pl-1 block w-full border border-gray-300 py-2 font-source-sans-pro text-base placeholder-black rounded"
-                                        value={formValues.category}>
-                                            <option>Dairy</option>
-                                            <option>Brand 1</option>
-                                            <option>Brand 2</option>
-                                        </select>
+                                        <input type="text" name="productName" className="mt-1 pl-3 block w-full border border-gray-300 py-2 font-source-sans-pro text-base placeholder-black rounded" value={formValues.category}/>
                                     </div>
                                     <div className="flex-1">
                                         <label className="font-source-sans-pro text-sm font-semibold leading-5">Sub Category</label>
-                                        <select name="subCategory" className="mt-1 pl-3 block w-full border border-gray-300 py-2 font-source-sans-pro text-base placeholder-black rounded"
-                                        value={formValues.subCategory}
-                                        >
-                                            <option>Butter</option>
-                                            <option>Brand 1</option>
-                                            <option>Brand 2</option>
-                                        </select>
+                                        <input type="text" name="productName" className="mt-1 pl-3 block w-full border border-gray-300 py-2 font-source-sans-pro text-base placeholder-black rounded" value={formValues.subCategory}/>
                                     </div>
                                     <div className="flex-1">
                                         <label className="font-source-sans-pro text-sm font-semibold leading-5">Brand</label>
-                                        <select name="brand" className="mt-1 pl-3 block w-full border border-gray-300 py-2 font-source-sans-pro text-base placeholder-black rounded"
-                                        value={formValues.brand}>
-                                            <option>Butter</option>
-                                            <option>Brand 1</option>
-                                            <option>Brand 2</option>
-                                        </select>
+                                        <input type="text" name="productName" className="mt-1 pl-3 block w-full border border-gray-300 py-2 font-source-sans-pro text-base placeholder-black rounded" value={formValues.brand}/>
+                                      
                                     </div>
                                 </div>
 
                                 <div className="flex flex-col md:flex-row gap-4 w-full">
                                     <div className="flex-1">
                                         <label className="font-source-sans-pro text-sm font-semibold leading-5">Unit</label>
-                                        <select name="unit" className="mt-1 pl-3 block border border-gray-300 py-2 font-source-sans-pro text-base placeholder-black rounded w-full"
-                                        value={formValues.unit}>
-                                            {/* <option>100gm</option> */}
-                                            <option>g</option>
-                                            <option>Lt</option>
-                                            <option>ml</option>
-                                            <option>Box</option>
-                                        </select>
+                                        <input type="number" name="qty" className="mt-1 pl-3 block border border-gray-300 py-2 font-source-sans-pro text-base placeholder-black rounded lg:w-44 xl:w-44 md:w-32" value={formValues.unit} />
                                     </div>
                                     <div className='flex gap-2'>
                                         <div>
