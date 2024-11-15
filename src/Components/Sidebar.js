@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import { HiOutlineArrowLeft, HiOutlineArrowRight } from "react-icons/hi";
 import Eloiacs from "../Images/Icons/Eloiacs.svg";
-import DashboardIcon from "../Images/Icons/Dashboard.svg"
+import DashboardIcon from "../Images/Icons/DashboardIcon.svg";
 import ProductIcon from "../Images/Icons/Product icon.svg";
 import Brand from "../Images/Icons/Brand.svg";
 import Sales from "../Images/Icons/Sales.svg";
@@ -15,7 +15,7 @@ import Elipse14 from "../Images/Icons/Ellipse 14.svg";
 import Elipsepic from "../Images/Icons/Ellipse pic.svg";
 import Notifications from "../Images/Icons/Notifications.svg";
 import Orangedot from "../Images/Icons/Orangedot.svg";
-// import Dashboard from "../Components/Dashboard";
+import Dashboard from "../Components/Dashboard";
 import ProductList from '../Product Pages/Product_List_Table'
 import Sales_List from "../Sales/Sales_List";
 import Purchase_List from "../Purchase/Purchase_List";
@@ -35,22 +35,36 @@ import StockTransform from "../Inventry/Stock_Transform";
 import Ware_House from "../Inventry/Ware_House";
 import Userlist from "../Contact/User_List";
 import Swal from "sweetalert2"; 
-import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'; 
+import Logout from "../Images/Icons/Logout.svg";
 
 
 
-function App() {
+function Sidebar() {
 
 
   const dispatch = useDispatch();
 
 
   const [isExpanded, setIsExpanded] = useState(true);
-  const [selectedMenu, setSelectedMenu] = useState('Product List');
+  const [selectedMenu, setSelectedMenu] = useState('Dashboard');
   const [isSubmenuOpen, setIsSubmenuOpen] = useState({});
   const [isHide, setIsHide] = useState(true)
   const state = useSelector(state => state);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // const handleLogout = () => {
+   
+  //   console.log("Logged out");
+  //   setIsModalOpen(false);
+  //   localStorage.clear();  
+  //       sessionStorage.clear();  
+  //       window.location.href = "/login"; 
+  // };
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
 
 
   const toggleSidebar = () => {
@@ -60,6 +74,10 @@ function App() {
 
   const toggleSubmenu = (menu) => {
     setIsSubmenuOpen((prev) => ({ ...prev, [menu]: !prev[menu] }));
+
+console.log("menu*************",menu)
+//     setSelectedMenu(title)
+// localStorage.setItem('currentPage', title);
   };
 
 
@@ -68,6 +86,7 @@ function App() {
 
 
 const handleSelectedMenu = (title) => {
+  console.log("title",title)
 setSelectedMenu(title)
 localStorage.setItem('currentPage', title);
 }
@@ -81,16 +100,20 @@ useEffect(() => {
 
 useEffect(() => {
   if (state.LoginReducer?.isLoggedIn) {
-    setSelectedMenu('Product List')
+    setSelectedMenu('Dashboard')
+    localStorage.setItem('currentPage', 'Dashboard');
   }
 }, [state.LoginReducer?.isLoggedIn])
+
 
  const renderSubmenuItems = (items) =>
     items.map((item) => (
       <li
         key={item}
         className="flex items-center gap-8 text-xs font-normal font-manrope "
-        onClick={() => handleSelectedMenu(item)}
+        onClick={() => {
+          
+          handleSelectedMenu(item)}}
       >
         
         <div
@@ -167,25 +190,10 @@ useEffect(() => {
 
   const handleLogout = () => {
     dispatch({ type: 'LOG-OUT' })
-    // const encryptData = CryptoJS.AES.encrypt(JSON.stringify(false), 'abcd');
-    // localStorage.setItem("appTaLogin", encryptData.toString());
-    Swal.fire({
-      title: 'Are you sure?',
-      text: "Do you want to log out?",
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Yes, log out!',
-      cancelButtonText: 'No, keep me logged in!',
-      reverseButtons: true
-    }).then((result) => {
-      if (result.isConfirmed) {
-        localStorage.clear();  
-        sessionStorage.clear();  
-        window.location.href = "/login"; 
-       console.log("Logged out successfully");
-      }
-    });
-  };
+    setIsModalOpen(false);
+    const encryptData = CryptoJS.AES.encrypt(JSON.stringify(false), 'abcd');
+    localStorage.setItem("appTaLogin", encryptData.toString());
+  }
 
 
   useEffect(()=>{
@@ -199,8 +207,8 @@ useEffect(() => {
 
   const handleCloseForStock = () =>{
     setIsHide(true)
-    setSelectedMenu('Product List')
-    localStorage.setItem('currentPage', 'Product List');
+    setSelectedMenu('Dashboard')
+    localStorage.setItem('currentPage', 'Dashboard');
 
   }
 
@@ -242,7 +250,7 @@ useEffect(() => {
               <li
                 key={title}
                 className="flex items-center pl-4 cursor-pointer"
-                onClick={() => setSelectedMenu(title)}
+                onClick={() => handleSelectedMenu(title)}
               >
                 <img src={icon} alt={`${title} Logo`} className="w-5 h-5 cursor-pointer" />
                 {isExpanded && <span className="ml-6 text-base font-normal font-manrope cursor-pointer">{title}</span>}
@@ -264,11 +272,39 @@ useEffect(() => {
             alt="Profile Picture" 
             className="w-9 h-9 md:w-10 md:h-10"
           />
-          <FontAwesomeIcon 
-            icon={faSignOutAlt} 
-            className="text-lg cursor-pointer"
-            onClick={handleLogout} 
+          <div className="flex justify-center items-center min-h-screen">
+      <img 
+            src={Logout} 
+            alt="Profile Picture" 
+            className="w-7 h-7"
+            onClick={() => setIsModalOpen(true)}
           />
+
+      {isModalOpen && (
+        <div className="fixed inset-0 flex justify-center items-start pt-36 ml-48  bg-opacity-50 flex">
+          <div className="bg-white rounded-lg shadow-lg p-5 w-68 max-w-xs border border-orange-500">
+            <h2 className="text-lg font-semibold text-gray-800 mb-4">
+              Are you sure you want to log out?
+            </h2>
+            <div className="flex justify-between">
+              <button
+                className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
+                onClick={handleLogout}
+              >
+                Yes
+              </button>
+              <button
+                className="px-4 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400"
+                onClick={handleCancel}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+        
         </div>
       </div>
     </div>
@@ -280,11 +316,11 @@ useEffect(() => {
         <div className="overflow-y-auto h-full ">
 
 
-          {/* {selectedMenu === 'Dashboard' && (
+          {selectedMenu === 'Dashboard' && (
             <div className="bg-white  mt-2">
              <Dashboard />
             </div>
-          )} */}
+          )} 
 
 
 
@@ -400,7 +436,7 @@ useEffect(() => {
   );
 }
 
-export default App;
+export default Sidebar;
 
 
 
