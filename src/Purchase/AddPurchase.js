@@ -140,6 +140,9 @@ console.log("error",errors)
   
  
 
+
+  
+
 // const handleInputChange = (e, field, index) => {
 //   const value = e.target.value;
 //   const updatedProducts = [...products];
