@@ -15,7 +15,7 @@ import moment from 'moment';
 import Minus from '../Images/Sales/white_Minus.svg';
 
 
-function HoldOrderList() {
+function HoldOrderList({cancelholdorder}) {
 
 
 
@@ -65,10 +65,10 @@ dispatch({ type: 'GETHOLDORDERLIST'})
     <label className='text-base text-white font-semibold font-Manrope'>On Hold</label>
 </div>
 <div>
-    <img src={Minus} className='w-4 h-4'/>
+    <img src={Minus} className='w-4 h-4 cursor-pointer' onClick={cancelholdorder}/>
     </div>
 </div>
-                            <table className="w-full text-left mb-5 table-auto">
+                            <table className="w-full text-left mb-5  table-auto">
                                 
                                 <thead>
     

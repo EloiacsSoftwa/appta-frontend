@@ -20,6 +20,7 @@ import useBarcodeScanner from '../utils/useBarcodeScanner';
 import { useNavigate } from 'react-router-dom';
 
 import { ADD_ORDER_ITEMS_API_CALL, GET_ALL_ACTIVE_PRODUCTS_API_CALL, RESET_PAYMENT_STATUS_CODE } from '../utils/Constant';
+import HoldOrderList from './HoldOrderList';
 
 
 
@@ -518,9 +519,10 @@ const Pos = ({ handleClosed }) => {
     }
   }, [State.PosReducer.deleteposproductStatuscode])
 
-
+  const [openholdorder,setHoldOrder] = useState(false)
 
   const handleHoldOrder = () => {
+    setHoldOrder(true)
     if (order_id) {
       dispatch({
         type: 'ORDER-HOLD',
@@ -531,6 +533,10 @@ const Pos = ({ handleClosed }) => {
     }
 
   };
+
+  const handleCloseHoldOrder = () => {
+    setHoldOrder(false)
+  }
 
 
   useEffect(() => {
@@ -850,7 +856,10 @@ const Pos = ({ handleClosed }) => {
 
               </table>
 
-
+              {
+        openholdorder  && (<HoldOrderList   cancelholdorder={handleCloseHoldOrder}/>
+        )
+      }
 
 
             </div>
