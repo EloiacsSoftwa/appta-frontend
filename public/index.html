@@ -17,6 +17,18 @@
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
 
+
+    <!-- <script>
+      window.addEventListener('popstate', function (event) {
+        alert('popstate event triggered');
+        window.location.href = '#';
+      });
+    
+      // Replace current history state to prevent user from navigating back
+      history.pushState(null, null, document.URL);
+    </script> -->
+
+    
     <!--
       Notice the use of %PUBLIC_URL% in the tags above.
       It will be replaced with the URL of the `public` folder during the build.
@@ -27,10 +39,27 @@
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
     <title>React App</title>
+   
+
+      
+
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div id="root"></div>
+    <div id="root">
+
+    </div>
+    
+    <!-- <script>
+          window.addEventListener('popstate', function (event) {
+       
+        window.location.href = 'http://www.s3remotica.com/'; 
+      });
+
+     
+      history.pushState(null, document.title, window.location.href);
+    </script> -->
+
     <!--
       This HTML file is a template.
       If you open it directly in the browser, you will see an empty page.

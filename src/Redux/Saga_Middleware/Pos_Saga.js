@@ -230,6 +230,9 @@ function* handlecompleteOrderPayment(action) {
                                            statusCode: response?.status || response?.data?.code || response.code} 
       });
     }
+    if (response) {
+      ExpireToken(response)
+    }
   } 
   catch (error) {
     yield put({ type: 'ERROR', payload: { message: error.response?.data?.message || error.message, 
@@ -271,6 +274,9 @@ function ExpireToken(response) {
 
       if (response.status === 200 && response.data.code === 200  || response.code === 200) {
         yield put({type: ADD_ORDER_ITEMS_API_RESPONSE, payload: { orderItems: response.data.data.orderItems, statusCode: response?.status || response?.data?.code || response.code  }})
+      }
+      if (response) {
+        ExpireToken(response)
       }
   }
 
