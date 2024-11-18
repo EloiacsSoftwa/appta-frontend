@@ -524,7 +524,7 @@ const Pos = ({ handleClosed }) => {
     if (order_id) {
       dispatch({
         type: 'ORDER-HOLD',
-        payload: { orderId: String(order_id) }, // Pass orderId as a simple string
+        payload: { orderId: String(order_id) }, 
       });
     } else {
       console.error("Order ID is missing.");
@@ -782,11 +782,10 @@ const Pos = ({ handleClosed }) => {
                           )}
                         </td>
 
-
-
                         <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">₹{item.unitPrice || '0'}</td>
                         <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">
-                          ₹{item.totalAmount ? Math.round(item.totalAmount) : '-'}</td>
+                         ₹{item.quantity && item.unitPrice? Math.round(item.quantity * item.unitPrice): '-'}</td>
+
                         <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">
                           {editingIndex === index ? (
                             <input
@@ -1043,14 +1042,22 @@ const Pos = ({ handleClosed }) => {
 
 
 
-      <div className='h-22 w-full shadow-custom overflow-x-auto bg-[#D9D9D9]'>
+      <div className='h-44 pt-3 mt-3 w-full shadow-custom overflow-x-auto bg-[#D9D9D9]'>
         <div className='flex flex-row justify-center  justify-between items-center p-2 space-x-2'>
           <div className='flex flex-row space-x-2 pt-3 ps-3 justify-evenly'>
             <button
               type="submit"
-              className="flex  items-center me-4 rounded justify-center bg-[#EA580C] text-white px-5 py-1.5 text-sm font-semibold  border border-[#EA580C] shadow-sm hover:bg-[#EA580C] hover:text-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#EA580C]">
+              className="flex  items-center me-5 rounded justify-center bg-[#EA580C] text-white px-5 py-1.5 text-sm font-semibold  border border-[#EA580C] shadow-sm hover:bg-[#EA580C] hover:text-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#EA580C]">
               Quotation
             </button>
+
+            <div>
+            <button
+              type="submit"
+              className="flex  items-center me-5 rounded justify-center bg-[#EA580C] text-white px-5 py-1.5 text-sm font-semibold  border border-[#EA580C] shadow-sm hover:bg-[#EA580C] hover:text-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#EA580C]">
+              Sales Return
+            </button>
+            </div>
 
             <div >
               <button
