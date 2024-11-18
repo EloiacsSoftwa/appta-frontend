@@ -20,6 +20,9 @@ const initialState = {
   Invoice_url:'',
   SalesList:[],
   getsalesproductStatuscode:0,
+  holdOrderList:[],
+  getHoldOrderStatuscode:0,
+
 }
 
 
@@ -96,6 +99,12 @@ const PosReducer = (state = initialState, action) => {
               return { ...state, SalesList: action.payload.response, getsalesproductStatuscode: action.payload.statusCode }
             case 'REMOVE_GET_SALES_PRODUCT_STATUS_CODE':
               return { ...state, getsalesproductStatuscode: 0 }
+
+             case 'GET_HOLD_ORDER_LIST' : 
+             return { ...state, holdOrderList: action.payload.response, getHoldOrderStatuscode: action.payload.statusCode }
+             case 'REMOVE_GET_HOLD_ORDER_LIST' : 
+             return { ...state,  getHoldOrderStatuscode: 0}
+
 
     default:
       return state;

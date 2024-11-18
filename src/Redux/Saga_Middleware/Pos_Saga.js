@@ -1,6 +1,6 @@
 import { call, takeEvery, put, take } from 'redux-saga/effects';
 import { PosGetbyBarcode ,CreateOrder, addOrderItemsApiCall ,getPaymentType,
-   DeletePosProduct, Holdorder,InitializePayment ,CompleteOrder ,getsalesProduct} from '../Action/sales_pos_Action';
+   DeletePosProduct, Holdorder,InitializePayment ,CompleteOrder ,getsalesProduct,getHoldOrders} from '../Action/sales_pos_Action';
 import Cookies from 'universal-cookie';
 import { ADD_ORDER_ITEMS_API_CALL, ADD_ORDER_ITEMS_API_RESPONSE} from '../../utils/Constant';
 import { toast } from 'react-toastify';
@@ -260,6 +260,37 @@ function* handleGetSalesProduct() {
 }
 
 
+
+function* handleGetHoldOrder() {
+  
+  const response = yield call(getHoldOrders);
+       console.log("resposne",response)
+  if (response.status === 200 || response.code === 200 || response.data.code === 200) {
+    yield put({ type: 'GET_HOLD_ORDER_LIST', payload: { response: response.data.data, statusCode: response.status || response.code } });
+  }
+  else {
+    yield put({ type: 'ERROR', payload: { statusCode: response.status || response.code } });
+  }
+  if (response) {
+    ExpireToken(response)
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 function ExpireToken(response) {
 
     const code = response.data?.code ?? response.code;
@@ -291,6 +322,8 @@ function* PosSaga() {
     yield takeEvery('COMPLETE-ORDER-PAYMENT', handlecompleteOrderPayment);
     yield takeEvery('GET-SALES-PRODUCT', handleGetSalesProduct);
     yield takeEvery(ADD_ORDER_ITEMS_API_CALL, addOrderItems)
+        yield takeEvery('GETHOLDORDERLIST', handleGetHoldOrder)
+
 }
 
 export default PosSaga;
