@@ -17,6 +17,7 @@ import AddCustomer from '../Contact/AddCustomer';
 import { Setting } from 'iconsax-react';
 import Pos_Payment from './Pos_Payment';
 import useBarcodeScanner from '../utils/useBarcodeScanner';
+import { useNavigate } from 'react-router-dom';
 
 import { ADD_ORDER_ITEMS_API_CALL, GET_ALL_ACTIVE_PRODUCTS_API_CALL, RESET_PAYMENT_STATUS_CODE } from '../utils/Constant';
 
@@ -87,8 +88,39 @@ const Pos = ({ handleClosed }) => {
   }, [handleClosed]);
 
 
+  const navigate = useNavigate();
 
 
+  useEffect(() => {
+    const handlePopState = () => {
+      // alert("popstate triggered");
+          //  handleHoldOrder();
+// alert('popstate triggered',order_id)
+console.log("order_id",order_id)
+          if (order_id) {
+            dispatch({
+              type: 'ORDER-HOLD',
+              payload: { orderId: String(order_id) }, 
+            });
+          }
+
+       setTimeout(()=>{
+        handleClosed()
+       },2000)
+     
+          // navigate('/', { replace: true });
+
+    };
+
+    window.addEventListener('popstate', handlePopState);
+
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+    };
+  }, [navigate]);
+ 
+
+  console.log("order_id",order_id)
 
   const [barcode, setBarcode] = useState('');
 

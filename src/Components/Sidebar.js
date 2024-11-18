@@ -36,14 +36,14 @@ import Ware_House from "../Inventry/Ware_House";
 import Userlist from "../Contact/User_List";
 import Swal from "sweetalert2"; 
 import Logout from "../Images/Icons/Logout.svg";
-
+import { useNavigate } from 'react-router-dom';
 
 
 function Sidebar() {
 
 
   const dispatch = useDispatch();
-
+  const navigate = useNavigate();
 
   const [isExpanded, setIsExpanded] = useState(true);
   const [selectedMenu, setSelectedMenu] = useState('Dashboard');
@@ -104,6 +104,22 @@ useEffect(() => {
     localStorage.setItem('currentPage', 'Dashboard');
   }
 }, [state.LoginReducer?.isLoggedIn])
+
+
+// useEffect(() => {
+//   const handlePopState = (event) => {
+//     alert('popstate event triggered in sidebar');
+  
+//     setSelectedMenu('Sales List')
+//   };
+
+//   window.addEventListener('popstate', handlePopState);
+
+//   return () => {
+//     window.removeEventListener('popstate', handlePopState);
+//   };
+// }, [navigate]);
+
 
 
  const renderSubmenuItems = (items) =>
