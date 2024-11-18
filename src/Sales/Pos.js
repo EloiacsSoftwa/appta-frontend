@@ -22,6 +22,7 @@ import { useNavigate } from 'react-router-dom';
 import { ADD_ORDER_ITEMS_API_CALL, GET_ALL_ACTIVE_PRODUCTS_API_CALL, RESET_PAYMENT_STATUS_CODE } from '../utils/Constant';
 
 
+
 const Pos = ({ handleClosed }) => {
 
   const dispatch = useDispatch();
@@ -862,6 +863,10 @@ const Pos = ({ handleClosed }) => {
 
 
           </div>
+
+
+
+
 
 
           <div className="bg-white w-1/4 h-full shadow-custom overflow-x-auto">

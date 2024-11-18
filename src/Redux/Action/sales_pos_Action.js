@@ -75,3 +75,11 @@ export async function getsalesProduct() {
   return await AxiosConfig.post('/order/getOrders', {
   })
 }
+
+
+
+
+export async function getHoldOrders() {
+  return await AxiosConfig.post('/order/getHoldOrders', {
+  })
+}
