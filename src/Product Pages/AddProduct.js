@@ -16,7 +16,7 @@ const AddProductModal = ({ onClose }) => {
 
 
 
-  
+
 
 
 
@@ -58,7 +58,8 @@ const AddProductModal = ({ onClose }) => {
     statusTypeId: 1,
     sizeId: 0,
     hsnCode: '',
-    manualSize: true
+    manualSize: true,
+    noOfItemsPerunit: 0
   });
 
 
@@ -75,7 +76,7 @@ const AddProductModal = ({ onClose }) => {
     if (state.AddProduct.add_Product_status_code === 200) {
       dispatch({ type: 'GETPRODUCT' })
       setActiveTab("Product Details");
-      dispatch({ type: 'REMOVE_ADD_PRODUCT_VALIDATION'})
+      dispatch({ type: 'REMOVE_ADD_PRODUCT_VALIDATION' })
       setFormData(prevState => ({
         ...prevState,
         images: [],
@@ -128,14 +129,14 @@ const AddProductModal = ({ onClose }) => {
   const handleNext = () => {
 
 
-  if (activeTab === "Product Details") {
-    // setActiveTab("Accounting");
-    setActiveTab("Bill Of Material");
-  } else if (activeTab === "Accounting") {
-    setActiveTab("Bill Of Material");
-  
-  };
-  
+    if (activeTab === "Product Details") {
+      // setActiveTab("Accounting");
+      setActiveTab("Bill Of Material");
+    } else if (activeTab === "Accounting") {
+      setActiveTab("Bill Of Material");
+
+    };
+
   };
 
   const handleBack = () => {
@@ -146,16 +147,16 @@ const AddProductModal = ({ onClose }) => {
       setActiveTab("Product Details");
     }
   }
- 
 
 
-  useEffect(()=>{
-if(state.AddProduct.IsAlreadyExist){
-  setTimeout(()=>{
-    dispatch({ type: 'REMOVE_ADD_PRODUCT_VALIDATION'})
-  },5000)
-}
-  },[state.AddProduct.IsAlreadyExist])
+
+  useEffect(() => {
+    if (state.AddProduct.IsAlreadyExist) {
+      setTimeout(() => {
+        dispatch({ type: 'REMOVE_ADD_PRODUCT_VALIDATION' })
+      }, 5000)
+    }
+  }, [state.AddProduct.IsAlreadyExist])
 
 
 
@@ -175,7 +176,7 @@ if(state.AddProduct.IsAlreadyExist){
             <button
               key={tab}
               // onClick={() => setActiveTab(tab)}
-               readOnly
+              readOnly
               className={`px-20 py-2 -mb-px border-b-2 ${activeTab === tab ? "border-orange-500 text-orange-500" : "border-transparent text-gray-500"}`}
             >
               {tab}
@@ -215,10 +216,10 @@ const ProductDetailsForm = ({ handleNext, formData, setFormData }) => {
     const { name, checked } = e.target;
     setFormData({
       ...formData,
-      [name]: checked 
+      [name]: checked
     });
   };
-  
+
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -242,9 +243,9 @@ const ProductDetailsForm = ({ handleNext, formData, setFormData }) => {
     setShowDropdown(true);
     setFormData({ ...formData, sizeId: value });
 
-              if (errors.sizeId) {
-                  setErrors((prevErrors) => ({ ...prevErrors,  sizeId: "" }));
-                }
+    if (errors.sizeId) {
+      setErrors((prevErrors) => ({ ...prevErrors, sizeId: "" }));
+    }
 
     const filtered = productSizes.filter((size) =>
       size.sizeName.toLowerCase().includes(value.toLowerCase())
@@ -352,11 +353,11 @@ const ProductDetailsForm = ({ handleNext, formData, setFormData }) => {
 
 
 
-const handleCheckValidation = () =>{
-  if (validateFields()) {
-    handleNext()
+  const handleCheckValidation = () => {
+    if (validateFields()) {
+      handleNext()
+    }
   }
-}
 
 
 
@@ -390,8 +391,8 @@ const handleCheckValidation = () =>{
           </div>
           <div className="flex items-center mt-2">
             <input
-               type="checkbox"
-  name="freebie"
+              type="checkbox"
+              name="freebie"
               checked={formData.freebie}
               onChange={handleInputChange}
               className="h-4 w-4 text-orange-600 border-gray-300 rounded focus:ring-orange-500"
@@ -410,33 +411,31 @@ const handleCheckValidation = () =>{
             <div className="flex-1">
 
 
-            
+
 
 
               <label className="text-left block text-sm font-semibold text-black font-SourceSansPro">Product Name</label>
-              <input type="text" name="productName" value={formData.productName} onChange={(e) => { 
-                
-                setFormData({ ...formData, productName: e.target.value }) 
-                
+              <input type="text" name="productName" value={formData.productName} onChange={(e) => {
+
+                setFormData({ ...formData, productName: e.target.value })
+
                 if (errors.productName) {
                   setErrors((prevErrors) => ({ ...prevErrors, productName: "" }));
                 }
-                
-                }} className="focus:border-zinc-400 focus:outline-none font-SourceSansPro text-base  placeholder-gray mt-1 block w-full border border-gray-300 rounded-md h-9 pl-2 pr-2" placeholder="Watch" />
+
+              }} className="focus:border-zinc-400 focus:outline-none font-SourceSansPro text-base  placeholder-gray mt-1 block w-full border border-gray-300 rounded-md h-9 pl-2 pr-2" placeholder="Watch" />
 
               {errors.productName && <p className="text-red-500 text-sm font-Manrope mt-2">{errors.productName}</p>}
             </div>
             <div className="flex-1">
               <label className="text-left block text-sm font-semibold text-black font-SourceSansPro">Brand</label>
-              <select name="subCategory" value={formData.brandId} onChange={(e) => 
-                
-                { 
-                  setFormData({ ...formData, brandId: e.target.value })
-                  if (errors.brandId) {
-                    setErrors((prevErrors) => ({ ...prevErrors, brandId: "" }));
-                  }
-                
-                }} className=" focus:border-zinc-400 focus:outline-none font-SourceSansPro text-base  placeholder-gray  mt-1 block w-full border border-gray-300 rounded-md h-9">
+              <select name="subCategory" value={formData.brandId} onChange={(e) => {
+                setFormData({ ...formData, brandId: e.target.value })
+                if (errors.brandId) {
+                  setErrors((prevErrors) => ({ ...prevErrors, brandId: "" }));
+                }
+
+              }} className=" focus:border-zinc-400 focus:outline-none font-SourceSansPro text-base  placeholder-gray  mt-1 block w-full border border-gray-300 rounded-md h-9">
                 <option>Select Brand</option>
                 {state.AddProduct?.brands && state.AddProduct.brands.map((v, i) => (
                   <option key={v.id} value={v.id}>{v.brandName}</option>
@@ -465,14 +464,14 @@ const handleCheckValidation = () =>{
             </div>
             <div className="flex-1">
               <label className="text-left block text-sm font-semibold text-black font-SourceSansPro">Sub Category</label>
-              <select name="subCategory" value={formData.subCategoryId} onChange={(e) => { 
-                
+              <select name="subCategory" value={formData.subCategoryId} onChange={(e) => {
+
                 setFormData({ ...formData, subCategoryId: e.target.value })
                 if (errors.subCategoryId) {
                   setErrors((prevErrors) => ({ ...prevErrors, subCategoryId: "" }));
                 }
-                
-                }} className="focus:border-zinc-400 focus:outline-none font-SourceSansPro text-base  placeholder-gray mt-1 block w-full border border-gray-300 rounded-md h-9">
+
+              }} className="focus:border-zinc-400 focus:outline-none font-SourceSansPro text-base  placeholder-gray mt-1 block w-full border border-gray-300 rounded-md h-9">
                 <option>Select One</option>
                 {state.AddProduct?.subcategory && state.AddProduct.subcategory.map((v, i) => (
                   <option key={v.id} value={v.id}>{v.subCategoryName}</option>
@@ -490,15 +489,15 @@ const handleCheckValidation = () =>{
 
             <div className="flex-1">
               <label className="text-left block text-sm font-semibold text-black font-SourceSansPro">Unit</label>
-              <select name="unit" value={formData.unitId} onChange={(e) => { 
-                
-                
+              <select name="unit" value={formData.unitId} onChange={(e) => {
+
+
                 setFormData({ ...formData, unitId: e.target.value })
                 if (errors.unitId) {
-                  setErrors((prevErrors) => ({ ...prevErrors,  unitId: "" }));
+                  setErrors((prevErrors) => ({ ...prevErrors, unitId: "" }));
                 }
-                
-                }} className="focus:border-zinc-400 focus:outline-none font-SourceSansPro text-base  placeholder-gray mt-1 block w-full border border-gray-300 rounded-md h-9">
+
+              }} className="focus:border-zinc-400 focus:outline-none font-SourceSansPro text-base  placeholder-gray mt-1 block w-full border border-gray-300 rounded-md h-9">
                 <option>Select Unit</option>
                 {state.AddProduct?.units && state.AddProduct.units.map((v, i) => (
                   <option key={v.id} value={v.id}>{v.unitSmall} - {v.unitName}</option>
@@ -507,29 +506,29 @@ const handleCheckValidation = () =>{
               {errors.unitId && <p className="text-red-500 text-sm  font-Manrope mt-2">{errors.unitId}</p>}
             </div>
             <div className="flex-1 relative " ref={dropdownRef}>
-  <label className="text-left block text-sm font-semibold text-black font-SourceSansPro">Size</label>
-  <input
-    type="text"
-    className="focus:border-zinc-400 focus:outline-none font-SourceSansPro text-base placeholder-gray mt-1 block w-full border border-gray-300 rounded-md h-9 pl-2 pr-2"
-    placeholder="Brand"
-    value={formData.sizeId}
-    onChange={handleInputChanges}
-  />
-  {errors.sizeId && <p className="text-red-500 text-sm font-Manrope mt-2">{errors.sizeId}</p>}
-  {showDropdown && filteredSizes.length > 0 && (
-    <div className="absolute w-full bg-white border border-gray-300 rounded-md mt-1 z-10 shadow-lg">
-      {filteredSizes.map((size) => (
-        <div
-          key={size.id}
-          className="p-2 cursor-pointer hover:bg-gray-100"
-          onClick={() => handleSuggestionClick(size)}
-        >
-          {size.sizeName}
-        </div>
-      ))}
-    </div>
-  )}
-</div>
+              <label className="text-left block text-sm font-semibold text-black font-SourceSansPro">Size</label>
+              <input
+                type="text"
+                className="focus:border-zinc-400 focus:outline-none font-SourceSansPro text-base placeholder-gray mt-1 block w-full border border-gray-300 rounded-md h-9 pl-2 pr-2"
+                placeholder="Brand"
+                value={formData.sizeId}
+                onChange={handleInputChanges}
+              />
+              {errors.sizeId && <p className="text-red-500 text-sm font-Manrope mt-2">{errors.sizeId}</p>}
+              {showDropdown && filteredSizes.length > 0 && (
+                <div className="absolute w-full bg-white border border-gray-300 rounded-md mt-1 z-10 shadow-lg">
+                  {filteredSizes.map((size) => (
+                    <div
+                      key={size.id}
+                      className="p-2 cursor-pointer hover:bg-gray-100"
+                      onClick={() => handleSuggestionClick(size)}
+                    >
+                      {size.sizeName}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
 
 
           </div>
@@ -537,16 +536,16 @@ const handleCheckValidation = () =>{
           <div className="flex flex-row flex-1 gap-4">
             <div className="flex-1">
               <label className="text-left block text-sm font-semibold text-black font-SourceSansPro">Product Type</label>
-              <select name="productType" value={formData.productId} onChange={(e) => { 
-                
-                
-                
+              <select name="productType" value={formData.productId} onChange={(e) => {
+
+
+
                 setFormData({ ...formData, productId: e.target.value, statusTypeId: e.target.value, billOfMaterials: e.target.value == 2 ? true : false })
                 if (errors.productId) {
-                  setErrors((prevErrors) => ({ ...prevErrors,  productId: "" }));
+                  setErrors((prevErrors) => ({ ...prevErrors, productId: "" }));
                 }
-                
-                }} className="focus:border-zinc-400 focus:outline-none font-SourceSansPro text-base  placeholder-gray mt-1 block w-full border border-gray-300 rounded-md h-9">
+
+              }} className="focus:border-zinc-400 focus:outline-none font-SourceSansPro text-base  placeholder-gray mt-1 block w-full border border-gray-300 rounded-md h-9">
                 <option value={0}>Select</option>
                 <option value={1}>Tracked</option>
                 <option value={2}>Bill Of Materials</option>
@@ -558,12 +557,46 @@ const handleCheckValidation = () =>{
             <div className="flex-1">
               <label className="text-left block text-sm font-semibold text-black font-SourceSansPro">HSN Code</label>
               <input type="text" className="focus:border-zinc-400 focus:outline-none font-SourceSansPro text-base  placeholder-gray mt-1 block w-full border border-gray-300 rounded-md h-9 pl-2 pr-2" placeholder="Hsn Code" value={formData.hsnCode} onChange={(e) => {
-                 setFormData({ ...formData, hsnCode: e.target.value })
-                 if (errors.hsnCode) {
-                  setErrors((prevErrors) => ({ ...prevErrors,  hsnCode: "" }));
+                setFormData({ ...formData, hsnCode: e.target.value })
+                if (errors.hsnCode) {
+                  setErrors((prevErrors) => ({ ...prevErrors, hsnCode: "" }));
                 }
-                 
-                 }} />
+
+              }} />
+
+              {errors.hsnCode && <p className="text-red-500 text-sm font-Manrope mt-2">{errors.hsnCode}</p>}
+            </div>
+          </div>
+
+          <div className="flex flex-row flex-1 gap-4">
+            <div className="flex-1">
+              <label className="text-left block text-sm font-semibold text-black font-SourceSansPro">Unit Type</label>
+              <select name="productType" value={formData.productId} onChange={(e) => {
+
+
+
+                setFormData({ ...formData, productId: e.target.value, statusTypeId: e.target.value, billOfMaterials: e.target.value == 2 ? true : false })
+                if (errors.productId) {
+                  setErrors((prevErrors) => ({ ...prevErrors, productId: "" }));
+                }
+
+              }} className="focus:border-zinc-400 focus:outline-none font-SourceSansPro text-base  placeholder-gray mt-1 block w-full border border-gray-300 rounded-md h-9">
+                <option value={1}>Bag</option>
+                <option value={2}>Chain</option>
+              </select>
+              {errors.productId && <p className="text-red-500 text-sm font-Manrope mt-2">{errors.productId}</p>}
+
+            </div>
+
+            <div className="flex-1">
+              <label className="text-left block text-sm font-semibold text-black font-SourceSansPro">Items Per Unit</label>
+              <input type="text" className="focus:border-zinc-400 focus:outline-none font-SourceSansPro text-base  placeholder-gray mt-1 block w-full border border-gray-300 rounded-md h-9 pl-2 pr-2" placeholder="Hsn Code" value={formData.hsnCode} onChange={(e) => {
+                setFormData({ ...formData, noOfItemsPerunit: e.target.value })
+                if (errors.noOfItemsPerunit) {
+                  setErrors((prevErrors) => ({ ...prevErrors, noOfItemsPerunit: "" }));
+                }
+
+              }} />
 
               {errors.hsnCode && <p className="text-red-500 text-sm font-Manrope mt-2">{errors.hsnCode}</p>}
             </div>
@@ -575,7 +608,7 @@ const handleCheckValidation = () =>{
               <select name="barcode" value={formData.barcodeType} onChange={(e) => {
                 setFormData({ ...formData, barcodeType: e.target.value })
                 if (errors.barcodeType) {
-                  setErrors((prevErrors) => ({ ...prevErrors,  barcodeType: "" }));
+                  setErrors((prevErrors) => ({ ...prevErrors, barcodeType: "" }));
                 }
                 if (e.target.value === 2) {
                   // useBarcodeScanner(barcodeScanned)
@@ -595,14 +628,14 @@ const handleCheckValidation = () =>{
 
             <div className="flex-1">
               {/* <label className="text-left block text-sm font-medium text-gray-700">Barcode</label> */}
-              <input type="text" name="quantity" value={formData.barcodeNo} onChange={(e) => { 
-                
-                setFormData({ ...formData, barcodeNo: e.target.value }) 
-                
+              <input type="text" name="quantity" value={formData.barcodeNo} onChange={(e) => {
+
+                setFormData({ ...formData, barcodeNo: e.target.value })
+
                 if (errors.barcodeNo) {
                   setErrors((prevErrors) => ({ ...prevErrors, barcodeNo: "" }));
                 }
-                }} className="font-SourceSansPro text-base  placeholder-black mt-6 block w-full border border-gray-300 rounded-md h-9 focus:border-zinc-400 focus:outline-none" />
+              }} className="font-SourceSansPro text-base  placeholder-black mt-6 block w-full border border-gray-300 rounded-md h-9 focus:border-zinc-400 focus:outline-none" />
               {errors.barcodeNo && <p className="text-red-500 text-sm font-Manrope mt-2">{errors.barcodeNo}</p>}
               {/* <label className="text-left block text-sm font-medium text-gray-700">Barcode</label> */}
               {/* <input type="number" name="quantity" value={formData.barcodeNo} onChange={(e) => { setFormData({ ...formData, barcodeNo: e.target.value }) }} className="mt-1 block w-full border border-gray-300 rounded-md" /> */}
@@ -680,10 +713,10 @@ const AccountingDetailsForm = ({ handleNext, handleBack, formData, setFormData }
 
   const handleSubmit = () => {
     if (validateFields()) {
-    setFormData({ ...formData, billOfMaterialsList: [] })
-    let temp = { ...formData, billOfMaterialsList: [] }
-    console.log(temp);
-    dispatch({ type: "ADDPRODUCTDETAILS", payload: temp })
+      setFormData({ ...formData, billOfMaterialsList: [] })
+      let temp = { ...formData, billOfMaterialsList: [] }
+      console.log(temp);
+      dispatch({ type: "ADDPRODUCTDETAILS", payload: temp })
     }
   }
   return (
@@ -759,23 +792,23 @@ function BillOfMaterials({ handleBack, formData, setFormData }) {
   const state = useSelector(state => state);
   const [product, setProduct] = useState([])
   const [showProductDropdown, setShowProductDropdown] = useState([]);
- 
+
   useEffect(() => {
     dispatch({ type: 'GETPRODUCT' })
   }, [])
-  
-  
-  
+
+
+
   useEffect(() => {
-      if (state.AddProduct.getProductStatusCode == 200) {
-         
-          setProduct(state.AddProduct.ProductList)
-  
-          setTimeout(() => {
-              dispatch({ type: 'REMOVE_GET_PRODUCT_STATUS_CODE' })
-          }, 2000)
-      }
-  
+    if (state.AddProduct.getProductStatusCode == 200) {
+
+      setProduct(state.AddProduct.ProductList)
+
+      setTimeout(() => {
+        dispatch({ type: 'REMOVE_GET_PRODUCT_STATUS_CODE' })
+      }, 2000)
+    }
+
   }, [state.AddProduct.getProductStatusCode])
 
 
@@ -792,7 +825,7 @@ function BillOfMaterials({ handleBack, formData, setFormData }) {
   ]);
 
 
-  console.log("billOfMaterialsList",billOfMaterialsList)
+  console.log("billOfMaterialsList", billOfMaterialsList)
 
 
   // const addComponent = () => {
@@ -808,11 +841,11 @@ function BillOfMaterials({ handleBack, formData, setFormData }) {
         billOfMaterialsProductId: '',
         billOfMaterialsProductQuantity: '',
         costName: '',
-        billOfMaterialsProductCost: 0 
+        billOfMaterialsProductCost: 0
       }
     ]);
-  
-  
+
+
     setShowProductDropdown([...showProductDropdown, false]);
   };
 
@@ -835,8 +868,8 @@ function BillOfMaterials({ handleBack, formData, setFormData }) {
   const validateFields = () => {
     let tempErrors = {};
 
-   
-   
+
+
 
     billOfMaterialsList.forEach((component, index) => {
       if (!component.productName) tempErrors[`billOfMaterialsList[${index}].productName`] = "Product Name is required";
@@ -845,7 +878,7 @@ function BillOfMaterials({ handleBack, formData, setFormData }) {
       }
     });
 
-   
+
     additionalCosts.forEach((cost, index) => {
       if (!cost.costName) tempErrors[`additionalCosts[${index}].costName`] = "Cost Name is required";
       if (!cost.billOfMaterialsProductCost || isNaN(cost.billOfMaterialsProductCost)) {
@@ -860,16 +893,16 @@ function BillOfMaterials({ handleBack, formData, setFormData }) {
   var handleSubmit = () => {
     if (validateFields()) {
 
-    setFormData({ ...formData, billOfMaterialsList })
-    let temp = { ...formData, billOfMaterialsList }
-    // console.log(temp);
-    // const combinedObject = billOfMaterialsList.reduce((obj, keyObj, index) => {
-    //     obj[keyObj.key] = additionalCosts[index].value;
-    //     return obj;
-    // }, {});
+      setFormData({ ...formData, billOfMaterialsList })
+      let temp = { ...formData, billOfMaterialsList }
+      // console.log(temp);
+      // const combinedObject = billOfMaterialsList.reduce((obj, keyObj, index) => {
+      //     obj[keyObj.key] = additionalCosts[index].value;
+      //     return obj;
+      // }, {});
 
-    // console.log(combinedObject);
-    dispatch({ type: "ADDPRODUCTDETAILS", payload: temp })
+      // console.log(combinedObject);
+      dispatch({ type: "ADDPRODUCTDETAILS", payload: temp })
     }
 
   }
@@ -881,9 +914,9 @@ function BillOfMaterials({ handleBack, formData, setFormData }) {
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
 
 
- 
-  
- 
+
+
+
 
 
   useEffect(() => {
@@ -892,7 +925,7 @@ function BillOfMaterials({ handleBack, formData, setFormData }) {
         setIsDropdownVisible(false);
       }
     };
-  
+
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
@@ -901,26 +934,26 @@ function BillOfMaterials({ handleBack, formData, setFormData }) {
 
 
 
-const handleproductNameDropDown = (index) => {
-  const updatedDropdown = [...showProductDropdown];
-  updatedDropdown[index] = !updatedDropdown[index]; 
-  setShowProductDropdown(updatedDropdown);
-};
+  const handleproductNameDropDown = (index) => {
+    const updatedDropdown = [...showProductDropdown];
+    updatedDropdown[index] = !updatedDropdown[index];
+    setShowProductDropdown(updatedDropdown);
+  };
 
 
-const handleProductName = (item, index) => {
-  dispatch({ type: 'REMOVE_ADD_PRODUCT_VALIDATION'})
-  const newComponents = [...billOfMaterialsList];
-  
+  const handleProductName = (item, index) => {
+    dispatch({ type: 'REMOVE_ADD_PRODUCT_VALIDATION' })
+    const newComponents = [...billOfMaterialsList];
 
-  newComponents[index].productName = item.productName; 
-  newComponents[index].billOfMaterialsProductId = item.productId;  
-  
-  setbillOfMaterialsList(newComponents);
 
-  // Hide dropdown after selection
-  setShowProductDropdown([...showProductDropdown.map(() => false)]);  
-};
+    newComponents[index].productName = item.productName;
+    newComponents[index].billOfMaterialsProductId = item.productId;
+
+    setbillOfMaterialsList(newComponents);
+
+    // Hide dropdown after selection
+    setShowProductDropdown([...showProductDropdown.map(() => false)]);
+  };
 
 
 
@@ -931,8 +964,8 @@ const handleProductName = (item, index) => {
 
         <div className='pl-6 pt-0'>
 
-      
-      
+
+
 
 
 
@@ -954,50 +987,50 @@ const handleProductName = (item, index) => {
                         value={component.productName}
                         placeholder="Enter product name"
                         className="border-none w-full bg-zinc-100 p-2 px-4 focus:outline-none focus:ring-2 focus:ring-orange-500"
-                       
+
                         onClick={() => handleproductNameDropDown(index)}
-                      
+
                         onChange={(e) => {
                           const newComponents = [...billOfMaterialsList];
                           newComponents[index].productName = e.target.value;
-                          newComponents[index].billOfMaterialsProductId = null; 
+                          newComponents[index].billOfMaterialsProductId = null;
                           setbillOfMaterialsList(newComponents);
                           const newErrors = { ...errors };
                           delete newErrors[`billOfMaterialsList[${index}].productName`];
                           setErrors(newErrors);
-                          
+
                         }}
                       />
 
 
-{showProductDropdown[index] && (
-    <div className="absolute z-50 bg-light_gray divide-y divide-gray-100 shadow md:w-56 w-56 sm:w-56">
-      <ul className="py-2 text-sm text-black font-Manrope font-medium text-start">
-        {product.length > 0 ? (
-          product
-            .filter(item => item.productName.toLowerCase().includes(component.productName.toLowerCase())) 
-            .map(item => (
-              
-              <li
-                key={item.productId}
-                onClick={() => handleProductName(item, index)}
-                className="px-2 py-2 cursor-pointer hover:bg-gray-200"
-              >
-                <div className="flex flex-col">
-                  <label>{item.productName} </label>
-                    
-                     
-                </div>
-              </li>
-            ))
-        ) : (
-          <li className="px-2 py-2 cursor-pointer hover:bg-gray-200">
-            No products
-          </li>
-        )}
-      </ul>
-    </div>
-  )}
+                      {showProductDropdown[index] && (
+                        <div className="absolute z-50 bg-light_gray divide-y divide-gray-100 shadow md:w-56 w-56 sm:w-56">
+                          <ul className="py-2 text-sm text-black font-Manrope font-medium text-start">
+                            {product.length > 0 ? (
+                              product
+                                .filter(item => item.productName.toLowerCase().includes(component.productName.toLowerCase()))
+                                .map(item => (
+
+                                  <li
+                                    key={item.productId}
+                                    onClick={() => handleProductName(item, index)}
+                                    className="px-2 py-2 cursor-pointer hover:bg-gray-200"
+                                  >
+                                    <div className="flex flex-col">
+                                      <label>{item.productName} </label>
+
+
+                                    </div>
+                                  </li>
+                                ))
+                            ) : (
+                              <li className="px-2 py-2 cursor-pointer hover:bg-gray-200">
+                                No products
+                              </li>
+                            )}
+                          </ul>
+                        </div>
+                      )}
 
 
                     </td>
@@ -1007,9 +1040,9 @@ const handleProductName = (item, index) => {
                         value={component.billOfMaterialsProductQuantity}
                         placeholder="Enter quantity"
                         className="border w-full border-none w-full bg-zinc-100 p-2 px-4 focus:outline-none focus:ring-2 focus:ring-orange-500"
-                       
-                       
-                       
+
+
+
                         onChange={(e) => {
                           const newComponents = [...billOfMaterialsList];
                           newComponents[index].billOfMaterialsProductQuantity = e.target.value;
@@ -1017,7 +1050,7 @@ const handleProductName = (item, index) => {
                           const newErrors = { ...errors };
                           delete newErrors[`billOfMaterialsList[${index}].billOfMaterialsProductQuantity`];
                           setErrors(newErrors);
-                         
+
                         }}
                       />
 
@@ -1039,25 +1072,25 @@ const handleProductName = (item, index) => {
             </div>
           </div>
           {Object.keys(errors).some(
-        key => key.includes('billOfMaterialsProductQuantity') || 
-                              key.includes('productName') 
-               
-      ) && (
-        <div className="text-red-500 p-4 mb-4 rounded">
-                   <ul className="list-disc list-inside">
-            {Object.keys(errors)
-              .filter(errorKey => 
-                errorKey.includes('billOfMaterialsProductQuantity') || 
-                            errorKey.includes('productName') 
-              
-              )
-              .map((filteredErrorKey, index) => (
-                <li key={index} className="list-none">{errors[filteredErrorKey]}</li>
-              ))}
-          </ul>
-        </div>
-      )}
- 
+            key => key.includes('billOfMaterialsProductQuantity') ||
+              key.includes('productName')
+
+          ) && (
+              <div className="text-red-500 p-4 mb-4 rounded">
+                <ul className="list-disc list-inside">
+                  {Object.keys(errors)
+                    .filter(errorKey =>
+                      errorKey.includes('billOfMaterialsProductQuantity') ||
+                      errorKey.includes('productName')
+
+                    )
+                    .map((filteredErrorKey, index) => (
+                      <li key={index} className="list-none">{errors[filteredErrorKey]}</li>
+                    ))}
+                </ul>
+              </div>
+            )}
+
           <div className="my-4">
             <h3 className="text-lg font-semibold text-orange-500">Additional Cost</h3>
             <table className="w-full mt-2 border-none lg:w-96">
@@ -1089,11 +1122,11 @@ const handleProductName = (item, index) => {
                           newComponents[index].costName = e.target.value;
                           setbillOfMaterialsList(newComponents);
                           const newErrors = { ...errors };
-                delete newErrors[`additionalCosts[${index}].costName`];
-                setErrors(newErrors);
+                          delete newErrors[`additionalCosts[${index}].costName`];
+                          setErrors(newErrors);
                         }}
                       />
-                      
+
 
                     </td>
                     <td className="">
@@ -1115,11 +1148,11 @@ const handleProductName = (item, index) => {
                           newComponents[index].billOfMaterialsProductCost = e.target.value;
                           setbillOfMaterialsList(newComponents);
                           const newErrors = { ...errors };
-                delete newErrors[`additionalCosts[${index}].billOfMaterialsProductCost`];
-                setErrors(newErrors);
+                          delete newErrors[`additionalCosts[${index}].billOfMaterialsProductCost`];
+                          setErrors(newErrors);
                         }}
                       />
-                    
+
                     </td>
                     <td className=" text-center">
                       <button onClick={() => deleteAdditionalCost(index)} className="text-red-500 hover:text-red-700">
@@ -1132,7 +1165,7 @@ const handleProductName = (item, index) => {
             </table>
 
 
-           
+
 
 
 
@@ -1144,23 +1177,23 @@ const handleProductName = (item, index) => {
 
           </div>
           {Object.keys(errors).some(
-        key => key.includes('additionalCosts') ||
-                key.includes('costName')
-      ) && (
-        <div className="text-red-500 p-4 mb-4 rounded">
-                   <ul className="list-disc list-inside">
-            {Object.keys(errors)
-              .filter(errorKey =>  errorKey.includes('additionalCosts') ||
-              errorKey.includes('costName')
-                            
-               
-              )
-              .map((filteredErrorKey, index) => (
-                <li key={index} className="list-none">{errors[filteredErrorKey]}</li>
-              ))}
-          </ul>
-        </div>
-      )}
+            key => key.includes('additionalCosts') ||
+              key.includes('costName')
+          ) && (
+              <div className="text-red-500 p-4 mb-4 rounded">
+                <ul className="list-disc list-inside">
+                  {Object.keys(errors)
+                    .filter(errorKey => errorKey.includes('additionalCosts') ||
+                      errorKey.includes('costName')
+
+
+                    )
+                    .map((filteredErrorKey, index) => (
+                      <li key={index} className="list-none">{errors[filteredErrorKey]}</li>
+                    ))}
+                </ul>
+              </div>
+            )}
         </div>
 
 
