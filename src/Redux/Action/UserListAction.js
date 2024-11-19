@@ -7,7 +7,7 @@ export async function GetUserList() {
 }
 
 export async function AddUserList(user) {
-  // console.log("State after API Call:", state);
+  console.log("State after API Call:", user);
 
   return await AxiosConfig.post('/users/insertUsers',user,{
     data:user

@@ -103,7 +103,7 @@ function Userlist() {
                 //    Add User
    
                 useEffect(() => {
-                    if (state.UserList.addCustomerStatusCode == 200) {
+                    if (state.UserList.addUserStatusCode == 200) {
                         dispatch({ type: 'GETUSERLIST' })
                         setShowAddUser(false);
                         setTimeout(() => {
