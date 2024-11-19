@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Vector from '../Images/Sales/Vector.svg'
 import Frame1 from '../Images/Sales/Frame.svg'
 import Frame2 from '../Images/Sales/Frame2.svg'
@@ -12,14 +12,20 @@ import AddUser from './AddUser';
 import Checkbox from '../Images/Vector (8).svg'
 import { ArrowRight2, ArrowLeft2 ,ArrowUp2, ArrowDown2} from 'iconsax-react';
 import Plus from '../Images/Icons/Vector.svg'
+import { useDispatch, useSelector } from 'react-redux';
 
 function Userlist() {
 
    
     const [currentPage, setCurrentPage] = useState(1);
     const [showAddUser, setShowAddUser] = useState(false)
-
     const [isHovered, setIsHovered] = useState(false); 
+    const [loading, setLoading] = useState(true);
+    const [user, setUser] = useState([])
+
+    const dispatch = useDispatch();
+    const state = useSelector(state => state);
+  
 
     const reports = [
         {
@@ -42,8 +48,6 @@ function Userlist() {
             extra: "20%",
         },
     ];
-
-
 
 
     const Userlist = [
@@ -76,18 +80,45 @@ function Userlist() {
 
     ];
 
+    
+    useEffect(() => {
+        dispatch({ type: 'GETUSERLIST' })
+    }, [])
 
+    console.log("state", state)
 
+    useEffect(() => {
+        if (state.UserList.getUserStatusCode == 200) {
+            setLoading(false)
+            setUser(state.UserList.UserList)
+            setTimeout(() => {
+                dispatch({ type: 'REMOVE_GET_USER_STATUS_CODE' })
+            }, 2000)
+        }
 
+    }, [state.UserList.getUserStatusCode])
 
+    console.log("user",user);
 
+                //    Add User
+   
+                useEffect(() => {
+                    if (state.UserList.addCustomerStatusCode == 200) {
+                        dispatch({ type: 'GETUSERLIST' })
+                        setShowAddUser(false);
+                        setTimeout(() => {
+                            dispatch({ type: 'REMOVE_ADD_USER_STATUS_CODE' })
+                        }, 2000)
+                    }
+            
+                }, [state.UserList.addUserStatusCode])
 
     //  pagination
     const itemsPerPage = 10;
-    const totalPages = Math.ceil(Userlist.length / itemsPerPage);
+    const totalPages = Math.ceil(user && user.length / itemsPerPage);
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const currentItems = Userlist.slice(indexOfFirstItem, indexOfLastItem);
+    const currentItems = user && user.slice(indexOfFirstItem, indexOfLastItem);
 
     const handlePrevClick = () => {
         if (currentPage > 1) {
@@ -133,20 +164,7 @@ function Userlist() {
                 <label className='font-semibold text-22 text-neutral-900 font-Manrope'>Contacts - </label> <label className='font-bold text-22 text-orange-600 font-Manrope'>Userlist </label>
             </div>
 
-            {/* <div>
-  <button 
-    onClick={handleAdd}
-    type="submit" 
-    className="cursor-pointer flex items-center gap-2 w-auto h-auto text-orange-600 border border-orange-600 rounded px-3 py-1 font-Manrope font-semibold text-sm "
-  >
-    <img
-      src={Add}
-      alt="Add"
-      className=""
-    />
-    Add User
-  </button>
-</div> */}
+        
 
 <div
     onClick={handleAdd}
@@ -297,7 +315,7 @@ function Userlist() {
                         </tr>
                     </thead>
                     <tbody>
-                        {currentItems.map((item, index) => (
+                        {currentItems && currentItems.length > 0 && currentItems.map((item, index) => (
                             <tr key={index} className="hover:bg-gray-50 border-0">
                                 <td className="p-2 mt-1 flex items-center justify-start">
                                     <img src={SmallDot} className="mr-1.5" />
@@ -305,12 +323,12 @@ function Userlist() {
                                         type="checkbox"
                                         className="form-checkbox h-4 w-4 text-blue-600 border-neutral-500 cursor-pointer"
                                     /></td>
-                                <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{item.firstName}</td>
+                                <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{item.firstname}</td>
                                 <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{item.lastName}</td>
-                                <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{item.userName}</td>
-                                <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{item. role}</td>
-                                <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{item.mobile}</td>
-                                <td className="p-2 font-semibold text-sm font-Manrope text-start text-neutral-900"> {item.mailid} </td>
+                                <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{item.username}</td>
+                                <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{item.roleId}</td>
+                                <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{item.mobileNumber}</td>
+                                <td className="p-2 font-semibold text-sm font-Manrope text-start text-neutral-900"> {item.email} </td>
                                 <td className="p-2 text-gray-500 cursor-pointer"><img src={Dot} /></td>
                             </tr>
                         ))}
