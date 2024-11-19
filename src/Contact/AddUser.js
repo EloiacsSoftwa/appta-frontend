@@ -1,84 +1,133 @@
-
 import React, { useState } from "react";
-import { useDispatch, useSelector } from 'react-redux';
-
+import { useDispatch, useSelector } from "react-redux";
 
 function AddUser({ handleClose }) {
-
-
   const dispatch = useDispatch();
-  const state = useSelector(state => state);
+  const state = useSelector((state) => state);
 
-  console.log("ADDUSERstate",state);
-  
+  console.log("ADDUSERstate", state);
 
-  const [formData, setFormData] = useState({
-       userName: "",
-    password: "",
-    phoneNumber: "",
-    email: "",
-    manager: "",
-  });
+  const [username, setUserName] = useState("");
+  const [password, setPassword] = useState("");
+  const [mobilenumber, setMobileNumber] = useState("");
+  const [email, setEmail] = useState("");
+  const [roleId, setRoleId] = useState("");
 
-  const [errors, setErrors] = useState({});
+  const [usernameError, setUserNameError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [mobileNumberError, setMobileNumberError] = useState("");
+  const [emailError, setEmailError] = useState("");
+  const [roleIdError, setRoleIdError] = useState("");
 
-  const validate = () => {
-    const newErrors = {};
+  const [hasSubmitted, setHasSubmitted] = useState(false);
 
-    
-    if (!formData.userName) newErrors.userName = "User Name is required.";
-    if (!formData.password) newErrors.password = "Password is required.";
-    if (!formData.phoneNumber) newErrors.phoneNumber = "Phone Number is required.";
-    if (!formData.email) {
-      newErrors.email = "Email is required.";
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = "Invalid email format.";
+
+
+  const handleUserNameChange = (e) => {
+    const value = e.target.value;
+    setUserName(value);
+    if (value) {
+      setUserNameError("");
     }
-    if (!formData.manager) newErrors.manager = "Manager selection is required.";
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
   };
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+  const handlePasswordChange = (e) => {
+    const value = e.target.value;
+    setPassword(value);
+    if (value) {
+      setPasswordError("");
+    }
   };
 
+  const handleMobileNumberChange = (e) => {
+    const value = e.target.value;
+    setMobileNumber(value);
+    if (value) {
+      setMobileNumberError("");
+    }
+  };
+
+  const handleEmailChange = (e) => {
+    const value = e.target.value;
+    setEmail(value);
+    if (value) {
+      setEmailError("");
+    }
+  };
+
+  const handleRoleChange = (e) => {
+    const value = e.target.value;
+    setRoleId(value);
+    if (value) {
+      setRoleIdError("");
+    }
+  };
+
+
+  const validateForm = () => {
+    let isValid = true;
+
+    if (!username.trim()) {
+      setUserNameError("User Name is required");
+      isValid = false;
+    } else {
+      setUserNameError("");
+    }
+
+    if (!password.trim()) {
+      setPasswordError("Password is required");
+      isValid = false;
+    } else if (password.length < 6) {
+      setPasswordError("Password must be at least 6 characters");
+      isValid = false;
+    } else {
+      setPasswordError("");
+    }
+
+
+    if (!mobilenumber.trim() || !/^\d{10}$/.test(mobilenumber)) {
+      setMobileNumberError("Enter a valid 10-digit phone number");
+      isValid = false;
+    } else {
+      setMobileNumberError("");
+    }
+
+    if (!email.trim() || !/\S+@\S+\.\S+/.test(email)) {
+      setEmailError("Enter a valid email address");
+      isValid = false;
+    } else {
+
+    }
+
+    if (!roleId) {
+      setRoleIdError("Please select a role");
+      isValid = false;
+    }
+
+    return isValid;
+  };
 
   const handleSubmit = (e) => {
-    // e.preventDefault();
-   console.log("clicked")
-    if (validate()) {
-      dispatch({
-        type: "ADDUSERLIST",
-        payload: {
-          id: 0, 
-          username: formData.userName,
-          password: formData.password,
-          mobileNumber: formData.phoneNumber,
-          email: formData.email,
-          roleId: Number(formData.manager),
-        },
-      });
+    e.preventDefault();
+    setHasSubmitted(true);
 
-
-      
-      // Reset form
-      // setFormData({
-      //   firstName: "",
-      //   lastName: "",
-      //   userName: "",
-      //   password: "",
-      //   phoneNumber: "",
-      //   email: "",
-      //   manager: "",
-      // });
-      // setErrors({});
-      // alert("User added successfully!");
+    if (!validateForm()) {
+      return;
     }
-  };
 
+    console.log("Form Submitted");
+    dispatch({
+      type: "ADDUSERLIST",
+      payload: {
+        id: 0,
+        username,
+        password,
+        mobileNumber: mobilenumber,
+        email,
+        roleId: Number(roleId),
+      },
+    });
+  };
 
   return (
     <div className="h-screen bg-white p-4 w-full">
@@ -102,25 +151,23 @@ function AddUser({ handleClose }) {
         </div>
       </div>
 
-      <div  className="w-full rounded-xl shadow-custom mt-8 p-4 mb-4 h-4/5">
+      <div className="w-full rounded-xl shadow-custom mt-8 p-4 mb-4 h-4/5">
         <p className="font-bold text-lg text-orange-600 mb-4 font-Manrope">User Details</p>
         <div className="flex flex-wrap lg:flex-nowrap gap-4">
-        
-      
-
           <div className="w-full max-w-sm min-w-[200px]">
             <label className="block font-semibold mb-1 text-sm text-start font-SourceSansPro">
               User Name
             </label>
             <input
               type="text"
-              name="userName"
-              value={formData.userName}
-              onChange={handleChange}
+              value={username}
+              onChange={handleUserNameChange}
               className="w-full border border-[#BDBDBD] rounded px-3 py-2 text-sm placeholder-black"
               placeholder="Martin"
             />
-            {errors.userName && <p className="text-red-500 text-xs mt-1">{errors.userName}</p>}
+            {hasSubmitted && usernameError && (
+              <p className="text-red-500 text-xs">{usernameError}</p>
+            )}
           </div>
 
           <div className="w-full max-w-sm min-w-[200px]">
@@ -129,13 +176,14 @@ function AddUser({ handleClose }) {
             </label>
             <input
               type="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
+              value={password}
+              onChange={handlePasswordChange}
               className="w-full border border-[#BDBDBD] rounded px-3 py-2 text-sm placeholder-black"
               placeholder="Password"
             />
-            {errors.password && <p className="text-red-500 text-xs mt-1">{errors.password}</p>}
+            {hasSubmitted && passwordError && (
+              <p className="text-red-500 text-xs">{passwordError}</p>
+            )}
           </div>
         </div>
 
@@ -146,13 +194,14 @@ function AddUser({ handleClose }) {
             </label>
             <input
               type="text"
-              name="phoneNumber"
-              value={formData.phoneNumber}
-              onChange={handleChange}
+              value={mobilenumber}
+              onChange={handleMobileNumberChange}
               className="w-full border border-[#BDBDBD] rounded px-3 py-2 text-sm placeholder-black"
               placeholder="+91"
             />
-            {errors.phoneNumber && <p className="text-red-500 text-xs mt-1">{errors.phoneNumber}</p>}
+            {hasSubmitted && mobileNumberError && (
+              <p className="text-red-500 text-xs">{mobileNumberError}</p>
+            )}
           </div>
 
           <div className="w-full max-w-sm min-w-[200px]">
@@ -161,13 +210,14 @@ function AddUser({ handleClose }) {
             </label>
             <input
               type="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
+              value={email}
+              onChange={handleEmailChange}
               className="w-full border border-[#BDBDBD] rounded px-3 py-2 text-sm placeholder-black"
               placeholder="example@example.com"
             />
-            {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
+            {hasSubmitted && emailError && (
+              <p className="text-red-500 text-xs">{emailError}</p>
+            )}
           </div>
 
           <div className="w-full max-w-sm min-w-[200px]">
@@ -175,17 +225,20 @@ function AddUser({ handleClose }) {
               Manager
             </label>
             <select
-              name="manager"
-              value={formData.manager}
-              onChange={handleChange}
+              value={roleId}
+              onChange={handleRoleChange}
               className="w-full border border-[#BDBDBD] rounded px-3 py-2 text-sm"
             >
+              <option value="">Select Role</option>
               <option value="1">Manager</option>
               <option value="2">Sales Manager</option>
               <option value="3">Admin</option>
             </select>
-            {errors.manager && <p className="text-red-500 text-xs mt-1">{errors.manager}</p>}
+            {roleIdError && (
+              <p className="text-red-500 text-xs">{roleIdError}</p>
+            )}
           </div>
+
         </div>
       </div>
     </div>
@@ -193,3 +246,7 @@ function AddUser({ handleClose }) {
 }
 
 export default AddUser;
+
+
+
+
