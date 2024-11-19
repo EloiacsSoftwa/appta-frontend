@@ -313,7 +313,8 @@ function Sales_List() {
                                         className="form-checkbox h-4 w-4 text-blue-600 border-neutral-500 cursor-pointer"
                                     /></td>
                                 <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">
-                                    { moment(item.createdAt).format('DD-MM-YYYY')}</td>
+                                {moment(item.createdAt, "DD-MM-YYYY HH:mm:ss").format('DD MMM YYYY')}
+                                    </td>
                                 <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{item.customerName}</td>
                                 <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">{item.customerId}</td>
                                 <td className={`p-2 font-semibold text-sm font-Manrope text-start  ${item.status === 'completed' ? 'text-lime-600' : 'text-red-600'}`}>
