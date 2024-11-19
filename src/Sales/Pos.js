@@ -141,59 +141,87 @@ const Pos = ({ handleClosed }) => {
   const [quantity, setQuantity] = useState(0);
   const [discount, setDiscount] = useState(0);
   const [discountAmount, setDiscountAmount] = useState(0);
+  const [error, setError] = useState(null);
+  const [unitPrice, setUnitPrice] = useState(0);
 
   const handleFieldClick = (index, fieldValues) => {
     setEditingIndex(index);
-    setQuantity(fieldValues.quantity);
-    setDiscount(fieldValues.discount);
-    setDiscountAmount(fieldValues.discountAmount ?? 0);
+    setQuantity(fieldValues.quantity ?? 0);
+    setDiscount(fieldValues.discount ?? 0);
+    setDiscountAmount(Number(fieldValues.discountAmount ?? 0));
+    setUnitPrice(Number(fieldValues.unitPrice ?? 0));
+};
+
+const handleFieldChange = (productId) => {
+  if (error) {
+    alert(error);
+    return;
+  }
+
+  let typeOfDiscount = 0; 
+  if (discount > 0) {
+    typeOfDiscount = 1; 
+  } else if (discountAmount > 0) {
+    typeOfDiscount = 2;
+  }
+
+  const payload = {
+    orderId: order_id,
+    productId: productId,
+    discount: discount,
+    quantity: quantity,
+    unitPrice: unitPrice,
+    manuallyEntered: true,
+    typeOfDiscount: typeOfDiscount,
+    discountAmount: discountAmount,
   };
 
-  const handleFieldChange = (productId) => {
-    const payload = {
-      orderId: order_id,
-      productId: productId,
-      discount: discount,
-      quantity: quantity,
-      manuallyEntered: true,
-    };
+  dispatch({ type: ADD_ORDER_ITEMS_API_CALL, payload });
+  setEditingIndex(null);
+  setError(null); 
+};
 
-    dispatch({ type: ADD_ORDER_ITEMS_API_CALL, payload });
-    setEditingIndex(null);
-  };
 
-  const [error, setError] = useState(null);
+const handleInputChange = (field, e, item) => {
+  let value = e.target.value.replace(/^0+/, ''); 
+  const parsedValue = parseFloat(value);
 
-  const handleInputChange = (field, e, item) => {
-    let value = e.target.value;
-    value = value.replace(/^0+/, '');
-    const parsedValue = parseFloat(value);
+  if (parsedValue < 0) {
+    setError(`${field} cannot be negative.`);
+    return;
+  }
 
-    if (field === 'discount') {
-      const discountPercent = isNaN(parsedValue) ? 0 : parsedValue;
-      const calculatedDiscountAmount = (discountPercent / 100) * item.totalAmount;
+  if (field === 'discount') {
+    const discountPercent = isNaN(parsedValue) ? 0 : parsedValue;
+    const calculatedDiscountAmount = (discountPercent / 100) * item.totalAmount;
 
-      if (calculatedDiscountAmount > item.totalAmount) {
-        setError('Discount amount exceeds the total amount.');
-      } else {
-        setError(null);
-        setDiscount(discountPercent);
-        setDiscountAmount(calculatedDiscountAmount.toFixed(2));
-      }
-    } else if (field === 'discountAmount') {
-      const discountAmt = isNaN(parsedValue) ? 0 : parsedValue;
-
-      if (discountAmt > item.totalAmount) {
-        setError('Discount amount exceeds the total amount.');
-      } else {
-        setError(null);
-        setDiscountAmount(discountAmt);
-        setDiscount(((discountAmt / item.totalAmount) * 100).toFixed(2));
-      }
-    } else if (field === 'quantity') {
-      setQuantity(isNaN(parsedValue) ? '' : parsedValue);
+    if (calculatedDiscountAmount > item.totalAmount) {
+      setError('Discount amount exceeds the total amount.');
+    } else {
+      setError(null);
+      setDiscount(discountPercent);
+      setDiscountAmount(0); 
     }
-  };
+  } else if (field === 'discountAmount') {
+    const discountAmt = isNaN(parsedValue) ? 0 : parsedValue;
+
+    if (discountAmt > item.totalAmount) {
+      setError('Discount amount exceeds the total amount.');
+    } else {
+      setError(null);
+      setDiscountAmount(discountAmt);
+      setDiscount(0); 
+    }
+  } else if (field === 'quantity') {
+    setQuantity(parsedValue || 0);
+  } else if (field === 'unitPrice') {
+    setUnitPrice(parsedValue || 0);
+  }
+};
+
+
+
+
 
 
 
@@ -791,7 +819,28 @@ const Pos = ({ handleClosed }) => {
                           )}
                         </td>
 
-                        <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">₹{item.unitPrice || '0'}</td>
+                        {/* <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">₹{item.unitPrice || '0'}</td> */}
+
+                        <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">
+    {editingIndex === index ? (
+        <input
+            type="number"
+            value={unitPrice}
+            onChange={(e) => handleInputChange('unitPrice', e)}
+            onBlur={() => handleFieldChange(item.productId, 'unitPrice', unitPrice)}
+            onKeyDown={(e) => handleKeyDown(item.productId, e)}
+            className="border border-neutral-300 rounded px-1 py-0.5 w-16"
+        />
+    ) : (
+        <span
+            onClick={() => handleFieldClick(index, item)}
+            className="cursor-pointer"
+        >
+            ₹{item.unitPrice || '0'}
+        </span>
+    )}
+</td>
+
                         <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">
                          ₹{item.quantity && item.unitPrice? Math.round(item.quantity * item.unitPrice): '-'}</td>
 
@@ -816,27 +865,28 @@ const Pos = ({ handleClosed }) => {
 
 
                         <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">
-                          {editingIndex === index ? (
-                            <input
-                              type="number"
-                              value={discountAmount}
-                              onChange={(e) => handleInputChange('discountAmount', e, item)}
-                              onBlur={() => handleFieldChange(item.productId)}
-                              onKeyDown={(e) => handleKeyDown(item.productId, e)}
-                              className="border border-neutral-300 rounded px-1 py-0.5 w-16"
-                            />
-                          ) : (
-                            <span onClick={() => handleFieldClick(index, item)} className="cursor-pointer">
-                              ₹ {item.totalAmount ? (item.totalAmount * (item.discount / 100)).toFixed(2) : '0'}
-                            </span>
-                          )}
-                        </td>
+  {editingIndex === index ? (
+    <input
+      type="number"
+      value={discountAmount}
+      onChange={(e) => handleInputChange('discountAmount', e, item)}
+      onBlur={() => handleFieldChange(item.productId)}
+      onKeyDown={(e) => handleKeyDown(item.productId, e)}
+      className="border border-neutral-300 rounded px-1 py-0.5 w-16"
+    />
+  ) : (
+    <span onClick={() => handleFieldClick(index, item)} className="cursor-pointer">
+    ₹{item.discountAmount ? Math.round(item.discountAmount) : '0'}
+  </span>
+  
+  )}
+</td>
 
 
 
 
                         <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">
-                          ₹ {item.totalAmount}
+                          ₹ {item.totalAmount ? item.totalAmount.toFixed(2) : '0'}
                         </td>
 
 
