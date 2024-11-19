@@ -52,6 +52,7 @@ function Sidebar() {
   const state = useSelector(state => state);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isOpenProfile, setIsOpenProfile] = useState(false)
 
   // const handleLogout = () => {
    
@@ -65,6 +66,17 @@ function Sidebar() {
   const handleCancel = () => {
     setIsModalOpen(false);
   };
+
+  const handleMouseEnter = () =>{
+    setIsOpenProfile(true)
+  }
+const handleMouseLeave = () =>{
+  setIsOpenProfile(false)
+}
+
+const handleListItem = () =>{
+  setIsOpenProfile(!isOpenProfile)
+}
 
 
   const toggleSidebar = () => {
@@ -282,37 +294,71 @@ useEffect(() => {
       <div className="flex items-center mr-5  h-14">
         <img src={Notifications} alt="Notification Icon" className="mr-2 md:mr-5" />
         <p className="mr-4 font-semibold text-sm font-manrope">Jony Larrence</p>
-        <div className="flex items-center space-x-2 h-14">
+        <div className="flex items-center space-x-2 h-14 ">
+          <div className="relative">
+
         <img 
             src={Elipsepic} 
             alt="Profile Picture" 
-            className="w-9 h-9 md:w-10 md:h-10"
+            className="w-9 h-9 md:w-10 md:h-10 cursor-pointer"
+            // onMouseEnter={handleMouseEnter}
+            // onMouseLeave={handleMouseLeave}
+            onClick={handleListItem}
           />
-          <div className="flex justify-center items-center h-14">
+          {
+  isOpenProfile && <>
+  <div className="absolute right-0">
+  <div class="relative flex flex-col rounded-lg bg-white shadow-sm border border-slate-200 z-50 min-w-[180px]">
+  <nav class="flex w-full flex-col gap-1 p-1.5">
+    <div
+      role="button"
+      class=" font-Manrope text-sm text-slate-800 flex w-full items-center rounded-md p-3 transition-all hover:bg-slate-100 focus:bg-slate-100 active:bg-slate-100"
+      onClick={() => {
+        setIsModalOpen(true)
+      setIsOpenProfile(false)
+      }}
+   >
+      Logout
+    </div>
+    
+  </nav>
+</div>
+</div>
+  
+  </>
+}
+          </div>
+          {/* <div className="flex justify-center items-center h-14">
       <img 
             src={Logout} 
             alt="Profile Picture" 
             className="w-7 h-7"
-            onClick={() => setIsModalOpen(true)}
+           
           />
 
      
-    </div>
-        
+    </div> */}
+
+
+     
         </div>
       </div>
     </div>
        
+
+    
+      
+
    
     {isModalOpen && (
-        <div className="fixed inset-0 flex justify-center items-start pt-36 ml-48  bg-opacity-50 flex">
+        <div className="fixed inset-0 flex justify-center items-start pt-36 ml-48  bg-opacity-50 flex z-50">
           <div className="bg-white rounded-lg shadow-lg p-5 w-68 max-w-xs border border-orange-500">
-            <h2 className="text-lg font-semibold text-gray-800 mb-4">
-              Are you sure you want to log out?
+            <h2 className="text-lg font-semibold text-gray-800 mb-4 font-Manrope">
+              Are you sure you want to Logout?
             </h2>
-            <div className="flex justify-between">
+            <div className="flex justify-center gap-5">
               <button
-                className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
+                className="px-4 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-600"
                 onClick={handleLogout}
               >
                 Yes

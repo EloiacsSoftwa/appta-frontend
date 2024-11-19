@@ -29,6 +29,7 @@ console.log("purchase",Purchase)
 
     useEffect(() => {
         dispatch({ type: 'GETPURCHASE' });  
+       
     }, []);
 
 
