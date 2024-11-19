@@ -105,7 +105,8 @@ const AddProductModal = ({ onClose }) => {
         barcodeNo: 0,
         statusTypeId: 1,
         sizeId: 0,
-        hsnCode: ''
+        hsnCode: '',
+        noOfItemsPerunit:''
       }));
       setErrors({});
       setTimeout(() => {
@@ -590,7 +591,7 @@ const ProductDetailsForm = ({ handleNext, formData, setFormData }) => {
 
             <div className="flex-1">
               <label className="text-left block text-sm font-semibold text-black font-SourceSansPro">Items Per Unit</label>
-              <input type="text" className="focus:border-zinc-400 focus:outline-none font-SourceSansPro text-base  placeholder-gray mt-1 block w-full border border-gray-300 rounded-md h-9 pl-2 pr-2" placeholder="Hsn Code" value={formData.hsnCode} onChange={(e) => {
+              <input type="text" className="focus:border-zinc-400 focus:outline-none font-SourceSansPro text-base  placeholder-gray mt-1 block w-full border border-gray-300 rounded-md h-9 pl-2 pr-2" placeholder="Enter Items per unit" value={formData.noOfItemsPerunit} onChange={(e) => {
                 setFormData({ ...formData, noOfItemsPerunit: e.target.value })
                 if (errors.noOfItemsPerunit) {
                   setErrors((prevErrors) => ({ ...prevErrors, noOfItemsPerunit: "" }));
