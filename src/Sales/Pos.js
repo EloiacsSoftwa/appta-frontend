@@ -99,13 +99,16 @@ const Pos = ({ handleClosed }) => {
       //  handleHoldOrder();
       // alert('popstate triggered',order_id)
       console.log("order_id", order_id)
-      if (order_id) {
-        dispatch({
-          type: 'ORDER-HOLD',
-          payload: { orderId: String(order_id) },
-        });
-      }
-
+      setTimeout(()=>{
+        if (order_id) {
+          dispatch({
+            type: 'ORDER-HOLD',
+            payload: { orderId: String(order_id) },
+          });
+        }
+  
+      },3000)
+     
       setTimeout(() => {
         handleClosed()
       }, 2000)
@@ -119,7 +122,7 @@ const Pos = ({ handleClosed }) => {
     return () => {
       window.removeEventListener('popstate', handlePopState);
     };
-  }, [navigate]);
+  }, [navigate,handleClosed]);
 
 
   console.log("order_id", order_id)
