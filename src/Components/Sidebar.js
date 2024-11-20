@@ -286,7 +286,7 @@ useEffect(() => {
   return (
     <div className="flex h-screen">
       {isHide ? <>
-      {/* Sidebar */}
+    
       <div
         className={`${isExpanded ? "w-64" : "w-20"} bg-black text-white flex flex-col transition-width duration-300 h-screen overflow-y-auto fixed `}
       >
