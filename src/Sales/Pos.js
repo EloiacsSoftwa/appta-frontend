@@ -18,7 +18,7 @@ import { Setting } from 'iconsax-react';
 import Pos_Payment from './Pos_Payment';
 import useBarcodeScanner from '../utils/useBarcodeScanner';
 import { useNavigate } from 'react-router-dom';
-
+import CryptoJS from "crypto-js";
 import { ADD_ORDER_ITEMS_API_CALL, GET_ALL_ACTIVE_PRODUCTS_API_CALL, RESET_PAYMENT_STATUS_CODE } from '../utils/Constant';
 import HoldOrderList from './HoldOrderList';
 
@@ -123,6 +123,29 @@ const Pos = ({ handleClosed }) => {
       window.removeEventListener('popstate', handlePopState);
     };
   }, [navigate,handleClosed]);
+
+
+
+
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      const navType = performance.navigation.type;
+      if (navType === 1) {
+        console.log("Page Reload detected");
+                               
+                dispatch({ type: 'LOG-OUT' })
+            const encryptData = CryptoJS.AES.encrypt(JSON.stringify(false), 'abcd');
+            localStorage.setItem("appTaLogin", encryptData.toString());
+                    }
+    };
+  
+    
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, []);
 
 
   console.log("order_id", order_id)

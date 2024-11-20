@@ -276,6 +276,9 @@ useEffect(() => {
 
 
 
+
+
+
   const handleCloseForPos = () =>{
     setIsHide(true)
     setSelectedMenu('Sales List')

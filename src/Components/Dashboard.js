@@ -184,7 +184,7 @@ const Dashboard = () => {
  <div className="bg-white p-4 lg:col-span-2 border-l-2 ">
     <div>
         <div className="flex justify-between">
-      <h2 className="text-xl font-semibold mb-6 ">Sales Statistics</h2>
+      <h2 className="text-xl font-semibold mb-6 font-Manrope">Sales Statistics</h2>
 
       <div className="flex gap-2">
                             <div className="w-6 h-6 flex items-center justify-center rounded-tl-[5.82px] bg-gray-200">
@@ -245,7 +245,7 @@ const Dashboard = () => {
             cursor={{ fill: "#F3F4F6" }}
           />
           
-          <Bar dataKey="sales" fill="#EA580C" radius={[4, 4, 0, 0]} barSize={5} />
+          <Bar dataKey="sales" fill="#EA580C" radius={[4, 4, 0, 0]} barSize={5}  />
           <Bar dataKey="loss" fill="#797979" radius={[0, 0, 4, 4]} barSize={5} />
         </BarChart>
       </ResponsiveContainer>
