@@ -112,10 +112,12 @@ const Dashboard = () => {
                 </div>
             </div>
 
-            {/* Main Content */}
+            
             <div className="grid grid-cols-3 ml-5 w-full gap-3 bg-zinc-300" style={{ width: "1195px" }}>
-                {/* Sales Statistic */}
-                <div className="bg-white p-4 lg:col-span-2 border-l-2 border-black">
+               
+{/* priya */}
+
+                 {/* <div className="bg-white p-4 lg:col-span-2 border-l-2 border-black">
                     <div className="flex justify-between">
                         <h2 className="text-xl font-bold mb-4">Sales Statistic</h2>
                         <div className="flex gap-2">
@@ -173,9 +175,124 @@ const Dashboard = () => {
                             </div>
                         </div>
                     </div>
-                </div>
+                </div>  */}
 
-                {/* Notification with gap */}
+
+{/* priya */}
+
+
+ <div className="bg-white p-4 lg:col-span-2 border-l-2 ">
+    <div>
+        <div className="flex justify-between">
+      <h2 className="text-xl font-semibold mb-6 ">Sales Statistics</h2>
+
+      <div className="flex gap-2">
+                            <div className="w-6 h-6 flex items-center justify-center rounded-tl-[5.82px] bg-gray-200">
+                                <img src={Framelines} className="w-4 h-4" />
+                            </div>
+                            <div className="w-6 h-6 flex items-center justify-center rounded-tl-[5.82px] bg-gray-200">
+                                <img src={TopArrow} />
+                            </div>
+                        </div>
+</div>
+      <ResponsiveContainer width="100%" height={300}>
+        <BarChart data={sampleData} barGap={0} style={{padding:0}}>
+         
+          <CartesianGrid  stroke="#F3F3F4"
+                horizontal={true} 
+                vertical={false} 
+          />
+         
+          <XAxis
+            dataKey="month"
+            axisLine={{ stroke: "#D1D5DB" }}
+            tickLine={false}
+            fontSize={12}
+            fontWeight={500}
+            stroke="#6B7280"
+          />
+        
+          {/* <YAxis
+  domain={[0, 700000]} 
+  ticks={[100000, 200000, 300000, 400000, 500000, 600000, 700000]} 
+  tickFormatter={(value) => `₹${value / 100000} Lak`}
+  axisLine={false}
+  tickLine={false}
+  fontSize={12}
+  tick={{ fill: "#EA580C" }}
+  fontWeight={500}
+  stroke="#EA580C"
+/> */}
+
+<YAxis
+      domain={[-700000, 700000]}  
+      ticks={[-700000, -600000, -500000, -400000, -300000, -200000, -100000, 0, 100000, 200000, 300000, 400000, 500000, 600000, 700000]}
+      tickFormatter={(value) => `₹${Math.abs(value) / 100000} Lak`} 
+      axisLine={false}
+      tickLine={false}
+      fontSize={12}
+      tick={{ fill: "#EA580C" }}
+      fontWeight={500}
+      stroke="#EA580C"
+    />
+          {/* Tooltip */}
+          <Tooltip
+            contentStyle={{
+              backgroundColor: "#F9FAFB",
+              border: "1px solid #E5E7EB",
+              borderRadius: "4px",
+            }}
+            cursor={{ fill: "#F3F4F6" }}
+          />
+          
+          <Bar dataKey="sales" fill="#EA580C" radius={[4, 4, 0, 0]} barSize={5} />
+          <Bar dataKey="loss" fill="#797979" radius={[0, 0, 4, 4]} barSize={5} />
+        </BarChart>
+      </ResponsiveContainer>
+    </div>
+
+
+    <div className="w-full bg-black shadow-lg px-2 mt-8 py-2">
+                        <div className="flex flex-wrap gap-4 justify-between">
+                            <div className="text-white border-r border-gray-700 pr-4 text-xs flex-1 my-0.5">
+                                <p className='text-orange-500 pt-2'>Low Stock</p>
+                                <p>06 Items</p>
+                            </div>
+                            <div className="text-white border-r border-gray-700 pr-4 text-xs flex-1 ">
+                                <p className='text-lime-600 pt-2'>Sales</p>
+                                <p>120 Items</p>
+                            </div>
+                            <div className="text-white border-r border-gray-700 pr-4 text-xs flex-1 ">
+                                <p className='pt-2'>+Products</p>
+                                <p>06</p>
+                            </div>
+                            <div className="text-white border-r border-gray-700 pr-4 text-xs flex-1 ">
+                                <p className='text-orange-500 pt-2'>Out of Stock</p>
+                                <p>06</p>
+                            </div>
+                            <div className="text-white border-r border-gray-700 pr-4 text-xs flex-1 ">
+                                <p className='pt-2'>+ Customer</p>
+                                <p>06</p>
+                            </div>
+                            <div className="text-white text-xs flex-1">
+                                <p className='pt-3'>Wholesale</p>
+                                <p>04</p>
+                            </div>
+                        </div>
+              
+
+
+</div>
+
+
+
+
+    </div>
+    
+
+
+
+
                 <div className='bg-zinc-300'>
                 <div className="bg-white p-4 shadow-md w-64 ">
                     <div className="flex justify-between items-center mb-4">
@@ -268,74 +385,7 @@ const Dashboard = () => {
         </div>
 
 
-        <div className="p-6 bg-white shadow-md rounded-lg w-full max-w-4xl mx-auto">
-        <div className="flex justify-between">
-      <h2 className="text-xl font-semibold mb-6 ">Sales Statistics</h2>
-
-      <div className="flex gap-2">
-                            <div className="w-6 h-6 flex items-center justify-center rounded-tl-[5.82px] bg-gray-200">
-                                <img src={Framelines} className="w-4 h-4" />
-                            </div>
-                            <div className="w-6 h-6 flex items-center justify-center rounded-tl-[5.82px] bg-gray-200">
-                                <img src={TopArrow} />
-                            </div>
-                        </div>
-</div>
-      <ResponsiveContainer width="100%" height={300}>
-        <BarChart data={sampleData} barGap={0} style={{padding:0}}>
-         
-          <CartesianGrid  stroke="#F3F3F4"
-                horizontal={true} 
-                vertical={false} 
-          />
-         
-          <XAxis
-            dataKey="month"
-            axisLine={{ stroke: "#D1D5DB" }}
-            tickLine={false}
-            fontSize={12}
-            fontWeight={500}
-            stroke="#6B7280"
-          />
-        
-          {/* <YAxis
-  domain={[0, 700000]} 
-  ticks={[100000, 200000, 300000, 400000, 500000, 600000, 700000]} 
-  tickFormatter={(value) => `₹${value / 100000} Lak`}
-  axisLine={false}
-  tickLine={false}
-  fontSize={12}
-  tick={{ fill: "#EA580C" }}
-  fontWeight={500}
-  stroke="#EA580C"
-/> */}
-
-<YAxis
-      domain={[-700000, 700000]}  
-      ticks={[-700000, -600000, -500000, -400000, -300000, -200000, -100000, 0, 100000, 200000, 300000, 400000, 500000, 600000, 700000]}
-      tickFormatter={(value) => `₹${Math.abs(value) / 100000} Lak`} 
-      axisLine={false}
-      tickLine={false}
-      fontSize={12}
-      tick={{ fill: "#EA580C" }}
-      fontWeight={500}
-      stroke="#EA580C"
-    />
-          {/* Tooltip */}
-          <Tooltip
-            contentStyle={{
-              backgroundColor: "#F9FAFB",
-              border: "1px solid #E5E7EB",
-              borderRadius: "4px",
-            }}
-            cursor={{ fill: "#F3F4F6" }}
-          />
-          
-          <Bar dataKey="sales" fill="#EA580C" radius={[4, 4, 0, 0]} barSize={5} />
-          <Bar dataKey="loss" fill="#797979" radius={[0, 0, 4, 4]} barSize={5} />
-        </BarChart>
-      </ResponsiveContainer>
-    </div>
+       
         </>
     );
 };
