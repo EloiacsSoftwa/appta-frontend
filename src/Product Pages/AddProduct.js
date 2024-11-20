@@ -329,6 +329,7 @@ const ProductDetailsForm = ({ handleNext, formData, setFormData }) => {
     if (!formData.description) tempErrors.description = "Description is required";
     if (!formData.sizeId) tempErrors.sizeId = "Size is required";
     if (!formData.hsnCode) tempErrors.hsnCode = "HSN Code is required";
+    if (!formData.noOfItemsPerunit) tempErrors.noOfItemsPerunit = "No Of Items Per unit is required";
     if (!formData.productId) tempErrors.productId = "Product type is required";
 
 
@@ -599,7 +600,7 @@ const ProductDetailsForm = ({ handleNext, formData, setFormData }) => {
 
               }} />
 
-              {errors.hsnCode && <p className="text-red-500 text-sm font-Manrope mt-2">{errors.hsnCode}</p>}
+              {errors.noOfItemsPerunit && <p className="text-red-500 text-sm font-Manrope mt-2">{errors.noOfItemsPerunit}</p>}
             </div>
           </div>
 
@@ -645,7 +646,7 @@ const ProductDetailsForm = ({ handleNext, formData, setFormData }) => {
           </div>
 
           <div className="flex-1">
-            <label className="text-left block text-sm font-semibold text-black font-SourceSansPro">description</label>
+            <label className="text-left block text-sm font-semibold text-black font-SourceSansPro">Description</label>
             <textarea
               name="description"
               value={formData.description}

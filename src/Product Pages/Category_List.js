@@ -313,7 +313,7 @@ const handleCloseAddCategory = () =>{
                                     {item.createdBy}
                                 </td>
                                 <td className='p-2 font-semibold text-sm font-Manrope text-start text-neutral-900' >
-                                    { moment(item.createdAt).format('DD-MM-YYYY')}
+                                    { moment(item.createdAt,"DD-MM-YYYY HH:mm:ss").format('DD-MM-YYYY')}
                                 </td>
                                 {/* <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900">{item.Unit}</td> */}
                                 <td className="p-2 text-gray-500 cursor-pointer w-8 "><img src={Dot} /></td>

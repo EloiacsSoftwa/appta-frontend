@@ -118,7 +118,7 @@ function Userlist() {
     const totalPages = Math.ceil(user && user.length / itemsPerPage);
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const currentItems = user && user.slice(indexOfFirstItem, indexOfLastItem);
+    const currentItems = user && user?.slice(indexOfFirstItem, indexOfLastItem);
 
     const handlePrevClick = () => {
         if (currentPage > 1) {
