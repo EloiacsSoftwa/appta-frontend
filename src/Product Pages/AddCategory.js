@@ -58,7 +58,7 @@ if(!categoryname){
           </div>
 
 {
-  categoryError && <span className="text-red-500 font-Manrope mt-1 text-sm">categoryError</span>
+  categoryError && <span className="text-red-500 font-Manrope mt-1 text-sm">{categoryError}</span>
 }
                      {/* <div className="mb-4">
              <label htmlFor="description" className="block text-sm font-medium text-gray-700">

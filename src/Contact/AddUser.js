@@ -77,10 +77,8 @@ function AddUser({ handleClose }) {
     if (!password.trim()) {
       setPasswordError("Password is required");
       isValid = false;
-    } else if (password.length < 6) {
-      setPasswordError("Password must be at least 6 characters");
-      isValid = false;
-    } else {
+    } 
+    else {
       setPasswordError("");
     }
 
