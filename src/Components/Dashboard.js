@@ -1,9 +1,8 @@
 import React from 'react';
 import {
     AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
-    PieChart, Pie, Cell, Label
+    PieChart, Pie, Cell, Label,BarChart, Bar,
 } from 'recharts';
-
 import Persons from '../Images/Icons/Persons.svg';
 import TotalSale from '../Images/Icons/Vector (1).svg';
 import Rupees from '../Images/Icons/Rupees.svg';
@@ -32,8 +31,52 @@ const orderStatusData = [
 
 const COLORS = ['#84cc16','#ef4444','#3b82f6'];
 
+
+
+// const sampleData = [
+//     { month: "Jan", sales: 700000, loss: -700000 },
+//     { month: "Feb", sales: 200000, loss: -200000 },
+//     { month: "Mar", sales: 300000, loss: -300000 },
+//     { month: "Apr", sales: 400000, loss: -400000 },
+//     { month: "May", sales: 500000, loss: -500000 },
+//     { month: "Jun", sales: 600000, loss: -600000 },
+//     { month: "Jul", sales: 700000, loss: -700000 },
+//     { month: "Aug", sales: 600000, loss: -600000 },
+//     { month: "Sep", sales: 500000, loss: -500000 },
+// ];
+
+
+
+const sampleData = [
+    { month: "Jan", sales: 700000, loss: -700000 },
+  
+    { month: "Feb", sales: 200000, loss: -200000 },
+   
+    { month: "Mar", sales: 300000, loss: -300000 },
+   
+    { month: "Apr", sales: 400000, loss: -400000 },
+   
+    { month: "May", sales: 500000, loss: -500000 },
+   
+    { month: "Jun", sales: 600000, loss: -600000 },
+  
+    { month: "Jul", sales: 700000, loss: -700000 },
+   
+    { month: "Aug", sales: 600000, loss: -600000 },
+    
+    { month: "Sep", sales: 500000, loss: -500000 },
+];
+
+  
+  
+
+
+
+
 const Dashboard = () => {
     return (
+        <>
+      
         <div className="">
         <div className="bg-zinc-300 -mt-2">
             {/* Header Section */}
@@ -223,6 +266,77 @@ const Dashboard = () => {
             </div>
         </div>
         </div>
+
+
+        <div className="p-6 bg-white shadow-md rounded-lg w-full max-w-4xl mx-auto">
+        <div className="flex justify-between">
+      <h2 className="text-xl font-semibold mb-6 ">Sales Statistics</h2>
+
+      <div className="flex gap-2">
+                            <div className="w-6 h-6 flex items-center justify-center rounded-tl-[5.82px] bg-gray-200">
+                                <img src={Framelines} className="w-4 h-4" />
+                            </div>
+                            <div className="w-6 h-6 flex items-center justify-center rounded-tl-[5.82px] bg-gray-200">
+                                <img src={TopArrow} />
+                            </div>
+                        </div>
+</div>
+      <ResponsiveContainer width="100%" height={300}>
+        <BarChart data={sampleData} barGap={0} style={{padding:0}}>
+         
+          <CartesianGrid  stroke="#F3F3F4"
+                horizontal={true} 
+                vertical={false} 
+          />
+         
+          <XAxis
+            dataKey="month"
+            axisLine={{ stroke: "#D1D5DB" }}
+            tickLine={false}
+            fontSize={12}
+            fontWeight={500}
+            stroke="#6B7280"
+          />
+        
+          {/* <YAxis
+  domain={[0, 700000]} 
+  ticks={[100000, 200000, 300000, 400000, 500000, 600000, 700000]} 
+  tickFormatter={(value) => `₹${value / 100000} Lak`}
+  axisLine={false}
+  tickLine={false}
+  fontSize={12}
+  tick={{ fill: "#EA580C" }}
+  fontWeight={500}
+  stroke="#EA580C"
+/> */}
+
+<YAxis
+      domain={[-700000, 700000]}  
+      ticks={[-700000, -600000, -500000, -400000, -300000, -200000, -100000, 0, 100000, 200000, 300000, 400000, 500000, 600000, 700000]}
+      tickFormatter={(value) => `₹${Math.abs(value) / 100000} Lak`} 
+      axisLine={false}
+      tickLine={false}
+      fontSize={12}
+      tick={{ fill: "#EA580C" }}
+      fontWeight={500}
+      stroke="#EA580C"
+    />
+          {/* Tooltip */}
+          <Tooltip
+            contentStyle={{
+              backgroundColor: "#F9FAFB",
+              border: "1px solid #E5E7EB",
+              borderRadius: "4px",
+            }}
+            cursor={{ fill: "#F3F4F6" }}
+          />
+          
+          <Bar dataKey="sales" fill="#EA580C" radius={[4, 4, 0, 0]} barSize={5} />
+          <Bar dataKey="loss" fill="#797979" radius={[0, 0, 4, 4]} barSize={5} />
+        </BarChart>
+      </ResponsiveContainer>
+    </div>
+        </>
     );
 };
 
