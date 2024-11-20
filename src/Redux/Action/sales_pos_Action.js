@@ -79,6 +79,13 @@ export async function getsalesProduct() {
 
 
 
+export async function Addordercustomername(payload) {
+  return await AxiosConfig.post('/order/addOrder', payload, {
+     data: payload
+  })
+}
+
+
 export async function getHoldOrders() {
   return await AxiosConfig.post('/order/getHoldOrders', {
   })

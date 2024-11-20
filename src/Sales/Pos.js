@@ -441,7 +441,11 @@ const handleInputChange = (field, e, item) => {
 
   const handleOpen = () => {
     if (customerFilter && order_id) {
+      console.log("customerFilter",customerFilter);
+      
       setOpen(true);
+      dispatch({type: 'ADD-CUSTOMER-FOR-ORDER',payload: { orderId: String(order_id), customerId: String(customerFilter.customerId) }});
+
       dispatch({
         type: 'ORDER-INITIALIZE-PAYMENT',
         payload: { orderId: String(order_id) },

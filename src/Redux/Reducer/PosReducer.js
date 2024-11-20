@@ -22,7 +22,7 @@ const initialState = {
   getsalesproductStatuscode:0,
   holdOrderList:[],
   getHoldOrderStatuscode:0,
-
+  addcustomerforOrderstatuscode:0,
 }
 
 
@@ -93,6 +93,11 @@ const PosReducer = (state = initialState, action) => {
 
           case RESET_PAYMENT_STATUS_CODE:
             return { ...state, paymentordercompletedStatusCode: 0 }
+
+            case 'ADD_CUSTOMER_FOR_ORDER':
+              return { ...state,  addcustomerforOrderstatuscode: action.payload.statusCode }
+            case 'REMOVE_ADD_CUSTOMER_FOR_ORDER_STATUS_CODE':
+              return { ...state, addcustomerforOrderstatuscode: 0 }
 
 
             case 'GET_SALES_PRODUCT':
