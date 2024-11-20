@@ -49,10 +49,37 @@ function Sidebar() {
   const [selectedMenu, setSelectedMenu] = useState('Dashboard');
   const [isSubmenuOpen, setIsSubmenuOpen] = useState({});
   const [isHide, setIsHide] = useState(true)
+
   const state = useSelector(state => state);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isOpenProfile, setIsOpenProfile] = useState(false)
+
+  const [loading, setLoading] = useState(true);
+  const [userinfo, setUserInfo] = useState([])
+
+  
+
+  useEffect(()=>{
+      dispatch({type : 'GETUSERINFO'})
+   },[])
+   console.log("dashboardstate", state)
+
+   useEffect(() => {
+       if (state.Dashboard.getUserInfoStatusCode == 200) {
+           setLoading(false)
+           setUserInfo(state.Dashboard?.UserInfo)
+           setTimeout(() => {
+               dispatch({ type: 'REMOVE_GET_USER_INFO_STATUS_CODE' })
+           }, 2000)
+       }
+
+   }, [state.Dashboard.getUserInfoStatusCode])
+
+  console.log("userinfo",userinfo);
+  
+
+
 
   // const handleLogout = () => {
    
@@ -259,7 +286,7 @@ useEffect(() => {
   return (
     <div className="flex h-screen">
       {isHide ? <>
-      {/* Sidebar */}
+    
       <div
         className={`${isExpanded ? "w-64" : "w-20"} bg-black text-white flex flex-col transition-width duration-300 h-screen overflow-y-auto fixed `}
       >
@@ -293,7 +320,7 @@ useEffect(() => {
       <div className="flex justify-end items-center bg-zinc-300 h-14 sticky">
       <div className="flex items-center mr-5  h-14">
         <img src={Notifications} alt="Notification Icon" className="mr-2 md:mr-5" />
-        <p className="mr-4 font-semibold text-sm font-manrope">Jony Larrence</p>
+        <p className="mr-4 font-semibold text-sm font-manrope">{userinfo?.name}</p>
         <div className="flex items-center space-x-2 h-14 ">
           <div className="relative">
 
