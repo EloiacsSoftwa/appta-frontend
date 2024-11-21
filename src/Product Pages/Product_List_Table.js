@@ -50,16 +50,16 @@ const [productDetails, setProductDetails] = useState('')
 
 
     useEffect(() => {
-        if (state.AddProduct.getProductStatusCode == 200) {
+        if (state.Product.getProductStatusCode == 200) {
             setLoading(false)
-            setProduct(state.AddProduct.ProductList)
+            setProduct(state.Product.ProductList)
 
             setTimeout(() => {
                 dispatch({ type: 'REMOVE_GET_PRODUCT_STATUS_CODE' })
             }, 2000)
         }
 
-    }, [state.AddProduct.getProductStatusCode])
+    }, [state.Product.getProductStatusCode])
 
 
     const reports = [

@@ -73,7 +73,7 @@ const AddProductModal = ({ onClose }) => {
   const state = useSelector(state => state);
 
   useEffect(() => {
-    if (state.AddProduct.add_Product_status_code === 200) {
+    if (state.Product.add_Product_status_code === 200) {
       dispatch({ type: 'GETPRODUCT' })
       setActiveTab("Product Details");
       dispatch({ type: 'REMOVE_ADD_PRODUCT_VALIDATION' })
@@ -113,7 +113,7 @@ const AddProductModal = ({ onClose }) => {
         dispatch({ type: 'REMOVE_ADD_PRODUCT_STATUS_CODE' })
       }, 3000)
     }
-  }, [state.AddProduct.add_Product_status_code]);
+  }, [state.Product.add_Product_status_code]);
 
 
   useEffect(() => {
@@ -152,12 +152,12 @@ const AddProductModal = ({ onClose }) => {
 
 
   useEffect(() => {
-    if (state.AddProduct.IsAlreadyExist) {
+    if (state.Product.IsAlreadyExist) {
       setTimeout(() => {
         dispatch({ type: 'REMOVE_ADD_PRODUCT_VALIDATION' })
       }, 5000)
     }
-  }, [state.AddProduct.IsAlreadyExist])
+  }, [state.Product.IsAlreadyExist])
 
 
 
@@ -186,7 +186,7 @@ const AddProductModal = ({ onClose }) => {
         </div>
 
 
-        {state.AddProduct.IsAlreadyExist && <p className="text-red-500 text-sm font-Manrope mt-2">{state.AddProduct.IsAlreadyExist}</p>}
+        {state.Product.IsAlreadyExist && <p className="text-red-500 text-sm font-Manrope mt-2">{state.Product.IsAlreadyExist}</p>}
 
         {/* Form */}
         {activeTab === "Product Details" && <ProductDetailsForm handleNext={handleNext} formData={formData} setFormData={setFormData} errors={errors} />}
@@ -236,7 +236,7 @@ const ProductDetailsForm = ({ handleNext, formData, setFormData }) => {
 
   // productsize filter or input field value send
   const [filteredSizes, setFilteredSizes] = useState([]);
-  const productSizes = useSelector(state => state.AddProduct.productSize);
+  const productSizes = useSelector(state => state.Product.productSize);
 
 
   const handleInputChanges = (e) => {
@@ -439,7 +439,7 @@ const ProductDetailsForm = ({ handleNext, formData, setFormData }) => {
 
               }} className=" focus:border-zinc-400 focus:outline-none font-SourceSansPro text-base  placeholder-gray  mt-1 block w-full border border-gray-300 rounded-md h-9">
                 <option>Select Brand</option>
-                {state.AddProduct?.brands && state.AddProduct.brands.map((v, i) => (
+                {state.Product?.brands && state.Product.brands.map((v, i) => (
                   <option key={v.id} value={v.id}>{v.brandName}</option>
                 ))}
               </select>
@@ -458,7 +458,7 @@ const ProductDetailsForm = ({ handleNext, formData, setFormData }) => {
                 handleSelectCategory(e.target.value)
               }} className=" focus:border-zinc-400 focus:outline-none font-SourceSansPro text-base  placeholder-gray mt-1 block w-full border border-gray-300 rounded-md h-9">
                 <option>Select One</option>
-                {state.AddProduct?.category && state.AddProduct.category?.map((v, i) => (
+                {state.Product?.category && state.Product.category?.map((v, i) => (
                   <option key={v.id} value={v.id}>{v.categoryName}</option>
                 ))}
               </select>
@@ -475,7 +475,7 @@ const ProductDetailsForm = ({ handleNext, formData, setFormData }) => {
 
               }} className="focus:border-zinc-400 focus:outline-none font-SourceSansPro text-base  placeholder-gray mt-1 block w-full border border-gray-300 rounded-md h-9">
                 <option>Select One</option>
-                {state.AddProduct?.subcategory && state.AddProduct.subcategory.map((v, i) => (
+                {state.Product?.subcategory && state.Product.subcategory.map((v, i) => (
                   <option key={v.id} value={v.id}>{v.subCategoryName}</option>
                 ))}
               </select>
@@ -501,7 +501,7 @@ const ProductDetailsForm = ({ handleNext, formData, setFormData }) => {
 
               }} className="focus:border-zinc-400 focus:outline-none font-SourceSansPro text-base  placeholder-gray mt-1 block w-full border border-gray-300 rounded-md h-9">
                 <option>Select Unit</option>
-                {state.AddProduct?.units && state.AddProduct.units.map((v, i) => (
+                {state.Product?.units && state.Product.units.map((v, i) => (
                   <option key={v.id} value={v.id}>{v.unitSmall} - {v.unitName}</option>
                 ))}
               </select>
@@ -802,16 +802,16 @@ function BillOfMaterials({ handleBack, formData, setFormData }) {
 
 
   useEffect(() => {
-    if (state.AddProduct.getProductStatusCode == 200) {
+    if (state.Product.getProductStatusCode == 200) {
 
-      setProduct(state.AddProduct.ProductList)
+      setProduct(state.Product.ProductList)
 
       setTimeout(() => {
         dispatch({ type: 'REMOVE_GET_PRODUCT_STATUS_CODE' })
       }, 2000)
     }
 
-  }, [state.AddProduct.getProductStatusCode])
+  }, [state.Product.getProductStatusCode])
 
 
 

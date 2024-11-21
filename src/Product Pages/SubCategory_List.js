@@ -47,18 +47,18 @@ function SubCategory_List() {
 
 
     useEffect(() => {
-        if (state.AddProduct.getSubCategoryStatusCode == 200) {
+        if (state.Product.getSubCategoryStatusCode == 200) {
             setLoading(false)
-            setSubCategoryList(state.AddProduct.subcategory)
+            setSubCategoryList(state.Product.subcategory)
             setTimeout(() => {
                 dispatch({ type: 'REMOVE_GET_SUBCATEGORY_STATUS_CODE' })
             }, 2000)
         }
 
-    }, [state.AddProduct.getSubCategoryStatusCode])
+    }, [state.Product.getSubCategoryStatusCode])
 
     useEffect(() => {
-        if (state.SubCategory.addSubCategoryStatusCode == 200) {
+        if (state.Product.addSubCategoryStatusCode == 200) {
             dispatch({ type: 'GETSUBCATEGORY' });
             setShowAddCategory(false)
 
@@ -69,7 +69,7 @@ function SubCategory_List() {
 
         }
 
-    }, [state.SubCategory.addSubCategoryStatusCode])
+    }, [state.Product.addSubCategoryStatusCode])
 
 
 

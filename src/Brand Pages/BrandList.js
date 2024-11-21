@@ -40,20 +40,20 @@ function Brand_List() {
 
 
     useEffect(() => {
-        if (state.AddProduct.getBrandStatusCode == 200) {
+        if (state.Product.getBrandStatusCode == 200) {
             setLoading(false)
-            setBrandList(state.AddProduct?.brands)
+            setBrandList(state.Product?.brands)
 
             setTimeout(() => {
                 dispatch({ type: 'REMOVE_GET_BRAND_STATUSCODE' })
             }, 3000)
         }
 
-    }, [state.AddProduct.getBrandStatusCode])
+    }, [state.Product.getBrandStatusCode])
 
 
     useEffect(() => {
-        if (state.AddProduct.AddBrandSuccessStatusCode == 200) {
+        if (state.Product.AddBrandSuccessStatusCode == 200) {
             dispatch({ type: GET_BRANDS_API_CALL })
             setShowAddCategory(false)
             setTimeout(() => {
@@ -62,7 +62,7 @@ function Brand_List() {
 
         }
 
-    }, [state.AddProduct.AddBrandSuccessStatusCode])
+    }, [state.Product.AddBrandSuccessStatusCode])
 
 
 

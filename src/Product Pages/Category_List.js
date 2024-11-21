@@ -30,28 +30,28 @@ function Category_List() {
 
 
 useEffect(()=>{
-if(State.AddProduct?.getCategoryStatusCode == 200){
+if(State.Product?.getCategoryStatusCode == 200){
     setLoading(false)
-    setCatgory(State.AddProduct?.category)
+    setCatgory(State.Product?.category)
     setTimeout(()=>{
         dispatch({ type: 'REMOVE_GET_CATEGORY_STATUS_CODE'})
     },2000)
 }
 
 
-},[State.AddProduct?.getCategoryStatusCode])
+},[State.Product?.getCategoryStatusCode])
 
 
 
 
      useEffect(() => {
-        if (State.categoryReducer.CategoryStatuscode ) {
+        if (State.Product?.AddCategoryStatuscode == 200 ) {
           dispatch({ type: 'GETCATEGORY' })
           setTimeout(() => {
             dispatch({ type: 'REMOVE_ADD_CATEGORY_STATUS_CODE' })     
           }, 100);
         }
-      }, [State.categoryReducer.CategoryStatuscode])
+      }, [State.Product?.AddCategoryStatuscode])
 
     const [currentPage, setCurrentPage] = useState(1);
    const [showAddCategory, setShowAddCategory] = useState(false)

@@ -16,8 +16,8 @@ const initialState = {
       //  case 'GET-CATEGORY':
       //   return {...state, Category :action.payload.response ,  GetCategoryStatusCode: action.payload.statusCode};
                      
-      case 'REMOVE_GET_CATEGORY_STATUS_CODE':
-       return{...state, GetCategoryStatusCode:0 }
+      // case 'REMOVE_GET_CATEGORY_STATUS_CODE':
+      //  return{...state, GetCategoryStatusCode:0 }
  
       default: 
       return state;

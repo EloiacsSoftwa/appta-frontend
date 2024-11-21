@@ -117,7 +117,7 @@ const [formValues, setFormValues] = useState({
             );
 }
 const mapStateToProps = (state) => ({
-    ProductByName: state.AddProduct.ProductByName,
+    ProductByName: state.Product.ProductByName,
   });
 
 export default connect(mapStateToProps)(ProductDetails)

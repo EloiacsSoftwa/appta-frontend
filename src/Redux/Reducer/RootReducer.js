@@ -14,9 +14,9 @@ import DashboardReducer from "../Reducer/DashboardReducer";
 const RootReducer = combineReducers({
     LoginReducer : LoginReducer,
     PosReducer   : PosReducer,
-    categoryReducer: categoryReducer,
-    AddProduct : AddProductReducer,
-    SubCategory : SubCategoryReducer,
+    // categoryReducer: categoryReducer,
+    Product : AddProductReducer,
+    // SubCategory : SubCategoryReducer,
     Customer : CustomerReducer,
     Purchase : PurchaseReducer,
     Supplier : SupplierReducer,
