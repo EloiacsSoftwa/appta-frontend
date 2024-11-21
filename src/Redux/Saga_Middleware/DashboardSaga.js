@@ -6,7 +6,7 @@ function* handleGetUserInfo() {
 const response = yield call(GetUserInfo);
     console.log("response",response)
     if (response.status === 200 || response.code === 200) {
-      yield put({type: 'GET_USER', payload: {response:response.data.data,statusCode: response.status || response.code }});
+      yield put({type: 'GET_USER_INFO', payload: {response:response.data.data,statusCode: response.status || response.code }});
                 }
        else {
 }

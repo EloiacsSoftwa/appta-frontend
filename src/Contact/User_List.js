@@ -98,7 +98,7 @@ function Userlist() {
 
     }, [state.UserList.getUserStatusCode])
 
-    console.log("user", user);
+    console.log("User_List", user);
 
     //    Add User
 
@@ -122,8 +122,6 @@ function Userlist() {
 
 
 
-console.log("currentItems",currentItems)
-console.log("user",user)
 
     const handlePrevClick = () => {
         if (currentPage > 1) {

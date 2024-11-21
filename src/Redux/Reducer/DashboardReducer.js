@@ -7,7 +7,7 @@ const initialState = {
   const DashboardReducer = (state = initialState, action) => {
     switch (action.type) {
   
-      case 'GET_USER':
+      case 'GET_USER_INFO':
         return { ...state, UserInfo: action.payload.response, getUserInfoStatusCode: action.payload.statusCode };
   
       case 'REMOVE_GET_USER_INFO_STATUS_CODE':
