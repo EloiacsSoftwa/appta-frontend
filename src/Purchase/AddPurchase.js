@@ -152,7 +152,7 @@ function AddPurchase({ handleClose }) {
     updatedProducts[index][field] = value;
 
     const { Quantity, PurchasePrice, SalesPercentage, WholeSalePercentage, MRP, SalesPrice, WholeSalePrice, Product, noOFItemPerUnit, FinalQuantity } = updatedProducts[index];
-    updatedProducts[index].Total = FinalQuantity * PurchasePrice;
+    updatedProducts[index].Total = Math.ceil(FinalQuantity * PurchasePrice);
 
 
   
@@ -164,6 +164,8 @@ function AddPurchase({ handleClose }) {
     const numericWholeSalePrice = parseFloat(WholeSalePrice) || 0;
 
     const newErrors = { ...errors };
+
+    console.log("purchase price", numericPurchasePrice)
 
     if (!Product) {
       newErrors[`Product-${index}`] = 'Product name is required';
@@ -228,7 +230,7 @@ function AddPurchase({ handleClose }) {
     
     if (field === 'SalesPercentage' && SalesPercentage && PurchasePrice) {
 
-      const calculateSalesPrice = updatedProducts[index].SalesPrice = Math.round(PurchasePrice * (1 + SalesPercentage / 100));
+      const calculateSalesPrice = updatedProducts[index].SalesPrice = Math.ceil(PurchasePrice * (1 + SalesPercentage / 100));
       updatedProducts[index].SalesPrice = calculateSalesPrice;
 
       if (calculateSalesPrice > numericMRP) {
@@ -238,11 +240,11 @@ function AddPurchase({ handleClose }) {
       }
 
     } else if (field === 'SalesPrice' && !SalesPercentage && numericPurchasePrice > 0) {
-      updatedProducts[index].SalesPercentage = Math.round(((numericSalesPrice / numericPurchasePrice) - 1) * 100);
+      updatedProducts[index].SalesPercentage = Math.ceil(((numericSalesPrice / numericPurchasePrice) - 1) * 100);
 
 
     } else if (field === 'SalesPrice' && SalesPercentage && numericPurchasePrice > 0) {
-      const calculatedSalesPercentage = Math.round(((numericSalesPrice / numericPurchasePrice) - 1) * 100);
+      const calculatedSalesPercentage = Math.ceil(((numericSalesPrice / numericPurchasePrice) - 1) * 100);
       updatedProducts[index].SalesPercentage = calculatedSalesPercentage;
 
       if (calculatedSalesPercentage < 0) {
@@ -251,7 +253,7 @@ function AddPurchase({ handleClose }) {
     }
 
     if (field === 'WholeSalePercentage' && WholeSalePercentage && PurchasePrice) {
-      const CalculateWholeSalePrice = Math.round(PurchasePrice * (1 + WholeSalePercentage / 100));
+      const CalculateWholeSalePrice = Math.ceil(PurchasePrice * (1 + WholeSalePercentage / 100));
       updatedProducts[index].WholeSalePrice = CalculateWholeSalePrice
 
       if (CalculateWholeSalePrice > numericMRP) {
@@ -260,10 +262,10 @@ function AddPurchase({ handleClose }) {
         newErrors[`WholeSalePrice-${index}`] = '';
       }
     } else if (field === 'WholeSalePrice' && !WholeSalePercentage && numericPurchasePrice > 0) {
-      updatedProducts[index].WholeSalePercentage = Math.round(((numericWholeSalePrice / numericPurchasePrice) - 1) * 100);
+      updatedProducts[index].WholeSalePercentage = Math.ceil(((numericWholeSalePrice / numericPurchasePrice) - 1) * 100);
 
     } else if (field === 'WholeSalePrice' && WholeSalePercentage && numericPurchasePrice > 0) {
-      const calculatedWholeSalesPercentage = Math.round(((numericWholeSalePrice / numericPurchasePrice) - 1) * 100);
+      const calculatedWholeSalesPercentage = Math.ceil(((numericWholeSalePrice / numericPurchasePrice) - 1) * 100);
       updatedProducts[index].WholeSalePercentage = calculatedWholeSalesPercentage;
 
       if (calculatedWholeSalesPercentage < 0) {
@@ -335,7 +337,7 @@ function AddPurchase({ handleClose }) {
       }
 
       if (product.SalesPercentage && product.PurchasePrice) {
-        const calculatedSalesPrice = Math.round(product.PurchasePrice * (1 + product.SalesPercentage / 100));
+        const calculatedSalesPrice = Math.ceil(product.PurchasePrice * (1 + product.SalesPercentage / 100));
         if (calculatedSalesPrice > product.MRP) {
           newErrors[`SalesPrice-${index}`] = 'Sales price exceeds MRP';
           valid = false;
@@ -345,7 +347,7 @@ function AddPurchase({ handleClose }) {
         valid = false;
       }
       if (product.WholeSalePercentage && product.PurchasePrice) {
-        const calculatedWholeSalePrice = Math.round(product.PurchasePrice * (1 + product.WholeSalePercentage / 100));
+        const calculatedWholeSalePrice = Math.ceil(product.PurchasePrice * (1 + product.WholeSalePercentage / 100));
         if (calculatedWholeSalePrice > product.MRP) {
           newErrors[`WholeSalePrice-${index}`] = 'Wholesale price exceeds MRP';
           valid = false;
@@ -487,7 +489,7 @@ console.log("Item name",item)
   };
 
 
-console.log("ProductID",productId)
+// console.log("ProductID",productId)
 
 useEffect(() => {
   if (state.Product.getProductStatusCode == 200) {
