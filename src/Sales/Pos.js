@@ -127,25 +127,25 @@ const Pos = ({ handleClosed }) => {
 
 
 
-  // useEffect(() => {
-  //   const handleBeforeUnload = () => {
-  //     const navType = performance.navigation.type;
-  //     if (navType === 1) {
-  //       console.log("Page Reload detected");
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      const navType = performance.navigation.type;
+      if (navType === 1) {
+        console.log("Page Reload detected");
                                
-  //               dispatch({ type: 'LOG-OUT' })
-  //           const encryptData = CryptoJS.AES.encrypt(JSON.stringify(false), 'abcd');
-  //           localStorage.setItem("appTaLogin", encryptData.toString());
-  //                   }
-  //   };
+                dispatch({ type: 'LOG-OUT' })
+            const encryptData = CryptoJS.AES.encrypt(JSON.stringify(false), 'abcd');
+            localStorage.setItem("appTaLogin", encryptData.toString());
+                    }
+    };
   
     
-  //   window.addEventListener("beforeunload", handleBeforeUnload);
+    window.addEventListener("beforeunload", handleBeforeUnload);
     
-  //   return () => {
-  //     window.removeEventListener("beforeunload", handleBeforeUnload);
-  //   };
-  // }, []);
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, []);
 
 
   console.log("order_id", order_id)
