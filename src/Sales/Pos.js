@@ -127,25 +127,25 @@ const Pos = ({ handleClosed }) => {
 
 
 
-  useEffect(() => {
-    const handleBeforeUnload = () => {
-      const navType = performance.navigation.type;
-      if (navType === 1) {
-        console.log("Page Reload detected");
+  // useEffect(() => {
+  //   const handleBeforeUnload = () => {
+  //     const navType = performance.navigation.type;
+  //     if (navType === 1) {
+  //       console.log("Page Reload detected");
                                
-                dispatch({ type: 'LOG-OUT' })
-            const encryptData = CryptoJS.AES.encrypt(JSON.stringify(false), 'abcd');
-            localStorage.setItem("appTaLogin", encryptData.toString());
-                    }
-    };
+  //               dispatch({ type: 'LOG-OUT' })
+  //           const encryptData = CryptoJS.AES.encrypt(JSON.stringify(false), 'abcd');
+  //           localStorage.setItem("appTaLogin", encryptData.toString());
+  //                   }
+  //   };
   
     
-    window.addEventListener("beforeunload", handleBeforeUnload);
+  //   window.addEventListener("beforeunload", handleBeforeUnload);
     
-    return () => {
-      window.removeEventListener("beforeunload", handleBeforeUnload);
-    };
-  }, []);
+  //   return () => {
+  //     window.removeEventListener("beforeunload", handleBeforeUnload);
+  //   };
+  // }, []);
 
 
   console.log("order_id", order_id)
@@ -168,6 +168,9 @@ const Pos = ({ handleClosed }) => {
   const [unitPrice, setUnitPrice] = useState(0);
 
   const handleFieldClick = (index, fieldValues) => {
+
+    console.log("fieldValues",fieldValues);
+    
     setEditingIndex(index);
     setQuantity(fieldValues.quantity ?? 0);
     setDiscount(fieldValues.discount ?? 0);
@@ -205,7 +208,7 @@ const handleFieldChange = (productId) => {
 };
 
 
-const handleInputChange = (field, e, item) => {
+const handleInputChanges = (field, e, item) => {
   let value = e.target.value.replace(/^0+/, ''); 
   const parsedValue = parseFloat(value);
 
@@ -306,12 +309,15 @@ const handleInputChange = (field, e, item) => {
 
 
   // Search filter logic
-  const [searchQuery, setSearchQuery] = useState('');
+  // const [searchQuery, setSearchQuery] = useState('');
   const [selectedProductId, setSelectedProductId] = useState('');
 
-  const [products, setProducts] = useState([])
+  // const [products, setProducts] = useState([])
 
+  const [products, setProducts] = useState([{ productName: '', quantity: 1, discount: 0, unitPrice: 0 }]);
 
+ console.log("productsforder",products);
+ 
   const handleproductName = (item) => {
     setSearchQuery('');
 
@@ -324,6 +330,7 @@ const handleInputChange = (field, e, item) => {
     }
 
     dispatch({ type: ADD_ORDER_ITEMS_API_CALL, payload: payload })
+  
 
   }
 
@@ -335,6 +342,8 @@ const handleInputChange = (field, e, item) => {
   }, [State.PosReducer.orderItems])
 
   const orderItems = useSelector((state) => state.PosReducer.orderItems);
+  console.log("orderItems",orderItems);
+  
 
   useEffect(() => {
     if (orderItems && orderItems.length > 0) {
@@ -659,6 +668,92 @@ const handleInputChange = (field, e, item) => {
   }, [State.PosReducer.barcodeStatuscode])
 
 
+
+
+
+
+
+
+  const [searchQuery, setSearchQuery] = useState('');
+
+  useEffect(() => {
+    if (orderItems && orderItems.length > 0) {
+      setProducts(orderItems);
+    }
+  }, [orderItems]);
+
+ 
+  const handleInputChange = (index, field, value) => {
+    const updatedProducts = [...products];
+    updatedProducts[index][field] = value;
+    setProducts(updatedProducts);
+  
+  };
+
+ 
+  const handleAddRow = () => {
+    setProducts((prevProducts) => [
+      ...prevProducts,
+      { productName: '', quantity: 1, discount: 0, unitPrice: 0 },
+    ]);
+  };
+  
+  const handleKeyDowns = (event) => {
+    if (event.key === "Enter") {
+      handleAddRow();
+    }
+  };
+  
+
+  const [selectedProductName, setSelectedProductName] = useState("");
+  // const [searchQuery, setSearchQuery] = useState("");
+  
+  // const [selectedProductName, setSelectedProductName] = useState("");
+  // const [selectedProductId, setSelectedProductId] = useState(null);
+  // const [searchQuery, setSearchQuery] = useState("");
+  
+  const handleProductName = (productId) => {
+    console.log("productId", productId);
+  
+    const payload = {
+      orderId: order_id,
+      productId: productId,
+      discount: 0,
+      quantity: 1,
+      manuallyEntered: false,
+    };
+  
+    // Dispatch action
+    dispatch({ type: ADD_ORDER_ITEMS_API_CALL, payload: payload });
+  
+    // Set the selected product ID for further processing
+    setSelectedProductId(productId);
+  
+    // Clear search query and add a new row
+    setSearchQuery("");
+    handleAddRow();
+  };
+  
+  
+  useEffect(() => {
+    if (selectedProductId) {
+      console.log("selectedProductId",selectedProductId);
+      console.log("orderItemsssss",orderItems);
+      
+      const selectedProduct = orderItems.filter((item) =>{ return item.productId === selectedProductId});
+      console.log("selectedProduct", selectedProduct);
+      if (selectedProduct.length > 0) {
+       console.log("selectedProduct.productName",selectedProduct[0].productName);
+       
+        setSelectedProductName(selectedProduct[0].productName);
+        setSelectedProductId(null); // Reset the product ID after finding it
+      }
+    }
+  }, [ selectedProductId]);
+  
+  
+  
+
   return (<>
     <div className='w-screen h-screen ' >
       <div className='h-4/5 bg-white p-4 w-full'>
@@ -669,7 +764,7 @@ const handleInputChange = (field, e, item) => {
             <div className="flex items-center justify-between p-2 border-b bg-lightgray">
               <div className="flex items-center ">
 
-                <div className="relative">
+                {/* <div className="relative">
                   <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none">
                     <img src={Search} alt="Search Icon" />
                   </span>
@@ -683,19 +778,18 @@ const handleInputChange = (field, e, item) => {
                     role="search"
                   />
 
-                  {/* Search result dropdown */}
+               
                   {searchQuery && filteredData.length > 0 && (
                     <div className="absolute w-full bg-white border border-gray-300 rounded mt-1 max-h-60 overflow-y-auto z-10">
                       {filteredData.map((item) => (
                         <div
-                          key={item.productId}  // Use productId for key instead of index
+                          key={item.productId}  
                           className="p-2 hover:bg-gray-100 cursor-pointer"
                           onClick={() => {
                             handleproductName(item.productId)
 
                           }}
 
-                        //   onChange={(e)=>handleproductName(e)}
                         >
                           <div className="text-sm font-medium text-gray-900 flex flex-col">
                             <label>{item.productName} {item.subCategory}</label>
@@ -706,19 +800,20 @@ const handleInputChange = (field, e, item) => {
                     </div>
                   )}
 
-                  {/* No results message */}
                   {searchQuery && filteredData && filteredData.length === 0 && (
                     <div className="absolute w-full bg-white border border-gray-300 rounded mt-1 p-2 text-sm text-gray-500">
                       No products match your search
                     </div>
                   )}
-                </div>
+                </div> */}
 
                 <div className='bg-zinc-300 ms-2 items-center rounded'>
                   <img src={Barcode} className='p-1' alt='barcode' />
                 </div>
               </div>
               <div className='flex items-center gap-2 '>
+
+                <button onClick={handleAddRow}>Add</button>
 
                 <div>
                   <img src={Delete} className='w-6 h-6 cursor-pointer' onClick={openDeleteConfirmation} />
@@ -761,12 +856,12 @@ const handleInputChange = (field, e, item) => {
                       </div>
                     </th>
 
-                    <th className="p-1 font-semibold text-base text-neutral-900">
+                    {/* <th className="p-1 font-semibold text-base text-neutral-900">
                       <div className="flex items-center justify-start gap-2">
 
                         <div className='font-semibold text-sm text-neutral-900 font-Manrope'>ICode</div>
                       </div>
-                    </th>
+                    </th> */}
                     <th className="p-1 font-semibold text-base text-neutral-900">
                       <div className="flex items-center justify-start gap-2">
 
@@ -815,7 +910,155 @@ const handleInputChange = (field, e, item) => {
 
                   </tr>
                 </thead>
+  
+
+
                 <tbody>
+  {products.map((item, index) => (
+    <tr key={index} className="hover:bg-gray-50 border">
+         <td className="p-2 mt-1 flex items-center justify-start">
+                          <input type="checkbox" className="form-checkbox h-3 w-3 text-blue-600 border-neutral-500 cursor-pointer"
+                            checked={selectedProducts.includes(item.productId)}
+                            onChange={(e) => handleProductSelect(item.productId, e.target.checked)} />
+                        </td>
+      <td className="p-2">{index + 1}</td>
+      <td className="p-2 relative">
+      <div className="relative">
+      <input
+  type="text"
+  placeholder="Search for products"
+  className="rounded pl-10 py-1 bg-zinc-300"
+  value={item.productName || searchQuery}
+  onChange={handleSearchChange}
+  aria-label="Search for products"
+  role="search"
+/>
+
+  {searchQuery && filteredData.length > 0 && (
+    <div className="absolute w-full bg-white border border-gray-300 rounded mt-1 max-h-60 overflow-y-auto z-10">
+     {filteredData.map((item) => (
+  <div
+    key={item.productId}
+    onClick={() => handleProductName(item.productId)}
+    className="p-2 hover:bg-gray-100 cursor-pointer"
+  >
+    <div className="text-sm font-medium text-gray-900 flex flex-col">
+      <label>
+        {item.productName} {item.subCategory}
+      </label>
+      <label>
+        {item.size} {item.unit}
+      </label>
+    </div>
+  </div>
+))}
+
+    </div>
+  )}
+</div>
+      </td>
+
+
+      <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">
+                          {editingIndex === index ? (
+                            <input
+                              type="number"
+                              value={quantity}
+                              onChange={(e) => handleInputChanges('quantity', e)}
+                              onBlur={() => handleFieldChange(item.productId, 'quantity', quantity)}
+                              onKeyDown={(e) => handleKeyDown(item.productId, e)}
+                              className="border border-neutral-300 rounded px-1 py-0.5 w-16"
+                            />
+                          ) : (
+                            <span onClick={() => handleFieldClick(index, item)} className="cursor-pointer">
+                              {item.quantity || '-'}
+                            </span>
+                          )}
+                        </td>
+
+                        {/* <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">₹{item.unitPrice || '0'}</td> */}
+
+                         <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">
+    {editingIndex === index ? (
+        <input
+            type="number"
+            value={unitPrice}
+            onChange={(e) => handleInputChanges('unitPrice', e)}
+            onBlur={() => handleFieldChange(item.productId, 'unitPrice', unitPrice)}
+            onKeyDown={(e) => handleKeyDown(item.productId, e)}
+            className="border border-neutral-300 rounded px-1 py-0.5 w-16"
+        />
+    ) : (
+        <span
+            onClick={() => handleFieldClick(index, item)}
+            className="cursor-pointer"
+        >
+            ₹{item.unitPrice || '0'}
+        </span>
+    )}
+</td>
+
+                        <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">
+                         ₹{item.quantity && item.unitPrice? Math.round(item.quantity * item.unitPrice): '-'}</td>
+
+                        <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">
+                          {editingIndex === index ? (
+                            <input
+                              type="number"
+                              value={discount}
+                              onChange={(e) => handleInputChanges('discount', e, item)}
+                              onBlur={() => handleFieldChange(item.productId)}
+                              onKeyDown={(e) => handleKeyDown(item.productId, e)}
+                              className="border border-neutral-300 rounded px-1 py-0.5 w-16"
+                              placeholder="%"
+                            />
+                          ) : (
+                            <span onClick={() => handleFieldClick(index, item)} className="cursor-pointer">
+                              {item.discount || '0'}
+                            </span>
+                          )}
+                          {error && <div className="text-red-500 text-xs">{error}</div>}
+                        </td>
+
+
+                        <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">
+  {editingIndex === index ? (
+    <input
+      type="number"
+      value={discountAmount}
+      onChange={(e) => handleInputChanges('discountAmount', e, item)}
+      onBlur={() => handleFieldChange(item.productId)}
+      onKeyDown={(e) => handleKeyDown(item.productId, e)}
+      className="border border-neutral-300 rounded px-1 py-0.5 w-16"
+    />
+  ) : (
+    <span onClick={() => handleFieldClick(index, item)} className="cursor-pointer">
+    ₹{item.discountAmount ? Math.round(item.discountAmount) : '0'}
+  </span>
+  
+  )}
+</td>
+
+
+
+
+                        <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">
+                          ₹ {item.totalAmount ? item.totalAmount.toFixed(2) : '0'}
+                        </td>
+
+
+     
+    
+    </tr>
+  ))}
+</tbody>
+
+
+
+
+
+
+                {/* <tbody>
                   {State.PosReducer.orderItems && State.PosReducer.orderItems.length > 0 ? (
                     State.PosReducer.orderItems.map((item, index) => (
                       <tr key={index} className="hover:bg-gray-50 border-0">
@@ -848,7 +1091,7 @@ const handleInputChange = (field, e, item) => {
 
                         {/* <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">₹{item.unitPrice || '0'}</td> */}
 
-                        <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">
+                        {/* <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">
     {editingIndex === index ? (
         <input
             type="number"
@@ -927,7 +1170,7 @@ const handleInputChange = (field, e, item) => {
                       </td>
                     </tr>
                   )}
-                </tbody>
+                </tbody>  */}
 
 
 
