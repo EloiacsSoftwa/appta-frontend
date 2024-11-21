@@ -21,7 +21,15 @@ const initialState = {
   getProductByNameStatusCode: 0,
   productSize: [],
   activeProducts: [],
-  IsAlreadyExist: ''
+  IsAlreadyExist: '',
+  // //////////////Category /////////////
+  Category: [],
+  AddCategoryStatuscode: 0,
+  GetCategoryStatusCode:0,
+
+  /////// Sub category ////////
+  addSubCategoryStatusCode: 0,
+  
 };
 
 const AddProductReducer = (state = initialState, action) => {
@@ -93,6 +101,23 @@ const AddProductReducer = (state = initialState, action) => {
 
     case GET_ALL_ACTIVE_PRODUCTS_API_RESPONSE: 
       return {...state, activeProducts: action.payload}
+
+// Category 
+
+      case 'ADD-CATEGORY':
+        return {...state,  AddCategoryStatuscode: action.payload.statusCode};
+                     
+      case 'REMOVE_ADD_CATEGORY_STATUS_CODE':
+       return{...state, AddCategoryStatuscode:0 }
+////// sub category 
+
+case 'ADD_SUB_CATEGORY':
+  return {...state,   addSubCategoryStatusCode: action.payload.statusCode};
+               
+case 'REMOVE_ADD_SUB_CATEGORY_STATUS_CODE':
+ return{...state, addSubCategoryStatusCode:0 }
+
+ 
 
     default:
       return state;

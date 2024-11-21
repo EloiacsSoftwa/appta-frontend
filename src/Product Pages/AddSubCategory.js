@@ -106,7 +106,7 @@ function AddSubCategory({ handleClose }) {
                                 className="appearance-none font-normal text-sm  mt-1 block w-full border text-black font-Manrope rounded-md shadow-sm p-3 focus:outline-none focus:ring-2 focus:ring-orange-500"
                             >
                                 <option value="" disabled>Select a parent category</option>
-                                {state.AddProduct?.category?.map((category) => (
+                                {state.Product?.category?.map((category) => (
                                     <option key={category.id} value={category.id}>
                                         {category.categoryName}
                                     </option>

@@ -406,7 +406,7 @@ const SupplierForm = ({handleClose}) => {
 };
 
 const mapStateToProps = (state) => ({
-  SupplierList: state.AddProduct.SupplierList,
+  SupplierList: state.Product.SupplierList,
 });
 
 export default connect(mapStateToProps)(SupplierForm)

@@ -361,7 +361,7 @@ const handleInputChange = (field, e, item) => {
     setSearchQuery(e.target.value.toLowerCase());
 
     if (e.target.value) {
-      setFilteredData(State.AddProduct?.activeProducts && State.AddProduct?.activeProducts?.filter((item) =>
+      setFilteredData(State.Product?.activeProducts && State.Product?.activeProducts?.filter((item) =>
         item?.productName?.toLowerCase().includes(searchQuery) ||
         item?.barcodeNo?.toLowerCase().includes(searchQuery)
       ) || [])
@@ -378,13 +378,13 @@ const handleInputChange = (field, e, item) => {
 
 
   useEffect(() => {
-    if (State.AddProduct.getFreebieName && Array.isArray(State.AddProduct.getFreebieName) && State.AddProduct.getFreebieName.length > 0) {
+    if (State.Product.getFreebieName && Array.isArray(State.Product.getFreebieName) && State.Product.getFreebieName.length > 0) {
 
-      State.AddProduct.getFreebieName.forEach((productData) => {
+      State.Product.getFreebieName.forEach((productData) => {
         handleProductUpdate(productData);
       });
     }
-  }, [State.AddProduct.getFreebieName]);
+  }, [State.Product.getFreebieName]);
 
 
 
