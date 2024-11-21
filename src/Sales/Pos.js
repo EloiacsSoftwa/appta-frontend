@@ -726,8 +726,8 @@ const handleInputChanges = (field, e, item) => {
   
   const handleProductName = (productId , index) => {
     console.log("productId", productId);
-  
-  
+    
+    
     const payload = {
       orderId: order_id,
       productId: productId,
@@ -736,14 +736,12 @@ const handleInputChanges = (field, e, item) => {
       manuallyEntered: false,
     };
   
-    // Dispatch action
+   
     dispatch({ type: ADD_ORDER_ITEMS_API_CALL, payload: payload });
   
-    // Set the selected product ID for further processing
     setSelectedProductId(productId);
-  
-    // Clear search query and add a new row
     setSearchQuery("");
+    handleAddRow();
     const searchInputElement = document.getElementById("searchInput");
     if (searchInputElement) {
       searchInputElement.focus();
@@ -763,7 +761,7 @@ const handleInputChanges = (field, e, item) => {
        console.log("selectedProduct.productName",selectedProduct[0].productName);
        
         setSelectedProductName(selectedProduct[0].productName);
-        setSelectedProductId(null); // Reset the product ID after finding it
+        setSelectedProductId(null); 
       }
     }
   }, [ selectedProductId]);
