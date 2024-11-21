@@ -253,6 +253,8 @@ const handleInputChanges = (field, e, item) => {
 
   const handleKeyDown = (productId, e) => {
     if (e.key === 'Enter') {
+
+      
       if (error) {
         e.preventDefault();
         alert(error);
@@ -302,6 +304,10 @@ const handleInputChanges = (field, e, item) => {
     if (State.PosReducer.paymentordercompletedStatusCode == 200) {
       window.open(State.PosReducer.invoiceUrl, "_blank");
       dispatch({ type: RESET_PAYMENT_STATUS_CODE })
+
+      setProducts([{ productName: '', quantity: 1, discount: 0, unitPrice: 0 }])
+
+
     }
   }, [State.PosReducer.paymentordercompletedStatusCode])
 
@@ -374,6 +380,7 @@ const handleInputChanges = (field, e, item) => {
         item?.productName?.toLowerCase().includes(searchQuery) ||
         item?.barcodeNo?.toLowerCase().includes(searchQuery)
       ) || [])
+      // setFilteredData(State.AddProduct?.activeProducts)
     }
 
   };
@@ -476,11 +483,11 @@ const handleInputChanges = (field, e, item) => {
       console.log("customerFilter",customerFilter);
       
       setOpen(true);
-      dispatch({type: 'ADD-CUSTOMER-FOR-ORDER',payload: { orderId: String(order_id), customerId: String(customerFilter.customerId) }});
+      // dispatch({type: 'ADD-CUSTOMER-FOR-ORDER',payload: { orderId: String(order_id), customerId: String(customerFilter.customerId) }});
 
       dispatch({
         type: 'ORDER-INITIALIZE-PAYMENT',
-        payload: { orderId: String(order_id) },
+        payload: { orderId: String(order_id),customerId: String(customerFilter.customerId) },
       });
     }
     else {
@@ -692,6 +699,11 @@ const handleInputChanges = (field, e, item) => {
 
  
   const handleAddRow = () => {
+
+
+
+
+
     setProducts((prevProducts) => [
       ...prevProducts,
       { productName: '', quantity: 1, discount: 0, unitPrice: 0 },
@@ -712,8 +724,9 @@ const handleInputChanges = (field, e, item) => {
   // const [selectedProductId, setSelectedProductId] = useState(null);
   // const [searchQuery, setSearchQuery] = useState("");
   
-  const handleProductName = (productId) => {
+  const handleProductName = (productId , index) => {
     console.log("productId", productId);
+  
   
     const payload = {
       orderId: order_id,
@@ -731,8 +744,12 @@ const handleInputChanges = (field, e, item) => {
   
     // Clear search query and add a new row
     setSearchQuery("");
-    handleAddRow();
-  };
+    const searchInputElement = document.getElementById("searchInput");
+    if (searchInputElement) {
+      searchInputElement.focus();
+    }
+   
+  };    
   
   
   useEffect(() => {
@@ -813,7 +830,7 @@ const handleInputChanges = (field, e, item) => {
               </div>
               <div className='flex items-center gap-2 '>
 
-                <button onClick={handleAddRow}>Add</button>
+                {/* <button onClick={handleAddRow}>Add</button> */}
 
                 <div>
                   <img src={Delete} className='w-6 h-6 cursor-pointer' onClick={openDeleteConfirmation} />
@@ -916,30 +933,33 @@ const handleInputChanges = (field, e, item) => {
                 <tbody>
   {products.map((item, index) => (
     <tr key={index} className="hover:bg-gray-50 border">
-         <td className="p-2 mt-1 flex items-center justify-start">
-                          <input type="checkbox" className="form-checkbox h-3 w-3 text-blue-600 border-neutral-500 cursor-pointer"
-                            checked={selectedProducts.includes(item.productId)}
-                            onChange={(e) => handleProductSelect(item.productId, e.target.checked)} />
-                        </td>
+      <td className="p-2 mt-1 flex items-center justify-start">
+        <input type="checkbox" className="form-checkbox h-3 w-3 text-blue-600 border-neutral-500 cursor-pointer"
+          checked={selectedProducts.includes(item.productId)}
+
+          onChange={(e) => handleProductSelect(item.productId, e.target.checked)} />
+      </td>
       <td className="p-2">{index + 1}</td>
       <td className="p-2 relative">
-      <div className="relative">
-      <input
-  type="text"
-  placeholder="Search for products"
-  className="rounded pl-10 py-1 bg-zinc-300"
-  value={item.productName || searchQuery}
-  onChange={handleSearchChange}
-  aria-label="Search for products"
-  role="search"
-/>
+        <div className="relative">
+          <input
+            type="text"
+            placeholder="Search for products"
+            className="rounded pl-4 py-1 bg-zinc-300"
+            value={item.productName || searchQuery}
+            onChange={handleSearchChange}
+            onKeyDown={handleKeyDowns}
+            aria-label="Search for products"
+            role="search"
+          />
 
   {searchQuery && filteredData.length > 0 && (
     <div className="absolute w-full bg-white border border-gray-300 rounded mt-1 max-h-60 overflow-y-auto z-10">
-     {filteredData.map((item) => (
+     {filteredData.map((item,index) => (
   <div
     key={item.productId}
-    onClick={() => handleProductName(item.productId)}
+    onClick={() => handleProductName(item.productId, index)}
+  
     className="p-2 hover:bg-gray-100 cursor-pointer"
   >
     <div className="text-sm font-medium text-gray-900 flex flex-col">
