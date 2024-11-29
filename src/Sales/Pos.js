@@ -30,8 +30,8 @@ const Pos = ({ handleClosed }) => {
   const State = useSelector(state => state);
 
 
-  console.log("State pos first", State.PosReducer.Invoice_url)
   const [invoiceurl, setInvoiceurl] = useState('')
+  const [products, setProducts] = useState([{ productName: '', quantity: 1, discount: 0, unitPrice: 0 }]);
 
   const [loading, setLoading] = useState(false)
 
@@ -81,7 +81,9 @@ const Pos = ({ handleClosed }) => {
   useEffect(() => {
     const handleKeyDown = (event) => {
       if (event.key === 'Escape') {
-        handleHoldOrder()
+        if (products.length > 0 && products[0].productId) {
+          handleHoldOrder()
+        }
         handleClosed()
       }
     };
@@ -265,10 +267,6 @@ const handleInputChanges = (field, e, item) => {
   };
 
 
-
-
-
-
   useEffect(() => {
     const date = new Date();
     const formattedDate = date.toLocaleDateString('en-GB', {
@@ -320,9 +318,7 @@ const handleInputChanges = (field, e, item) => {
 
   // const [products, setProducts] = useState([])
 
-  const [products, setProducts] = useState([{ productName: '', quantity: 1, discount: 0, unitPrice: 0 }]);
 
- console.log("productsforder",products);
  
   const handleproductName = (item) => {
     setSearchQuery('');
@@ -348,8 +344,6 @@ const handleInputChanges = (field, e, item) => {
   }, [State.PosReducer.orderItems])
 
   const orderItems = useSelector((state) => state.PosReducer.orderItems);
-  console.log("orderItems",orderItems);
-  
 
   useEffect(() => {
     if (orderItems && orderItems.length > 0) {
@@ -480,7 +474,6 @@ const handleInputChanges = (field, e, item) => {
 
   const handleOpen = () => {
     if (customerFilter && order_id) {
-      console.log("customerFilter",customerFilter);
       
       setOpen(true);
       // dispatch({type: 'ADD-CUSTOMER-FOR-ORDER',payload: { orderId: String(order_id), customerId: String(customerFilter.customerId) }});
