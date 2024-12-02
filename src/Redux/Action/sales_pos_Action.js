@@ -50,10 +50,10 @@ export async function Holdorder({ orderId }) {
 }
 
 
-export async function InitializePayment({ orderId }) { 
+export async function InitializePayment({ orderId, customerId }) { 
   try {
     return await AxiosConfig.post('/order/initializePayments', null, {
-      params: { orderId }, 
+      params: { orderId, customerId }, 
     });
   } catch (error) {
     console.error("Network error:", error.response || error.message);

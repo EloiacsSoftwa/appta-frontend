@@ -195,7 +195,7 @@ function* handleInitializePayments({ payload }) {
     
     const successCode = response?.status === 200 || response.code === 200 || response?.data?.code === 200;
     if (successCode) {
-      yield put({ type: 'ORDER_INITIALIZE_PAYMENT', payload: {total_amount :response.data.data , statusCode: response?.status || response?.data?.code || response.code  } });
+      yield put({ type: 'ORDER_INITIALIZE_PAYMENT', payload: {total_amount :response.data.data.totalAmount , statusCode: response?.status || response?.data?.code || response.code  } });
       
     } else {
       yield put({ type: 'ERROR', payload: { response: response?.data?.message, statusCode: response?.status || response?.data?.code } });
@@ -321,7 +321,7 @@ function ExpireToken(response) {
       const response = yield call(addOrderItemsApiCall, data.payload)
 
       if (response.status === 200 && response.data.code === 200  || response.code === 200) {
-        yield put({type: ADD_ORDER_ITEMS_API_RESPONSE, payload: { orderItems: response.data.data.orderItems, statusCode: response?.status || response?.data?.code || response.code  }})
+        yield put({type: ADD_ORDER_ITEMS_API_RESPONSE, payload: { orderItems: response.data.data.orderItems, statusCode: response?.status || response?.data?.code || response.code, totalAmount: response.data.data.totalAmount  }})
       }
       if (response) {
         ExpireToken(response)

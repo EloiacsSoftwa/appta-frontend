@@ -69,54 +69,6 @@ function Sales_List() {
 
 
 
-    const salesData = [
-        {
-            date: '09-Oct-2024',
-            customer: 'Shane',
-            customerId: 'CK0546',
-            status: 'pending',
-            payment: 'pending',
-            total: '₹ 2,500',
-            paid: '₹ 2,500',
-            counter: 'C3',
-        },
-        {
-            date: '09-Oct-2024',
-            customer: 'Robert',
-            customerId: 'CK0546',
-            status: 'completed',
-            payment: 'completed',
-            total: '₹ 2,500',
-            paid: '₹ 2,500',
-            counter: 'C3',
-        },
-        {
-            date: '09-Oct-2024',
-            customer: 'Branson',
-            customerId: 'CK0546',
-            status: 'completed',
-            payment: 'completed',
-            total: '₹ 2,500',
-            paid: '₹ 2,500',
-            counter: 'C4',
-        },
-        {
-            date: '09-Oct-2024',
-            customer: 'Branson',
-            customerId: 'CK0546',
-            status: 'completed',
-            payment: 'completed',
-            total: '₹ 2,500',
-            paid: '₹ 2,500',
-            counter: 'C4',
-        },
-    ];
-
-
-
-
-
-
     //  pagination
     const itemsPerPage = 10;
     const totalPages = Math.ceil(product && product.length / itemsPerPage);
@@ -135,19 +87,6 @@ function Sales_List() {
             setCurrentPage(currentPage + 1);
         }
     };
-
-
-
-
-   
-
-   
-
-
-
-
-
-
 
 
     return (
@@ -304,7 +243,7 @@ function Sales_List() {
                         </tr>
                     </thead>
                     <tbody>
-                        {currentItems.map((item, index) => (
+                        {currentItems && currentItems.map((item, index) => (
                             <tr key={index} className="hover:bg-gray-50 border-0">
                                 <td className="p-2 mt-1 flex items-center justify-start">
                                     <img src={SmallDot} className="mr-1.5" />
