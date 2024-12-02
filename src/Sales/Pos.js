@@ -30,8 +30,8 @@ const Pos = ({ handleClosed }) => {
   const State = useSelector(state => state);
 
 
-  console.log("State pos first", State.PosReducer.Invoice_url)
   const [invoiceurl, setInvoiceurl] = useState('')
+  const [products, setProducts] = useState([{ productName: '', quantity: 1, discount: 0, unitPrice: 0 }]);
 
   const [loading, setLoading] = useState(false)
 
@@ -43,14 +43,12 @@ const Pos = ({ handleClosed }) => {
   // },[State.PosReducer?.Invoice_url])
 
   const [customerFilter, setCustomerFilter] = useState('');
-  const [totalamount, setTotalAmount] = useState('')
 
   const [order_id, setOrderID] = useState('')
 
 
   useEffect(() => {
     if (State.PosReducer?.paymentordercompletedStatusCode == 200) {
-      setTotalAmount('');
       setOrderID('');
       setCustomerFilter('');
 
@@ -81,7 +79,9 @@ const Pos = ({ handleClosed }) => {
   useEffect(() => {
     const handleKeyDown = (event) => {
       if (event.key === 'Escape') {
-        handleHoldOrder()
+        if (products.length > 0 && products[0].productId) {
+          handleHoldOrder()
+        }
         handleClosed()
       }
     };
@@ -99,16 +99,16 @@ const Pos = ({ handleClosed }) => {
       //  handleHoldOrder();
       // alert('popstate triggered',order_id)
       console.log("order_id", order_id)
-      setTimeout(()=>{
+      setTimeout(() => {
         if (order_id) {
           dispatch({
             type: 'ORDER-HOLD',
             payload: { orderId: String(order_id) },
           });
         }
-  
-      },3000)
-     
+
+      }, 3000)
+
       setTimeout(() => {
         handleClosed()
       }, 2000)
@@ -122,7 +122,7 @@ const Pos = ({ handleClosed }) => {
     return () => {
       window.removeEventListener('popstate', handlePopState);
     };
-  }, [navigate,handleClosed]);
+  }, [navigate, handleClosed]);
 
 
 
@@ -132,16 +132,16 @@ const Pos = ({ handleClosed }) => {
       const navType = performance.navigation.type;
       if (navType === 1) {
         console.log("Page Reload detected");
-                               
-                dispatch({ type: 'LOG-OUT' })
-            const encryptData = CryptoJS.AES.encrypt(JSON.stringify(false), 'abcd');
-            localStorage.setItem("appTaLogin", encryptData.toString());
-                    }
+
+        dispatch({ type: 'LOG-OUT' })
+        const encryptData = CryptoJS.AES.encrypt(JSON.stringify(false), 'abcd');
+        localStorage.setItem("appTaLogin", encryptData.toString());
+      }
     };
-  
-    
+
+
     window.addEventListener("beforeunload", handleBeforeUnload);
-    
+
     return () => {
       window.removeEventListener("beforeunload", handleBeforeUnload);
     };
@@ -169,81 +169,79 @@ const Pos = ({ handleClosed }) => {
 
   const handleFieldClick = (index, fieldValues) => {
 
-    console.log("fieldValues",fieldValues);
-    
     setEditingIndex(index);
     setQuantity(fieldValues.quantity ?? 0);
     setDiscount(fieldValues.discount ?? 0);
     setDiscountAmount(Number(fieldValues.discountAmount ?? 0));
     setUnitPrice(Number(fieldValues.unitPrice ?? 0));
-};
-
-const handleFieldChange = (productId) => {
-  if (error) {
-    alert(error);
-    return;
-  }
-
-  let typeOfDiscount = 0; 
-  if (discount > 0) {
-    typeOfDiscount = 1; 
-  } else if (discountAmount > 0) {
-    typeOfDiscount = 2;
-  }
-
-  const payload = {
-    orderId: order_id,
-    productId: productId,
-    discount: discount,
-    quantity: quantity,
-    unitPrice: unitPrice,
-    manuallyEntered: true,
-    typeOfDiscount: typeOfDiscount,
-    discountAmount: discountAmount,
   };
 
-  dispatch({ type: ADD_ORDER_ITEMS_API_CALL, payload });
-  setEditingIndex(null);
-  setError(null); 
-};
-
-
-const handleInputChanges = (field, e, item) => {
-  let value = e.target.value.replace(/^0+/, ''); 
-  const parsedValue = parseFloat(value);
-
-  if (parsedValue < 0) {
-    setError(`${field} cannot be negative.`);
-    return;
-  }
-
-  if (field === 'discount') {
-    const discountPercent = isNaN(parsedValue) ? 0 : parsedValue;
-    const calculatedDiscountAmount = (discountPercent / 100) * item.totalAmount;
-
-    if (calculatedDiscountAmount > item.totalAmount) {
-      setError('Discount amount exceeds the total amount.');
-    } else {
-      setError(null);
-      setDiscount(discountPercent);
-      setDiscountAmount(0); 
+  const handleFieldChange = (productId) => {
+    if (error) {
+      alert(error);
+      return;
     }
-  } else if (field === 'discountAmount') {
-    const discountAmt = isNaN(parsedValue) ? 0 : parsedValue;
 
-    if (discountAmt > item.totalAmount) {
-      setError('Discount amount exceeds the total amount.');
-    } else {
-      setError(null);
-      setDiscountAmount(discountAmt);
-      setDiscount(0); 
+    let typeOfDiscount = 0;
+    if (discount > 0) {
+      typeOfDiscount = 1;
+    } else if (discountAmount > 0) {
+      typeOfDiscount = 2;
     }
-  } else if (field === 'quantity') {
-    setQuantity(parsedValue || 0);
-  } else if (field === 'unitPrice') {
-    setUnitPrice(parsedValue || 0);
-  }
-};
+
+    const payload = {
+      orderId: order_id,
+      productId: productId,
+      discount: discount,
+      quantity: quantity,
+      unitPrice: unitPrice,
+      manuallyEntered: true,
+      typeOfDiscount: typeOfDiscount,
+      discountAmount: discountAmount,
+    };
+
+    dispatch({ type: ADD_ORDER_ITEMS_API_CALL, payload });
+    setEditingIndex(null);
+    setError(null);
+  };
+
+
+  const handleInputChanges = (field, e, item) => {
+    let value = e.target.value.replace(/^0+/, '');
+    const parsedValue = parseFloat(value);
+
+    if (parsedValue < 0) {
+      setError(`${field} cannot be negative.`);
+      return;
+    }
+
+    if (field === 'discount') {
+      const discountPercent = isNaN(parsedValue) ? 0 : parsedValue;
+      const calculatedDiscountAmount = (discountPercent / 100) * item.totalAmount;
+
+      if (calculatedDiscountAmount > item.totalAmount) {
+        setError('Discount amount exceeds the total amount.');
+      } else {
+        setError(null);
+        setDiscount(discountPercent);
+        setDiscountAmount(0);
+      }
+    } else if (field === 'discountAmount') {
+      const discountAmt = isNaN(parsedValue) ? 0 : parsedValue;
+
+      if (discountAmt > item.totalAmount) {
+        setError('Discount amount exceeds the total amount.');
+      } else {
+        setError(null);
+        setDiscountAmount(discountAmt);
+        setDiscount(0);
+      }
+    } else if (field === 'quantity') {
+      setQuantity(parsedValue || 0);
+    } else if (field === 'unitPrice') {
+      setUnitPrice(parsedValue || 0);
+    }
+  };
 
 
 
@@ -254,7 +252,7 @@ const handleInputChanges = (field, e, item) => {
   const handleKeyDown = (productId, e) => {
     if (e.key === 'Enter') {
 
-      
+
       if (error) {
         e.preventDefault();
         alert(error);
@@ -263,10 +261,6 @@ const handleInputChanges = (field, e, item) => {
       }
     }
   };
-
-
-
-
 
 
   useEffect(() => {
@@ -320,10 +314,8 @@ const handleInputChanges = (field, e, item) => {
 
   // const [products, setProducts] = useState([])
 
-  const [products, setProducts] = useState([{ productName: '', quantity: 1, discount: 0, unitPrice: 0 }]);
 
- console.log("productsforder",products);
- 
+
   const handleproductName = (item) => {
     setSearchQuery('');
 
@@ -336,7 +328,7 @@ const handleInputChanges = (field, e, item) => {
     }
 
     dispatch({ type: ADD_ORDER_ITEMS_API_CALL, payload: payload })
-  
+
 
   }
 
@@ -348,8 +340,6 @@ const handleInputChanges = (field, e, item) => {
   }, [State.PosReducer.orderItems])
 
   const orderItems = useSelector((state) => state.PosReducer.orderItems);
-  console.log("orderItems",orderItems);
-  
 
   useEffect(() => {
     if (orderItems && orderItems.length > 0) {
@@ -359,14 +349,6 @@ const handleInputChanges = (field, e, item) => {
         netAmount: item.totalAmount,
       }));
       setProducts(updatedProducts);
-
-
-      const totalNetAmount = updatedProducts.reduce((sum, item) => sum + item.netAmount, 0);
-      setTotalAmount(Math.round(totalNetAmount));
-
-    }
-    else {
-      setTotalAmount('')
     }
   }, [orderItems]);
 
@@ -416,10 +398,6 @@ const handleInputChanges = (field, e, item) => {
             ...updatedData[existingProductIndex],
             quantity: updatedData[existingProductIndex].quantity + 1,
           };
-
-          // Calculate total amount
-          const totalAmount = updatedData.reduce((acc, item) => acc + (item.quantity * item.wholesalePrice), 0);
-          setTotalAmount(totalAmount);
 
           return updatedData;
 
@@ -480,14 +458,13 @@ const handleInputChanges = (field, e, item) => {
 
   const handleOpen = () => {
     if (customerFilter && order_id) {
-      console.log("customerFilter",customerFilter);
-      
+
       setOpen(true);
       // dispatch({type: 'ADD-CUSTOMER-FOR-ORDER',payload: { orderId: String(order_id), customerId: String(customerFilter.customerId) }});
 
       dispatch({
         type: 'ORDER-INITIALIZE-PAYMENT',
-        payload: { orderId: String(order_id),customerId: String(customerFilter.customerId) },
+        payload: { orderId: String(order_id), customerId: String(customerFilter.customerId) },
       });
     }
     else {
@@ -505,7 +482,6 @@ const handleInputChanges = (field, e, item) => {
 
   useEffect(() => {
     if (State.PosReducer.orderinitialiseStatusCode === 200) {
-      setTotalAmount(Math.round(State.PosReducer.totalAmount));
       setTimeout(() => {
         dispatch({ type: 'REMOVE_ORDER_INITIALIZE_PAYMENT_STATUS_CODE' });
       }, 1000);
@@ -593,14 +569,14 @@ const handleInputChanges = (field, e, item) => {
     }
   }, [State.PosReducer.deleteposproductStatuscode])
 
-  const [openholdorder,setHoldOrder] = useState(false)
+  const [openholdorder, setHoldOrder] = useState(false)
 
   const handleHoldOrder = () => {
     setHoldOrder(true)
     if (order_id) {
       dispatch({
         type: 'ORDER-HOLD',
-        payload: { orderId: String(order_id) }, 
+        payload: { orderId: String(order_id) },
       });
     } else {
       console.error("Order ID is missing.");
@@ -689,15 +665,15 @@ const handleInputChanges = (field, e, item) => {
     }
   }, [orderItems]);
 
- 
+
   const handleInputChange = (index, field, value) => {
     const updatedProducts = [...products];
     updatedProducts[index][field] = value;
     setProducts(updatedProducts);
-  
+
   };
 
- 
+
   const handleAddRow = () => {
 
 
@@ -709,25 +685,25 @@ const handleInputChanges = (field, e, item) => {
       { productName: '', quantity: 1, discount: 0, unitPrice: 0 },
     ]);
   };
-  
+
   const handleKeyDowns = (event) => {
     if (event.key === "Enter") {
       handleAddRow();
     }
   };
-  
+
 
   const [selectedProductName, setSelectedProductName] = useState("");
   // const [searchQuery, setSearchQuery] = useState("");
-  
+
   // const [selectedProductName, setSelectedProductName] = useState("");
   // const [selectedProductId, setSelectedProductId] = useState(null);
   // const [searchQuery, setSearchQuery] = useState("");
-  
-  const handleProductName = (productId , index) => {
+
+  const handleProductName = (productId, index) => {
     console.log("productId", productId);
-    
-    
+
+
     const payload = {
       orderId: order_id,
       productId: productId,
@@ -735,10 +711,10 @@ const handleInputChanges = (field, e, item) => {
       quantity: 1,
       manuallyEntered: false,
     };
-  
-   
+
+
     dispatch({ type: ADD_ORDER_ITEMS_API_CALL, payload: payload });
-  
+
     setSelectedProductId(productId);
     setSearchQuery("");
     handleAddRow();
@@ -746,28 +722,28 @@ const handleInputChanges = (field, e, item) => {
     if (searchInputElement) {
       searchInputElement.focus();
     }
-   
-  };    
-  
-  
+
+  };
+
+
   useEffect(() => {
     if (selectedProductId) {
-      console.log("selectedProductId",selectedProductId);
-      console.log("orderItemsssss",orderItems);
-      
-      const selectedProduct = orderItems.filter((item) =>{ return item.productId === selectedProductId});
+      console.log("selectedProductId", selectedProductId);
+      console.log("orderItemsssss", orderItems);
+
+      const selectedProduct = orderItems.filter((item) => { return item.productId === selectedProductId });
       console.log("selectedProduct", selectedProduct);
       if (selectedProduct.length > 0) {
-       console.log("selectedProduct.productName",selectedProduct[0].productName);
-       
+        console.log("selectedProduct.productName", selectedProduct[0].productName);
+
         setSelectedProductName(selectedProduct[0].productName);
-        setSelectedProductId(null); 
+        setSelectedProductId(null);
       }
     }
-  }, [ selectedProductId]);
-  
-  
-  
+  }, [selectedProductId]);
+
+
+
 
   return (<>
     <div className='w-screen h-screen ' >
@@ -898,7 +874,7 @@ const handleInputChanges = (field, e, item) => {
                     <th className="p-1 font-semibold text-base text-neutral-900">
                       <div className="flex items-center justify-start gap-2">
 
-                        <div className='font-semibold text-sm text-neutral-900 font-Manrope'>Amount </div>
+                        <div className='font-semibold text-sm text-neutral-900 font-Manrope'>MRP </div>
                       </div>
                     </th>
                     <th className="p-1 font-semibold text-base text-neutral-900">
@@ -925,151 +901,151 @@ const handleInputChanges = (field, e, item) => {
 
                   </tr>
                 </thead>
-  
+
 
 
                 <tbody>
-  {products.map((item, index) => (
-    <tr key={index} className="hover:bg-gray-50 border">
-      <td className="p-2 mt-1 flex items-center justify-start">
-        <input type="checkbox" className="form-checkbox h-3 w-3 text-blue-600 border-neutral-500 cursor-pointer"
-          checked={selectedProducts.includes(item.productId)}
+                  {products.map((item, index) => (
+                    <tr key={index} className="hover:bg-gray-50 border">
+                      <td className="p-2 mt-1 flex items-center justify-start">
+                        <input type="checkbox" className="form-checkbox h-3 w-3 text-blue-600 border-neutral-500 cursor-pointer"
+                          checked={selectedProducts.includes(item.productId)}
 
-          onChange={(e) => handleProductSelect(item.productId, e.target.checked)} />
-      </td>
-      <td className="p-2">{index + 1}</td>
-      <td className="p-2 relative">
-        <div className="relative">
-          <input
-            type="text"
-            placeholder="Search for products"
-            className="rounded pl-4 py-1 bg-zinc-300"
-            value={item.productName || searchQuery}
-            onChange={handleSearchChange}
-            onKeyDown={handleKeyDowns}
-            aria-label="Search for products"
-            role="search"
-          />
+                          onChange={(e) => handleProductSelect(item.productId, e.target.checked)} />
+                      </td>
+                      <td className="p-2">{index + 1}</td>
+                      <td className="p-2 relative">
+                        <div className="relative">
+                          <input
+                            type="text"
+                            placeholder="Search for products"
+                            className="rounded pl-4 py-1 bg-zinc-300"
+                            value={item.productName || searchQuery}
+                            onChange={handleSearchChange}
+                            onKeyDown={handleKeyDowns}
+                            aria-label="Search for products"
+                            role="search"
+                          />
 
-  {searchQuery && filteredData.length > 0 && (
-    <div className="absolute w-full bg-white border border-gray-300 rounded mt-1 max-h-60 overflow-y-auto z-10">
-     {filteredData.map((item,index) => (
-  <div
-    key={item.productId}
-    onClick={() => handleProductName(item.productId, index)}
-  
-    className="p-2 hover:bg-gray-100 cursor-pointer"
-  >
-    <div className="text-sm font-medium text-gray-900 flex flex-col">
-      <label>
-        {item.productName} {item.subCategory}
-      </label>
-      <label>
-        {item.size} {item.unit}
-      </label>
-    </div>
-  </div>
-))}
+                          {searchQuery && filteredData.length > 0 && (
+                            <div className="absolute w-full bg-white border border-gray-300 rounded mt-1 max-h-60 overflow-y-auto z-10">
+                              {filteredData.map((item, index) => (
+                                <div
+                                  key={item.productId}
+                                  onClick={() => handleProductName(item.productId, index)}
 
-    </div>
-  )}
-</div>
-      </td>
+                                  className="p-2 hover:bg-gray-100 cursor-pointer"
+                                >
+                                  <div className="text-sm font-medium text-gray-900 flex flex-col">
+                                    <label>
+                                      {item.productName} {item.subCategory}
+                                    </label>
+                                    <label>
+                                      {item.size} {item.unit}
+                                    </label>
+                                  </div>
+                                </div>
+                              ))}
 
-
-      <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">
-                          {editingIndex === index ? (
-                            <input
-                              type="number"
-                              value={quantity}
-                              onChange={(e) => handleInputChanges('quantity', e)}
-                              onBlur={() => handleFieldChange(item.productId, 'quantity', quantity)}
-                              onKeyDown={(e) => handleKeyDown(item.productId, e)}
-                              className="border border-neutral-300 rounded px-1 py-0.5 w-16"
-                            />
-                          ) : (
-                            <span onClick={() => handleFieldClick(index, item)} className="cursor-pointer">
-                              {item.quantity || '-'}
-                            </span>
+                            </div>
                           )}
-                        </td>
-
-                        {/* <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">₹{item.unitPrice || '0'}</td> */}
-
-                         <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">
-    {editingIndex === index ? (
-        <input
-            type="number"
-            value={unitPrice}
-            onChange={(e) => handleInputChanges('unitPrice', e)}
-            onBlur={() => handleFieldChange(item.productId, 'unitPrice', unitPrice)}
-            onKeyDown={(e) => handleKeyDown(item.productId, e)}
-            className="border border-neutral-300 rounded px-1 py-0.5 w-16"
-        />
-    ) : (
-        <span
-            onClick={() => handleFieldClick(index, item)}
-            className="cursor-pointer"
-        >
-            ₹{item.unitPrice || '0'}
-        </span>
-    )}
-</td>
-
-                        <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">
-                         ₹{item.quantity && item.unitPrice? Math.round(item.quantity * item.unitPrice): '-'}</td>
-
-                        <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">
-                          {editingIndex === index ? (
-                            <input
-                              type="number"
-                              value={discount}
-                              onChange={(e) => handleInputChanges('discount', e, item)}
-                              onBlur={() => handleFieldChange(item.productId)}
-                              onKeyDown={(e) => handleKeyDown(item.productId, e)}
-                              className="border border-neutral-300 rounded px-1 py-0.5 w-16"
-                              placeholder="%"
-                            />
-                          ) : (
-                            <span onClick={() => handleFieldClick(index, item)} className="cursor-pointer">
-                              {item.discount || '0'}
-                            </span>
-                          )}
-                          {error && <div className="text-red-500 text-xs">{error}</div>}
-                        </td>
+                        </div>
+                      </td>
 
 
-                        <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">
-  {editingIndex === index ? (
-    <input
-      type="number"
-      value={discountAmount}
-      onChange={(e) => handleInputChanges('discountAmount', e, item)}
-      onBlur={() => handleFieldChange(item.productId)}
-      onKeyDown={(e) => handleKeyDown(item.productId, e)}
-      className="border border-neutral-300 rounded px-1 py-0.5 w-16"
-    />
-  ) : (
-    <span onClick={() => handleFieldClick(index, item)} className="cursor-pointer">
-    ₹{item.discountAmount ? Math.round(item.discountAmount) : '0'}
-  </span>
-  
-  )}
-</td>
+                      <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">
+                        {editingIndex === index ? (
+                          <input
+                            type="number"
+                            value={quantity}
+                            onChange={(e) => handleInputChanges('quantity', e)}
+                            onBlur={() => handleFieldChange(item.productId, 'quantity', quantity)}
+                            onKeyDown={(e) => handleKeyDown(item.productId, e)}
+                            className="border border-neutral-300 rounded px-1 py-0.5 w-16"
+                          />
+                        ) : (
+                          <span onClick={() => handleFieldClick(index, item)} className="cursor-pointer">
+                            {item.quantity || '-'}
+                          </span>
+                        )}
+                      </td>
+
+                      {/* <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">₹{item.unitPrice || '0'}</td> */}
+
+                      <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">
+                        {editingIndex === index ? (
+                          <input
+                            type="number"
+                            value={unitPrice}
+                            onChange={(e) => handleInputChanges('unitPrice', e)}
+                            onBlur={() => handleFieldChange(item.productId, 'unitPrice', unitPrice)}
+                            onKeyDown={(e) => handleKeyDown(item.productId, e)}
+                            className="border border-neutral-300 rounded px-1 py-0.5 w-16"
+                          />
+                        ) : (
+                          <span
+                            onClick={() => handleFieldClick(index, item)}
+                            className="cursor-pointer"
+                          >
+                            ₹{item.unitPrice || '0'}
+                          </span>
+                        )}
+                      </td>
+
+                      <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">
+                        ₹{item.quantity && item.mrp ? item.mrp : '-'}</td>
+
+                      <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">
+                        {editingIndex === index ? (
+                          <input
+                            type="number"
+                            value={discount}
+                            onChange={(e) => handleInputChanges('discount', e, item)}
+                            onBlur={() => handleFieldChange(item.productId)}
+                            onKeyDown={(e) => handleKeyDown(item.productId, e)}
+                            className="border border-neutral-300 rounded px-1 py-0.5 w-16"
+                            placeholder="%"
+                          />
+                        ) : (
+                          <span onClick={() => handleFieldClick(index, item)} className="cursor-pointer">
+                            {item.discount || '0'}
+                          </span>
+                        )}
+                        {error && <div className="text-red-500 text-xs">{error}</div>}
+                      </td>
+
+
+                      <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">
+                        {editingIndex === index ? (
+                          <input
+                            type="number"
+                            value={discountAmount}
+                            onChange={(e) => handleInputChanges('discountAmount', e, item)}
+                            onBlur={() => handleFieldChange(item.productId)}
+                            onKeyDown={(e) => handleKeyDown(item.productId, e)}
+                            className="border border-neutral-300 rounded px-1 py-0.5 w-16"
+                          />
+                        ) : (
+                          <span onClick={() => handleFieldClick(index, item)} className="cursor-pointer">
+                            ₹{item.discountAmount ? Math.round(item.discountAmount) : '0'}
+                          </span>
+
+                        )}
+                      </td>
 
 
 
 
-                        <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">
-                          ₹ {item.totalAmount ? item.totalAmount.toFixed(2) : '0'}
-                        </td>
+                      <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">
+                        ₹ {item.totalAmount}
+                      </td>
 
 
-     
-    
-    </tr>
-  ))}
-</tbody>
+
+
+                    </tr>
+                  ))}
+                </tbody>
 
 
 
@@ -1109,7 +1085,7 @@ const handleInputChanges = (field, e, item) => {
 
                         {/* <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">₹{item.unitPrice || '0'}</td> */}
 
-                        {/* <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">
+                {/* <td className="p-2 font-semibold text-sm font-Manrope text-neutral-900 text-start">
     {editingIndex === index ? (
         <input
             type="number"
@@ -1198,9 +1174,9 @@ const handleInputChanges = (field, e, item) => {
               </table>
 
               {
-        openholdorder  && (<HoldOrderList   cancelholdorder={handleCloseHoldOrder}/>
-        )
-      }
+                openholdorder && (<HoldOrderList cancelholdorder={handleCloseHoldOrder} />
+                )
+              }
 
 
             </div>
@@ -1340,7 +1316,7 @@ const handleInputChanges = (field, e, item) => {
 
               <div className='flex flex-row justify-between' >
                 <p className='text-[#131313] text-sm  font-semibold font-Manrope ps-2'>Amount :</p>
-                <p className='text-[#131313] text-sm  font-semibold font-Manrope pe-2'>{totalamount}</p>
+                <p className='text-[#131313] text-sm  font-semibold font-Manrope pe-2'>{State.PosReducer?.totalAmount}</p>
               </div>
 
               <div className='flex flex-row justify-between' >
@@ -1369,7 +1345,7 @@ const handleInputChanges = (field, e, item) => {
 
               <div className='flex flex-row justify-between  mb-2 mt-2' >
                 <p className='text-[#131313] text-sm  font-semibold font-Manrope ps-2'>Total :</p>
-                <p className='text-[#131313] text-sm  font-semibold font-Manrope pe-2'>₹ {totalamount ? totalamount : 0}</p>
+                <p className='text-[#131313] text-sm  font-semibold font-Manrope pe-2'>₹ {State.PosReducer?.totalAmount}</p>
               </div>
 
               <div class="border border-dotted border-black ">
@@ -1377,7 +1353,7 @@ const handleInputChanges = (field, e, item) => {
 
               <div className='flex flex-col items-center mt-1' >
                 <p className='font-semibold font-Manrope text-[#131313] font-bold text-xl '>Amount to Pay</p>
-                <p className='font-semibold font-Manrope text-[#131313] font-bold text-xl '>₹ {totalamount ? totalamount : 0}</p>
+                <p className='font-semibold font-Manrope text-[#131313] font-bold text-xl '>₹ {State.PosReducer?.totalAmount}</p>
               </div>
 
 
@@ -1402,11 +1378,11 @@ const handleInputChanges = (field, e, item) => {
             </button>
 
             <div>
-            <button
-              type="submit"
-              className="flex  items-center me-5 rounded justify-center bg-[#EA580C] text-white px-5 py-1.5 text-sm font-semibold  border border-[#EA580C] shadow-sm hover:bg-[#EA580C] hover:text-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#EA580C]">
-              Sales Return
-            </button>
+              <button
+                type="submit"
+                className="flex  items-center me-5 rounded justify-center bg-[#EA580C] text-white px-5 py-1.5 text-sm font-semibold  border border-[#EA580C] shadow-sm hover:bg-[#EA580C] hover:text-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#EA580C]">
+                Sales Return
+              </button>
             </div>
 
             <div >
@@ -1595,7 +1571,7 @@ const handleInputChanges = (field, e, item) => {
 
 
       {
-        open && customerFilter && (<Pos_Payment handleclose={handleClose} order_id={order_id} total_amount={totalamount} />
+        open && customerFilter && (<Pos_Payment handleclose={handleClose} order_id={order_id} total_amount={State.PosReducer?.totalAmount} />
         )
       }
 

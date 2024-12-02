@@ -1,5 +1,5 @@
 const config = {
-    apiBaseUrl: "http://97.74.94.57:8080/inventory-test",
+    apiBaseUrl: process.env.REACT_APP_BASE_URL,
 
 };
 
