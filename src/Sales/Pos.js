@@ -35,6 +35,9 @@ const Pos = ({ handleClosed }) => {
 
   const [loading, setLoading] = useState(false)
 
+  const [posselectedtype, setPosSelectedType] = useState('')
+  const [posselectedfilterdata , setPosSelectedFilterdata] = useState([])
+
   // useEffect(()=>{
   //   if(State.PosReducer?.Invoice_url){
 
@@ -196,6 +199,7 @@ const Pos = ({ handleClosed }) => {
       quantity: quantity,
       unitPrice: unitPrice,
       manuallyEntered: true,
+      salesType:Number(posselectedtype),
       typeOfDiscount: typeOfDiscount,
       discountAmount: discountAmount,
     };
@@ -262,6 +266,17 @@ const Pos = ({ handleClosed }) => {
     }
   };
 
+  
+  
+
+
+  const handlePosTypechange = (selectionType) => {
+    setPosSelectedType(selectionType);
+    console.log('SelectedType:', selectionType);
+   
+  };
+  
+  
 
   useEffect(() => {
     const date = new Date();
@@ -300,7 +315,7 @@ const Pos = ({ handleClosed }) => {
       dispatch({ type: RESET_PAYMENT_STATUS_CODE })
 
       setProducts([{ productName: '', quantity: 1, discount: 0, unitPrice: 0 }])
-
+      setPosSelectedType('')
 
     }
   }, [State.PosReducer.paymentordercompletedStatusCode])
@@ -335,6 +350,9 @@ const Pos = ({ handleClosed }) => {
   useEffect(() => {
     if (State.PosReducer.orderItems && State.PosReducer.orderItems.length > 0) {
       setProducts(State.PosReducer.orderItems)
+    }
+    else{
+      setProducts([{ productName: '', quantity: 1, discount: 0, unitPrice: 0 }])
     }
 
   }, [State.PosReducer.orderItems])
@@ -630,7 +648,10 @@ const Pos = ({ handleClosed }) => {
         productId: State.PosReducer.BarcodeproductData.productId,
         discount: 0,
         quantity: 1,
-        manuallyEntered: false
+        manuallyEntered: false,
+        salesType:Number(posselectedtype),
+        typeOfDiscount: 0,
+        discountAmount: 0,
       }
       dispatch({ type: ADD_ORDER_ITEMS_API_CALL, payload: payload })
     }
@@ -663,6 +684,9 @@ const Pos = ({ handleClosed }) => {
     if (orderItems && orderItems.length > 0) {
       setProducts(orderItems);
     }
+    else{
+      setProducts([{ productName: '', quantity: 1, discount: 0, unitPrice: 0 }])
+    }
   }, [orderItems]);
 
 
@@ -675,9 +699,6 @@ const Pos = ({ handleClosed }) => {
 
 
   const handleAddRow = () => {
-
-
-
 
 
     setProducts((prevProducts) => [
@@ -710,6 +731,9 @@ const Pos = ({ handleClosed }) => {
       discount: 0,
       quantity: 1,
       manuallyEntered: false,
+      salesType:Number(posselectedtype),
+      typeOfDiscount: 0,
+      discountAmount: 0,
     };
 
 
@@ -747,6 +771,30 @@ const Pos = ({ handleClosed }) => {
 
   return (<>
     <div className='w-screen h-screen ' >
+
+    <div style={{ marginLeft: '50px' , width:'180px'}}>
+  <div className="relative">
+    <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none">
+      <img src={Search} alt="Search Icon" />
+    </span>
+    <select
+      className="rounded pl-10 py-1 bg-zinc-300 w-full"
+      value={posselectedtype}
+      onChange={(e) => handlePosTypechange(e.target.value)}
+      aria-label="Search"
+      role="search"
+    >
+      <option value="" disabled>
+        Search
+      </option>
+      <option value="1" >Wholesale</option>
+      <option value="2">Retail</option>
+    </select>
+  </div>
+</div>
+
+
+
       <div className='h-4/5 bg-white p-4 w-full'>
 
         <div className='flex flex-row w-full h-full gap-4'>
@@ -910,7 +958,6 @@ const Pos = ({ handleClosed }) => {
                       <td className="p-2 mt-1 flex items-center justify-start">
                         <input type="checkbox" className="form-checkbox h-3 w-3 text-blue-600 border-neutral-500 cursor-pointer"
                           checked={selectedProducts.includes(item.productId)}
-
                           onChange={(e) => handleProductSelect(item.productId, e.target.checked)} />
                       </td>
                       <td className="p-2">{index + 1}</td>
@@ -923,6 +970,7 @@ const Pos = ({ handleClosed }) => {
                             value={item.productName || searchQuery}
                             onChange={handleSearchChange}
                             onKeyDown={handleKeyDowns}
+                            disabled={!posselectedtype}
                             aria-label="Search for products"
                             role="search"
                           />
